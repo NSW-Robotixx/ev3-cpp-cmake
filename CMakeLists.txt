@@ -38,7 +38,7 @@ set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
 FetchContent_MakeAvailable(googletest)
 
 # enable testing
-enable_testing()
+include(CTest)
 
 set(TEST_SOURCES ${CMAKE_SOURCE_DIR}/test.cpp)
 # file(GLOB_RECURSE TEST_SOURCES "*test.cpp")
@@ -48,6 +48,7 @@ target_link_libraries(
   Test 
   gtest_main
   Logger
+  Port
 )
 
 target_include_directories(Test PUBLIC ${CMAKE_SOURCE_DIR}/src)

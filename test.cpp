@@ -1,7 +1,8 @@
 #include <gtest/gtest.h>
+#include <console/Logger.test.cpp>
 #include <test2.cpp>
 #include <src.test.cpp>
-#include <console/Logger.test.cpp>
+#include <physical/portManager/port/Port.test.cpp>
 
 // Demonstrate some basic assertions.
 TEST(HelloTest, BasicAssertions) {

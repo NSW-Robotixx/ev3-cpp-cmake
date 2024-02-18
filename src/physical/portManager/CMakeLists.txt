@@ -16,7 +16,7 @@ target_sources(device_factory
 
 target_link_libraries(device_factory 
     PUBLIC
-        port
+        Port
     )
 
 target_include_directories(device_factory PUBLIC ${CMAKE_SOURCE_DIR}/src)
