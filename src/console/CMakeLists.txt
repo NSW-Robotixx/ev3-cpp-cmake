@@ -1,4 +1,4 @@
-add_library(Logger STATIC Logger.cpp)
+add_library(Logger Logger.cpp)
 
 target_sources(Logger 
     PRIVATE
@@ -10,4 +10,13 @@ target_sources(Logger
 target_include_directories(Logger
     PUBLIC
         ${CMAKE_SOURCE_DIR}/src
+)
+
+# testing
+add_library(LoggerTest STATIC Logger.test.cpp)
+
+target_link_libraries(LoggerTest
+    PUBLIC
+        Logger
+        gtest
 )
