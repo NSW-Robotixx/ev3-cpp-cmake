@@ -6,24 +6,12 @@ namespace finder
     {
         class DeviceFactory {
         public:
-            static Port getDevice(DeviceManager::DeviceType type, DeviceManager::DevicePort port) {
-                // switch (type) {
-                //     case DeviceType::SENSOR:
-                //         return getSensor(port);
-                //     case DeviceType::MOTOR:
-                //         return getMotor(port);
-                //     default:
-                //         Port ret = Port();
-                //         ret.setDisabled();
-                //         return ret;
-                // }
-                Port ret = Port();
-                ret.setDisabled();
-                return ret;
-            };
-        
+            static std::shared_ptr<Port> borrowDevice(DeviceManager::DeviceType type, DeviceManager::DevicePort port);
+            static Port returnDevice(std::shared_ptr<Port> port);
+
         private:
-            static DeviceManager _device_manager;            
+            static DeviceManager _device_manager;
+            static std::vector<std::shared_ptr<Port>> _borrowed_ports;          
 
         };
     } // namespace physical

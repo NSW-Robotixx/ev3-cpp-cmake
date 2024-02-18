@@ -1,17 +1,9 @@
-#include <iostream>
 #include <console/Logger.hpp>
+
+finder::console::Logger logger = finder::console::Logger();
 
 int main(int argc, char const *argv[])
 {
-    using namespace finder::console;
-
-    Logger logger = Logger(Logger::LogLevel::DEBUG);
-
-    logger.log(Logger::LogLevel::DEBUG, "DEBUG message");
-    logger.log(Logger::LogLevel::INFO, "INFO message");
-    logger.log(Logger::LogLevel::WARN, "WARN message");
-    logger.log(Logger::LogLevel::ERROR, "ERROR message");
-
-
+    logger.log(finder::console::Logger::LogLevel::WARN, "Hello, World!");
     return 0;
 }

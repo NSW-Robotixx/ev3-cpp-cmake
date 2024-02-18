@@ -54,5 +54,8 @@ target_link_libraries(
 
 target_include_directories(Test PUBLIC ${CMAKE_SOURCE_DIR}/src)
 
+# throws compiler error, but works. Can be removed
+# SET_TARGET_PROPERTIES (Test PROPERTIES LINK_FLAGS "-static -lc -lm -L/usr/local/lib/")
+
 include(GoogleTest)
 gtest_discover_tests(Test)

@@ -11,7 +11,7 @@ target_include_directories(Port PUBLIC ${CMAKE_SOURCE_DIR}/src)
 
 #testing
 
-add_executable(PortTest Port.test.cpp)
+add_library(PortTest Port.test.cpp)
 
 target_sources(PortTest
     PRIVATE
