@@ -16,7 +16,7 @@ target_include_directories(Main PUBLIC ${CMAKE_SOURCE_DIR}/src)
 
 target_link_libraries(Main 
   PUBLIC 
-    device_factory
+    Device_factory
     Logger
 )
 
@@ -49,6 +49,7 @@ target_link_libraries(
   gtest_main
   Logger
   Port
+  Device_factory
 )
 
 target_include_directories(Test PUBLIC ${CMAKE_SOURCE_DIR}/src)
