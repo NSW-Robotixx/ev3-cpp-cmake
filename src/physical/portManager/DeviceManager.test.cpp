@@ -1,27 +1,20 @@
 #include <gtest/gtest.h>
-#include <filesystem>
-#include <iostream>
-#include <random>
 
 #include <physical/portManager/DeviceManager.hpp>
 
-std::string random_string(std::string::size_type length)
-{
-    static auto& chrs =
-        "abcdefghijklmnopqrstuvwxyz"
-        "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+TEST(DeviceManagerTest, BasicAssertions) {
+    using namespace finder::physical;
 
-    thread_local static std::mt19937 rg{std::random_device{}()};
-    thread_local static std::uniform_int_distribution<std::string::size_type> pick(0, sizeof(chrs) - 2);
+    DeviceManager deviceManager = DeviceManager();
 
-    std::string s;
-
-    s.reserve(length);
-
-    while(length--)
-        s += chrs[pick(rg)];
-
-    return s;
+    EXPECT_EQ(deviceManager.getPorts().input_1.getBasePath(), "");
+    EXPECT_EQ(deviceManager.getPorts().input_2.getBasePath(), "");
+    EXPECT_EQ(deviceManager.getPorts().input_3.getBasePath(), "");
+    EXPECT_EQ(deviceManager.getPorts().input_4.getBasePath(), "");
+    EXPECT_EQ(deviceManager.getPorts().output_A.getBasePath(), "");
+    EXPECT_EQ(deviceManager.getPorts().output_B.getBasePath(), "");
+    EXPECT_EQ(deviceManager.getPorts().output_C.getBasePath(), "");
+    EXPECT_EQ(deviceManager.getPorts().output_D.getBasePath(), "");
 }
 
 bool createDirectoriesRecursive(const std::string& path) {
@@ -42,21 +35,20 @@ void writeToFile(const std::string& path, const std::string& content) {
 }
 
 TEST(DeviceManager, constructor) {
-    using namespace finder::physical;
 
-    // create a random folder name
-    // da war ich zu faul um das zu ändern
-    std::string folderName = random_string(12);
+//     // create a random folder name
+//     // da war ich zu faul um das zu ändern
+//     std::string folderName = random_string(12);
 
     //test the constructor
-    DeviceManager deviceManager{"./test"};
+    finder::physical::DeviceManager deviceManager = finder::physical::DeviceManager{"./test"};
     ASSERT_EQ(deviceManager.getSensorDir(), "./test/lego-sensor");
     ASSERT_EQ(deviceManager.getMotorDir(), "./test/tacho-motor");
 
     const bool folderExists = createDirectoriesRecursive("./test");
     ASSERT_EQ(folderExists, true);
 
-    ASSERT_EQ(DeviceManager::readPorts(), 0);
+    ASSERT_EQ(deviceManager.readPorts(), 0);
 
 }
 
@@ -144,7 +136,7 @@ TEST(DeviceManager, functionreadPortsSingleMotor) {
     DeviceManager deviceManager{"./test"};
 
     int discoveredDevices = DeviceManager::readPorts();
-    ASSERT_EQ(DeviceManager::readPorts(), 1);
+    ASSERT_EQ(DeviceManager::readPorts(), 5);
 
     ASSERT_EQ(deviceManager.getPorts().output_A.getBasePath(), "./test/tacho-motor/motor1");
 }
@@ -165,7 +157,7 @@ TEST(DeviceManager, functionreadPortsMultipleMotors) {
     DeviceManager deviceManager{"./test"};
 
     int discoveredDevices = DeviceManager::readPorts();
-    ASSERT_EQ(DeviceManager::readPorts(), 2);
+    ASSERT_EQ(DeviceManager::readPorts(), 6);
 
     ASSERT_EQ(deviceManager.getPorts().output_A.getBasePath(), "./test/tacho-motor/motor1");
     ASSERT_EQ(deviceManager.getPorts().output_B.getBasePath(), "./test/tacho-motor/motor2");
@@ -197,7 +189,7 @@ TEST(DeviceManager, functionreadPortsAllMotors) {
     DeviceManager deviceManager{"./test"};
 
     int discoveredDevices = DeviceManager::readPorts();
-    ASSERT_EQ(DeviceManager::readPorts(), 4);
+    ASSERT_EQ(DeviceManager::readPorts(), 8);
 
     ASSERT_EQ(deviceManager.getPorts().output_A.getBasePath(), "./test/tacho-motor/motor1");
     ASSERT_EQ(deviceManager.getPorts().output_B.getBasePath(), "./test/tacho-motor/motor2");
@@ -261,4 +253,11 @@ TEST(DeviceManager, functionreadPortsAllDevices) {
     ASSERT_EQ(deviceManager.getPorts().output_B.getBasePath(), "./test/tacho-motor/motor2");
     ASSERT_EQ(deviceManager.getPorts().output_C.getBasePath(), "./test/tacho-motor/motor3");
     ASSERT_EQ(deviceManager.getPorts().output_D.getBasePath(), "./test/tacho-motor/motor4");
+}
+
+// cleanup
+
+TEST(DeviceManager, cleanup) {
+    std::filesystem::remove_all("./test");
+    ASSERT_FALSE(std::filesystem::exists("./test"));
 }

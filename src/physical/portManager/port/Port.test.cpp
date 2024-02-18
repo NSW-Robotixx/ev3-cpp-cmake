@@ -2,59 +2,62 @@
 
 #include <physical/portManager/port/Port.hpp>
 
-TEST(Port, constructor) {
+TEST(PortTest, BasicAssertions) {
     using namespace finder::physical;
 
-        Port port("/test/path/to/port");
+    Port port = Port();
 
-    ASSERT_EQ(port.getBasePath(), "/test/path/to/port");
-    ASSERT_EQ(port.getAddressPath(), "/test/path/to/port/address");
-    ASSERT_EQ(port.getModePath(), "/test/path/to/port/mode");
-    ASSERT_EQ(port.getValuePath(), "/test/path/to/port/value0");
-    ASSERT_EQ(port.getCommandPath(), "/test/path/to/port/command");
-    ASSERT_EQ(port.getPositionPath(), "/test/path/to/port/position_sp");
-    ASSERT_EQ(port.getSpeedPath(), "/test/path/to/port/speed_sp");
-    ASSERT_EQ(port.getCountPerRotationPath(), "/test/path/to/port/count_per_rot");
-    ASSERT_EQ(port.getDutyCyclePath(), "/test/path/to/port/duty_cycle_sp");
-    ASSERT_EQ(port.getStopActionPath(), "/test/path/to/port/stop_action");
-    ASSERT_EQ(port.getPolarityPath(), "/test/path/to/port/polarity");
-    ASSERT_EQ(port.getStatePath(), "/test/path/to/port/state");
-};
-
-TEST(Port, functionsetPath) {
-    using namespace finder::physical;
-
-    Port port("/test/path/to/port");
-    port.setBasePath("/new/path/to/port");
-
-    ASSERT_EQ(port.getBasePath(), "/new/path/to/port");
-    ASSERT_EQ(port.getAddressPath(), "/new/path/to/port/address");
-    ASSERT_EQ(port.getModePath(), "/new/path/to/port/mode");
-    ASSERT_EQ(port.getValuePath(), "/new/path/to/port/value0");
-    ASSERT_EQ(port.getCommandPath(), "/new/path/to/port/command");
-    ASSERT_EQ(port.getPositionPath(), "/new/path/to/port/position_sp");
-    ASSERT_EQ(port.getSpeedPath(), "/new/path/to/port/speed_sp");
-    ASSERT_EQ(port.getCountPerRotationPath(), "/new/path/to/port/count_per_rot");
-    ASSERT_EQ(port.getDutyCyclePath(), "/new/path/to/port/duty_cycle_sp");
-    ASSERT_EQ(port.getStopActionPath(), "/new/path/to/port/stop_action");
-    ASSERT_EQ(port.getPolarityPath(), "/new/path/to/port/polarity");
-    ASSERT_EQ(port.getStatePath(), "/new/path/to/port/state");
-}
-
-TEST(Port, functionsetEnabled) {
-    using namespace finder::physical;
-
-    Port port("/test/path/to/port");
+    EXPECT_EQ(port.isEnabled(), false);
+    EXPECT_EQ(port.getBasePath(), "");
     port.setEnabled();
-
-    ASSERT_EQ(port.isEnabled(), 1);
+    EXPECT_EQ(port.isEnabled(), true);
+    EXPECT_EQ(port.getBasePath(), "");
 }
 
-TEST(Port, functionsetDisabled) {
+TEST(PortTest, PathAssertions) {
     using namespace finder::physical;
 
-    Port port("/test/path/to/port");
-    port.setDisabled();
+    Port port = Port();
 
-    ASSERT_EQ(port.isEnabled(), 0);
+    port.setBasePath("/sys/class/lego-sensor/sensor0");
+    EXPECT_EQ(port.getBasePath(), "/sys/class/lego-sensor/sensor0");
+    EXPECT_EQ(port.getAddressPath(), "/sys/class/lego-sensor/sensor0/address");
+    EXPECT_EQ(port.getValuePath(), "/sys/class/lego-sensor/sensor0/value0");
+    EXPECT_EQ(port.getModePath(), "/sys/class/lego-sensor/sensor0/mode");
+    EXPECT_EQ(port.getCommandPath(), "/sys/class/lego-sensor/sensor0/command");
+    EXPECT_EQ(port.getPositionSpPath(), "/sys/class/lego-sensor/sensor0/position_sp");
+    EXPECT_EQ(port.getSpeedPath(), "/sys/class/lego-sensor/sensor0/speed_sp");
+    EXPECT_EQ(port.getCountPerRotationPath(), "/sys/class/lego-sensor/sensor0/count_per_rot");
+    EXPECT_EQ(port.getDutyCyclePath(), "/sys/class/lego-sensor/sensor0/duty_cycle_sp");
+    EXPECT_EQ(port.getStopActionPath(), "/sys/class/lego-sensor/sensor0/stop_action");
+    EXPECT_EQ(port.getPolarityPath(), "/sys/class/lego-sensor/sensor0/polarity");
+    EXPECT_EQ(port.getStatePath(), "/sys/class/lego-sensor/sensor0/state");
+}
+
+TEST(PortTest, SetPathAssertions) {
+    using namespace finder::physical;
+
+    Port port = Port();
+
+    port.setBasePath("/sys/class/lego-sensor/sensor0");
+    EXPECT_EQ(port.getBasePath(), "/sys/class/lego-sensor/sensor0");
+    port.setBasePath("/sys/class/lego-sensor/sensor1");
+    EXPECT_EQ(port.getBasePath(), "/sys/class/lego-sensor/sensor1");
+}
+
+TEST(PortTest, EmptyPathAssertions) {
+    using namespace finder::physical;
+
+    Port port = Port();
+
+    EXPECT_EQ(port.getBasePath(), "");
+
+    port.setBasePath("/sys/class/lego-sensor/sensor0");
+    EXPECT_EQ(port.getBasePath(), "/sys/class/lego-sensor/sensor0");
+
+    port.setBasePath("");
+    EXPECT_EQ(port.getBasePath(), "");
+    EXPECT_EQ(port.getAddressPath(), "");
+
+    EXPECT_EQ(port.isEnabled(), false);
 }
