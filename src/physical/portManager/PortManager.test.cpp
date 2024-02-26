@@ -1,10 +1,9 @@
+#include <gtest/gtest.h>
+
 #include <console/Logger.hpp>
 #include <physical/portManager/PortManager.hpp>
-#include <iostream>
 
-finder::console::Logger logger = finder::console::Logger();
-
-int main(int argc, char const *argv[])
+TEST(PortManager, readPorts)
 {
     using namespace finder::physical;
 
@@ -12,5 +11,5 @@ int main(int argc, char const *argv[])
 
     DM.readPorts();
 
-    return 0;
-}
+    ASSERT_EQ(DM.getNumberOfDevices(), 0);
+} 

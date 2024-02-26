@@ -1,4 +1,4 @@
-add_library(Logger Logger.cpp)
+add_library(Logger STATIC Logger.cpp)
 
 target_sources(Logger 
     PRIVATE

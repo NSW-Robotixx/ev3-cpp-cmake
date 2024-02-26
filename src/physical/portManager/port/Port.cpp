@@ -1,16 +1,49 @@
 #include <physical/portManager/port/Port.hpp>
+#include "Port.hpp"
 
 namespace finder
 {
     namespace physical
     {
-        void Port::setBasePath(const path_port_t& path)
+        ::finder::console::Logger Port::_logger = ::finder::console::Logger{};
+
+        Port::Port()
+        {
+            _f_enabled = std::async(std::launch::async, [this]{this->_enabled = false;});
+        }
+
+        Port::Port(const path_port_t &port)
+        {
+            _enabled = false;
+            setBasePath(port);
+
+            // _file_address_path.open(getAddressPath());
+
+            // if (!_file_address_path.is_open()) {
+            _enabled = true;
+            // }
+            std::string address;
+            // _file_address_path >> address;
+
+        }
+
+        void Port::setBasePath(const path_port_t &path)
         {
             if (path != "") {
                 _path = path;
-                _enabled = true;
+                _f_enabled = std::async(&Port::initFiles, this);
             } else {
                 _enabled = false;
+            }
+        }
+
+        char Port::getPortKey() const
+        {
+            if (_enabled)
+            {
+                return _path.back();
+            } else {
+                return '-';
             }
         }
         
@@ -119,6 +152,40 @@ namespace finder
                 return _path + "/state";
             } else {
                 return "";
+            }
+        }
+
+        void Port::initFiles()
+        {
+            using namespace ::finder::console;
+
+            if (
+                std::filesystem::exists(getAddressPath()) == false ||
+                std::filesystem::exists(getValuePath()) == false ||
+                std::filesystem::exists(getModePath()) == false
+            ) {
+                _logger.log(
+                    Logger::LogLevel::DEBUG, 
+                    "Port files not found at: " + getAddressPath()
+                );
+            } else {
+                _file_address_path = std::make_shared<std::ifstream>();
+                _file_value_path = std::make_shared<std::ifstream>();
+                _file_mode_path = std::make_shared<std::ifstream>();
+
+                _file_address_path->open(getAddressPath());
+                _file_value_path->open(getValuePath());
+                _file_mode_path->open(getModePath());
+                if (
+                    _file_address_path->is_open() == false ||
+                    _file_value_path->is_open() == false ||
+                    _file_mode_path->is_open() == false
+                ) {
+                _logger.log(
+                        Logger::LogLevel::WARN, 
+                        "Failed to open port files at: " + getAddressPath()
+                    ); 
+                }
             }
         }
     } // namespace physical

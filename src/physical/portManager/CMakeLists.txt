@@ -1,35 +1,33 @@
 add_subdirectory(port)
 
-add_library(Device_factory STATIC
-    ${CMAKE_CURRENT_LIST_DIR}/DeviceManager.cpp
-    ${CMAKE_CURRENT_LIST_DIR}/DeviceFactory.cpp
+add_library(PortManager STATIC
+    ${CMAKE_CURRENT_LIST_DIR}/PortManager.cpp
     )
 
-target_sources(Device_factory 
+target_sources(PortManager 
     PRIVATE
-        ${CMAKE_CURRENT_LIST_DIR}/DeviceManager.cpp
-        ${CMAKE_CURRENT_LIST_DIR}/DeviceFactory.cpp
+        ${CMAKE_CURRENT_LIST_DIR}/PortManager.cpp
     PUBLIC
-        ${CMAKE_CURRENT_LIST_DIR}/DeviceManager.hpp
-        ${CMAKE_CURRENT_LIST_DIR}/DeviceFactory.hpp
+        ${CMAKE_CURRENT_LIST_DIR}/PortManager.hpp
     )
 
-target_link_libraries(Device_factory 
+target_link_libraries(PortManager
     PUBLIC
         Port
+        Logger
     )
 
-target_include_directories(Device_factory PUBLIC ${CMAKE_SOURCE_DIR}/src)
+target_include_directories(PortManager PUBLIC ${CMAKE_SOURCE_DIR}/src)
 
 
 #tests
 
-add_library(DeviceManagerTest STATIC
-    ${CMAKE_CURRENT_LIST_DIR}/DeviceManager.test.cpp
+add_library(PortManagerTest STATIC
+    ${CMAKE_CURRENT_LIST_DIR}/PortManager.test.cpp
     )
 
-target_link_libraries(DeviceManagerTest 
+target_link_libraries(PortManagerTest 
     PUBLIC
-        Device_factory
+        PortManager
         gtest
     )

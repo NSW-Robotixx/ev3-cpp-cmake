@@ -5,19 +5,16 @@
 TEST(PortTest, BasicAssertions) {
     using namespace finder::physical;
 
-    Port port = Port();
+    Port port = Port("./test");
 
-    EXPECT_EQ(port.isEnabled(), false);
-    EXPECT_EQ(port.getBasePath(), "");
-    port.setEnabled();
     EXPECT_EQ(port.isEnabled(), true);
-    EXPECT_EQ(port.getBasePath(), "");
+    EXPECT_EQ(port.getBasePath(), "./test");
 }
 
 TEST(PortTest, PathAssertions) {
     using namespace finder::physical;
 
-    Port port = Port();
+    Port port = Port("./test");
 
     port.setBasePath("/sys/class/lego-sensor/sensor0");
     EXPECT_EQ(port.getBasePath(), "/sys/class/lego-sensor/sensor0");
@@ -37,7 +34,7 @@ TEST(PortTest, PathAssertions) {
 TEST(PortTest, SetPathAssertions) {
     using namespace finder::physical;
 
-    Port port = Port();
+    Port port = Port("./test");
 
     port.setBasePath("/sys/class/lego-sensor/sensor0");
     EXPECT_EQ(port.getBasePath(), "/sys/class/lego-sensor/sensor0");
@@ -48,9 +45,9 @@ TEST(PortTest, SetPathAssertions) {
 TEST(PortTest, EmptyPathAssertions) {
     using namespace finder::physical;
 
-    Port port = Port();
+    Port port = Port("./test");
 
-    EXPECT_EQ(port.getBasePath(), "");
+    EXPECT_EQ(port.getBasePath(), "./test");
 
     port.setBasePath("/sys/class/lego-sensor/sensor0");
     EXPECT_EQ(port.getBasePath(), "/sys/class/lego-sensor/sensor0");

@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.14)
 
 project(robotixx-ev3dev)
 
-set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED True)
 
 add_executable(Main main.cpp)
@@ -16,7 +16,7 @@ target_include_directories(Main PUBLIC ${CMAKE_SOURCE_DIR}/src)
 
 target_link_libraries(Main 
   PUBLIC 
-    Device_factory
+    PortManager
     Logger
 )
 
@@ -38,7 +38,8 @@ set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
 FetchContent_MakeAvailable(googletest)
 
 # enable testing
-include(CTest)
+# include(CTest)
+enable_testing()
 
 set(TEST_SOURCES ${CMAKE_SOURCE_DIR}/test.cpp)
 # file(GLOB_RECURSE TEST_SOURCES "*test.cpp")
@@ -49,7 +50,7 @@ target_link_libraries(
   gtest_main
   Logger
   Port
-  Device_factory
+  PortManager
 )
 
 target_include_directories(Test PUBLIC ${CMAKE_SOURCE_DIR}/src)
@@ -58,4 +59,7 @@ target_include_directories(Test PUBLIC ${CMAKE_SOURCE_DIR}/src)
 # SET_TARGET_PROPERTIES (Test PROPERTIES LINK_FLAGS "-static -lc -lm -L/usr/local/lib/")
 
 include(GoogleTest)
-gtest_discover_tests(Test)
+if(CMAKE_C_COMPILER STREQUAL "/usr/bin/arm-linux-gnueabi-gcc")
+else()
+  gtest_discover_tests(Test)
+endif()

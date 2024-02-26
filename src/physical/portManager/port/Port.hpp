@@ -1,12 +1,16 @@
+#ifndef PORT_HPP
+#define PORT_HPP
 #include <string>
+#include <memory>
+#include <fstream>
+#include <console/Logger.hpp>
+#include <future>
+#include <mutex>
+#include <filesystem>
 namespace finder
 {
     namespace physical
     {
-        #ifndef PORT_HPP
-        #define PORT_HPP
-
-        
         typedef std::string path_port_t;
         typedef std::string path_address_t;
         typedef std::string path_value_t;
@@ -23,12 +27,14 @@ namespace finder
         struct Port
         {
             public:
-                Port(): _enabled{false} {};
-                Port(const path_port_t& port) : _path{port}, _enabled{true} {}
+                Port();
+                Port(const path_port_t& port);
+                Port(Port&) = delete;
                 ~Port() = default;
 
                 void setBasePath(const path_port_t& path);
-
+                
+                char getPortKey() const;
                 path_port_t getBasePath() const;
                 path_address_t getAddressPath() const;
                 path_value_t getValuePath() const;
@@ -41,17 +47,25 @@ namespace finder
                 path_stop_action_t getStopActionPath() const;
                 path_polarity_t getPolarityPath() const;
                 path_state_t getStatePath() const;
+                void initFiles();
             
                 bool isEnabled() const {return _enabled;}
-                void setEnabled() {_enabled = true;}
-                void setDisabled() {_enabled = false;}
 
+            protected:
+                std::shared_ptr<std::ifstream> _file_address_path;
+                std::shared_ptr<std::ifstream> _file_value_path;
+                std::shared_ptr<std::ifstream> _file_mode_path;
             private:
+                std::future<void> _f_enabled;
                 bool _enabled;
-                std::string _path;
+                // bool _enabled;
+                path_port_t _path;
+                static ::finder::console::Logger _logger;
+
         };
 
-        #endif // PORT_HPP
     } // namespace physical
     
 } // namespace finder
+
+#endif // PORT_HPP

@@ -1,5 +1,8 @@
 #include <iostream>
 
+#ifndef __LOGGER_HPP__
+#define __LOGGER_HPP__
+
 namespace finder
 {
     namespace console
@@ -35,3 +38,5 @@ namespace finder
         };
     } // namespace console
 } // namespace finder
+
+#endif // __LOGGER_HPP__

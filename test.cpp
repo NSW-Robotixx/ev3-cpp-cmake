@@ -3,7 +3,7 @@
 #include <test2.cpp>
 #include <src.test.cpp>
 #include <physical/portManager/port/Port.test.cpp>
-#include <physical/portManager/DeviceManager.test.cpp>
+#include <physical/portManager/PortManager.test.cpp>
 
 // Demonstrate some basic assertions.
 TEST(HelloTest, BasicAssertions) {
