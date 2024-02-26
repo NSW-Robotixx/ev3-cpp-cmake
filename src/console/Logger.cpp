@@ -61,6 +61,46 @@ namespace finder
             log(level, std::to_string(static_cast<int>(message)));
         }
 
+        void Logger::error(const std::string& message)
+        {
+            log(LogLevel::ERROR, message);
+        }
+
+        void Logger::error(const LogLevel& message)
+        {
+            log(LogLevel::ERROR, message);
+        }
+
+        void Logger::warn(const std::string& message)
+        {
+            log(LogLevel::WARN, message);
+        }
+
+        void Logger::warn(const LogLevel& message)
+        {
+            log(LogLevel::WARN, message);
+        }
+
+        void Logger::info(const std::string& message)
+        {
+            log(LogLevel::INFO, message);
+        }
+
+        void Logger::info(const LogLevel& message)
+        {
+            log(LogLevel::INFO, message);
+        }
+
+        void Logger::debug(const std::string& message)
+        {
+            log(LogLevel::DEBUG, message);
+        }
+
+        void Logger::debug(const LogLevel& message)
+        {
+            log(LogLevel::DEBUG, message);
+        }
+
         void Logger::enforceLogLevel(LogLevel level)
         {
             _logLevelEnforced = true;

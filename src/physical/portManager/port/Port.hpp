@@ -29,37 +29,29 @@ namespace finder
             public:
                 Port();
                 Port(const path_port_t& port);
+                Port(std::shared_ptr<Port> port);
                 Port(Port&) = delete;
                 ~Port() = default;
 
                 void setBasePath(const path_port_t& path);
                 
-                char getPortKey() const;
-                path_port_t getBasePath() const;
-                path_address_t getAddressPath() const;
-                path_value_t getValuePath() const;
-                path_mode_t getModePath() const;
-                path_command_t getCommandPath() const;
-                path_position_sp_t getPositionSpPath() const;
-                path_speed_t getSpeedPath() const;
-                path_count_per_rotation_t getCountPerRotationPath() const;
-                path_duty_cycle_t getDutyCyclePath() const;
-                path_stop_action_t getStopActionPath() const;
-                path_polarity_t getPolarityPath() const;
-                path_state_t getStatePath() const;
-                void initFiles();
+                char getPortKey();
+                path_port_t getBasePath();
+                path_address_t getAddressPath();
+                path_value_t getValuePath();
+                path_mode_t getModePath();
+                bool initFiles();
             
-                bool isEnabled() const {return _enabled;}
+                bool isEnabled();
 
             protected:
                 std::shared_ptr<std::ifstream> _file_address_path;
                 std::shared_ptr<std::ifstream> _file_value_path;
                 std::shared_ptr<std::ifstream> _file_mode_path;
-            private:
-                std::future<void> _f_enabled;
-                bool _enabled;
-                // bool _enabled;
                 path_port_t _path;
+            private:
+                std::future<bool> _f_enabled;
+                // bool _enabled;
                 static ::finder::console::Logger _logger;
 
         };

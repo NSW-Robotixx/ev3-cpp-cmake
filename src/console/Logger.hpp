@@ -27,6 +27,18 @@ namespace finder
                 void log(LogLevel level, const std::string& message);
                 void log(LogLevel level, const LogLevel& message);
 
+                void error(const std::string& message);
+                void error(const LogLevel& message);
+
+                void warn(const std::string& message);
+                void warn(const LogLevel& message);
+
+                void info(const std::string& message);
+                void info(const LogLevel& message);
+
+                void debug(const std::string& message);
+                void debug(const LogLevel& message);
+
                 static void enforceLogLevel(LogLevel level);
                 static void removeLogLevelEnforcement() {_logLevelEnforced = false;}
                 static bool isLogLevelEnforced() {return _logLevelEnforced;}
