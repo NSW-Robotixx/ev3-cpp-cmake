@@ -51,6 +51,7 @@ target_link_libraries(
   Logger
   Port
   PortManager
+  Vector3
 )
 
 target_include_directories(Test PUBLIC ${CMAKE_SOURCE_DIR}/src)
