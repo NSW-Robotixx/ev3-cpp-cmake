@@ -28,7 +28,7 @@ add_library(Vector3Test STATIC Vector3.test.cpp)
 
 target_sources(Vector2Test 
     PRIVATE
-        Vector.test.cpp    
+        Vector2.test.cpp    
     )
 
 target_sources(Vector3Test
