@@ -21,24 +21,6 @@ namespace finder
             init();
         }
 
-        path_command_t MotorPort::getCommandPath()
-        {
-            if (isEnabled()) {
-                return getBasePath() + "/command";
-            } else {
-                return "";
-            }
-        }
-
-        path_command_t MotorPort::getCommandsPath()
-        {
-            if (isEnabled()) {
-                return getBasePath() + "/commands";
-            } else {
-                return "";
-            }
-        }
-
         path_speed_t MotorPort::getSpeedPath()
         {
             if (isEnabled()) {
@@ -111,8 +93,8 @@ namespace finder
                     _logger.error("MotorPort failed to set command");
                 }
             } else {
-                _init_future.wait();
-                setCommand(command);
+                // _init_future.wait();
+                // setCommand(command);
             }
         }
 
@@ -125,8 +107,8 @@ namespace finder
                     _logger.error("MotorPort failed to set speed");
                 }
             } else {
-                _init_future.wait();
-                setSpeed(speed);
+                // _init_future.wait();
+                // setSpeed(speed);
             }
         }
 
@@ -139,8 +121,8 @@ namespace finder
                     _logger.error("MotorPort failed to set position_sp");
                 }
             } else {
-                _init_future.wait();
-                setPositionSp(position_sp);
+                // _init_future.wait();
+                // setPositionSp(position_sp);
             }
         }
 
@@ -153,8 +135,8 @@ namespace finder
                     _logger.error("MotorPort failed to set duty_cycle");
                 }
             } else {
-                _init_future.wait();
-                setDutyCycle(duty_cycle);
+                // _init_future.wait();
+                // setDutyCycle(duty_cycle);
             }
         }
 
@@ -167,8 +149,8 @@ namespace finder
                     _logger.error("MotorPort failed to set polarity");
                 }
             } else {
-                _init_future.wait();
-                setPolarity(polarity);
+                // _init_future.wait();
+                // setPolarity(polarity);
             }
         }
 
@@ -181,14 +163,14 @@ namespace finder
                     _logger.error("MotorPort failed to set stop_action");
                 }
             } else {
-                _init_future.wait();
-                setStopAction(stop_action);
+                // _init_future.wait();
+                // setStopAction(stop_action);
             }
         }
 
-        std::future<std::vector<MotorState>> MotorPort::getState()
+        std::vector<MotorState> MotorPort::getState()
         {
-            return std::async(std::launch::async, [this]() {
+            // return std::async(std::launch::async, [this]() {
                 std::vector<MotorState> states;
                 if (isEnabled()) {
                     if (_file_state_path->is_open()) {
@@ -221,16 +203,16 @@ namespace finder
                         _logger.error("MotorPort failed to get state");
                     }
                 } else {
-                    _init_future.wait();
-                    return getState().get();
+                    // _init_future.wait();
+                    // return getState().get();
                 }
                 return states;
-            });
+            // });
         }
 
-        std::future<int> MotorPort::getCountPerRotation()
+        int MotorPort::getCountPerRotation()
         {
-            return std::async(std::launch::async, [this]() {
+            // return std::async(std::launch::async, [this]() {
                 if (isEnabled()) {
                     if (_file_count_per_rotation_path->is_open()) {
                         int count_per_rotation;
@@ -240,22 +222,20 @@ namespace finder
                         _logger.error("MotorPort failed to get count_per_rotation");
                     }
                 } else {
-                    _init_future.wait();
-                    return getCountPerRotation().get();
+                    // _init_future.wait();
+                    // return getCountPerRotation().get();
                 }
                 return -1;
-            });
+            // });
         }
 
         void MotorPort::init()
         {
-            _init_future = std::async(std::launch::async, [this]() {
+            // _init_future = std::async(std::launch::async, [this]() {
                 if (
                     isEnabled() &&
                     std::filesystem::exists(getBasePath()) &&
                     std::filesystem::exists(getAddressPath()) &&
-                    std::filesystem::exists(getValuePath()) &&
-                    std::filesystem::exists(getModePath()) &&
                     std::filesystem::exists(getCommandPath()) &&
                     std::filesystem::exists(getSpeedPath()) &&
                     std::filesystem::exists(getPositionSpPath()) &&
@@ -293,7 +273,7 @@ namespace finder
                 } else {
                     _logger.error("MotorPort is not enabled or paths do not exist");
                 }
-            });
+            // });
         }
     }
 }

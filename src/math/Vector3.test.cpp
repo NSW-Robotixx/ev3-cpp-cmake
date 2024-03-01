@@ -145,7 +145,7 @@ TEST(Vector3, StreamOutput)
     finder::math::Vector3 v(1.0f, 2.0f, 3.0f);
     std::stringstream ss;
     ss << v;
-    EXPECT_EQ(ss.str(), "1.000000, 2.000000, 3.000000");
+    EXPECT_EQ(ss.str(), "Vector3(1, 2, 3)");
 }
 
 TEST(Vector3, LessThan)

@@ -4,8 +4,6 @@
 #include <memory>
 #include <fstream>
 #include <console/Logger.hpp>
-#include <future>
-#include <mutex>
 #include <filesystem>
 namespace finder
 {
@@ -15,7 +13,9 @@ namespace finder
         typedef std::string path_address_t;
         typedef std::string path_value_t;
         typedef std::string path_mode_t;
+        typedef std::string path_modes_t;
         typedef std::string path_command_t;
+        typedef std::string path_commands_t;
         typedef std::string path_position_sp_t;
         typedef std::string path_speed_t;
         typedef std::string path_count_per_rotation_t;
@@ -23,6 +23,8 @@ namespace finder
         typedef std::string path_stop_action_t;
         typedef std::string path_polarity_t;
         typedef std::string path_state_t;
+        typedef std::string path_num_values_t;
+        typedef std::string path_poll_ms_t;
 
         struct Port
         {
@@ -38,19 +40,19 @@ namespace finder
                 char getPortKey();
                 path_port_t getBasePath();
                 path_address_t getAddressPath();
-                path_value_t getValuePath();
-                path_mode_t getModePath();
+                path_command_t getCommandPath();
+                path_commands_t getCommandsPath();
                 bool initFiles();
             
                 bool isEnabled();
 
             protected:
                 std::shared_ptr<std::ifstream> _file_address_path;
-                std::shared_ptr<std::ifstream> _file_value_path;
-                std::shared_ptr<std::ifstream> _file_mode_path;
+                std::shared_ptr<std::ofstream> _file_command_path;
+                std::shared_ptr<std::ifstream> _file_commands_path;
                 path_port_t _path;
             private:
-                std::future<bool> _f_enabled;
+                bool _f_enabled;
                 // bool _enabled;
                 static ::finder::console::Logger _logger;
 

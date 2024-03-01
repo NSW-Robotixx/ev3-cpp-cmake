@@ -9,7 +9,7 @@ namespace finder
 
         Port::Port()
         {
-            _f_enabled = std::async(std::launch::async, [this]{return initFiles();});
+            _f_enabled = initFiles();
         }
 
         Port::Port(const path_port_t &port)
@@ -25,7 +25,7 @@ namespace finder
         void Port::setBasePath(const path_port_t &path)
         {
             _path = path;
-            _f_enabled = std::async(std::launch::async, [this]{return initFiles();});
+            _f_enabled = initFiles();
         }
 
         char Port::getPortKey()
@@ -56,19 +56,19 @@ namespace finder
             }
         }
 
-        path_value_t Port::getValuePath()
+        path_command_t Port::getCommandPath()
         {
             if (isEnabled()) {
-                return _path + "/value0";
+                return _path + "/command";
             } else {
                 return "";
             }
         }
 
-        path_mode_t Port::getModePath()
+        path_commands_t Port::getCommandsPath()
         {
             if (isEnabled()) {
-                return _path + "/mode";
+                return _path + "/commands";
             } else {
                 return "";
             }
@@ -80,8 +80,8 @@ namespace finder
 
             if (
                 std::filesystem::exists(getAddressPath()) == false ||
-                std::filesystem::exists(getValuePath()) == false ||
-                std::filesystem::exists(getModePath()) == false
+                std::filesystem::exists(getCommandPath()) == false ||
+                std::filesystem::exists(getCommandsPath()) == false
             ) {
                 _logger.log(
                     Logger::LogLevel::DEBUG, 
@@ -89,16 +89,16 @@ namespace finder
                 );
             } else {
                 _file_address_path = std::make_shared<std::ifstream>();
-                _file_value_path = std::make_shared<std::ifstream>();
-                _file_mode_path = std::make_shared<std::ifstream>();
+                _file_command_path = std::make_shared<std::ofstream>();
+                _file_commands_path = std::make_shared<std::ifstream>();
 
                 _file_address_path->open(getAddressPath());
-                _file_value_path->open(getValuePath());
-                _file_mode_path->open(getModePath());
+                _file_command_path->open(getCommandPath());
+                _file_commands_path->open(getCommandsPath());
                 if (
                     _file_address_path->is_open() == false ||
-                    _file_value_path->is_open() == false ||
-                    _file_mode_path->is_open() == false
+                    _file_command_path->is_open() == false ||
+                    _file_commands_path->is_open() == false
                 ) {
                 _logger.log(
                         Logger::LogLevel::WARN, 
@@ -113,10 +113,7 @@ namespace finder
 
         bool Port::isEnabled()
         {
-            if (_f_enabled.valid()) {
-                _f_enabled.wait();
-            }
-            return _f_enabled.get();
+            return _f_enabled;
         }
     } // namespace physical
 } // namespace finder

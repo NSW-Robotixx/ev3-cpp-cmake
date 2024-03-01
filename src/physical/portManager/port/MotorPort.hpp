@@ -47,8 +47,6 @@ namespace finder
                 MotorPort(std::shared_ptr<Port> port);
                 ~MotorPort();
 
-                inline path_command_t getCommandPath();
-                inline path_command_t getCommandsPath();
                 inline path_speed_t getSpeedPath();
                 inline path_position_sp_t getPositionSpPath();
                 inline path_duty_cycle_t getDutyCyclePath();
@@ -64,13 +62,12 @@ namespace finder
                 void setPolarity(MotorPolarity polarity);
                 void setStopAction(MotorStopAction stop_action);
 
-                std::future<std::vector<MotorState>> getState();
-                std::future<int> getCountPerRotation();
+                std::vector<MotorState> getState();
+                int getCountPerRotation();
 
             private:
                 static ::finder::console::Logger _logger;
 
-                std::shared_ptr<std::ofstream> _file_command_path;
                 std::shared_ptr<std::ofstream> _file_speed_path;
                 std::shared_ptr<std::ofstream> _file_position_sp_path;
                 std::shared_ptr<std::ofstream> _file_duty_cycle_path;
@@ -80,7 +77,6 @@ namespace finder
                 std::shared_ptr<std::ifstream> _file_count_per_rotation_path;
                 
                 bool _is_initialized;
-                std::future<void> _init_future;
 
                 void init();
         };

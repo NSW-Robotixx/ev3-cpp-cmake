@@ -5,8 +5,8 @@ namespace finder
     namespace physical
     {
         std::vector<std::shared_ptr<Port>> PortManager::_borrowed_ports = std::vector<std::shared_ptr<Port>>();
-        std::future<int> PortManager::_read_ports_future;
-        std::atomic<bool> PortManager::_ports_read = false;
+        int PortManager::_read_ports_future;
+        bool PortManager::_ports_read = false;
         path_port_t PortManager::_sensor_dir = "/sys/class/lego-sensor";
         path_port_t PortManager::_motor_dir = "/sys/class/tacho-motor";
         std::vector<std::shared_ptr<Port>> PortManager::_ports;
@@ -27,7 +27,6 @@ namespace finder
         
         void PortManager::readPorts() 
         {
-            _read_ports_future = std::async(std::launch::async, [](){
                 using namespace ::finder::console;
 
                 std::array<const std::string, 2> dirs = {_sensor_dir, _motor_dir};
@@ -80,8 +79,8 @@ namespace finder
 
                 }
                 _ports_read = true;
-                return foundDevices;
-            });
+                _read_ports_future = foundDevices;
+            // });
         }
 
         void PortManager::init()

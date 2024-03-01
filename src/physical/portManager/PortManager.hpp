@@ -9,7 +9,6 @@
 #include <iostream>
 #include <algorithm>
 #include <cctype>
-#include <atomic>
 #include <unistd.h>
 #include <filesystem>
 #include <console/Logger.hpp>
@@ -53,9 +52,9 @@ namespace finder
 
             private:
                 static std::vector<std::shared_ptr<Port>> _borrowed_ports;
-                static std::future<int> _read_ports_future;
+                static int _read_ports_future;
 
-                static std::atomic<bool> _ports_read;
+                static bool _ports_read;
 
                 static std::vector<std::shared_ptr<Port>> _ports;
 

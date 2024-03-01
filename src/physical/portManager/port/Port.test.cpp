@@ -19,8 +19,6 @@ TEST(PortTest, PathAssertions) {
     port.setBasePath("/sys/class/lego-sensor/sensor0");
     EXPECT_EQ(port.getBasePath(), "/sys/class/lego-sensor/sensor0");
     EXPECT_EQ(port.getAddressPath(), "/sys/class/lego-sensor/sensor0/address");
-    EXPECT_EQ(port.getValuePath(), "/sys/class/lego-sensor/sensor0/value0");
-    EXPECT_EQ(port.getModePath(), "/sys/class/lego-sensor/sensor0/mode");
 }
 
 TEST(PortTest, SetPathAssertions) {

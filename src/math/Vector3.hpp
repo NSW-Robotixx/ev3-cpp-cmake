@@ -1,8 +1,6 @@
 #ifndef FINDER_MATH_VECTOR_HPP
 #define FINDER_MATH_VECTOR_HPP
 
-#include <future>
-#include <vector>
 #include <math.h>
 
 namespace finder
