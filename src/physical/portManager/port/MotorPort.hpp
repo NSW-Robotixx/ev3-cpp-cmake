@@ -1,3 +1,6 @@
+#ifndef __MOTOR_PORT_HPP__
+#define __MOTOR_PORT_HPP__
+
 #include <physical/portManager/port/Port.hpp>
 #include <filesystem>
 #include <vector>
@@ -45,7 +48,6 @@ namespace finder
                 MotorPort();
                 MotorPort(std::string port_name);
                 MotorPort(std::shared_ptr<Port> port);
-                ~MotorPort();
 
                 inline path_speed_t getSpeedPath();
                 inline path_position_sp_t getPositionSpPath();
@@ -82,3 +84,5 @@ namespace finder
         };
     } // namespace physical
 } // namespace finder
+
+#endif // __MOTOR_PORT_HPP__

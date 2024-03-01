@@ -4,20 +4,20 @@ namespace finder
 {
     namespace physical
     {
-        SensorPort::SensorPort()
+        SensorPort::SensorPort(): Port()
         {
             _is_initialized = false;
             initFiles();
         }
 
-        SensorPort::SensorPort(std::string port_name)
+        SensorPort::SensorPort(std::string port_name): Port()
         {
             setBasePath(port_name);
             _is_initialized = false;
             initFiles();
         }
 
-        SensorPort::SensorPort(std::shared_ptr<Port> port)
+        SensorPort::SensorPort(std::shared_ptr<Port> port): Port()
         {
             setBasePath(port->getBasePath());
             _is_initialized = false;
@@ -153,15 +153,6 @@ namespace finder
                 }
             }
             return -1;
-        }
-
-        SensorPort::~SensorPort()
-        {
-            _file_value_path->close();
-            _file_mode_path->close();
-            _file_modes_path->close();
-            _file_num_values_path->close();
-            _file_poll_ms_path->close();
         }
 
         void SensorPort::initFiles()

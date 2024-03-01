@@ -1,19 +1,20 @@
+#ifndef __SENSOR_PORT_HPP__
+#define __SENSOR_PORT_HPP__
+
 #include <physical/portManager/port/Port.hpp>
 #include <filesystem>
 #include <vector>
-
 namespace finder
 {
     namespace physical
     {
         typedef std::string sensor_mode_t;
 
-        class SensorPort : Port {
+        class SensorPort : public Port {
             public:
                 SensorPort();
                 SensorPort(std::string port_name);
                 SensorPort(std::shared_ptr<Port> port);
-                ~SensorPort();
 
                 inline path_value_t getValuePath(int index);
                 inline path_mode_t getModePath();
@@ -45,3 +46,5 @@ namespace finder
     } // namespace physical
     
 } // namespace finder
+
+#endif // __SENSOR_PORT_HPP__

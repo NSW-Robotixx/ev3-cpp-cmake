@@ -26,6 +26,11 @@ namespace finder
         typedef std::string path_num_values_t;
         typedef std::string path_poll_ms_t;
 
+        enum struct DeviceType {
+            SENSOR,
+            MOTOR
+        };
+
         struct Port
         {
             public:
@@ -42,6 +47,9 @@ namespace finder
                 path_address_t getAddressPath();
                 path_command_t getCommandPath();
                 path_commands_t getCommandsPath();
+
+                DeviceType getDeviceType();
+
                 bool initFiles();
             
                 bool isEnabled();

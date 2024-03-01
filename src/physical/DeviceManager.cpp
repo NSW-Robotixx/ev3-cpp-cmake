@@ -22,10 +22,18 @@ namespace finder
             {
                 init();
             }
-        }   
+        }
 
         DeviceManager::~DeviceManager()
         {
+        }
+
+        void DeviceManager::init()
+        {
+            _portManager = std::make_shared<PortManager>();
+            _portManager->readPorts();
+
+            _gyroSensor = _portManager->borrowSensor(_portManager->adresses[0]);
         }
     } // namespace physical
     

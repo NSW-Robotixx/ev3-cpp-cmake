@@ -95,7 +95,7 @@ namespace finder
             adresses.push_back(std::string{"ev3-ports:outD"});
         }
 
-        std::shared_ptr<Port> PortManager::borrowDevice(PortManager::DeviceType type, std::string port_address)
+        std::shared_ptr<Port> PortManager::borrowDevice(DeviceType type, std::string port_address)
         {
             // check if addess is valid
             for (auto &address : adresses) {
@@ -105,6 +105,12 @@ namespace finder
                         if (port->getPortKey() == port_address.back()) {
                             // set port as borrowed
                             _borrowed_ports.push_back(port);
+                            if (port->getDeviceType() == DeviceType::SENSOR) {
+                                return std::shared_ptr<SensorPort>(new SensorPort{port});
+                            } else {
+                                return std::shared_ptr<MotorPort>(new MotorPort{port});
+                            }
+
                             return _borrowed_ports.back();
                         }
                     }
@@ -112,6 +118,16 @@ namespace finder
                 throw std::logic_error("Port not found: " + port_address + " (borrowDevice)");
             }
             return std::shared_ptr<Port>(new Port{});
+        }
+
+        std::shared_ptr<SensorPort> PortManager::borrowSensor(std::string port_address)
+        {
+            return std::shared_ptr<SensorPort>(new SensorPort{borrowDevice(DeviceType::SENSOR, port_address)});
+        }
+
+        std::shared_ptr<MotorPort> PortManager::borrowMotor(std::string port_address)
+        {
+            return std::shared_ptr<MotorPort>(new MotorPort{borrowDevice(DeviceType::MOTOR, port_address)});
         }
 
         void PortManager::returnDevice(std::shared_ptr<Port> port)
@@ -123,6 +139,16 @@ namespace finder
                 }
             }
             throw std::logic_error("Port not found: " + port->getBasePath() + " (returnDevice)");
+        }
+
+        void PortManager::returnDevice(std::shared_ptr<SensorPort> port)
+        {
+            returnDevice(std::dynamic_pointer_cast<Port>(port));
+        }
+
+        void PortManager::returnDevice(std::shared_ptr<MotorPort> port)
+        {
+            returnDevice(std::dynamic_pointer_cast<Port>(port));
         }
     } // namespace physical
 

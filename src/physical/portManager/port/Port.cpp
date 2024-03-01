@@ -74,6 +74,18 @@ namespace finder
             }
         }
 
+        DeviceType Port::getDeviceType()
+        {
+            if (isEnabled()) {
+                if (_path.find("sensor") != std::string::npos) {
+                    return DeviceType::SENSOR;
+                } else if (_path.find("motor") != std::string::npos) {
+                    return DeviceType::MOTOR;
+                }
+            }
+            return DeviceType::SENSOR;
+        }
+
         bool Port::initFiles()
         {
             using namespace ::finder::console;

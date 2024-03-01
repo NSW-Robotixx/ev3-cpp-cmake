@@ -12,7 +12,8 @@
 #include <unistd.h>
 #include <filesystem>
 #include <console/Logger.hpp>
-#include <physical/portManager/port/Port.hpp>
+#include <physical/portManager/port/SensorPort.hpp>
+#include <physical/portManager/port/MotorPort.hpp>
 
 
 namespace finder
@@ -23,11 +24,6 @@ namespace finder
         class PortManager {
             
             public:
-                enum struct DeviceType {
-                    SENSOR,
-                    MOTOR
-                };
-
                 enum struct DevicePort {
                     INPUT_1 = '1',
                     INPUT_2 = '2',
@@ -45,8 +41,12 @@ namespace finder
                 
                 static void readPorts();
 
-                static std::shared_ptr<Port> borrowDevice(PortManager::DeviceType type, std::string port_address);
+                static std::shared_ptr<Port> borrowDevice(DeviceType type, std::string port_address);
+                static std::shared_ptr<SensorPort> borrowSensor(std::string port_address);
+                static std::shared_ptr<MotorPort> borrowMotor(std::string port_address);
                 static void returnDevice(std::shared_ptr<Port> port);
+                static void returnDevice(std::shared_ptr<SensorPort> port);
+                static void returnDevice(std::shared_ptr<MotorPort> port);
 
                 static int getNumberOfDevices() {return _ports.size();}
 
