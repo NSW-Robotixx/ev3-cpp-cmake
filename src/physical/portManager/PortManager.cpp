@@ -106,9 +106,9 @@ namespace finder
                             // set port as borrowed
                             _borrowed_ports.push_back(port);
                             if (port->getDeviceType() == DeviceType::SENSOR) {
-                                return std::shared_ptr<SensorPort>(new SensorPort{port});
+                                // return std::shared_ptr<SensorPort>(new SensorPort{port});
                             } else {
-                                return std::shared_ptr<MotorPort>(new MotorPort{port});
+                                // return std::shared_ptr<MotorPort>(new MotorPort{port});
                             }
 
                             return _borrowed_ports.back();

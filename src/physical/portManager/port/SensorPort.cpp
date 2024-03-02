@@ -1,13 +1,16 @@
-#include <physical/portManager/port/SensorPort.hpp>
+// #include <physical/portManager/port/SensorPort.hpp>
+#include "./SensorPort.hpp"
 
 namespace finder
 {
     namespace physical
     {
+        ::finder::console::Logger SensorPort::_logger;
+        std::vector<sensor_mode_t> SensorPort::_modes{};
+
         SensorPort::SensorPort(): Port()
         {
             _is_initialized = false;
-            initFiles();
         }
 
         SensorPort::SensorPort(std::string port_name): Port()
@@ -124,7 +127,9 @@ namespace finder
                     }
                     _modes = _modes;
                 }
+                return _modes;
             }
+            return std::vector<sensor_mode_t>{};
         }
 
         int SensorPort::getNumValues()

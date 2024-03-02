@@ -28,8 +28,8 @@ target_include_directories(MotorPort PUBLIC ${CMAKE_SOURCE_DIR}/src)
 target_include_directories(SensorPort PUBLIC ${CMAKE_SOURCE_DIR}/src)
 
 target_link_libraries(Port PUBLIC Logger)
-target_link_libraries(MotorPort PUBLIC Port)
-target_link_libraries(SensorPort PUBLIC Port)
+target_link_libraries(MotorPort PUBLIC Port Logger)
+target_link_libraries(SensorPort PUBLIC Port Logger)
 
 #testing
 

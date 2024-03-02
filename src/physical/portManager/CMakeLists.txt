@@ -15,6 +15,8 @@ target_link_libraries(PortManager
     PUBLIC
         Port
         Logger
+        SensorPort
+        MotorPort
     )
 
 target_include_directories(PortManager PUBLIC ${CMAKE_SOURCE_DIR}/src)
