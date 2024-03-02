@@ -67,6 +67,8 @@ namespace finder
                 std::vector<MotorState> getState();
                 int getCountPerRotation();
 
+                DeviceType getDeviceType() override;
+
             private:
                 static ::finder::console::Logger _logger;
 

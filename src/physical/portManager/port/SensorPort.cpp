@@ -27,6 +27,12 @@ namespace finder
             initFiles();
         }
 
+        void SensorPort::setBasePath(const path_port_t& path)
+        {
+            Port::setBasePath(path);
+            initFiles();
+        }
+
         path_value_t SensorPort::getValuePath(int index)
         {
             if (isEnabled())
@@ -108,6 +114,7 @@ namespace finder
                 if (_file_mode_path->is_open())
                 {
                     *_file_mode_path << mode;
+                    _file_mode_path->flush();
                 }
             }
         }
@@ -160,6 +167,15 @@ namespace finder
             return -1;
         }
 
+        DeviceType SensorPort::getDeviceType()
+        {
+            if (Port::getDeviceType() != DeviceType::SENSOR) {
+                _logger.warn(
+                    "SensorPort::getDeviceType() called on non-sensor port"
+                );
+            }
+            return DeviceType::SENSOR;
+        }
         void SensorPort::initFiles()
         {
             using namespace ::finder::console;

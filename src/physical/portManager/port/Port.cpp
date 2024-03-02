@@ -69,6 +69,42 @@ namespace finder
             return "";
         }
 
+        std::string Port::getAddress()
+        {
+            if (isEnabled()) {
+                std::string address;
+                *_file_address_path >> address;
+                return address;
+            }
+            return "";
+        }
+
+        bool Port::setCommand(std::string command)
+        {
+            if (isEnabled()) {
+                *_file_command_path << command;
+                return true;
+            }
+            return false;
+        }
+
+        std::vector<std::string> Port::getCommands()
+        {
+            if (isEnabled()) {
+                std::vector<std::string> commands;
+                std::string command_total;
+                // split by space and store in vector
+                *_file_commands_path >> command_total;
+                std::istringstream iss(command_total);
+                std::string command;
+                while (iss >> command) {
+                    commands.push_back(command);
+                }
+                return commands;
+            }
+            return {};
+        }
+
         DeviceType Port::getDeviceType()
         {
             _logger.debug(
@@ -89,24 +125,30 @@ namespace finder
         bool Port::initFiles()
         {
             using namespace ::finder::console;
+            std::string address_path = _path + "/address";
+            std::string command_path = _path + "/command";
+            std::string commands_path = _path + "/commands";
+
+
+            _file_address_path = std::make_shared<std::ifstream>();
+            _file_command_path = std::make_shared<std::ofstream>();
+            _file_commands_path = std::make_shared<std::ifstream>();
+
+            _file_address_path->open(address_path);
+            _file_command_path->open(command_path);
+            _file_commands_path->open(commands_path);
 
             if (
-                std::filesystem::exists(getAddressPath()) == false ||
-                std::filesystem::exists(getCommandPath()) == false ||
-                std::filesystem::exists(getCommandsPath()) == false
+                // ( access( (_path + "/address").c_str(), F_OK ) == -1 ) ||
+                // ( access( (_path + "/command").c_str(), F_OK ) == -1 ) ||
+                // ( access( (_path + "/commands").c_str(), F_OK ) == -1 )
+                false
             ) {
                 _logger.log(
                     Logger::LogLevel::DEBUG, 
-                    "Port files not found at: " + getAddressPath()
+                    "Port files not found at: " + _path + "/address"
                 );
             } else {
-                _file_address_path = std::make_shared<std::ifstream>();
-                _file_command_path = std::make_shared<std::ofstream>();
-                _file_commands_path = std::make_shared<std::ifstream>();
-
-                _file_address_path->open(getAddressPath());
-                _file_command_path->open(getCommandPath());
-                _file_commands_path->open(getCommandsPath());
                 if (
                     _file_address_path->is_open() == false ||
                     _file_command_path->is_open() == false ||
@@ -114,7 +156,7 @@ namespace finder
                 ) {
                 _logger.log(
                         Logger::LogLevel::WARN, 
-                        "Failed to open port files at: " + getAddressPath()
+                        "Failed to open port files at: " + _path + "/address"
                     ); 
                 } else {
                     return true;

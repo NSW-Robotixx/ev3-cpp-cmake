@@ -4,6 +4,7 @@
 #include <src.test.cpp>
 #include <physical/portManager/port/Port.test.cpp>
 #include <physical/portManager/PortManager.test.cpp>
+#include <physical/portManager/port/SensorPort.test.cpp>
 #include <math/Vector3.test.cpp>
 // #include <math/Vector2.test.cpp>
 

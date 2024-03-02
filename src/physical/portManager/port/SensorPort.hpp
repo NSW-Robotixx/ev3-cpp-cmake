@@ -16,17 +16,21 @@ namespace finder
                 SensorPort(std::string port_name);
                 SensorPort(std::shared_ptr<Port> port);
 
-                inline path_value_t getValuePath(int index);
-                inline path_mode_t getModePath();
-                inline path_modes_t getModesPath();
-                inline path_num_values_t getNumValuesPath();
-                inline path_poll_ms_t getPollMsPath();
+                void setBasePath(const path_port_t& path) override;
+
+                path_value_t getValuePath(int index);
+                path_mode_t getModePath();
+                path_modes_t getModesPath();
+                path_num_values_t getNumValuesPath();
+                path_poll_ms_t getPollMsPath();
 
                 int getValue(int index);
                 void setMode(sensor_mode_t mode);
                 std::vector<sensor_mode_t> getModes();
                 int getNumValues();
                 int getPollMs();
+
+                DeviceType getDeviceType() override;
                 
             private:
                 static ::finder::console::Logger _logger;

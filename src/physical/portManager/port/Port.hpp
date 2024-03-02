@@ -5,6 +5,7 @@
 #include <fstream>
 #include <console/Logger.hpp>
 #include <filesystem>
+#include <vector>
 namespace finder
 {
     namespace physical
@@ -42,7 +43,7 @@ namespace finder
                 Port(Port&) = delete;
                 ~Port() = default;
 
-                void setBasePath(const path_port_t& path);
+                virtual void setBasePath(const path_port_t& path);
                 
                 char getPortKey();
                 path_port_t getBasePath();
@@ -50,15 +51,44 @@ namespace finder
                 path_command_t getCommandPath();
                 path_commands_t getCommandsPath();
 
-                DeviceType getDeviceType();
+                /**
+                 * @brief Get the address of the port.
+                 * 
+                 * @return The address of the port as a string.
+                 */
+                std::string getAddress();
+                /**
+                 * Sets the command for the port.
+                 *
+                 * @param command The command to set.
+                 * @return True if the command was set successfully, false otherwise.
+                 */
+                bool setCommand(std::string command);
+                /// @brief get the commands that the port can execute from file 
+                /// @return vector of strings of the commands that the port can execute
+                std::vector<std::string> getCommands();
 
-                bool initFiles();
+                /// @brief gets the device type of the port
+                /// @return the device type of the port, SENSOR, MOTOR, UNKNOWN, or DISABLED
+                virtual DeviceType getDeviceType();
+
             
+                /// @brief return the enabled status of the port
+                /// @return true if the port is enabled, false otherwise
                 bool isEnabled();
 
+                /// @brief NOT TO BE USED IN PRODUCTION!
+                /// This is a testing function to override the enabled status of the port
+                /// @param enabled the new enabled status
                 void overrideEnabled(bool enabled) { _f_enabled = enabled; };
 
             protected:
+                /**
+                 * Initializes the files for the port.
+                 * 
+                 * @return true if the files were successfully initialized, false otherwise.
+                 */
+                bool initFiles();
                 std::shared_ptr<std::ifstream> _file_address_path;
                 std::shared_ptr<std::ofstream> _file_command_path;
                 std::shared_ptr<std::ifstream> _file_commands_path;

@@ -229,6 +229,16 @@ namespace finder
             // });
         }
 
+        DeviceType MotorPort::getDeviceType()
+        {
+            if(Port::getDeviceType() != DeviceType::MOTOR) {
+                _logger.warn(
+                    "MotorPort is not a motor"
+                );
+            }
+            return DeviceType::MOTOR;
+        }
+
         void MotorPort::init()
         {
             // _init_future = std::async(std::launch::async, [this]() {

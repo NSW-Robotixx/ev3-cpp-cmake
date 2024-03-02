@@ -34,10 +34,22 @@ target_link_libraries(SensorPort PUBLIC Port Logger)
 #testing
 
 add_library(PortTest Port.test.cpp)
+add_library(MotorPortTest MotorPort.test.cpp)
+add_library(SensorPortTest SensorPort.test.cpp)
 
 target_sources(PortTest
     PRIVATE
         ${CMAKE_CURRENT_LIST_DIR}/Port.test.cpp
+    )
+
+target_sources(MotorPortTest
+    PRIVATE
+        ${CMAKE_CURRENT_LIST_DIR}/MotorPort.test.cpp
+    )
+
+target_sources(SensorPortTest
+    PRIVATE
+        ${CMAKE_CURRENT_LIST_DIR}/SensorPort.test.cpp
     )
 
 target_link_libraries(PortTest
@@ -46,3 +58,14 @@ target_link_libraries(PortTest
         gtest_main
     )
 
+target_link_libraries(MotorPortTest
+    PRIVATE
+        MotorPort
+        gtest_main
+    )
+
+target_link_libraries(SensorPortTest
+    PRIVATE
+        SensorPort
+        gtest_main
+    )
