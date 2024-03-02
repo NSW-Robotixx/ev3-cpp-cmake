@@ -33,45 +33,40 @@ namespace finder
             if (isEnabled())
             {
                 return _path.back();
-            } else {
-                return '-';
             }
+            return -1;
         }
         
         path_port_t Port::getBasePath()
         {
             if (isEnabled()) {
                 return _path;
-            } else {
-                return "";
             }
+            return "";
         }
 
         path_address_t Port::getAddressPath()
         {
             if (isEnabled()) {
                 return _path + "/address";
-            } else {
-                return "";
             }
+            return "";
         }
 
         path_command_t Port::getCommandPath()
         {
             if (isEnabled()) {
                 return _path + "/command";
-            } else {
-                return "";
             }
+            return "";
         }
 
         path_commands_t Port::getCommandsPath()
         {
             if (isEnabled()) {
                 return _path + "/commands";
-            } else {
-                return "";
             }
+            return "";
         }
 
         DeviceType Port::getDeviceType()
