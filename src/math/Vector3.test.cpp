@@ -186,26 +186,6 @@ TEST(Vector3, Lerp)
     EXPECT_FLOAT_EQ(v3.z, 4.5f);
 }
 
-TEST(Vector3, Slerp)
-{
-    finder::math::Vector3 v1(1.0f, 2.0f, 3.0f);
-    finder::math::Vector3 v2(4.0f, 5.0f, 6.0f);
-    finder::math::Vector3 v3 = finder::math::Vector3::slerp(v1, v2, 0.5f);
-    EXPECT_FLOAT_EQ(v3.x, 2.5f);
-    EXPECT_FLOAT_EQ(v3.y, 3.5f);
-    EXPECT_FLOAT_EQ(v3.z, 4.5f);
-}
-
-TEST(Vector3, Nlerp)
-{
-    finder::math::Vector3 v1(1.0f, 2.0f, 3.0f);
-    finder::math::Vector3 v2(4.0f, 5.0f, 6.0f);
-    finder::math::Vector3 v3 = finder::math::Vector3::nlerp(v1, v2, 0.5f);
-    EXPECT_FLOAT_EQ(v3.x, 0.26726123690605164f);
-    EXPECT_FLOAT_EQ(v3.y, 0.5345224738121033f);
-    EXPECT_FLOAT_EQ(v3.z, 0.8017836809158325f);
-}
-
 TEST(Vector3, Distance)
 {
     finder::math::Vector3 v1(1.0f, 2.0f, 3.0f);

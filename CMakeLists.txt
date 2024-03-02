@@ -15,9 +15,9 @@ add_subdirectory(tests)
 target_include_directories(Main PUBLIC ${CMAKE_SOURCE_DIR}/src)
 
 target_link_libraries(Main 
-  PUBLIC 
-    PortManager
-    Logger
+PUBLIC 
+PortManager
+Logger
 )
 
 include_directories(${CMAKE_SOURCE_DIR}/src)
@@ -39,28 +39,29 @@ FetchContent_MakeAvailable(googletest)
 
 # enable testing
 # include(CTest)
-enable_testing()
+# enable_testing()
 
 set(TEST_SOURCES ${CMAKE_SOURCE_DIR}/test.cpp)
 # file(GLOB_RECURSE TEST_SOURCES "*test.cpp")
 add_executable(Test ${TEST_SOURCES})
 
 target_link_libraries(
-  Test 
+  Test
   gtest_main
   Logger
   Port
   PortManager
   Vector3
-)
-
-target_include_directories(Test PUBLIC ${CMAKE_SOURCE_DIR}/src)
-
-# throws compiler error, but works. Can be removed
-# SET_TARGET_PROPERTIES (Test PROPERTIES LINK_FLAGS "-static -lc -lm -L/usr/local/lib/")
-
+  Vector2
+  )
+  
+  target_include_directories(Test PUBLIC ${CMAKE_SOURCE_DIR}/src)
+  
+  # throws compiler error, but works. Can be removed
+    
 include(GoogleTest)
+gtest_discover_tests(Test)
 if(CMAKE_C_COMPILER STREQUAL "/usr/bin/arm-linux-gnueabi-gcc")
+  SET_TARGET_PROPERTIES (Test PROPERTIES LINK_FLAGS "-static -lc -lm -L/usr/local/lib/")
 else()
-  gtest_discover_tests(Test)
 endif()

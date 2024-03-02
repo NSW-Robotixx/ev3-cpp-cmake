@@ -129,6 +129,12 @@ namespace finder
                     Vector2 relative = (b - a * dot).normalize();
                     return (a * cos(theta)) + (relative * sin(theta));
                 }
+
+                friend std::ostream& operator<<(std::ostream& os, const Vector2& v)
+                {
+                    os << "Vector2(" << v.x << ", " << v.y << ")";
+                    return os;
+                }
         };
     } // namespace math
     

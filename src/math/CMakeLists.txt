@@ -39,5 +39,5 @@ target_sources(Vector3Test
 target_include_directories(Vector2Test PUBLIC ${CMAKE_SOURCE_DIR}/src)
 target_include_directories(Vector3Test PUBLIC ${CMAKE_SOURCE_DIR}/src)
 
-target_link_libraries(Vector2Test PUBLIC gtest_main)
-target_link_libraries(Vector3Test PUBLIC gtest_main)
+target_link_libraries(Vector2Test PUBLIC gtest_main Vector2)
+target_link_libraries(Vector3Test PUBLIC gtest_main Vector3)

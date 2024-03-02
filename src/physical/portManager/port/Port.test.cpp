@@ -41,11 +41,18 @@ TEST(Port, getDeviceType)
 {
     finder::physical::Port sensorPort;
     finder::physical::Port motorPort;
+    finder::physical::Port unknownPort;
 
     sensorPort.setBasePath("/sys/class/lego-sensor/sensor0");
     motorPort.setBasePath("/sys/class/lego-motor/motor0");
+    unknownPort.setBasePath("/sys/class/lego-unknown/unknown0");
+
+    sensorPort.overrideEnabled(true);
+    motorPort.overrideEnabled(true);
+    unknownPort.overrideEnabled(true);
     
     ASSERT_EQ(sensorPort.getDeviceType(), finder::physical::DeviceType::SENSOR);
     ASSERT_EQ(motorPort.getDeviceType(), finder::physical::DeviceType::MOTOR);
+    ASSERT_EQ(unknownPort.getDeviceType(), finder::physical::DeviceType::UNKNOWN);
 }
 

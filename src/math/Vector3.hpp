@@ -141,20 +141,6 @@ namespace finder
                     return a + (b - a) * t;
                 }
 
-                static Vector3 slerp(const Vector3& a, const Vector3& b, float t)
-                {
-                    float dot = a.dot(b);
-                    dot = std::max(std::min(dot, 1.0f), -1.0f);
-                    float theta = acos(dot) * t;
-                    Vector3 relative = (b - a * dot).normalize();
-                    return a * cos(theta) + relative * sin(theta);
-                }
-
-                static Vector3 nlerp(const Vector3& a, const Vector3& b, float t)
-                {
-                    return lerp(a, b, t).normalize();
-                }
-
                 float distance(const Vector3& other) const
                 {
                     return (*this - other).magnitude();

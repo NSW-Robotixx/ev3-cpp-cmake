@@ -27,8 +27,10 @@ namespace finder
         typedef std::string path_poll_ms_t;
 
         enum struct DeviceType {
-            SENSOR,
-            MOTOR
+            SENSOR = 0,
+            MOTOR = 1,
+            UNKNOWN = 2,
+            DISABLED = 3
         };
 
         struct Port
@@ -53,6 +55,8 @@ namespace finder
                 bool initFiles();
             
                 bool isEnabled();
+
+                void overrideEnabled(bool enabled) { _f_enabled = enabled; };
 
             protected:
                 std::shared_ptr<std::ifstream> _file_address_path;
