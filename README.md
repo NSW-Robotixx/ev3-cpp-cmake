@@ -1,3 +1,4 @@
+[![CMake on a single platform](https://github.com/wandeltn/ev3-cpp-cmake/actions/workflows/cmake-single-platform.yml/badge.svg?branch=main)](https://github.com/wandeltn/ev3-cpp-cmake/actions/workflows/cmake-single-platform.yml)
 # Ev3 Pathfinder Project
 
 ## Why and What?
