@@ -41,6 +41,7 @@ namespace finder
                 
                 static void readPorts();
 
+                static std::shared_ptr<Port> borrowRaw(std::string port_address);
                 static std::shared_ptr<Port> borrowDevice(DeviceType type, std::string port_address);
                 static std::shared_ptr<SensorPort> borrowSensor(std::string port_address);
                 static std::shared_ptr<MotorPort> borrowMotor(std::string port_address);

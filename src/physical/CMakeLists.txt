@@ -1,4 +1,5 @@
 add_subdirectory(portManager)
+add_subdirectory(display)
 
 add_library(DeviceManager STATIC DeviceManager.cpp)
 

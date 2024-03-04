@@ -95,6 +95,11 @@ namespace finder
             adresses.push_back(std::string{"ev3-ports:outD"});
         }
 
+        std::shared_ptr<Port> PortManager::borrowRaw(std::string port_address)
+        {
+            return borrowDevice(DeviceType::ANY, port_address);
+        }
+
         std::shared_ptr<Port> PortManager::borrowDevice(DeviceType type, std::string port_address)
         {
             // check if addess is valid
@@ -105,10 +110,12 @@ namespace finder
                         if (port->getPortKey() == port_address.back()) {
                             // set port as borrowed
                             _borrowed_ports.push_back(port);
-                            if (port->getDeviceType() == DeviceType::SENSOR) {
-                                // return std::shared_ptr<SensorPort>(new SensorPort{port});
-                            } else {
-                                // return std::shared_ptr<MotorPort>(new MotorPort{port});
+                            if (port->getDeviceType() != type) {
+                                if (type != DeviceType::ANY) {
+                                    throw std::logic_error("Port is not of the correct type: " + port_address + " (borrowDevice)");
+                                } else {
+                                    _logger.log(::finder::console::Logger::LogLevel::INFO, "Port is not of the correct type: " + port_address + " (borrowDevice)");
+                                }
                             }
 
                             return _borrowed_ports.back();

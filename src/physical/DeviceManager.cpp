@@ -34,6 +34,15 @@ namespace finder
             _portManager->readPorts();
 
             _gyroSensor = _portManager->borrowSensor(_portManager->adresses[0]);
+            _colorSensorLeft = _portManager->borrowSensor(_portManager->adresses[1]);
+            _colorSensorRight = _portManager->borrowSensor(_portManager->adresses[2]);
+            _colorSensorFront = _portManager->borrowSensor(_portManager->adresses[3]);
+            _motorLeft = _portManager->borrowMotor(_portManager->adresses[4]);
+            _motorRight = _portManager->borrowMotor(_portManager->adresses[5]);
+            _motorShift = _portManager->borrowMotor(_portManager->adresses[6]);
+            _motorTool = _portManager->borrowMotor(_portManager->adresses[7]);
+
+            _initialized = true;
         }
     } // namespace physical
     

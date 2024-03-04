@@ -84,25 +84,12 @@ namespace finder
             }
         }
 
-        void MotorPort::setCommand(MotorCommand command)
-        {
-            if (isEnabled()) {
-                if (_file_command_path->is_open()) {
-                    *_file_command_path << static_cast<int>(command);
-                } else {
-                    _logger.error("MotorPort failed to set command");
-                }
-            } else {
-                // _init_future.wait();
-                // setCommand(command);
-            }
-        }
-
         void MotorPort::setSpeed(int speed)
         {
             if (isEnabled()) {
                 if (_file_speed_path->is_open()) {
                     *_file_speed_path << speed;
+                    _file_speed_path->flush();
                 } else {
                     _logger.error("MotorPort failed to set speed");
                 }
@@ -117,6 +104,7 @@ namespace finder
             if (isEnabled()) {
                 if (_file_position_sp_path->is_open()) {
                     *_file_position_sp_path << position_sp;
+                    _file_position_sp_path->flush();
                 } else {
                     _logger.error("MotorPort failed to set position_sp");
                 }
@@ -131,6 +119,7 @@ namespace finder
             if (isEnabled()) {
                 if (_file_duty_cycle_path->is_open()) {
                     *_file_duty_cycle_path << duty_cycle;
+                    _file_duty_cycle_path->flush();
                 } else {
                     _logger.error("MotorPort failed to set duty_cycle");
                 }
@@ -145,6 +134,7 @@ namespace finder
             if (isEnabled()) {
                 if (_file_polarity_path->is_open()) {
                     *_file_polarity_path << static_cast<int>(polarity);
+                    _file_polarity_path->flush();
                 } else {
                     _logger.error("MotorPort failed to set polarity");
                 }
@@ -159,6 +149,7 @@ namespace finder
             if (isEnabled()) {
                 if (_file_stop_action_path->is_open()) {
                     *_file_stop_action_path << static_cast<int>(stop_action);
+                    _file_stop_action_path->flush();
                 } else {
                     _logger.error("MotorPort failed to set stop_action");
                 }

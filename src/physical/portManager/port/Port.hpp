@@ -31,7 +31,8 @@ namespace finder
             SENSOR = 0,
             MOTOR = 1,
             UNKNOWN = 2,
-            DISABLED = 3
+            DISABLED = 3,
+            ANY = 4
         };
 
         struct Port
