@@ -7,6 +7,7 @@
 #include <physical/portManager/port/SensorPort.test.cpp>
 #include <physical/portManager/port/MotorPort.test.cpp>
 #include <math/Vector3.test.cpp>
+#include <physical/display/Screen.test.cpp>
 // #include <math/Vector2.test.cpp>
 
 // Demonstrate some basic assertions.

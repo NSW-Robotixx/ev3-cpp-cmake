@@ -2,6 +2,7 @@
 #include <sys/mman.h>
 #include <stdint.h>
 #include <memory>
+#include <console/Logger.hpp>
 
 
 #ifndef __DISPLAY_HPP__
@@ -16,31 +17,15 @@
   }
 #endif
 
-namespace physical::display
+namespace finder::physical::display
 {
-  enum DisplayColors {
-      DISPLAY_BLACK = 0x11111111,
-      DISPLAY_DARK = 0x78787878,
-      DISPLAY_LIGHT = 0xb4b4b4b4,
-      DISPLAY_WHITE = 0xffffffff,
-      // If the display gets colors
-      DISPLAY_RED = 0xff000000,
-      DISPLAY_GREEN = 0x00ff0000,
-      DISPLAY_BLUE = 0x0000ff00,
-      DISPLAY_YELLOW = 0xffff0000,
-      DISPLAY_CYAN = 0x00ffff00,
-      DISPLAY_MAGENTA = 0xff00ff00,
-      DISPLAY_ORANGE = 0xffa50000,
-      DISPLAY_PURPLE = 0x80008000,
-      DISPLAY_BROWN = 0xa52a2a00,
-      DISPLAY_PINK = 0xffc0cb00
-  };
-
   class Screen
   {
+  private:
+    static ::finder::console::Logger _logger;
   protected:
       int fbfd;
-      std::unique_ptr<uint32_t> *fbp;
+      uint32_t *fbp;
       size_t screensize = 0;
 
       unsigned int width;
@@ -48,7 +33,10 @@ namespace physical::display
   public:
       Screen();
       ~Screen();
+
+
+      void drawPixel(int x, int y, uint32_t color);
   };
-} // namespace physical::display
+} // namespace finder::physical::display
 
 #endif
