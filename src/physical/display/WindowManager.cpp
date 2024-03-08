@@ -113,14 +113,22 @@ namespace finder::physical::display
     {
         for (auto &window : windows)
         {
+            _logger.debug("Drawing window: " + window->getName() + " at x: " + std::to_string(window->getStartX()) + " y: " + std::to_string(window->getStartY()));
             for (int y = 0; y < window->getHeight(); y++)
             {
+                _logger.debug("Drawing row: " + std::to_string(y + window->getStartY()));
                 for (int x = 0; x < window->getWidth(); x++)
                 {
                     _logger.debug("Drawing pixel at x: " + std::to_string(x + window->getStartX()) + " y: " + std::to_string(y + window->getStartY()));
                     screen.drawPixel(x + window->getStartX(), y + window->getStartY(), window->getPixels()[y * window->getWidth() + x]);
+                    _logger.debug("Pixel drawn");
                 }
             }
         }
+    }
+
+    void ScreenManager::clearScreen()
+    {
+        screen.clear();
     }
 } // namespace finder::physical::display

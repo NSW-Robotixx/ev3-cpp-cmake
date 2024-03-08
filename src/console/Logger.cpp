@@ -22,11 +22,7 @@ namespace finder
 
         void Logger::log(LogLevel level, const std::string& message)
         {
-            if (_logLevelEnforced)
-            {
-                level = _enforcedLogLevel;
-            }
-            if (level >= _minlLevel)
+            if (level >= getActiveLogLevel())
             {
                 std::string color;
                 switch (level)

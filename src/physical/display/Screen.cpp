@@ -50,6 +50,9 @@ Screen::Screen()
     }
     width = screensize / vinfo.yres;
     height = screensize / vinfo.xres;
+
+    width = vinfo.xres;
+    height = vinfo.yres;
     // printf("The framebuffer device was mapped to memory successfully.\n");
 
 }
@@ -66,8 +69,36 @@ Screen::~Screen()
         if(x < 0 || x > width || y < 0 || y > height) {
             return;
         }
-        fbp[x + y * width] = color;
+
+        if (fbp[y * width + x] == color) {
+            return;
+        }
+        fbp[y * width + x] = color;
 
         _logger.debug("Pixel drawn in Screen at x: " + std::to_string(x) + " y: " + std::to_string(y));
+        _logger.debug("Fbp value: " + std::to_string(y * width + x));
+    }
+
+
+    void Screen::clear()
+    {
+        for (int y = 0; y < height; y++)
+        {
+            for (int x = 0; x < width; x++)
+            {
+                drawPixel(x, y, 0xffffffff);
+                // _logger.debug("Screen width: " + std::to_string(width) + " height: " + std::to_string(height));
+            }
+        }
+    }
+    void Screen::fill(uint32_t color)
+    {
+        for (int y = 0; y < height; y++)
+        {
+            for (int x = 0; x < width; x++)
+            {
+                drawPixel(x, y, color);
+            }
+        }
     }
 } // namespace finder::physical::display

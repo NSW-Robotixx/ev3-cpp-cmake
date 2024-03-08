@@ -4,6 +4,7 @@
 #include <memory>
 #include <string>
 #include <vector>
+#include <map>
 #include <iomanip>
 #include <console/Logger.hpp>
 
@@ -49,6 +50,7 @@ namespace finder::physical::display
             int drawRectangle(int x0, int y0, int x1, int y1, DisplayColors color);
             int drawRectangle(int x0, int y0, int x1, int y1, int x2, int y2, int x3, int y3, DisplayColors color);
             int drawCircle(int x0, int y0, int radius, DisplayColors color);
+            int drawTriangle(int x0, int y0, int x1, int y1, int x2, int y2, DisplayColors color);
             int drawText(int x, int y, std::string text, DisplayColors color);
             int fill(DisplayColors color);
             
@@ -62,9 +64,8 @@ namespace finder::physical::display
             int height;
             int x;
             int y;
-            std::vector<uint32_t> pixels;
 
-            static std::vector<std::vector<int>> font8x8_basic;
+            static std::map<char, std::vector<int>> font8x8_basic;
     };
 } // namespace finder::physical::display
 

@@ -36,6 +36,8 @@ namespace finder::physical::display
 
 
       void drawPixel(int x, int y, uint32_t color);
+      void clear();
+      void fill(uint32_t color);
   };
 } // namespace finder::physical::display
 

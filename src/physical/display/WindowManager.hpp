@@ -30,6 +30,7 @@ namespace finder::physical::display
             static void remoteUpdate(std::string name);
 
             static void pushToScreen();
+            static void clearScreen();
         private:
             static finder::console::Logger _logger;
             static std::vector<std::shared_ptr<Window>> windows;
