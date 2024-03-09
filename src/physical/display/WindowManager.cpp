@@ -8,7 +8,7 @@ namespace finder::physical::display
 
     ScreenManager::ScreenManager()
     {
-
+        _logger.setMinLevel(finder::console::Logger::LogLevel::INFO);
     }
 
     ScreenManager::~ScreenManager()

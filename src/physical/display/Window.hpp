@@ -7,6 +7,7 @@
 #include <map>
 #include <iomanip>
 #include <console/Logger.hpp>
+#include <physical/display/bitmaps/Bitmaps.hpp>
 
 namespace finder::physical::display
 {
@@ -52,6 +53,7 @@ namespace finder::physical::display
             int drawCircle(int x0, int y0, int radius, DisplayColors color);
             int drawTriangle(int x0, int y0, int x1, int y1, int x2, int y2, DisplayColors color);
             int drawText(int x, int y, std::string text, DisplayColors color);
+            int drawMonochromeBitmap(int x, int y, std::shared_ptr<bitmaps::ImageFormat> bitmap);
             int fill(DisplayColors color);
             
             int getStartX() { return x; };
@@ -64,8 +66,7 @@ namespace finder::physical::display
             int height;
             int x;
             int y;
-
-            static std::map<char, std::vector<int>> font8x8_basic;
+            std::vector<uint32_t> pixels;
     };
 } // namespace finder::physical::display
 

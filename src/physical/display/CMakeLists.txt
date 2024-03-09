@@ -1,3 +1,5 @@
+add_subdirectory(bitmaps)
+
 #screen
 add_library(Screen STATIC Screen.cpp)
 
@@ -57,6 +59,7 @@ target_include_directories(Window
 target_link_libraries(Window
     PUBLIC
         Logger
+        Bitmaps
 )
 
 #tests

@@ -201,24 +201,42 @@ namespace finder::physical::display
 
     int Window::drawText(int x, int y, std::string text, DisplayColors color)
     {
+        unsigned int xpos = x;
+        unsigned int ypos = y;
         for (int i = 0; i < text.size(); i++)
         {
             int ascii = text[i] - 32;
 
-            if (ascii < 0 || ascii >= font8x8_basic.size())
+            if (ascii < 0 || ascii >= bitmaps::Keyboard::Keyboard_images.size())
                 continue;
 
-            for (int j = 0; j < 8; j++)
+            if (xpos + 8 >= this->width)
             {
-                for (int k = 0; k < 8; k++)
+                xpos = x;
+                ypos += bitmaps::Keyboard::Keyboard_images[ascii]->height + 1;
+            }
+
+            this->drawMonochromeBitmap(xpos, ypos, bitmaps::Keyboard::Keyboard_images[ascii]);
+            xpos += bitmaps::Keyboard::Keyboard_images[ascii]->width + 1;
+        }
+        return 0;
+    }
+
+    int Window::drawMonochromeBitmap(int x, int y, std::shared_ptr<bitmaps::ImageFormat> bitmap)
+    {
+        for (int i = 0; i < bitmap->height; i++)
+        {
+            for (int j = 0; j < bitmap->width; j++)
+            {
+                if ((bitmap->data[i] >> j) & 0x1)
                 {
-                    if ((font8x8_basic[ascii][j] >> k) & 0x1)
-                    {
-                        this->drawPixel(x + k, y + j, color);
-                    }
+                    this->drawPixel(x + j, y + i, DISPLAY_BLACK);
+                }
+                else
+                {
+                    this->drawPixel(x + j, y + i, DISPLAY_WHITE);
                 }
             }
-            x += 8;
         }
         return 0;
     }
