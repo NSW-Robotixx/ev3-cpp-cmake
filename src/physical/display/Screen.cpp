@@ -14,6 +14,8 @@ namespace finder::physical::display
 
 Screen::Screen()
 {
+    _logger.setMinLevel(::finder::console::Logger::LogLevel::INFO);
+
     fbfd = open("/dev/fb0", O_RDWR);
     
     if(fbfd == -1) {
@@ -48,9 +50,6 @@ Screen::Screen()
         perror("Error: failed to map framebuffer device to memory");
         exit(4);
     }
-    width = screensize / vinfo.yres;
-    height = screensize / vinfo.xres;
-
     width = vinfo.xres;
     height = vinfo.yres;
     // printf("The framebuffer device was mapped to memory successfully.\n");
@@ -65,8 +64,8 @@ Screen::~Screen()
 
     void Screen::drawPixel(int x, int y, uint32_t color)
     {
-        _logger.debug("Drawing pixel in Screen at x: " + std::to_string(x) + " y: " + std::to_string(y));
         if(x < 0 || x > width || y < 0 || y > height) {
+            _logger.warn("Tried to draw pixel outside of screen at x: " + std::to_string(x) + " y: " + std::to_string(y));
             return;
         }
 
@@ -74,9 +73,6 @@ Screen::~Screen()
             return;
         }
         fbp[y * width + x] = color;
-
-        _logger.debug("Pixel drawn in Screen at x: " + std::to_string(x) + " y: " + std::to_string(y));
-        _logger.debug("Fbp value: " + std::to_string(y * width + x));
     }
 
 
@@ -87,7 +83,6 @@ Screen::~Screen()
             for (int x = 0; x < width; x++)
             {
                 drawPixel(x, y, 0xffffffff);
-                // _logger.debug("Screen width: " + std::to_string(width) + " height: " + std::to_string(height));
             }
         }
     }

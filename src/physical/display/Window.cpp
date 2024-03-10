@@ -205,10 +205,14 @@ namespace finder::physical::display
         unsigned int ypos = y;
         for (int i = 0; i < text.size(); i++)
         {
-            int ascii = text[i] - 32;
+            int ascii = static_cast<int>(text[i]) - 97;
+            _logger.debug("Ascii version of character: " + std::to_string(ascii));
 
-            if (ascii < 0 || ascii >= bitmaps::Keyboard::Keyboard_images.size())
+            if (ascii < 0 || ascii >= bitmaps::Keyboard::Keyboard_images.size()) 
+            {
+                _logger.warn("Character not found in font: " + std::to_string(text[i]) + " ascii: " + std::to_string(ascii));
                 continue;
+            }
 
             if (xpos + 8 >= this->width)
             {
@@ -216,14 +220,18 @@ namespace finder::physical::display
                 ypos += bitmaps::Keyboard::Keyboard_images[ascii]->height + 1;
             }
 
-            this->drawMonochromeBitmap(xpos, ypos, bitmaps::Keyboard::Keyboard_images[ascii]);
+            _logger.debug("Drawing character: " + std::to_string(text[i]) + " at: " + std::to_string(xpos) + ", " + std::to_string(ypos));
+            this->drawBitmap(xpos, ypos, bitmaps::Keyboard::Keyboard_images[ascii]);
             xpos += bitmaps::Keyboard::Keyboard_images[ascii]->width + 1;
         }
         return 0;
     }
 
-    int Window::drawMonochromeBitmap(int x, int y, std::shared_ptr<bitmaps::ImageFormat> bitmap)
+    int Window::drawBitmap(int x, int y, std::shared_ptr<bitmaps::ImageFormat> bitmap)
     {
+        _logger.debug("Drawing monochrome bitmap at: " + std::to_string(x) + ", " + std::to_string(y));
+        _logger.debug("Bitmap width: " + std::to_string(bitmap->width));
+        _logger.debug("Bitmap height: " + std::to_string(bitmap->height));
         for (int i = 0; i < bitmap->height; i++)
         {
             for (int j = 0; j < bitmap->width; j++)

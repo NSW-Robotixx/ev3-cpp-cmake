@@ -12,7 +12,7 @@
 namespace finder::physical::display
 {
     enum DisplayColors {
-        DISPLAY_BLACK = 0x11111111,
+        DISPLAY_BLACK = 0x00000000,
         DISPLAY_DARK = 0x78787878,
         DISPLAY_LIGHT = 0xb4b4b4b4,
         DISPLAY_WHITE = 0xffffffff,
@@ -53,7 +53,7 @@ namespace finder::physical::display
             int drawCircle(int x0, int y0, int radius, DisplayColors color);
             int drawTriangle(int x0, int y0, int x1, int y1, int x2, int y2, DisplayColors color);
             int drawText(int x, int y, std::string text, DisplayColors color);
-            int drawMonochromeBitmap(int x, int y, std::shared_ptr<bitmaps::ImageFormat> bitmap);
+            int drawBitmap(int x, int y, std::shared_ptr<bitmaps::ImageFormat> bitmap);
             int fill(DisplayColors color);
             
             int getStartX() { return x; };

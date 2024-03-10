@@ -44,15 +44,15 @@ int main(int argc, char const *argv[])
     }
     
 
-    std::shared_ptr<Window> window = screenManager.createWindow("Window 1", 0, 0, 100, 100);
+    std::shared_ptr<Window> window = screenManager.createWindow("Window 1", 0, 0, 179, 128);
 
-    window->fill(DisplayColors::DISPLAY_BLACK);
+    window->fill(DisplayColors::DISPLAY_LIGHT);
 
     window->drawRectangle(10, 10, 50, 50, DisplayColors::DISPLAY_WHITE);
     window->drawCircle(50, 50, 20, DISPLAY_WHITE);
     window->drawTriangle(10, 10, 50, 10, 50, 50, DISPLAY_WHITE);
     // window->drawText(10, 10, "ABCDEFGHIJKLMNOPQRSTUVWXYZ", DISPLAY_WHITE);
-    window->drawText(10, 30, "test", DISPLAY_WHITE);
+    window->drawText(10, 30, "abcxyz", DISPLAY_WHITE);
     logger.debug("drew text");
 
 
