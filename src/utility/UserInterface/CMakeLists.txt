@@ -1,0 +1,19 @@
+add_library(UserInterface STATIC UserInterface.cpp)
+
+target_sources(UserInterface
+    PRIVATE
+        ${CMAKE_CURRENT_LIST_DIR}/UserInterface.cpp
+    PUBLIC
+        ${CMAKE_CURRENT_LIST_DIR}/UserInterface.hpp
+)
+
+target_include_directories(UserInterface
+    PUBLIC
+        ${CMAKE_SOURCE_DIR}/src
+)
+
+target_link_libraries(UserInterface
+    PUBLIC
+        Window
+        WindowManager
+)

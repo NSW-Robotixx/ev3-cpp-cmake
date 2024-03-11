@@ -3,6 +3,7 @@
 
 #include <memory>
 #include <string>
+#include <atomic>
 #include <vector>
 #include <map>
 #include <iomanip>
@@ -32,6 +33,8 @@ namespace finder::physical::display
 
     class Window
     {
+        friend class WindowManager;
+
         public:
             Window(std::string name, int width, int height, int x, int y);
             ~Window();
@@ -67,6 +70,21 @@ namespace finder::physical::display
             int x;
             int y;
             std::vector<uint32_t> pixels;
+
+            std::atomic_bool _dirty;
+            std::atomic_bool _button_left_pressed;
+            std::atomic_bool _button_right_pressed;
+            std::atomic_bool _button_up_pressed;
+            std::atomic_bool _button_down_pressed;
+            std::atomic_bool _button_enter_pressed;
+            std::atomic_bool _button_back_pressed;
+            
+            std::atomic_bool _button_left_released;
+            std::atomic_bool _button_right_released;
+            std::atomic_bool _button_up_released;
+            std::atomic_bool _button_down_released;
+            std::atomic_bool _button_enter_released;
+            std::atomic_bool _button_back_released;
     };
 } // namespace finder::physical::display
 

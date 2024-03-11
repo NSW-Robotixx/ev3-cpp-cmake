@@ -9,12 +9,15 @@
 finder::console::Logger logger = finder::console::Logger();
 
 constexpr auto& ascii_art_literal = R"(
-___________________________________________
-    _____                       __         
-    /    '   ,             /  /    )       
----/__-----------__----__-/---- _ /----)__-
-  /        /   /   ) /   /        )   /   )
-_/________/___/___/_(___/___(____/___/_____
+  _____ _           _ _____      
+ |  ___(_)_ __   __| |___ / _ __ 
+ | |_  | | '_ \ / _` | |_ \| '__|
+ |  _| | | | | | (_| |___) | |   
+ |_|   |_|_| |_|\__,_|____/|_|   
+                                     _        
+  _  _      _  __   _/  /_     _     _/ _/_   
+ /_//_/|/|//_'//_'/_/  /_//_/ /_'|/._//_//_'|/
+/                         _/                  
 )";
 
 int main(int argc, char const *argv[])
@@ -30,7 +33,7 @@ int main(int argc, char const *argv[])
 
     logger.info("Starting application...");
 
-    finder::physical::display::ScreenManager screenManager = finder::physical::display::ScreenManager();
+    finder::physical::display::WindowManager screenManager = finder::physical::display::WindowManager();
 
     screenManager.clearScreen();
 

@@ -8,14 +8,16 @@
 #include <physical/display/Screen.hpp>
 #include <physical/display/Window.hpp>
 #include <console/Logger.hpp>
+#include <linux/input-event-codes.h>
 
 namespace finder::physical::display
 {
-    class ScreenManager
+    class WindowManager
     {
+
         public:
-            ScreenManager();
-            ~ScreenManager();
+            WindowManager();
+            ~WindowManager();
 
             static void addWindow(std::shared_ptr<Window> window);
             static void removeWindow(std::shared_ptr<Window> window);
@@ -31,10 +33,18 @@ namespace finder::physical::display
 
             static void pushToScreen();
             static void clearScreen();
+
+            static void buttonPressed(int code);
+            static void buttonReleased(int code);
         private:
             static finder::console::Logger _logger;
             static std::vector<std::shared_ptr<Window>> windows;
             static Screen screen;
+            static std::shared_ptr<Window> _active_window;
+
+            static void setActiveWindow(std::shared_ptr<Window> window);
+            static void setActiveWindow(int index);
+            static void setActiveWindow(std::string name);
     };
 } // namespace finder::physical::display
 
