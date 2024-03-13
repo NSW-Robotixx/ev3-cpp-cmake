@@ -47,7 +47,7 @@ namespace finder::physical::display
             
             std::vector<uint32_t>& getPixels();
 
-            void update();
+            virtual void update() = 0;
 
             int drawPixel(int x, int y, DisplayColors color);
             int drawLine(int x0, int y0, int x1, int y1, DisplayColors color);

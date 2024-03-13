@@ -43,11 +43,6 @@ namespace finder::physical::display
         return this->pixels;
     }
 
-    void Window::update()
-    {
-        
-    }
-
     int Window::drawPixel(int x, int y, DisplayColors color)
     {
         if (x < 0 || x >= this->width || y < 0 || y >= this->height)

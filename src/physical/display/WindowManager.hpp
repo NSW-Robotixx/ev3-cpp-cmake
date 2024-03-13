@@ -25,7 +25,6 @@ namespace finder::physical::display
             static void removeWindow(std::string name);
             static std::shared_ptr<Window> getWindow(int index);
             static std::shared_ptr<Window> getWinodw(std::string name);
-            static std::shared_ptr<Window> createWindow(std::string name, int x, int y, int width, int height);
 
             static void updateAll();
             static void remoteUpdate(int index);

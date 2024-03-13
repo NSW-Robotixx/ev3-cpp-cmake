@@ -76,13 +76,6 @@ namespace finder::physical::display
         return nullptr;
     }
 
-    std::shared_ptr<Window> WindowManager::createWindow(std::string name, int x, int y, int width, int height)
-    {
-        std::shared_ptr<Window> window = std::make_shared<Window>(name, width, height, x, y);
-        windows.push_back(window);
-        return window;
-    }
-
     void WindowManager::updateAll()
     {
         for (auto &window : windows)

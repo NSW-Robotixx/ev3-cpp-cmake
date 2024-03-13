@@ -13,29 +13,37 @@ set(CMAKE_EXE_LINKER_FLAGS "-static-libgcc -static-libstdc++")
 # fetch dependencies
 include(FetchContent) 
 
+# http-server
+FetchContent_Declare(
+  http-server
+  GIT_REPOSITORY https://github.com/trungams/http-server.git
+  )
+FetchContent_MakeAvailable(http-server)
+
 # google test
-include(FetchContent)
 FetchContent_Declare(
   googletest
   URL https://github.com/google/googletest/archive/03597a01ee50ed33e9dfd640b249b4be3799d395.zip
-)
-set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
-FetchContent_MakeAvailable(googletest)
-
-add_executable(Main main.cpp)
-
-add_subdirectory(src)
-add_subdirectory(tests)
-
-# target_include_directories(Test PUBLIC ${CMAKE_SOURCE_DIR}/tests)
-# target_include_directories(Test PUBLIC ${CMAKE_SOURCE_DIR}/src)
-target_include_directories(Main PUBLIC ${CMAKE_SOURCE_DIR}/src)
-
+  )
+  set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
+  FetchContent_MakeAvailable(googletest)
+  
+  add_executable(Main main.cpp)
+  
+  add_subdirectory(src)
+  add_subdirectory(tests)
+  
+  # target_include_directories(Test PUBLIC ${CMAKE_SOURCE_DIR}/tests)
+  # target_include_directories(Test PUBLIC ${CMAKE_SOURCE_DIR}/src)
+  target_include_directories(Main PUBLIC ${CMAKE_SOURCE_DIR}/src)
+  
 target_link_libraries(Main 
-PUBLIC 
+PUBLIC
 WindowManager
 Logger
 Window
+http-server
+webComponents
 )
 
 include_directories(${CMAKE_SOURCE_DIR}/src)
@@ -57,6 +65,7 @@ add_executable(Test ${TEST_SOURCES})
 
 target_link_libraries(
   Test
+  ${OpenCV_LIBS}
   gtest_main
   Logger
   Port

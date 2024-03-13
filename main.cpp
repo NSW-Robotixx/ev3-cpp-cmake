@@ -5,6 +5,7 @@
 #include <stdio.h>
 #include <thread>
 #include <chrono>
+#include <server/webComponents/WebComponentBase.hpp>
 
 finder::console::Logger logger = finder::console::Logger();
 
@@ -22,6 +23,8 @@ constexpr auto& ascii_art_literal = R"(
 
 int main(int argc, char const *argv[])
 {
+    using namespace finder::physical::display;
+
     std::cout << ascii_art_literal << std::endl;
 
     // wait for 500ms
@@ -33,11 +36,9 @@ int main(int argc, char const *argv[])
 
     logger.info("Starting application...");
 
-    finder::physical::display::WindowManager screenManager = finder::physical::display::WindowManager();
+    WindowManager::clearScreen();
 
-    screenManager.clearScreen();
-
-    screenManager.pushToScreen();
+    WindowManager::pushToScreen();
 
     while (true)
     {
@@ -46,25 +47,6 @@ int main(int argc, char const *argv[])
         break;
     }
     
-
-    std::shared_ptr<Window> window = screenManager.createWindow("Window 1", 0, 0, 179, 128);
-
-    window->fill(DisplayColors::DISPLAY_LIGHT);
-
-    window->drawRectangle(10, 10, 50, 50, DisplayColors::DISPLAY_WHITE);
-    window->drawCircle(50, 50, 20, DISPLAY_WHITE);
-    window->drawTriangle(10, 10, 50, 10, 50, 50, DISPLAY_WHITE);
-    // window->drawText(10, 10, "ABCDEFGHIJKLMNOPQRSTUVWXYZ", DISPLAY_WHITE);
-    window->drawText(10, 30, "abcxyz", DISPLAY_WHITE);
-    logger.debug("drew text");
-
-
-    screenManager.updateAll();
-
-    while (true) {
-        screenManager.pushToScreen();
-    }
-
 
     logger.info("Application finished.");
     return 0;
