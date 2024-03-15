@@ -14,10 +14,6 @@ namespace finder::physical::display
         this->pixels.resize(width * height);
     }
 
-    Window::~Window()
-    {
-    }
-
     int Window::getWidth()
     {
         return this->width;
