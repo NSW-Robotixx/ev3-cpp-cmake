@@ -4,6 +4,7 @@
 #include <fcntl.h>
 #include <linux/input.h>
 #include <unistd.h>
+#include <linux/fb.h>
     
 
 

@@ -9,6 +9,26 @@ namespace finder::server::webComponents
         id = idCounter++;
     }
 
+    std::string WebComponentBase::render()
+    {
+        return std::string();
+    }
+
+    std::string WebComponentBase::getComponentName()
+    {
+        return std::string();
+    }
+
+    std::string WebComponentBase::getComponentType()
+    {
+        return std::string();
+    }
+
+    std::string WebComponentBase::getComponentHTML()
+    {
+        return std::string();
+    }
+
     void WebComponentBase::addChild(std::shared_ptr<WebComponentBase> child)
     {
         children.push_back(child);

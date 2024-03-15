@@ -4,6 +4,7 @@
 #include <string>
 #include <vector>
 #include <memory>
+#include <console/Logger.hpp>
 
 namespace finder::server::webComponents
 {
@@ -50,10 +51,10 @@ namespace finder::server::webComponents
             WebComponentBase();
             virtual ~WebComponentBase() = default;
 
-            virtual std::string render() = 0;
-            virtual std::string getComponentName() = 0;
-            virtual std::string getComponentType() = 0;
-            virtual std::string getComponentHTML() = 0;
+            virtual std::string render();
+            virtual std::string getComponentName();
+            virtual std::string getComponentType();
+            virtual std::string getComponentHTML();
 
             void addChild(std::shared_ptr<WebComponentBase> child);
             void removeChild(std::shared_ptr<WebComponentBase> child);
@@ -63,6 +64,9 @@ namespace finder::server::webComponents
             int id;
             static int idCounter;
             bool canHaveChildren;
+            std::string htmlClass;
+            std::string htmlId;
+            std::string htmlStyle;
             // the name of the component
             WebComponentType componentType;
             // not all components will have children (e.g. input, button, etc.)

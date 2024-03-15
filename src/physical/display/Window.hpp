@@ -27,7 +27,9 @@ namespace finder::physical::display
         DISPLAY_ORANGE = 0xffa50000,
         DISPLAY_PURPLE = 0x80008000,
         DISPLAY_BROWN = 0xa52a2a00,
-        DISPLAY_PINK = 0xffc0cb00
+        DISPLAY_PINK = 0xffc0cb00,
+        DISPLAY_TRAFFIC_RED = 0xC1121C00,
+        DISPLAY_TRAFFIC_GREEN = 0x00A74A00,
     };
 
 
@@ -37,7 +39,7 @@ namespace finder::physical::display
 
         public:
             Window(std::string name, int width, int height, int x, int y);
-            ~Window();
+            ~Window() = default;
 
             int getWidth();
             int getHeight();
