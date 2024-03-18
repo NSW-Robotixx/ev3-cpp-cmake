@@ -159,6 +159,37 @@ namespace finder
             }
         }
 
+        void MotorPort::setCommand(MotorCommand command)
+        {
+            if (isEnabled()) {
+                if (_file_command_path->is_open()) {
+                    if (command == MotorCommand::STOP) {
+                        *_file_command_path << "stop";
+                    } else if (command == MotorCommand::RUN_DIRECT) {
+                        *_file_command_path << "run-direct";
+                    } else if (command == MotorCommand::RUN_FOREVER) {
+                        *_file_command_path << "run-forever";
+                    } else if (command == MotorCommand::RUN_TO_ABS_POS) {
+                        *_file_command_path << "run-to-abs-pos";
+                    } else if (command == MotorCommand::RUN_TO_REL_POS) {
+                        *_file_command_path << "run-to-rel-pos";
+                    } else if (command == MotorCommand::RUN_TIMED) {
+                        *_file_command_path << "run-timed";
+                    } else if (command == MotorCommand::RESET) {
+                        *_file_command_path << "reset";
+                    } else {
+                        _logger.error("MotorPort failed to set command");
+                    }
+                    _file_command_path->flush();
+                } else {
+                    _logger.error("MotorPort failed to set command");
+                }
+            } else {
+                // _init_future.wait();
+                // setCommand(command);
+            }
+        }
+
         std::vector<MotorState> MotorPort::getState()
         {
             // return std::async(std::launch::async, [this]() {

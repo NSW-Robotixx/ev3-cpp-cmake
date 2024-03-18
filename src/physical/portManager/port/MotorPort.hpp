@@ -56,12 +56,14 @@ namespace finder
                 path_polarity_t getPolarityPath();
                 path_stop_action_t getStopActionPath();
                 path_count_per_rotation_t getCountPerRotationPath();
+                
 
                 void setSpeed(int speed);
                 void setPositionSp(int position_sp);
                 void setDutyCycle(int duty_cycle);
                 void setPolarity(MotorPolarity polarity);
                 void setStopAction(MotorStopAction stop_action);
+                void setCommand(MotorCommand command);
 
                 std::vector<MotorState> getState();
                 int getCountPerRotation();
