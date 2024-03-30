@@ -16,4 +16,7 @@ target_link_libraries(RobotMovement
     PUBLIC
         Logger
         DeviceManager
+        PortManager
+        MotorPort
+        SensorPort
 )

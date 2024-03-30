@@ -13,12 +13,19 @@ set(CMAKE_EXE_LINKER_FLAGS "-static-libgcc -static-libstdc++")
 # fetch dependencies
 include(FetchContent) 
 
-# http-server
-FetchContent_Declare(
-  http-server
-  GIT_REPOSITORY https://github.com/trungams/http-server.git
-  )
-FetchContent_MakeAvailable(http-server)
+# yaml parser -> NO INTERNET
+# FetchContent_Declare(
+#   yaml-cpp
+#   GIT_REPOSITORY https://github.com/jbeder/yaml-cpp.git
+#   GIT_TAG master # Can be a tag (yaml-cpp-x.x.x), a commit hash, or a branch name (master)
+# )
+# FetchContent_GetProperties(yaml-cpp)
+
+# if(NOT yaml-cpp_POPULATED)
+#   message(STATUS "Fetching yaml-cpp...")
+#   FetchContent_Populate(yaml-cpp)
+#   add_subdirectory(${yaml-cpp_SOURCE_DIR} ${yaml-cpp_BINARY_DIR})
+# endif()
 
 # google test
 FetchContent_Declare(
@@ -28,22 +35,26 @@ FetchContent_Declare(
   set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
   FetchContent_MakeAvailable(googletest)
   
-  add_executable(Main main.cpp)
+# find_package(yaml-cpp)
+
+add_executable(Main main.cpp)
   
-  add_subdirectory(src)
-  add_subdirectory(tests)
-  
-  # target_include_directories(Test PUBLIC ${CMAKE_SOURCE_DIR}/tests)
-  # target_include_directories(Test PUBLIC ${CMAKE_SOURCE_DIR}/src)
-  target_include_directories(Main PUBLIC ${CMAKE_SOURCE_DIR}/src)
+add_subdirectory(src)
+add_subdirectory(tests)
+
+# target_include_directories(Test PUBLIC ${CMAKE_SOURCE_DIR}/tests)
+# target_include_directories(Test PUBLIC ${CMAKE_SOURCE_DIR}/src)
+target_include_directories(Main PUBLIC ${CMAKE_SOURCE_DIR}/src)
   
 target_link_libraries(Main 
 PUBLIC
 WindowManager
 Logger
 Window
-http-server
+webServer
 webComponents
+RobotMovement
+# yaml-cpp::yaml-cpp
 )
 
 include_directories(${CMAKE_SOURCE_DIR}/src)
@@ -65,7 +76,6 @@ add_executable(Test ${TEST_SOURCES})
 
 target_link_libraries(
   Test
-  ${OpenCV_LIBS}
   gtest_main
   Logger
   Port

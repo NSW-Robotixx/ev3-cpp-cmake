@@ -1,11 +1,9 @@
 #include <console/Logger.hpp>
-#include <physical/display/WindowManager.hpp>
-#include <physical/display/Window.hpp>
 #include <iostream>
 #include <stdio.h>
 #include <thread>
 #include <chrono>
-#include <server/webComponents/WebComponentBase.hpp>
+#include <utility/RobotMovement/RobotMovement.hpp>
 
 finder::console::Logger logger = finder::console::Logger();
 
@@ -23,22 +21,18 @@ constexpr auto& ascii_art_literal = R"(
 
 int main(int argc, char const *argv[])
 {
-    using namespace finder::physical::display;
-
     std::cout << ascii_art_literal << std::endl;
 
     // wait for 500ms
     std::this_thread::sleep_for(std::chrono::milliseconds(500));
-
-    using namespace finder::physical::display;
-
-    // logger.enforceLogLevel(finder::console::Logger::LogLevel::INFO);
-
     logger.info("Starting application...");
 
-    WindowManager::clearScreen();
+    finder::robot::RobotMovement robotMovement;
 
-    WindowManager::pushToScreen();
+    robotMovement.moveForward(100);
+    robotMovement.moveBackward(100);
+    robotMovement.turnLeft(90);
+    robotMovement.turnRight(90);
 
     while (true)
     {
@@ -46,7 +40,6 @@ int main(int argc, char const *argv[])
         std::cin.get();
         break;
     }
-    
 
     logger.info("Application finished.");
     return 0;

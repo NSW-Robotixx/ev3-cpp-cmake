@@ -8,6 +8,7 @@ namespace finder::robot
     std::shared_ptr<physical::MotorPort> RobotMovement::_motorTool;
 
     int RobotMovement::_speed = 50;
+    int RobotMovement::_dutyCycle = 50;
 
     finder::console::Logger RobotMovement::_logger;
 
@@ -18,6 +19,13 @@ namespace finder::robot
         _motorRight = physical::DeviceManager::getMotorRight();
         _motorShift = physical::DeviceManager::getMotorShift();
         _motorTool = physical::DeviceManager::getMotorTool();
+
+        _logger.debug("Initializing RobotMovement");
+        _logger.debug(_motorLeft->getBasePath());
+        _logger.debug(_motorRight->getBasePath());
+        _logger.debug(_motorShift->getBasePath());
+        _logger.debug(_motorTool->getBasePath());
+        _logger.debug("RobotMovement initialized");
     }
 
     RobotMovement::~RobotMovement()

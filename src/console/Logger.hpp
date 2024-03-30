@@ -12,8 +12,9 @@ namespace finder
                 enum class LogLevel {
                     DEBUG = 0,
                     INFO = 1,
-                    WARN = 2,
-                    ERROR = 3
+                    POSITIVE = 2,
+                    WARN = 3,
+                    ERROR = 4,
                 };
 
                 Logger() : _minlLevel(LogLevel::DEBUG) {}
@@ -38,6 +39,9 @@ namespace finder
 
                 void debug(const std::string& message);
                 void debug(const LogLevel& message);
+
+                void positive(const std::string& message);
+                void positive(const LogLevel& message);
 
                 static void enforceLogLevel(LogLevel level);
                 static void removeLogLevelEnforcement() {_logLevelEnforced = false;}

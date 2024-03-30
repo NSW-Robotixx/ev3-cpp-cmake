@@ -46,7 +46,13 @@ namespace finder
 
                 virtual void setBasePath(const path_port_t& path);
                 
-                char getPortKey();
+                inline char getPortKey() {
+                    if (isEnabled())
+                    {
+                        return _path.back();
+                    }
+                    return -1;
+                };
                 path_port_t getBasePath();
                 path_address_t getAddressPath();
                 path_command_t getCommandPath();
@@ -83,7 +89,7 @@ namespace finder
                 /// @param enabled the new enabled status
                 void overrideEnabled(bool enabled) { _f_enabled = enabled; };
 
-            protected:
+            protected:  
                 /**
                  * Initializes the files for the port.
                  * 

@@ -43,6 +43,10 @@ namespace finder
                         color = "\033[3;41;30m";
                         std::cout << color << "[ERROR]" << "\033[0m " << "\033[31m";
                         break;
+                    case LogLevel::POSITIVE:
+                        color = "\033[3;42;30m";
+                        std::cout << color << "[POSITIVE]" << "\033[0m " << "\033[32m";
+                        break;
                     default:
                         color = "\033[3;47;35m";
                         break;
@@ -97,6 +101,16 @@ namespace finder
             log(LogLevel::DEBUG, message);
         }
 
+        void Logger::positive(const std::string& message)
+        {
+            log(LogLevel::POSITIVE, message);
+        }
+
+        void Logger::positive(const LogLevel& message)
+        {
+            log(LogLevel::POSITIVE, message);
+        }
+        
         void Logger::enforceLogLevel(LogLevel level)
         {
             _logLevelEnforced = true;

@@ -1,19 +1,22 @@
-add_subdirectory(http_server)
-add_subdirectory(webComponents)
+add_subdirectory(webServer)
 
-add_library(webServer STATIC
-    webServer.cpp
-)
 
-target_sources(webServer
+add_library(ServerManager STATIC ServerManager.cpp)
+
+target_sources(ServerManager
     PRIVATE
-        ${CMAKE_CURRENT_SOURCE_DIR}/webServer.cpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/ServerManager.cpp
     PUBLIC
-        ${CMAKE_CURRENT_SOURCE_DIR}/webServer.hpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/ServerManager.hpp
 )
 
-target_link_libraries(webServer
-    PRIVATE
-        http_server
-        webComponents
+target_include_directories(ServerManager 
+    PUBLIC 
+        ${CMAKE_SOURCE_DIR}/src
+)
+
+target_link_libraries(ServerManager 
+    PUBLIC
+        webServer
+        Logger
 )

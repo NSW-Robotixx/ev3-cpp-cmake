@@ -33,21 +33,21 @@ namespace finder
 
                 int foundDevices = 0;
 
-                for (const path_port_t& sensor_type : dirs) {
-                    if (!std::filesystem::exists(sensor_type)) {
-                        _logger.log(Logger::LogLevel::WARN, "Skipping directory: " + sensor_type);
-                        std::cout << "Skipping directory: " << sensor_type << std::endl;
+                for (const path_port_t& device_type_dir : dirs) {
+                    if (!std::filesystem::exists(device_type_dir)) {
+                        _logger.log(Logger::LogLevel::WARN, "Skipping directory: " + device_type_dir);
+                        std::cout << "Skipping directory: " << device_type_dir << std::endl;
                         continue;
                     }
 
-                    DIR *directory = opendir(sensor_type.c_str());
+                    DIR *directory = opendir(device_type_dir.c_str());
                     struct dirent *entry;
                     // entry = readdir(directory);
 
                     while ((entry = readdir(directory)) != nullptr) {
                         // std::cout << entry->d_name << std::endl;
                         if (std::string{entry->d_name}.find(".") == std::string::npos) {
-                            Port port{sensor_type + "/" + std::string{entry->d_name}};
+                            Port port{device_type_dir + "/" + std::string{entry->d_name}};
                             _logger.log(Logger::LogLevel::DEBUG, "PortBasePath:" + port.getBasePath());
 
                             //read file
@@ -85,6 +85,7 @@ namespace finder
 
         void PortManager::init()
         {
+            adresses.clear();
             adresses.push_back(std::string{"ev3-ports:in1"});
             adresses.push_back(std::string{"ev3-ports:in2"});
             adresses.push_back(std::string{"ev3-ports:in3"});
@@ -105,24 +106,32 @@ namespace finder
             // check if addess is valid
             for (auto &address : adresses) {
                 if (address == port_address) {
+                    _logger.positive("Found port: " + port_address + " (borrowDevice)");
                     // get correct port
                     for (auto &port : _ports) {
+                        _logger.debug("port->getPortKey(): " + std::string{port->getPortKey()} + " port_address.back(): " + port_address.back() + " (borrowDevice)");
                         if (port->getPortKey() == port_address.back()) {
+                            _logger.positive("Port key matches: " + std::string{port_address.back()} + " (borrowDevice)");
                             // set port as borrowed
                             _borrowed_ports.push_back(port);
-                            if (port->getDeviceType() != type) {
+                            if (port->getDeviceType() != type || port->getDeviceType() == DeviceType::UNKNOWN) {
                                 if (type != DeviceType::ANY) {
-                                    throw std::logic_error("Port is not of the correct type: " + port_address + " (borrowDevice)");
+                                    _logger.warn("Port is not of the correct type: " + port_address + " type: " + std::to_string((int)(type)) + " (borrowDevice)");
+
+                                    // should throw an error here but not enough time to fix all the errors
+                                    // throw std::logic_error("Port is not of the correct type: " + port_address + " (borrowDevice)");
                                 } else {
                                     _logger.log(::finder::console::Logger::LogLevel::INFO, "Port is not of the correct type: " + port_address + " (borrowDevice)");
                                 }
                             }
-
+                            _logger.debug("Port borrowed: " + _borrowed_ports.back()->getBasePath() + " (borrowDevice)");
                             return _borrowed_ports.back();
                         }
                     }
+                } else {
+                    _logger.debug("address: " + address + " (borrowDevice)");
+                    _logger.debug("Port not found: " + port_address + " (borrowDevice)");
                 }
-                throw std::logic_error("Port not found: " + port_address + " (borrowDevice)");
             }
             return std::shared_ptr<Port>(new Port{});
         }

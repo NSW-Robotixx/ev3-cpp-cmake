@@ -1,4 +1,5 @@
 #include <physical/DeviceManager.hpp>
+#include "DeviceManager.hpp"
 
 namespace finder
 {
@@ -26,6 +27,78 @@ namespace finder
 
         DeviceManager::~DeviceManager()
         {
+        }
+
+        std::shared_ptr<SensorPort> DeviceManager::getGyroSensor()
+        {
+            if (!_initialized)
+            {
+                init();
+            }
+            return _gyroSensor;
+        }
+
+        std::shared_ptr<SensorPort> DeviceManager::getColorSensorLeft()
+        {
+            if (!_initialized)
+            {
+                init();
+            }
+            return _colorSensorLeft;
+        }
+
+        std::shared_ptr<SensorPort> DeviceManager::getColorSensorRight()
+        {
+            if (!_initialized)
+            {
+                init();
+            }
+            return _colorSensorRight;
+        }
+
+        std::shared_ptr<SensorPort> DeviceManager::getColorSensorFront()
+        {
+            if (!_initialized)
+            {
+                init();
+            }
+            return _colorSensorFront;
+        }
+
+        std::shared_ptr<MotorPort> DeviceManager::getMotorLeft()
+        {
+            if (!_initialized)
+            {
+                init();
+            }
+            return _motorLeft;
+        }
+
+        std::shared_ptr<MotorPort> DeviceManager::getMotorRight()
+        {
+            if (!_initialized)
+            {
+                init();
+            }
+            return _motorRight;
+        }
+
+        std::shared_ptr<MotorPort> DeviceManager::getMotorShift()
+        {
+            if (!_initialized)
+            {
+                init();
+            }
+            return _motorShift;
+        }
+
+        std::shared_ptr<MotorPort> DeviceManager::getMotorTool()
+        {
+            if (!_initialized)
+            {
+                init();
+            }
+            return _motorTool;
         }
 
         void DeviceManager::init()

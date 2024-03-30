@@ -13,4 +13,4 @@ target_sources(DeviceManager
 
 target_include_directories(DeviceManager PUBLIC ${CMAKE_SOURCE_DIR}/src)
 
-target_link_libraries(DeviceManager PUBLIC Sensor Motor PortManager)
+target_link_libraries(DeviceManager PUBLIC SensorPort MotorPort PortManager)

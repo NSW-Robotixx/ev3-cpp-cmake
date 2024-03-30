@@ -51,10 +51,12 @@ namespace finder::server::webComponents
             WebComponentBase();
             virtual ~WebComponentBase() = default;
 
+            // following methods are not declared so any reference to them will be a compile error
             virtual std::string render();
             virtual std::string getComponentName();
             virtual std::string getComponentType();
             virtual std::string getComponentHTML();
+            // end of methods that are not declared
 
             void addChild(std::shared_ptr<WebComponentBase> child);
             void removeChild(std::shared_ptr<WebComponentBase> child);

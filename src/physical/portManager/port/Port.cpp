@@ -24,17 +24,15 @@ namespace finder
 
         void Port::setBasePath(const path_port_t &path)
         {
+            if (path.empty()) {
+                _logger.log(
+                    ::finder::console::Logger::LogLevel::WARN, 
+                    "Port path is empty"
+                );
+                return;
+            }
             _path = path;
             _f_enabled = initFiles();
-        }
-
-        char Port::getPortKey()
-        {
-            if (isEnabled())
-            {
-                return _path.back();
-            }
-            return -1;
         }
         
         path_port_t Port::getBasePath()
