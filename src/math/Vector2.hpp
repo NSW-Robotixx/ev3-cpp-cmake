@@ -2,6 +2,7 @@
 #define FINDER_MATH_VECTOR_HPP
 
 #include <math.h>
+#include <iostream>
 
 namespace finder
 {
@@ -119,15 +120,6 @@ namespace finder
                 static Vector2 lerp(const Vector2& a, const Vector2& b, float t)
                 {
                     return a + (b - a) * t;
-                }
-
-                static Vector2 slerp(const Vector2& a, const Vector2& b, float t)
-                {
-                    float dot = a.dot(b);
-                    dot = std::max(std::min(dot, 1.0f), -1.0f);
-                    float theta = acos(dot) * t;
-                    Vector2 relative = (b - a * dot).normalize();
-                    return (a * cos(theta)) + (relative * sin(theta));
                 }
 
                 friend std::ostream& operator<<(std::ostream& os, const Vector2& v)

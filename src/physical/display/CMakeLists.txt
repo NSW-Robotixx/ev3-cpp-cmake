@@ -61,23 +61,3 @@ target_link_libraries(Window
         Logger
         Bitmaps
 )
-
-#tests
-
-add_library(ScreenTest STATIC Screen.test.cpp)
-
-target_sources(ScreenTest
-    PRIVATE
-        ${CMAKE_CURRENT_LIST_DIR}/Screen.test.cpp
-)
-
-target_link_libraries(ScreenTest
-    PRIVATE
-        Screen
-        gtest_main
-)
-
-target_include_directories(ScreenTest
-    PUBLIC
-        ${CMAKE_SOURCE_DIR}/src
-)

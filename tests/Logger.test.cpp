@@ -11,6 +11,22 @@ TEST(Logger, log) {
     logger.log(Logger::LogLevel::INFO, "Info message");
     logger.log(Logger::LogLevel::WARN, "Warn message");
     logger.log(Logger::LogLevel::ERROR, "Error message");
+    logger.log(Logger::LogLevel::POSITIVE, "Positive message");
+    logger.log((Logger::LogLevel)10, "Unknown level message");
+
+    logger.debug("Debug message");
+    logger.info("Info message");
+    logger.warn("Warn message");
+    logger.error("Error message");
+    logger.positive("Positive message");
+
+    logger.debug(Logger::LogLevel::DEBUG);
+    logger.info(Logger::LogLevel::INFO);
+    logger.warn(Logger::LogLevel::WARN);
+    logger.error(Logger::LogLevel::ERROR);
+    logger.positive(Logger::LogLevel::POSITIVE);
+
+    ASSERT_EQ(logger.getActiveLogLevel(), Logger::LogLevel::DEBUG);
 }
 
 TEST(Logger, enforceLogLevel) {

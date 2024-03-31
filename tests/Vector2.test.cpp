@@ -171,12 +171,3 @@ TEST(Vector2, Lerp)
     EXPECT_FLOAT_EQ(v3.x, 2.0f);
     EXPECT_FLOAT_EQ(v3.y, 3.0f);
 }
-
-TEST(Vector2, Slerp)
-{
-    finder::math::Vector2 v1(1.0f, 2.0f);
-    finder::math::Vector2 v2(3.0f, 4.0f);
-    finder::math::Vector2 v3 = finder::math::Vector2::slerp(v1, v2, 0.5f);
-    EXPECT_FLOAT_EQ(v3.x, 2.0f);
-    EXPECT_FLOAT_EQ(v3.y, 3.0f);
-}
