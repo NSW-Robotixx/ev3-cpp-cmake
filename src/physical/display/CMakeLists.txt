@@ -64,7 +64,7 @@ target_link_libraries(Window
 
 #tests
 
-add_executable(ScreenTest Screen.test.cpp)
+add_library(ScreenTest STATIC Screen.test.cpp)
 
 target_sources(ScreenTest
     PRIVATE
