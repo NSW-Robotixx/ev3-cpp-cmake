@@ -1,7 +1,10 @@
 #include <gtest/gtest.h>
 #include <Logger.test.cpp>
+#include <MotorPort.test.cpp>
+#include <Port.test.cpp>
 #include <PortManager.test.cpp>
 #include <Screen.test.cpp>
+#include <SensorPort.test.cpp>
 #include <Vector2.test.cpp>
 // #include <Vector3.test.cpp>
 #include <Window.test.cpp>

@@ -7,12 +7,12 @@ message(STATUS SRC_FILES: ${SRC_FILES})
 add_library(all_tests STATIC ${SRC_FILES})
 
 
-target_link_libraries(
-    all_tests
-    gtest_main
-    Logger
-    Port
-    PortManager
-    Vector3
-    Vector2
+target_link_libraries(all_tests
+    PUBLIC    
+        gtest_main
+        Logger
+        Port
+        PortManager
+        Vector3
+        Vector2
 )
