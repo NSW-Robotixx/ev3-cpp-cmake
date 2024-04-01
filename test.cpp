@@ -1,4 +1,5 @@
 #include <gtest/gtest.h>
+#include <initFiles.test.cpp>
 #include <Logger.test.cpp>
 #include <MotorPort.test.cpp>
 #include <Port.test.cpp>

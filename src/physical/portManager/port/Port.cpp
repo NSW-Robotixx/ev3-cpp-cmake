@@ -9,6 +9,10 @@ namespace finder
 
         Port::Port()
         {
+            _f_enabled = false;
+            if (_path.empty()) {
+                return;
+            }
             _f_enabled = initFiles();
         }
 
@@ -132,9 +136,6 @@ namespace finder
             _file_command_path = std::make_shared<std::ofstream>();
             _file_commands_path = std::make_shared<std::ifstream>();
 
-            _file_address_path->open(address_path);
-            _file_command_path->open(command_path);
-            _file_commands_path->open(commands_path);
 
             if (
                 // ( access( (_path + "/address").c_str(), F_OK ) == -1 ) ||
@@ -142,20 +143,17 @@ namespace finder
                 // ( access( (_path + "/commands").c_str(), F_OK ) == -1 )
                 false
             ) {
-                _logger.log(
-                    Logger::LogLevel::DEBUG, 
-                    "Port files not found at: " + _path + "/address"
-                );
+                _logger.log(Logger::LogLevel::DEBUG, "Port files not found at: " + _path + "/address");
             } else {
+                _file_address_path->open(address_path);
+                _file_command_path->open(command_path);
+                _file_commands_path->open(commands_path);
                 if (
                     _file_address_path->is_open() == false ||
                     _file_command_path->is_open() == false ||
                     _file_commands_path->is_open() == false
                 ) {
-                _logger.log(
-                        Logger::LogLevel::WARN, 
-                        "Failed to open port files at: " + _path + "/address"
-                    ); 
+                    _logger.log(Logger::LogLevel::WARN, "Failed to open port files at: " + _path + "/address"); 
                 } else {
                     return true;
                 }

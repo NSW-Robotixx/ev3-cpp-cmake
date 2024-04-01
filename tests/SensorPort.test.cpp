@@ -61,6 +61,27 @@ TEST(SensorPort, getPollMsPath)
     ASSERT_EQ(sensorPort.getPollMsPath(), "/sys/class/lego-sensor/sensor0/poll_ms");
 }
 
+TEST(SensorPort, getValue)
+{
+    finder::physical::SensorPort sensorPort("./test/sensor0");
+    ASSERT_EQ(sensorPort.getValue(0), -1);
+    sensorPort.overrideEnabled(true);
+    ASSERT_EQ(sensorPort.getValue(0), 0);
+
+    ASSERT_EQ(sensorPort.getValue(100), -1);
+    ASSERT_EQ(sensorPort.getValue(-1), -1);
+}
+
+TEST(SensorPort, getModes)
+{
+    finder::physical::SensorPort sensorPort("/sys/class/lego-sensor/sensor0");
+    std::vector<std::string> modes = sensorPort.getModes();
+    ASSERT_EQ(modes.size(), 0);
+    sensorPort.overrideEnabled(true);
+    modes = sensorPort.getModes();
+    ASSERT_EQ(modes.size(), 0);
+}
+
 TEST(SensorPort, filestreams)
 {
     std::filesystem::create_directories("./test/sensor0");

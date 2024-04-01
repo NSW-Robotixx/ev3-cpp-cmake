@@ -79,51 +79,7 @@ TEST(MotorPort, getCountPerRotationPath)
 TEST(MotorPort, filestreams)
 {
 
-    std::filesystem::create_directories("./test/motor0");
 
-    std::ofstream fs_address("./test/motor0/address");
-    std::ofstream fs_command("./test/motor0/command");
-    std::ofstream fs_commands("./test/motor0/commands");
-    std::ofstream fs_speed("./test/motor0/speed_sp");   
-    std::ofstream fs_position_sp("./test/motor0/position_sp");
-    std::ofstream fs_duty_cycle("./test/motor0/duty_cycle_sp");
-    std::ofstream fs_state("./test/motor0/state");
-    std::ofstream fs_polarity("./test/motor0/polarity");
-    std::ofstream fs_stop_action("./test/motor0/stop_action");
-    std::ofstream fs_count_per_rotation("./test/motor0/count_per_rot");
-
-    ASSERT_TRUE(fs_address.is_open());
-    ASSERT_TRUE(fs_command.is_open());
-    ASSERT_TRUE(fs_commands.is_open());
-    ASSERT_TRUE(fs_speed.is_open());
-    ASSERT_TRUE(fs_position_sp.is_open());
-    ASSERT_TRUE(fs_duty_cycle.is_open());
-    ASSERT_TRUE(fs_state.is_open());
-    ASSERT_TRUE(fs_polarity.is_open());
-    ASSERT_TRUE(fs_stop_action.is_open());
-    ASSERT_TRUE(fs_count_per_rotation.is_open());
-
-    fs_address << "ev3-ports:outA";
-    fs_command << "run-forever";
-    fs_commands << "run-forever run-to-abs-pos run-to-rel-pos run-timed run-direct stop reset";
-    fs_speed << "";
-    fs_position_sp << "100";
-    fs_duty_cycle << "100";
-    fs_state << "0";
-    fs_polarity << "0";
-    fs_stop_action << "0";
-    fs_count_per_rotation << "360";
-
-    fs_address.close();
-    fs_command.close();
-    fs_commands.close();
-    fs_speed.close();
-    fs_position_sp.close();
-    fs_duty_cycle.close();
-    fs_state.close();
-    fs_polarity.close();
-    fs_stop_action.close();
-    fs_count_per_rotation.close();
 
     finder::physical::MotorPort motorPort("./test/motor0");
 
@@ -168,11 +124,4 @@ TEST(MotorPort, filestreams)
     ASSERT_EQ(polarity, "1");
     ASSERT_EQ(stop_action, "2");
     ASSERT_EQ(motorPort.getCountPerRotation(), 360);
-}
-
-TEST(MotorPort, cleanUp)
-{
-    std::filesystem::remove_all("./test");
-
-    ASSERT_FALSE(std::filesystem::exists("./test/motor0/address"));
 }

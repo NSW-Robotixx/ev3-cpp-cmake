@@ -13,14 +13,14 @@ namespace finder
             _is_initialized = false;
         }
 
-        SensorPort::SensorPort(std::string port_name): Port()
+        SensorPort::SensorPort(std::string port_name): Port(port_name)
         {
             setBasePath(port_name);
             _is_initialized = false;
             initFiles();
         }
 
-        SensorPort::SensorPort(std::shared_ptr<Port> port): Port()
+        SensorPort::SensorPort(std::shared_ptr<Port> port): Port(port->getBasePath())
         {
             setBasePath(port->getBasePath());
             _is_initialized = false;
@@ -185,7 +185,7 @@ namespace finder
                 std::filesystem::exists(getModePath()) == false ||
                 std::filesystem::exists(getModesPath()) == false ||
                 std::filesystem::exists(getNumValuesPath()) == false ||
-                std::filesystem::exists(getPollMsPath()) == false
+                std::filesystem::exists(getPollMsPath()) == false 
             ) {
                 _logger.log(
                     Logger::LogLevel::DEBUG, 
