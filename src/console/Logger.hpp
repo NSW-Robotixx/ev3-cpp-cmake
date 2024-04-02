@@ -42,6 +42,7 @@ namespace finder
 
                 void positive(const std::string& message);
                 void positive(const LogLevel& message);
+                void success(const std::string& message) { this->positive(message); };
 
                 static void enforceLogLevel(LogLevel level);
                 static void removeLogLevelEnforcement() {_logLevelEnforced = false;}
