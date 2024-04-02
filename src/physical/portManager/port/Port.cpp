@@ -126,7 +126,7 @@ namespace finder
 
         bool Port::initFiles()
         {
-            bool full_success = false;
+            bool full_success = true;
 
             std::string address_path = _path + "/address";
             std::string command_path = _path + "/command";
@@ -137,57 +137,48 @@ namespace finder
             _file_commands_path = std::make_shared<std::ifstream>(commands_path);
 
             // check if address file is opened
-            if (!_file_address_path->is_open()) {
-                _logger.warn("Failed to open address file at: " + address_path);
-                _file_address_path.reset();
-                full_success = false;
+            if (!_file_address_path->fail()) {
+                if (!_file_address_path->is_open()) {
+                    _logger.warn("Failed to open address file at: " + address_path);
+                    _file_address_path.reset();
+                    full_success = false;
+                } else {
+                    _logger.success("Opened address file at: " + address_path);
+                }
             } else {
-                _logger.success("Opened address file at: " + address_path);
+                _logger.error("File does not exist at: " + address_path);
+                full_success = false;
             }
 
             // check if command file is opened
-            if (!_file_command_path->is_open()) {
-                _logger.warn("Failed to open command file at: " + command_path);
-                _file_command_path.reset();
-                full_success = false;
+            if (!_file_command_path->fail()) {
+                if (!_file_command_path->is_open()) {
+                    _logger.warn("Failed to open command file at: " + command_path);
+                    _file_command_path.reset();
+                    full_success = false;
+                } else {
+                    _logger.success("Opened command file at: " + command_path);
+                }
             } else {
-                _logger.success("Opened command file at: " + command_path);
+                _logger.error("File does not exist at: " + command_path);
+                full_success = false;
             }
 
             // check if commands file is opened
-            if (!_file_commands_path->is_open()) {
-                _logger.warn("Failed to open commands file at: " + commands_path);
-                _file_commands_path.reset();
-                full_success = false;
+            if (!_file_commands_path->fail()) {
+                if (!_file_commands_path->is_open()) {
+                    _logger.warn("Failed to open commands file at: " + commands_path);
+                    _file_commands_path.reset();
+                    full_success = false;
+                } else {
+                    _logger.success("Opened commands file at: " + commands_path);
+                }
             } else {
-                _logger.success("Opened commands file at: " + commands_path);
+                _logger.error("File does not exist at: " + commands_path);
+                full_success = false;
             }
 
             return full_success;
-
-            // using namespace ::finder::console;
-            // if (
-            //     // ( access( (_path + "/address").c_str(), F_OK ) == -1 ) ||
-            //     // ( access( (_path + "/command").c_str(), F_OK ) == -1 ) ||
-            //     // ( access( (_path + "/commands").c_str(), F_OK ) == -1 )
-            //     false
-            // ) {
-            //     _logger.log(Logger::LogLevel::DEBUG, "Port files not found at: " + _path + "/address");
-            // } else {
-            //     _file_address_path->open(address_path);
-            //     _file_command_path->open(command_path);
-            //     _file_commands_path->open(commands_path);
-            //     if (
-            //         _file_address_path->is_open() == false ||
-            //         _file_command_path->is_open() == false ||
-            //         _file_commands_path->is_open() == false
-            //     ) {
-            //         _logger.log(Logger::LogLevel::WARN, "Failed to open port files at: " + _path + "/address"); 
-            //     } else {
-            //         return true;
-            //     }
-            // }
-            // return false;
         }
 
         bool Port::isEnabled()

@@ -35,7 +35,7 @@ TEST(initFiles, createFilesMotor0)
     fs_address << "ev3-ports:outA";
     fs_command << "run-forever";
     fs_commands << "run-forever run-to-abs-pos run-to-rel-pos run-timed run-direct stop reset";
-    fs_speed << "";
+    fs_speed << "0";
     fs_position_sp << "100";
     fs_duty_cycle << "100";
     fs_state << "0";
@@ -65,6 +65,8 @@ TEST(initFiles, createFilesSensor0)
     std::ofstream fs_num_values("./test/sensor0/num_values");
     std::ofstream fs_poll_ms("./test/sensor0/poll_ms");
     std::ofstream fs_value0("./test/sensor0/value0");
+    std::ofstream fs_command("./test/sensor0/command");
+    std::ofstream fs_commands("./test/sensor0/commands");
 
     ASSERT_TRUE(fs_address.is_open());
     ASSERT_TRUE(fs_mode.is_open());
@@ -72,6 +74,8 @@ TEST(initFiles, createFilesSensor0)
     ASSERT_TRUE(fs_num_values.is_open());
     ASSERT_TRUE(fs_poll_ms.is_open());
     ASSERT_TRUE(fs_value0.is_open());
+    ASSERT_TRUE(fs_command.is_open());
+    ASSERT_TRUE(fs_commands.is_open());
 
     fs_address << "ev3-ports:in1";
     fs_mode << "EV3-ULTRASONIC";
@@ -79,6 +83,8 @@ TEST(initFiles, createFilesSensor0)
     fs_num_values << "1";
     fs_poll_ms << "100";
     fs_value0 << "42";
+    fs_command << "value0";
+    fs_commands << "value0 value1 value2 value3";
 
     fs_address.close();
     fs_mode.close();
@@ -86,4 +92,6 @@ TEST(initFiles, createFilesSensor0)
     fs_num_values.close();
     fs_poll_ms.close();
     fs_value0.close();
+    fs_command.close();
+    fs_commands.close();
 }

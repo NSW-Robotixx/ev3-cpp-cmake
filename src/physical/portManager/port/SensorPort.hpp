@@ -37,7 +37,7 @@ namespace finder
 
                 static std::vector<sensor_mode_t> _modes;
 
-                std::shared_ptr<std::ifstream> _file_value_path;
+                std::vector<std::shared_ptr<std::ifstream>> _file_value_path;
                 std::shared_ptr<std::ofstream> _file_mode_path;
                 std::shared_ptr<std::ifstream> _file_modes_path;
                 std::shared_ptr<std::ifstream> _file_num_values_path;
@@ -45,7 +45,7 @@ namespace finder
 
                 bool _is_initialized;
 
-                void initFiles();
+                bool initFiles();
         };
     } // namespace physical
     

@@ -16,9 +16,12 @@ TEST(SensorPort, Constructor)
 
 TEST(SensorPort, ConstructorWithPort)
 {
-    std::shared_ptr<finder::physical::Port> port = std::make_shared<finder::physical::Port>("/sys/class/lego-sensor/sensor0");
+    std::shared_ptr<finder::physical::Port> port = std::make_shared<finder::physical::Port>("./test/sensor0");
+
     finder::physical::SensorPort sensorPort(port);
+
     ASSERT_EQ(sensorPort.getDeviceType(), finder::physical::DeviceType::SENSOR);
+    ASSERT_ANY_THROW(finder::physical::SensorPort sensorPort(""));
 }
 
 TEST(SensorPort, getValuePath)
@@ -64,9 +67,10 @@ TEST(SensorPort, getPollMsPath)
 TEST(SensorPort, getValue)
 {
     finder::physical::SensorPort sensorPort("./test/sensor0");
+    sensorPort.overrideEnabled(false);
     ASSERT_EQ(sensorPort.getValue(0), -1);
     sensorPort.overrideEnabled(true);
-    ASSERT_EQ(sensorPort.getValue(0), 0);
+    ASSERT_EQ(sensorPort.getValue(0), 42);
 
     ASSERT_EQ(sensorPort.getValue(100), -1);
     ASSERT_EQ(sensorPort.getValue(-1), -1);
@@ -113,7 +117,7 @@ TEST(SensorPort, filestreams)
     fs_commands.close();
 
     finder::physical::SensorPort sensorPort("./test/sensor0");
-    sensorPort.setBasePath("./test/sensor0");
+    // sensorPort.setBasePath("./test/sensor0");
     ASSERT_EQ(sensorPort.getDeviceType(), finder::physical::DeviceType::SENSOR);
     ASSERT_EQ(sensorPort.getValuePath(0), "./test/sensor0/value0");
 
