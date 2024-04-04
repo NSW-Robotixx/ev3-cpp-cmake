@@ -18,6 +18,7 @@ TEST(initFiles, createFilesMotor0)
     std::ofstream fs_stop_action("./test/motor0/stop_action");
     std::ofstream fs_count_per_rotation("./test/motor0/count_per_rot");
 
+
     ASSERT_TRUE(fs_address.is_open());
     ASSERT_TRUE(fs_command.is_open());
     ASSERT_TRUE(fs_commands.is_open());
@@ -28,8 +29,6 @@ TEST(initFiles, createFilesMotor0)
     ASSERT_TRUE(fs_polarity.is_open());
     ASSERT_TRUE(fs_stop_action.is_open());
     ASSERT_TRUE(fs_count_per_rotation.is_open());
-
-
     
 
     fs_address << "ev3-ports:outA";

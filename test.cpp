@@ -1,10 +1,13 @@
 #include <gtest/gtest.h>
+#include <DeviceManager.test.cpp>
 #include <initFiles.test.cpp>
 #include <Logger.test.cpp>
+#include <MotorManager.test.cpp>
 #include <MotorPort.test.cpp>
 #include <Port.test.cpp>
 #include <PortManager.test.cpp>
 #include <Screen.test.cpp>
+#include <SensorManager.test.cpp>
 #include <SensorPort.test.cpp>
 #include <Vector2.test.cpp>
 // #include <Vector3.test.cpp>

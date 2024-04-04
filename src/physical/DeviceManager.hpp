@@ -15,18 +15,7 @@ namespace finder
                 DeviceManager();
                 ~DeviceManager();
 
-                // TODO: Change to SensorPorts and MotorPorts
-                static std::shared_ptr<SensorPort> getGyroSensor();
-                static std::shared_ptr<SensorPort> getColorSensorLeft();
-                static std::shared_ptr<SensorPort> getColorSensorRight();
-                static std::shared_ptr<SensorPort> getColorSensorFront();
-
-                static std::shared_ptr<MotorPort> getMotorLeft();
-                static std::shared_ptr<MotorPort> getMotorRight();
-                static std::shared_ptr<MotorPort> getMotorShift();
-                static std::shared_ptr<MotorPort> getMotorTool();
-
-            private:
+            protected:
                 static std::shared_ptr<PortManager> _portManager;
 
                 static std::shared_ptr<SensorPort> _gyroSensor;
@@ -39,6 +28,7 @@ namespace finder
                 static std::shared_ptr<MotorPort> _motorShift;
                 static std::shared_ptr<MotorPort> _motorTool;
 
+            private:
                 static bool _initialized;
 
                 static void init();

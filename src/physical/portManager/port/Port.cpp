@@ -13,7 +13,7 @@ namespace finder
             if (_path.empty()) {
                 return;
             }
-            _f_enabled = initFiles();
+            // _f_enabled = initFiles(); // not needed, will not happen
         }
 
         Port::Port(const path_port_t &port)

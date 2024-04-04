@@ -12,6 +12,8 @@ TEST(SensorPort, Constructor)
 {
     finder::physical::SensorPort sensorPort("/sys/class/lego-sensor/sensor0");
     ASSERT_EQ(sensorPort.getDeviceType(), finder::physical::DeviceType::SENSOR);
+
+    ASSERT_ANY_THROW(finder::physical::SensorPort sensorPort(""));
 }
 
 TEST(SensorPort, ConstructorWithPort)
@@ -21,7 +23,18 @@ TEST(SensorPort, ConstructorWithPort)
     finder::physical::SensorPort sensorPort(port);
 
     ASSERT_EQ(sensorPort.getDeviceType(), finder::physical::DeviceType::SENSOR);
-    ASSERT_ANY_THROW(finder::physical::SensorPort sensorPort(""));
+
+    std::shared_ptr<finder::physical::Port> port2 = std::make_shared<finder::physical::Port>("");
+
+    ASSERT_ANY_THROW(finder::physical::SensorPort sensorPort(port2));
+}
+
+TEST(SensorPort, setBasePath)
+{
+    finder::physical::SensorPort sensorPort;
+    sensorPort.setBasePath("./test/sensor0");
+    ASSERT_EQ(sensorPort.getDeviceType(), finder::physical::DeviceType::SENSOR);
+    ASSERT_EQ(sensorPort.getBasePath(), "./test/sensor0");
 }
 
 TEST(SensorPort, getValuePath)
@@ -137,7 +150,14 @@ TEST(SensorPort, filestreams)
     ASSERT_EQ(modes[2], "EV3-Ultrasonic");
 
     ASSERT_EQ(sensorPort.getNumValues(), 1);
+    sensorPort.overrideEnabled(false);
+    ASSERT_EQ(sensorPort.getNumValues(), -1);
+    sensorPort.overrideEnabled(true);
+
     ASSERT_EQ(sensorPort.getPollMs(), 100);
+    sensorPort.overrideEnabled(false);
+    ASSERT_EQ(sensorPort.getPollMs(), -1);
+    sensorPort.overrideEnabled(true);
 }
 
 TEST(SensorPort, cleanUp)

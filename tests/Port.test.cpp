@@ -49,6 +49,38 @@ TEST(Port, getCommandsPath)
     EXPECT_EQ(port.getCommandsPath(), "/sys/class/lego-sensor/sensor0/commands");
 }
 
+TEST(Port, getAddress)
+{
+    finder::physical::Port port;
+    port.setBasePath("./test/sensor0");
+    EXPECT_EQ(port.getAddress(), "ev3-ports:in1");
+    port.overrideEnabled(false);
+    EXPECT_EQ(port.getAddress(), "");
+}
+
+TEST(Port, setCommand)
+{
+    finder::physical::Port port;
+    port.setBasePath("./test/sensor0");
+    EXPECT_EQ(port.setCommand("test"), true);
+    port.overrideEnabled(false);
+    EXPECT_EQ(port.setCommand("test"), false);
+}
+
+TEST(Port, getCommands)
+{
+    finder::physical::Port port;
+    port.setBasePath("./test/sensor0");
+    std::vector<std::string> commands = port.getCommands();
+    for (std::string& command : commands) {
+        std::cout << command << std::endl;
+    }
+    ASSERT_EQ(commands.size(), 0);
+    port.overrideEnabled(false);
+    commands = port.getCommands();
+    ASSERT_EQ(commands.size(), 0);
+}
+
 TEST(Port, getDeviceType)
 {
     finder::physical::Port sensorPort;

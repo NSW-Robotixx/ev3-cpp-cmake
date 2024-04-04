@@ -17,4 +17,5 @@ target_link_libraries(all_tests
         PortManager
         Vector3
         Vector2
+        DeviceManager
 )
