@@ -6,8 +6,8 @@ set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED True)
 
 # Add compiler flags for coverage
-set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -g -O0 --coverage")
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -g -O0 --coverage")
+set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -g -O1 --coverage")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -g -O1 --coverage")
 
 # add cmake-modules directory
 LIST(APPEND CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/cmake-modules)

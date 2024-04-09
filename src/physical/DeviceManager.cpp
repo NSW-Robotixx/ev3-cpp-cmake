@@ -15,6 +15,18 @@ namespace finder
         std::shared_ptr<MotorPort> DeviceManager::_motorTool;
         bool DeviceManager::_initialized = false;
 
+        struct DeviceType
+        {
+            int GYRO = 1;
+            int COLOR_LEFT = 2;
+            int COLOR_RIGHT = 3;
+            int COLOR_FRONT = 4;
+            int MOTOR_LEFT = 5;
+            int MOTOR_RIGHT = 6;
+            int MOTOR_SHIFT = 7;
+            int MOTOR_TOOL  = 8;
+        };
+
 
         DeviceManager::DeviceManager()
         {

@@ -2,7 +2,14 @@
 #define __SENSOR_MANAGER_HPP__
 
 #include <physical/DeviceManager.hpp>
+#include <physical/portManager/PortManager.hpp>
+#include <console/Logger.hpp>
 #include <memory>
+#include <functional>
+#include <vector>
+#include <mutex>
+#include <future>
+#include <map>
 
 namespace finder::physical
 {
@@ -12,11 +19,13 @@ namespace finder::physical
             SensorManager();
             ~SensorManager();
 
-            void readAllSensors();
-            int readGyro();
-            int readColorLeft();
-            int readColorRight();
-            int readColorFront();
+            static void readAllSensors();
+            static int readGyro();
+            static int readColorLeft();
+            static int readColorRight();
+            static int readColorFront();
+
+            static void addEventListeners(DeviceType port, std::function<void(int)> callback);
 
             static void Dispatcher();
 
@@ -26,6 +35,18 @@ namespace finder::physical
             static int _colorRightValue;
             static int _colorFrontValue;
 
+            static std::mutex _gyroValueMutex;
+            static std::mutex _colorLeftValueMutex;
+            static std::mutex _colorRightValueMutex;
+            static std::mutex _colorFrontValueMutex;
+
+            static std::vector<std::map<DeviceType, std::function<void(int)>>> _eventListeners;
+
+            static std::mutex _stopDispatcherMutex;
+            static bool _stopDispatcher;
+            static std::future<void> _dispatcherFuture;
+
+            static console::Logger _logger; 
     };
 } // namespace finder::physical
 
