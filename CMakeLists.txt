@@ -22,9 +22,9 @@ add_executable(Main main.cpp)
 add_executable(Test test.cpp)
 
 # add include directories
-# include_directories(${CMAKE_SOURCE_DIR}/src)
+# include_directories(${CMAKE_SOURCE_DIR}/lib)
 # include_directories(${CMAKE_SOURCE_DIR}/tests)
-add_subdirectory(src)
+add_subdirectory(lib)
 add_subdirectory(tests)
 
 # set executables to be static
@@ -58,8 +58,8 @@ FetchContent_MakeAvailable(googletest)
     
     
 target_include_directories(Test PUBLIC ${CMAKE_SOURCE_DIR}/tests)
-target_include_directories(Test PUBLIC ${CMAKE_SOURCE_DIR}/src)
-target_include_directories(Main PUBLIC ${CMAKE_SOURCE_DIR}/src)
+target_include_directories(Test PUBLIC ${CMAKE_SOURCE_DIR}/lib)
+target_include_directories(Main PUBLIC ${CMAKE_SOURCE_DIR}/lib)
     
     target_link_libraries(Main 
     PUBLIC
@@ -115,7 +115,7 @@ if (CMAKE_COMPILER_IS_GNUCXX)
     set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -O0")
 
     # optional excludes - None needed here
-    set(COVERAGE_EXCLUDES build/* src/*.test.cpp) # this is optional if you want to exclude some directory from the report
+    set(COVERAGE_EXCLUDES build/* lib/*.test.cpp) # this is optional if you want to exclude some directory from the report
 
     # importantly, set the path to the gcovr executable that you downladed
     set(GCOVR_PATH "/home/niklas/.local/bin/gcovr")
