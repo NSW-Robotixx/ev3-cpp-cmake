@@ -18,13 +18,14 @@ set(CMAKE_EXE_LINKER_FLAGS "-static-libgcc -static-libstdc++")
 # end of new and untested stuff
 
 # add executables
-add_executable(Main main.cpp)
-add_executable(Test test.cpp)
+add_executable(Main src/main.cpp)
+add_executable(Test ${PROJECT_SOURCE_DIR}/src/test.cpp)
 
 # add include directories
 # include_directories(${CMAKE_SOURCE_DIR}/lib)
 # include_directories(${CMAKE_SOURCE_DIR}/tests)
 add_subdirectory(lib)
+add_subdirectory(src)
 add_subdirectory(tests)
 
 # set executables to be static

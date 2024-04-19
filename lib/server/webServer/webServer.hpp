@@ -1,3 +1,6 @@
+#ifndef __WEBSERVER_H__
+#define __WEBSERVER_H__
+
 #include <server/webServer/http_server/http_server.h>
 #include <server/webServer/http_server/http_message.h>
 #include <server/webServer/http_server/uri.h>
@@ -5,6 +8,7 @@
 
 namespace finder::server
 {
+
     class WebServer
     {
         public:
@@ -25,3 +29,5 @@ namespace finder::server
             static void setupRoutes();
     };
 } // namespace finder::server
+
+#endif // __WEBSERVER_H__

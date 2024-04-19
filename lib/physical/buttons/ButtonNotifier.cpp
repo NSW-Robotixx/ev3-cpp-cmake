@@ -13,7 +13,7 @@ namespace finder::physical::buttons
     {
         _ifstream.open(EVENT_PATH, std::ios::in|std::ios::binary);
         if (!_ifstream.is_open()) {
-            throw(new std::invalid_argument{"Error while opening /dev/input/by-path/platform-gpio_keys-event!"});
+            throw(new std::invalid_argument{"Error while opening /dev/input/by-path/platform-gpio_keys-event"});
         }
 
         _listener_thread = std::async(std::launch::async, &ButtonNotifier::Dispatcher, this);

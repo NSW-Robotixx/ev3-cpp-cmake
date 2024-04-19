@@ -28,7 +28,7 @@ namespace finder::physical::buttons
             void Dispatcher();
 
         protected:
-            ButtonNotifier();        
+            ButtonNotifier();
 
             virtual void onButtonBackPressed();
             virtual void onButtonEnterPressed();

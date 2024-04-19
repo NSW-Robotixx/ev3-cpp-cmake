@@ -18,4 +18,19 @@ target_link_libraries(all_tests
         Vector3
         Vector2
         DeviceManager
+        ButtonNotifier
+        # Bitmaps
+        Screen
+        WindowManager
+        Window
+        MotorPort
+        SensorPort
+        http-server
+        webComponents
+        webServer
+        ServerManager
+        RobotMovement
+        UserInterface
 )
+
+target_include_directories(all_tests PUBLIC ${CMAKE_SOURCE_DIR}/lib)
