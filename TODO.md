@@ -1,4 +1,6 @@
-# Todo
+# TODO
+
+## Files
 
 - [] Line
 - [] pf
@@ -8,3 +10,8 @@
 - [] engines
     - [] location
     - [] movement
+
+
+## Bugs
+
+- [] Robot Movement to wait for readyness of motor

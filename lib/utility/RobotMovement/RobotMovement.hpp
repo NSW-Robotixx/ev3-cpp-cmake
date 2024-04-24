@@ -4,6 +4,8 @@
 #include <vector>
 #include <string>
 #include <memory>
+#include <future>
+#include <mutex>
 #include <physical/DeviceManager.hpp>
 #include <physical/portManager/port/MotorPort.hpp>
 #include <physical/portManager/port/SensorPort.hpp>
@@ -45,6 +47,8 @@ namespace finder::robot
 
             static void setSpeed(int speed);
             static void setDutyCycle(int dutyCycle);
+
+            static void awaitMotorReady();
         
         private:
             static std::shared_ptr<physical::MotorPort> _motorLeft;
@@ -56,6 +60,11 @@ namespace finder::robot
             static int _dutyCycle;
 
             static finder::console::Logger _logger;
+
+            static unsigned long int _movementID; 
+            static std::mutex _movementIDMutex;
+
+            static std::future<void> _movementFuture;
     };
 } // namespace finder::robot
 
