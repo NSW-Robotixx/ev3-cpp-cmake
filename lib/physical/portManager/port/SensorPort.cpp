@@ -8,10 +8,12 @@ namespace finder
         ::finder::console::Logger SensorPort::_logger;
         std::vector<sensor_mode_t> SensorPort::_modes{};
 
+        /*
         SensorPort::SensorPort(): Port()
         {
             _is_initialized = false;
         }
+        */
 
         SensorPort::SensorPort(std::string port_name): Port(port_name)
         {

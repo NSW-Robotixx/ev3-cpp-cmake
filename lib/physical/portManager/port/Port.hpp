@@ -38,7 +38,7 @@ namespace finder
         struct Port
         {
             public:
-                Port();
+                // Port();
                 Port(const path_port_t& port);
                 Port(std::shared_ptr<Port> port);
                 Port(Port&) = delete;

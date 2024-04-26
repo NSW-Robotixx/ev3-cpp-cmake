@@ -7,6 +7,7 @@ namespace finder
     {
         ::finder::console::Logger Port::_logger = ::finder::console::Logger{};
 
+        /*
         Port::Port()
         {
             _f_enabled = false;
@@ -15,6 +16,7 @@ namespace finder
             }
             // _f_enabled = initFiles(); // not needed, will not happen
         }
+        */
 
         Port::Port(const path_port_t &port)
         {
@@ -29,10 +31,11 @@ namespace finder
         void Port::setBasePath(const path_port_t &path)
         {
             if (path.empty()) {
-                _logger.log(
-                    ::finder::console::Logger::LogLevel::WARN, 
-                    "Port path is empty"
-                );
+                // _logger.log(
+                //     ::finder::console::Logger::LogLevel::WARN, 
+                //     "Port path is empty"
+                // );
+                throw std::invalid_argument("Port path is empty");
                 return;
             }
             _path = path;

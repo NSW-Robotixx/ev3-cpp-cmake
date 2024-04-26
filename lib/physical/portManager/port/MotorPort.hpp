@@ -45,7 +45,7 @@ namespace finder
 
         class MotorPort : public Port {
             public:
-                MotorPort();
+                // MotorPort();
                 MotorPort(std::string port_name);
                 MotorPort(std::shared_ptr<Port> port);
 

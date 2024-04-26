@@ -12,7 +12,7 @@ namespace finder
 
         class SensorPort : public Port {
             public:
-                SensorPort();
+                // SensorPort();
                 SensorPort(std::string port_name);
                 SensorPort(std::shared_ptr<Port> port);
 

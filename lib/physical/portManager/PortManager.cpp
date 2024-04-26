@@ -134,7 +134,8 @@ namespace finder
                     _logger.debug("Port not found: " + port_address + " (borrowDevice)");
                 }
             }
-            return std::shared_ptr<Port>(new Port{});
+            throw std::logic_error("Port not found: " + port_address + " (borrowDevice)");
+            // return std::shared_ptr<Port>(new Port{});
         }
 
         std::shared_ptr<SensorPort> PortManager::borrowSensor(std::string port_address)
@@ -164,7 +165,8 @@ namespace finder
                 return std::shared_ptr<MotorPort>(new MotorPort{borrowDevice(DeviceType::MOTOR, "ev3-ports:outD")});
 
             default:
-                _logger.error("Motor Port not recognized: " + std::to_string(static_cast<char>(port)));
+                // _logger.error("Motor Port not recognized: " + std::to_string(static_cast<char>(port)));
+                throw std::logic_error("Motor Port not recognized: " + std::to_string(static_cast<char>(port)));
                 break;
             }
         }

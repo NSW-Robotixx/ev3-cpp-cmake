@@ -6,10 +6,12 @@ namespace finder
     {
         ::finder::console::Logger MotorPort::_logger = ::finder::console::Logger{};
 
+        /*
         MotorPort::MotorPort() : Port()
         {
             init();
         }
+        */
 
         MotorPort::MotorPort(std::string port_name) : Port(port_name)
         {
