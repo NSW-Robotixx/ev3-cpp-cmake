@@ -12,10 +12,15 @@ namespace finder::robot
 
     finder::console::Logger RobotMovement::_logger;
 
-    unsigned long int RobotMovement::_movementID;
+    unsigned long int RobotMovement::_movementID = 0;
+    unsigned long int RobotMovement::_movementIDAhead = 0;
     std::mutex RobotMovement::_movementIDMutex;
 
-    std::future<void> _movementFuture;
+    std::queue<std::future<void>> RobotMovement::_movementFuture;
+    std::mutex RobotMovement::_movementFutureMutex;
+
+    std::queue<std::shared_ptr<std::condition_variable>> RobotMovement::_movementQueueCV;
+    std::queue<std::shared_ptr<std::mutex>> RobotMovement::_movementQueueCVMutex;
 
 
     RobotMovement::RobotMovement()
@@ -31,329 +36,73 @@ namespace finder::robot
 
     RobotMovement::~RobotMovement()
     {
+        stop();
     }
 
-    void RobotMovement::moveForward()
+    void RobotMovement::move(MovementType type, int distance = 0, int speed = MovementAction::getDefaultSpeed(), float arcRatio = 1)
     {
-        _movementFuture = std::async(std::launch::async, [&](){
-            awaitMotorReady();
-            if(_motorLeft->isEnabled() && _motorRight->isEnabled())
-            {
-                _motorLeft->setSpeed(_speed);
-                _motorRight->setSpeed(_speed);
+        _movementQueueCV.push(std::shared_ptr<std::condition_variable>( new std::condition_variable{}));
+        _movementQueueCVMutex.push(std::shared_ptr<std::mutex>( new std::mutex{}));
 
-                _motorLeft->setCommand(physical::MotorCommand::RUN_FOREVER);
-                _motorRight->setCommand(physical::MotorCommand::RUN_FOREVER);
-            } else {
-                _logger.error("Motor is not enabled");
+        _movementFuture.push(std::async(std::launch::async, [&](){
+
+            // check if this thread is the only one in the queue, if not wait for signal to continue
+            std::size_t _movementFutureSize;
+            {
+                std::lock_guard<std::mutex> lock(_movementFutureMutex);
+                _movementFutureSize = _movementFuture.size();
             }
-        });
+
+            if (_movementFutureSize != 1)
+            {
+                std::unique_lock<std::mutex> lk(*_movementQueueCVMutex.back());
+                _movementQueueCV.back()->wait(lk, []{ return false; });
+            }
+
+
+            awaitMotorReady();
+            
+            MovementAction(type, distance, speed, arcRatio);
+        }));
     }
 
-    void RobotMovement::moveForward(int distance)
-    {
-        _movementFuture = std::async(std::launch::async, [&](){
-            awaitMotorReady();
-            if(_motorLeft->isEnabled() && _motorRight->isEnabled())
-            {
-                _motorLeft->setSpeed(_speed);
-                _motorRight->setSpeed(_speed);
-
-                _motorLeft->setPositionSp(distance);
-                _motorRight->setPositionSp(distance);
-
-                _motorLeft->setCommand(physical::MotorCommand::RUN_TO_REL_POS);
-                _motorRight->setCommand(physical::MotorCommand::RUN_TO_REL_POS);
-            } else {
-                _logger.error("Motor is not enabled");
-            }
-        });
-    }
-
-    void RobotMovement::moveForward(int distance, int speed)
-    {
-        _movementFuture = std::async(std::launch::async, [&](){
-            awaitMotorReady();
-            if(_motorLeft->isEnabled() && _motorRight->isEnabled())
-            {
-                _motorLeft->setSpeed(speed);
-                _motorRight->setSpeed(speed);
-
-                _motorLeft->setPositionSp(distance);
-                _motorRight->setPositionSp(distance);
-
-                _motorLeft->setCommand(physical::MotorCommand::RUN_TO_REL_POS);
-                _motorRight->setCommand(physical::MotorCommand::RUN_TO_REL_POS);
-            } else {
-                _logger.error("Motor is not enabled");
-            }
-        });
-    }
-
-    void RobotMovement::moveBackward()
-    {
-        _movementFuture = std::async(std::launch::async, [&](){
-            awaitMotorReady();
-            if(_motorLeft->isEnabled() && _motorRight->isEnabled())
-            {
-                _motorLeft->setPolarity(physical::MotorPolarity::INVERSED);
-                _motorRight->setPolarity(physical::MotorPolarity::INVERSED);
-
-                _motorLeft->setSpeed(_speed);
-                _motorRight->setSpeed(_speed);
-
-                _motorLeft->setCommand(physical::MotorCommand::RUN_FOREVER);
-                _motorRight->setCommand(physical::MotorCommand::RUN_FOREVER);
-            } else {
-                _logger.error("Motor is not enabled");
-            }
-        });
-    }
-
-    void RobotMovement::moveBackward(int distance)
-    {
-        _movementFuture = std::async(std::launch::async, [&](){
-            awaitMotorReady();
-            if(_motorLeft->isEnabled() && _motorRight->isEnabled())
-            {
-                _motorLeft->setPolarity(physical::MotorPolarity::INVERSED);
-                _motorRight->setPolarity(physical::MotorPolarity::INVERSED);
-
-                _motorLeft->setSpeed(_speed);
-                _motorRight->setSpeed(_speed);
-
-                _motorLeft->setPositionSp(distance);
-                _motorRight->setPositionSp(distance);
-
-                _motorLeft->setCommand(physical::MotorCommand::RUN_TO_REL_POS);
-                _motorRight->setCommand(physical::MotorCommand::RUN_TO_REL_POS);
-            } else {
-                _logger.error("Motor is not enabled");
-            }
-        });
-    }
-
-    void RobotMovement::moveBackward(int distance, int speed)
-    {
-        _movementFuture = std::async(std::launch::async, [&](){
-            awaitMotorReady();
-            if(_motorLeft->isEnabled() && _motorRight->isEnabled())
-            {
-                _motorLeft->setPolarity(physical::MotorPolarity::INVERSED);
-                _motorRight->setPolarity(physical::MotorPolarity::INVERSED);
-
-                _motorLeft->setSpeed(speed);
-                _motorRight->setSpeed(speed);
-
-                _motorLeft->setPositionSp(distance);
-                _motorRight->setPositionSp(distance);
-
-                _motorLeft->setCommand(physical::MotorCommand::RUN_TO_REL_POS);
-                _motorRight->setCommand(physical::MotorCommand::RUN_TO_REL_POS);
-            } else {
-                _logger.error("Motor is not enabled");
-            }
-        });
-    }
-
-    void RobotMovement::turnLeft()
-    {
-        _movementFuture = std::async(std::launch::async, [&](){
-            awaitMotorReady();
-            if(_motorLeft->isEnabled() && _motorRight->isEnabled())
-            {
-                _motorLeft->setDutyCycle(_dutyCycle);
-                _motorRight->setDutyCycle(LEFT_RIGHT_SWITCH * _dutyCycle);
-
-                _motorLeft->setCommand(physical::MotorCommand::RUN_DIRECT);
-                _motorRight->setCommand(physical::MotorCommand::RUN_DIRECT);
-            } else {
-                _logger.error("Motor is not enabled");
-            }
-        });
-    }
-
-    void RobotMovement::turnLeft(int angle)
-    {
-        _movementFuture = std::async(std::launch::async, [&](){
-            awaitMotorReady();
-            _logger.warn("Not implemented yet");
-            if(_motorLeft->isEnabled() && _motorRight->isEnabled())
-            {
-                _motorLeft->setDutyCycle(_dutyCycle);
-                _motorRight->setDutyCycle(LEFT_RIGHT_SWITCH * _dutyCycle);
-
-                _motorLeft->setCommand(physical::MotorCommand::RUN_TO_REL_POS);
-                _motorRight->setCommand(physical::MotorCommand::RUN_TO_REL_POS);
-            } else {
-                _logger.error("Motor is not enabled");
-            }
-        });
-    }
-
-    void RobotMovement::turnLeft(int angle, int speed)
-    {
-        _movementFuture = std::async(std::launch::async, [&](){
-            awaitMotorReady();
-            _logger.warn("Not implemented yet");
-            if(_motorLeft->isEnabled() && _motorRight->isEnabled())
-            {
-                _motorLeft->setDutyCycle(speed);
-                _motorRight->setDutyCycle(LEFT_RIGHT_SWITCH * speed);
-
-                _motorLeft->setCommand(physical::MotorCommand::RUN_TO_REL_POS);
-                _motorRight->setCommand(physical::MotorCommand::RUN_TO_REL_POS);
-            } else {
-                _logger.error("Motor is not enabled");
-            }
-        });
-    }
-
-    void RobotMovement::turnRight()
-    {
-        _movementFuture = std::async(std::launch::async, [&](){
-            awaitMotorReady();
-            if(_motorLeft->isEnabled() && _motorRight->isEnabled())
-            {
-                _motorLeft->setDutyCycle(LEFT_RIGHT_SWITCH * _dutyCycle);
-                _motorRight->setDutyCycle(_dutyCycle);
-
-                _motorLeft->setCommand(physical::MotorCommand::RUN_DIRECT);
-                _motorRight->setCommand(physical::MotorCommand::RUN_DIRECT);
-            } else {
-                _logger.error("Motor is not enabled");
-            }
-        });
-    }
-
-    void RobotMovement::turnRight(int angle)
-    {
-        _movementFuture = std::async(std::launch::async, [&](){
-            awaitMotorReady();
-            _logger.warn("Not implemented yet");
-            if(_motorLeft->isEnabled() && _motorRight->isEnabled())
-            {
-                _motorLeft->setDutyCycle(LEFT_RIGHT_SWITCH * _dutyCycle);
-                _motorRight->setDutyCycle(_dutyCycle);
-
-                _motorLeft->setCommand(physical::MotorCommand::RUN_TO_REL_POS);
-                _motorRight->setCommand(physical::MotorCommand::RUN_TO_REL_POS);
-            } else {
-                _logger.error("Motor is not enabled");
-            }
-        });
-    }
-
-    void RobotMovement::turnRight(int angle, int speed)
-    {
-        _movementFuture = std::async(std::launch::async, [&](){
-            awaitMotorReady();
-            _logger.warn("Not implemented yet");
-            if(_motorLeft->isEnabled() && _motorRight->isEnabled())
-            {
-                _motorLeft->setDutyCycle(LEFT_RIGHT_SWITCH * speed);
-                _motorRight->setDutyCycle(speed);
-
-                _motorLeft->setCommand(physical::MotorCommand::RUN_TO_REL_POS);
-                _motorRight->setCommand(physical::MotorCommand::RUN_TO_REL_POS);
-            } else {
-                _logger.error("Motor is not enabled");
-            }
-        });
-    }
-
-    void RobotMovement::turnArcLeft(int angle)
-    {
-        _movementFuture = std::async(std::launch::async, [&](){
-            awaitMotorReady();
-            _logger.warn("Not implemented yet");
-            if(_motorRight->isEnabled())
-            {
-                _motorRight->setDutyCycle(_dutyCycle);
-
-                _motorRight->setCommand(physical::MotorCommand::RUN_DIRECT);
-            } else {
-                _logger.error("Motor is not enabled");
-            }
-        });
-    }
-
-    void RobotMovement::turnArcLeft(int angle, int speed)
-    {
-        _movementFuture = std::async(std::launch::async, [&](){
-            awaitMotorReady();
-            _logger.warn("Not implemented yet");
-            if(_motorRight->isEnabled())
-            {
-                _motorRight->setDutyCycle(speed);
-
-                _motorRight->setCommand(physical::MotorCommand::RUN_DIRECT);
-            } else {
-                _logger.error("Motor is not enabled");
-            }
-        });
-    }
-
-    void RobotMovement::turnArcRight(int angle)
-    {
-        _movementFuture = std::async(std::launch::async, [&](){
-            awaitMotorReady();
-            _logger.warn("Not implemented yet");
-            if(_motorLeft->isEnabled())
-            {
-                _motorLeft->setDutyCycle(_dutyCycle);
-
-                _motorLeft->setCommand(physical::MotorCommand::RUN_DIRECT);
-            } else {
-                _logger.error("Motor is not enabled");
-            }
-        });
-    }
-
-    void RobotMovement::turnArcRight(int angle, int speed)
-    {
-        _movementFuture = std::async(std::launch::async, [&](){
-            awaitMotorReady();
-            _logger.warn("Not implemented yet");
-            if(_motorLeft->isEnabled())
-            {
-                _motorLeft->setDutyCycle(speed);
-
-                _motorLeft->setCommand(physical::MotorCommand::RUN_DIRECT);
-            } else {
-                _logger.error("Motor is not enabled");
-            }
-        });
-    }
 
     void RobotMovement::stop()
     {
-        _movementFuture = std::async(std::launch::async, [&](){
-            awaitMotorReady();
-            if(_motorLeft->isEnabled() && _motorRight->isEnabled())
+        _movementQueueCV.push(std::shared_ptr<std::condition_variable>( new std::condition_variable{}));
+        _movementQueueCVMutex.push(std::shared_ptr<std::mutex>( new std::mutex{}));
+
+        _movementFuture.push(std::async(std::launch::async, [&](){
+
+            // check if this thread is the only one in the queue, if not wait for signal to continue
+            std::size_t _movementFutureSize;
             {
-                _motorLeft->setCommand(physical::MotorCommand::STOP);
-                _motorRight->setCommand(physical::MotorCommand::STOP);
-            } else {
-                _logger.error("Motor is not enabled");
+                std::lock_guard<std::mutex> lock(_movementFutureMutex);
+                _movementFutureSize = _movementFuture.size();
             }
-        });
+
+            if (_movementFutureSize != 1)
+            {
+                std::unique_lock<std::mutex> lk(*_movementQueueCVMutex.back());
+                _movementQueueCV.back()->wait(lk, []{ return false; });
+            }
+
+
+            awaitMotorReady();
+            
+            _motorLeft->setCommand(physical::MotorCommand::STOP);
+            _motorRight->setCommand(physical::MotorCommand::STOP);
+        }));
     }
 
     void RobotMovement::setSpeed(int speed)
     {
-        _movementFuture = std::async(std::launch::async, [&](){
-            awaitMotorReady();
-            _speed = speed;
-        });
+        _speed = speed;
     }
 
     void RobotMovement::setDutyCycle(int dutyCycle)
     {
-        _movementFuture = std::async(std::launch::async, [&](){
-            awaitMotorReady();
-            _dutyCycle = dutyCycle;
-        });
+        _dutyCycle = dutyCycle;
     }
 
     void RobotMovement::awaitMotorReady()
@@ -367,6 +116,13 @@ namespace finder::robot
         ) {
             _leftState = _motorLeft->getState();
             _rightState = _motorRight->getState();
+        }
+    }
+
+    void RobotMovement::processQueueChanges()
+    {
+        if (_movementFuture.size() == 1) {
+            _movementQueueCV.front()->notify_all();
         }
     }
 

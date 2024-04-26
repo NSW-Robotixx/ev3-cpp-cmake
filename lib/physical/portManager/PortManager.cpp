@@ -1,4 +1,5 @@
 #include <physical/portManager/PortManager.hpp>
+#include "PortManager.hpp"
 
 namespace finder
 {
@@ -146,6 +147,27 @@ namespace finder
             return std::shared_ptr<MotorPort>(new MotorPort{borrowDevice(DeviceType::MOTOR, port_address)});
         }
 
+        std::shared_ptr<MotorPort> PortManager::borrowMotor(DevicePort port)
+        {
+            switch (port)
+            {
+            case DevicePort::OUTPUT_A:
+                return std::shared_ptr<MotorPort>(new MotorPort{borrowDevice(DeviceType::MOTOR, "ev3-ports:outA")});
+
+            case DevicePort::OUTPUT_B:
+                return std::shared_ptr<MotorPort>(new MotorPort{borrowDevice(DeviceType::MOTOR, "ev3-ports:outB")});
+
+            case DevicePort::OUTPUT_C:
+                return std::shared_ptr<MotorPort>(new MotorPort{borrowDevice(DeviceType::MOTOR, "ev3-ports:outC")});
+
+            case DevicePort::OUTPUT_D:
+                return std::shared_ptr<MotorPort>(new MotorPort{borrowDevice(DeviceType::MOTOR, "ev3-ports:outD")});
+
+            default:
+                _logger.error("Motor Port not recognized: " + std::to_string(static_cast<char>(port)));
+                break;
+            }
+        }
         void PortManager::returnDevice(std::shared_ptr<Port> port)
         {
             for (auto &borrowed_port : _borrowed_ports) {

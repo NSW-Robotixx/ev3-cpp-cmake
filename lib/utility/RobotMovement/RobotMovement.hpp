@@ -6,10 +6,13 @@
 #include <memory>
 #include <future>
 #include <mutex>
+#include <queue>
+#include <condition_variable>
 #include <physical/DeviceManager.hpp>
 #include <physical/portManager/port/MotorPort.hpp>
 #include <physical/portManager/port/SensorPort.hpp>
 #include <console/Logger.hpp>
+#include "MovementAction.hpp"
 
 #define LEFT_RIGHT_SWITCH -1
 
@@ -21,34 +24,16 @@ namespace finder::robot
             RobotMovement();
             ~RobotMovement();
 
-            static void moveForward();
-            static void moveForward(int distance);
-            static void moveForward(int distance, int speed);
-
-            static void moveBackward();
-            static void moveBackward(int distance);
-            static void moveBackward(int distance, int speed);
-
-            static void turnLeft();
-            static void turnLeft(int angle);
-            static void turnLeft(int angle, int speed);
-
-            static void turnRight();
-            static void turnRight(int angle);
-            static void turnRight(int angle, int speed);
-
-            static void turnArcLeft(int angle);
-            static void turnArcLeft(int angle, int speed);
-
-            static void turnArcRight(int angle);
-            static void turnArcRight(int angle, int speed);
+            static void move(MovementType type, int distance, int speed, float arcRatio);
 
             static void stop();
+
 
             static void setSpeed(int speed);
             static void setDutyCycle(int dutyCycle);
 
             static void awaitMotorReady();
+
         
         private:
             static std::shared_ptr<physical::MotorPort> _motorLeft;
@@ -61,10 +46,17 @@ namespace finder::robot
 
             static finder::console::Logger _logger;
 
-            static unsigned long int _movementID; 
+            static unsigned long int _movementID;
+            static unsigned long int _movementIDAhead;
             static std::mutex _movementIDMutex;
 
-            static std::future<void> _movementFuture;
+            static std::queue<std::future<void>> _movementFuture;
+            static std::mutex _movementFutureMutex;
+
+            static std::queue<std::shared_ptr<std::condition_variable>> _movementQueueCV;
+            static std::queue<std::shared_ptr<std::mutex>> _movementQueueCVMutex;
+            
+            static void processQueueChanges();
     };
 } // namespace finder::robot
 

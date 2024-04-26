@@ -29,10 +29,10 @@ int main(int argc, char const *argv[])
 
     finder::robot::RobotMovement robotMovement;
 
-    robotMovement.moveForward(100);
-    robotMovement.moveBackward(100);
-    robotMovement.turnLeft(90);
-    robotMovement.turnRight(90);
+    robotMovement.move(finder::robot::MovementType::FORWARD, 100, 100, 1);
+    robotMovement.move(finder::robot::MovementType::BACKWARD, 100, 100, 1);
+    robotMovement.move(finder::robot::MovementType::TURN_RIGHT, 100, 100, 1);
+    robotMovement.move(finder::robot::MovementType::TURN_LEFT, 100, 100, 1);
 
     while (true)
     {
@@ -41,6 +41,6 @@ int main(int argc, char const *argv[])
         break;
     }
 
-    logger.info("Application finished.");
+    logger.success("Application finished.");
     return 0;
 }
