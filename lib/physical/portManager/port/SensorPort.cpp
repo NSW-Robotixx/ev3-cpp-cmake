@@ -182,7 +182,10 @@ namespace finder
         DeviceType SensorPort::getDeviceType()
         {
             if (Port::getDeviceType() != DeviceType::SENSOR) {
-                _logger.warn(
+                // _logger.warn(
+                    // "SensorPort::getDeviceType() called on non-sensor port"
+                // );
+                throw new std::runtime_error(
                     "SensorPort::getDeviceType() called on non-sensor port"
                 );
             }
@@ -265,49 +268,6 @@ namespace finder
             }
 
             return full_success;
-
-
-            // using namespace ::finder::console;
-
-            // if (
-            //     std::filesystem::exists(getValuePath(0)) == false ||
-            //     std::filesystem::exists(getModePath()) == false ||
-            //     std::filesystem::exists(getModesPath()) == false ||
-            //     std::filesystem::exists(getNumValuesPath()) == false ||
-            //     std::filesystem::exists(getPollMsPath()) == false 
-            // ) {
-            //     _logger.log(
-            //         Logger::LogLevel::DEBUG, 
-            //         "SensorPort files not found at: " + getBasePath()
-            //     );
-            // } else {
-            //     _file_value_path = std::make_shared<std::ifstream>();
-            //     _file_value_path->open(getValuePath(0));
-            //     _file_mode_path = std::make_shared<std::ofstream>();
-            //     _file_mode_path->open(getModePath());
-            //     _file_modes_path = std::make_shared<std::ifstream>();
-            //     _file_modes_path->open(getModesPath());
-            //     _file_num_values_path = std::make_shared<std::ifstream>();
-            //     _file_num_values_path->open(getNumValuesPath());
-            //     _file_poll_ms_path = std::make_shared<std::ifstream>();
-            //     _file_poll_ms_path->open(getPollMsPath());
-
-            //     if (
-            //         _file_value_path->is_open() == false ||
-            //         _file_mode_path->is_open() == false ||
-            //         _file_modes_path->is_open() == false ||
-            //         _file_num_values_path->is_open() == false ||
-            //         _file_poll_ms_path->is_open() == false
-            //     ) {
-            //         _logger.log(
-            //             Logger::LogLevel::ERROR, 
-            //             "SensorPort files not opened at: " + getBasePath()
-            //         );
-            //     } else {
-            //         _is_initialized = true;
-            //     }
-            // }
-
         }
 
     } // namespace physical

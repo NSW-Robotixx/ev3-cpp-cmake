@@ -39,6 +39,11 @@ namespace finder
                     return x * other.x + y * other.y;
                 }
 
+                double distanceTo(const Vector2& other) const
+                {
+                    return sqrt(pow(x - other.x, 2) + pow(y - other.y, 2));
+                }
+
                 Vector2 operator+(const Vector2& other) const
                 {
                     return Vector2(x + other.x, y + other.y);
