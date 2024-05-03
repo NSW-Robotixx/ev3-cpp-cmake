@@ -4,7 +4,7 @@
 
 TEST(Port, getPortKey)
 {
-    finder::physical::Port port;
+    finder::physical::Port port{"/sys/class/lego-sensor/sensor0"};
     port.setBasePath("/sys/class/lego-sensor/sensor0");
     ASSERT_EQ(port.getPortKey(), -1);
 
@@ -15,7 +15,7 @@ TEST(Port, getPortKey)
 
 TEST(Port, getBasePath)
 {
-    finder::physical::Port port;
+    finder::physical::Port port{"sys/class/lego-sensor/sensor0"};
     port.setBasePath("/sys/class/lego-sensor/sensor0");
     EXPECT_EQ(port.getBasePath(), "");
     port.overrideEnabled(true);
@@ -24,7 +24,7 @@ TEST(Port, getBasePath)
 
 TEST(Port, getAddressPath)
 {
-    finder::physical::Port port;
+    finder::physical::Port port{"sys/class/lego-sensor/sensor0"};
     port.setBasePath("/sys/class/lego-sensor/sensor0");
     EXPECT_EQ(port.getAddressPath(), "");
     port.overrideEnabled(true);
@@ -33,7 +33,7 @@ TEST(Port, getAddressPath)
 
 TEST(Port, getCommandPath)
 {
-    finder::physical::Port port;
+    finder::physical::Port port{"sys/class/lego-sensor/sensor0"};
     port.setBasePath("/sys/class/lego-sensor/sensor0");
     EXPECT_EQ(port.getCommandPath(), "");
     port.overrideEnabled(true);
@@ -42,7 +42,7 @@ TEST(Port, getCommandPath)
 
 TEST(Port, getCommandsPath)
 {
-    finder::physical::Port port;
+    finder::physical::Port port{"sys/class/lego-sensor/sensor0"};
     port.setBasePath("/sys/class/lego-sensor/sensor0");
     EXPECT_EQ(port.getCommandsPath(), "");
     port.overrideEnabled(true);
@@ -51,7 +51,7 @@ TEST(Port, getCommandsPath)
 
 TEST(Port, getAddress)
 {
-    finder::physical::Port port;
+    finder::physical::Port port{"sys/class/lego-sensor/sensor0"};
     port.setBasePath("./test/sensor0");
     EXPECT_EQ(port.getAddress(), "ev3-ports:in1");
     port.overrideEnabled(false);
@@ -60,7 +60,7 @@ TEST(Port, getAddress)
 
 TEST(Port, setCommand)
 {
-    finder::physical::Port port;
+    finder::physical::Port port{"sys/class/lego-sensor/sensor0"};
     port.setBasePath("./test/sensor0");
     EXPECT_EQ(port.setCommand("test"), true);
     port.overrideEnabled(false);
@@ -69,7 +69,7 @@ TEST(Port, setCommand)
 
 // TEST(Port, getCommands)
 // {
-//     finder::physical::Port port;
+//     finder::physical::Port port{"sys/class/lego-sensor/sensor0"};
 //     port.setBasePath("./test/sensor0");
 //     std::vector<std::string> commands = port.getCommands();
 //     for (std::string& command : commands) {
@@ -83,13 +83,9 @@ TEST(Port, setCommand)
 
 TEST(Port, getDeviceType)
 {
-    finder::physical::Port sensorPort;
-    finder::physical::Port motorPort;
-    finder::physical::Port unknownPort;
-
-    sensorPort.setBasePath("/sys/class/lego-sensor/sensor0");
-    motorPort.setBasePath("/sys/class/lego-motor/motor0");
-    unknownPort.setBasePath("/sys/class/lego-unknown/unknown0");
+    finder::physical::Port sensorPort{"/sys/class/lego-sensor/senso0"};
+    finder::physical::Port motorPort{"sys/class/lego-motor/motor0"};
+    finder::physical::Port unknownPort{"/sys/class/lego-unknown/unknown0"};
 
     sensorPort.overrideEnabled(true);
     motorPort.overrideEnabled(true);

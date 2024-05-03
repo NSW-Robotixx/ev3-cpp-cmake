@@ -2,12 +2,6 @@
 
 #include <physical/portManager/port/MotorPort.hpp>
 
-TEST(MotorPort, DefaultConstructor)
-{
-    finder::physical::MotorPort motorPort;
-    ASSERT_EQ(motorPort.getDeviceType(), finder::physical::DeviceType::MOTOR);
-}
-
 TEST(MotorPort, Constructor)
 {
     finder::physical::MotorPort motorPort("/sys/class/tacho-motor/motor0");

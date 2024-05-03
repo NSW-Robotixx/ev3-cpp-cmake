@@ -2,12 +2,6 @@
 
 #include <physical/portManager/port/SensorPort.hpp>
 
-TEST(SensorPort, DefaultConstructor)
-{
-    finder::physical::SensorPort sensorPort;
-    ASSERT_EQ(sensorPort.getDeviceType(), finder::physical::DeviceType::SENSOR);
-} 
-
 TEST(SensorPort, Constructor)
 {
     finder::physical::SensorPort sensorPort("/sys/class/lego-sensor/sensor0");
@@ -31,7 +25,7 @@ TEST(SensorPort, ConstructorWithPort)
 
 TEST(SensorPort, setBasePath)
 {
-    finder::physical::SensorPort sensorPort;
+    finder::physical::SensorPort sensorPort{""};
     sensorPort.setBasePath("./test/sensor0");
     ASSERT_EQ(sensorPort.getDeviceType(), finder::physical::DeviceType::SENSOR);
     ASSERT_EQ(sensorPort.getBasePath(), "./test/sensor0");

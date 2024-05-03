@@ -16,7 +16,7 @@ namespace finder::server::webComponents
 
     void WebComponentBase::removeChild(std::shared_ptr<WebComponentBase> child)
     {
-        children.erase(std::remove(children.begin(), children.end(), child), children.end());
+        // children.erase(std::remove(children.begin(), children.end(), child), children.end());
     }
 
     std::vector<std::shared_ptr<WebComponentBase>> WebComponentBase::getChildren()

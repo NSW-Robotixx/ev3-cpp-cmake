@@ -4,6 +4,7 @@
 #include <physical/DeviceManager.hpp>
 #include <queue>
 #include <mutex>
+#include <functional>
 #include <condition_variable>
 
 namespace finder::physical

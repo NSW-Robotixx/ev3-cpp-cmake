@@ -8,6 +8,7 @@
 #include <cctype>
 #include <string>
 #include <utility>
+#include <cstdint>
 
 namespace simple_http_server {
 
@@ -31,7 +32,7 @@ class Uri {
 
   std::string scheme() const { return scheme_; }
   std::string host() const { return host_; }
-  std::uint16_t port() const { return port_; }
+  uint16_t port() const { return port_; }
   std::string path() const { return path_; }
 
  private:
@@ -39,7 +40,7 @@ class Uri {
   std::string path_;
   std::string scheme_;
   std::string host_;
-  std::uint16_t port_;
+  uint16_t port_;
 
   void SetPathToLowercase() {
     std::transform(path_.begin(), path_.end(), path_.begin(),
