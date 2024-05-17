@@ -152,7 +152,7 @@ namespace finder::pathfind
             return true;
         }
         // std::cout << "dest: " << coordinates_ << " start: " << _origin;
-        bool intersect = om.checkForIntersect({coordinates_, _origin});
+        bool intersect = om.checkForIntersect(coordinates_, _origin);
         // std::cout << " intersect: " << intersect << std::endl;
         return intersect;
     }
