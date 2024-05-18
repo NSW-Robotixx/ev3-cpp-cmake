@@ -7,17 +7,6 @@ namespace finder
     {
         ::finder::console::Logger Port::_logger = ::finder::console::Logger{};
 
-        /*
-        Port::Port()
-        {
-            _f_enabled = false;
-            if (_path.empty()) {
-                return;
-            }
-            // _f_enabled = initFiles(); // not needed, will not happen
-        }
-        */
-
         Port::Port(const path_port_t &port)
         {
             setBasePath(port);
