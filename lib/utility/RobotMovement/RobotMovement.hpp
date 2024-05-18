@@ -40,6 +40,7 @@ namespace finder::robot
             static std::shared_ptr<physical::MotorPort> _motorRight;
             static std::shared_ptr<physical::MotorPort> _motorShift;
             static std::shared_ptr<physical::MotorPort> _motorTool;
+            
 
             static int _speed;
             static int _dutyCycle;
