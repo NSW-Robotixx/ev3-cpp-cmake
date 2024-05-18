@@ -64,6 +64,7 @@ namespace finder
                  * @return The address of the port as a string.
                  */
                 std::string getAddress();
+                
                 /**
                  * Sets the command for the port.
                  *
@@ -71,6 +72,7 @@ namespace finder
                  * @return True if the command was set successfully, false otherwise.
                  */
                 bool setCommand(std::string command);
+
                 /// @brief get the commands that the port can execute from file 
                 /// @return vector of strings of the commands that the port can execute
                 std::vector<std::string> getCommands();

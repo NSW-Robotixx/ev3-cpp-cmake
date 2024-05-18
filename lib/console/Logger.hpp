@@ -9,6 +9,7 @@ namespace finder
     {
         class Logger {
             public:
+
                 enum class LogLevel {
                     DEBUG = 0,
                     INFO = 1,
