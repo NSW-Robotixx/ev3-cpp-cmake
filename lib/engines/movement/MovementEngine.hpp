@@ -3,8 +3,11 @@
 
 #include <math/Vector2.hpp>
 #include <pf/AStar.hpp>
+#include <pf/SmoothPath.hpp>
 #include <utility/RobotMovement/RobotMovement.hpp>
 #include <utility/RobotMovement/MovementAction.hpp>
+#include <engines/location/LocationEngine.hpp>
+#include "MovementParser.hpp"
 
 
 namespace finder::engines::movement
@@ -17,8 +20,7 @@ namespace finder::engines::movement
             static void move(math::Vector2 destination);
 
         private:
-            static pathfind::ObstacleManager _obstacleManager;
-            static pathfind::AStar _astar;
+            static pathfind::AStar::Generator _astar;
 
     };
 } // namespace finder::movement

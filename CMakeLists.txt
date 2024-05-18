@@ -71,6 +71,8 @@ target_include_directories(Main PUBLIC ${CMAKE_SOURCE_DIR}/lib)
     webServer
     webComponents
     RobotMovement
+    Vector2
+    MovementEngine
     # yaml-cpp::yaml-cpp
     )
     

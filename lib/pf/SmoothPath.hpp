@@ -24,7 +24,7 @@ namespace finder::pathfind
 
         /// @brief Smooth the path using the by removing unnecessary points, if set in Contructor, this will be called automatically
         /// @param path Path to smooth
-        std::vector<math::Vector2> smoothPath(const std::vector<math::Vector2>& path);
+        static std::vector<math::Vector2> smoothPath(const std::vector<math::Vector2>& path);
 
         /// @brief Get the path that has been smoothed
         /// @return Smoothed path as a vector of Vector2

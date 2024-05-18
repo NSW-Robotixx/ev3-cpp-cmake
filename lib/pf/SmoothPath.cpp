@@ -16,7 +16,7 @@ namespace finder::pathfind
         {
             math::Line line(smoothedPath.back(), path[i + 1]);
 
-            if (!ObstacleManager::checkForIntersect(smoothedPath.back(), path[i + 1]))
+            if (!ObstacleManager::isColliding(smoothedPath.back(), path[i + 1]))
             {
                 smoothedPath.push_back(path[i]);
             }

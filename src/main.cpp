@@ -3,7 +3,8 @@
 #include <stdio.h>
 #include <thread>
 #include <chrono>
-#include <utility/RobotMovement/RobotMovement.hpp>
+#include <engines/movement/MovementEngine.hpp>
+#include <math/Vector2.hpp>
 
 finder::console::Logger logger = finder::console::Logger();
 
@@ -27,12 +28,12 @@ int main(int argc, char const *argv[])
     std::this_thread::sleep_for(std::chrono::milliseconds(500));
     logger.info("Starting application...");
 
-    finder::robot::RobotMovement robotMovement;
+    finder::engines::movement::MovementEngine movementEngine = finder::engines::movement::MovementEngine();
 
-    robotMovement.move(finder::robot::MovementType::FORWARD, 100, 100, 1);
-    robotMovement.move(finder::robot::MovementType::BACKWARD, 100, 100, 1);
-    robotMovement.move(finder::robot::MovementType::TURN_RIGHT, 100, 100, 1);
-    robotMovement.move(finder::robot::MovementType::TURN_LEFT, 100, 100, 1);
+    movementEngine.move(finder::math::Vector2{100, 100});
+    movementEngine.move(finder::math::Vector2{100, 100});
+    movementEngine.move(finder::math::Vector2{100, 100});
+    movementEngine.move(finder::math::Vector2{100, 100});
 
     while (true)
     {

@@ -11,13 +11,17 @@ namespace finder::engines::location
             LocationEngine();
             ~LocationEngine();
 
-            void update();
+            static void update();
 
-            math::Vector2 getPosition();
-            void setPosition(math::Vector2 position);
+            static math::Vector2 getPosition();
+            static void setPosition(math::Vector2 position);
+
+            static double getHeading() { return _heading; };
+            static void setHeading(double heading) { _heading = heading; };
 
         private:
-            math::Vector2 _position;
+            static math::Vector2 _position;
+            static double _heading;
     };
 } // namespace finder::engines::location
 
