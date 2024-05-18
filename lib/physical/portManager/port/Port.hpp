@@ -4,6 +4,7 @@
 #include <memory>
 #include <fstream>
 #include <console/Logger.hpp>
+#include <console/FileLogger.hpp>
 #include <filesystem>
 #include <vector>
 namespace finder
@@ -35,7 +36,7 @@ namespace finder
             ANY = 4
         };
 
-        struct Port
+        struct Port : public console::FileLogger
         {
             public:
                 // Port();
@@ -86,8 +87,8 @@ namespace finder
                 /// @return true if the port is enabled, false otherwise
                 bool isEnabled();
 
-                /// @brief NOT TO BE USED IN PRODUCTION!
-                /// This is a testing function to override the enabled status of the port
+                /// @brief This is a testing function to override the enabled status of the port
+                /// @warning NOT TO BE USED IN PRODUCTION! ONLY FOR TESTING PURPOSES!
                 /// @param enabled the new enabled status
                 void overrideEnabled(bool enabled) { _f_enabled = enabled; };
 

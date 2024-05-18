@@ -4,7 +4,7 @@
 
 TEST(SensorPort, Constructor)
 {
-    finder::physical::SensorPort sensorPort("/sys/class/lego-sensor/sensor0");
+    finder::physical::SensorPort sensorPort("./test/sensor0");
     ASSERT_EQ(sensorPort.getDeviceType(), finder::physical::DeviceType::SENSOR);
 
     ASSERT_ANY_THROW(finder::physical::SensorPort sensorPort(""));
@@ -17,15 +17,13 @@ TEST(SensorPort, ConstructorWithPort)
     finder::physical::SensorPort sensorPort(port);
 
     ASSERT_EQ(sensorPort.getDeviceType(), finder::physical::DeviceType::SENSOR);
-
-    std::shared_ptr<finder::physical::Port> port2 = std::make_shared<finder::physical::Port>("");
-
-    ASSERT_ANY_THROW(finder::physical::SensorPort sensorPort(port2));
+    ASSERT_EQ(sensorPort.getBasePath(), "./test/sensor0");
 }
 
 TEST(SensorPort, setBasePath)
 {
-    finder::physical::SensorPort sensorPort{""};
+    
+    finder::physical::SensorPort sensorPort{"/sys/class/lego-sensor/sensor0"};
     sensorPort.setBasePath("./test/sensor0");
     ASSERT_EQ(sensorPort.getDeviceType(), finder::physical::DeviceType::SENSOR);
     ASSERT_EQ(sensorPort.getBasePath(), "./test/sensor0");

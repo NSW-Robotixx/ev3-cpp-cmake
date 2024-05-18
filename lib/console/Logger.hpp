@@ -7,16 +7,17 @@ namespace finder
 {
     namespace console
     {
+        enum class LogLevel {
+            DEBUG = 0,
+            INFO = 1,
+            POSITIVE = 2,
+            WARN = 3,
+            ERROR = 4,
+        };
+        
         class Logger {
             public:
 
-                enum class LogLevel {
-                    DEBUG = 0,
-                    INFO = 1,
-                    POSITIVE = 2,
-                    WARN = 3,
-                    ERROR = 4,
-                };
 
                 Logger() : _minlLevel(LogLevel::DEBUG) {}
                 Logger(LogLevel minLogLevel);

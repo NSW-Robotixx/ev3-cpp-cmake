@@ -30,6 +30,11 @@ target_link_libraries(all_tests
         ServerManager
         RobotMovement
         UserInterface
+        LocationEngine
+        MovementEngine
+        pathfind
+        gearboxEngine
+        Line
 )
 
 target_include_directories(all_tests PUBLIC ${CMAKE_SOURCE_DIR}/lib)

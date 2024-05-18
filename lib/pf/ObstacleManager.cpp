@@ -24,4 +24,9 @@ namespace finder::pathfind
         return collision;
     }
 
+    void ObstacleManager::addObstacle(math::Line obstacle)
+    {
+        _obstacles.push_back(obstacle);
+    }
+
 } // namespace finder::pathfind

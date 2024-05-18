@@ -65,9 +65,12 @@ namespace finder
 
         std::string Port::getAddress()
         {
+            FileLoggerLock lock = FileLoggerLock();
+            logToFile("ADDRESS.GET: " + _path);
             if (isEnabled()) {
                 std::string address;
                 *_file_address_path >> address;
+                logToFile(" WITH RESULT: " + address);
                 return address;
             }
             return "";
@@ -75,6 +78,9 @@ namespace finder
 
         bool Port::setCommand(std::string command)
         {
+            FileLoggerLock lock = FileLoggerLock();
+            logToFile("COMMAND.SET: " + command + " TO: " + _path);
+
             if (isEnabled()) {
                 *_file_command_path << command;
                 return true;
@@ -84,6 +90,9 @@ namespace finder
 
         std::vector<std::string> Port::getCommands()
         {
+            FileLoggerLock lock = FileLoggerLock();
+            logToFile("COMMANDS.GET: " + _path);
+
             if (isEnabled()) {
                 std::vector<std::string> commands;
                 std::string command_total;
@@ -93,6 +102,7 @@ namespace finder
                 std::string command;
                 while (iss >> command) {
                     commands.push_back(command);
+                    logToFile(" WITH_RESULT: " + command);
                 }
                 return commands;
             }

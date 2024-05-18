@@ -95,6 +95,14 @@ target_include_directories(Main PUBLIC ${CMAKE_SOURCE_DIR}/lib)
       PortManager
       Vector3
       Vector2
+      pathfinder
+      MovementEngine
+      RobotMovement
+      webServer
+      webComponents
+      WindowManager
+      yaml-cpp::yaml-cpp
+      LocationEngine
       )
       
       

@@ -101,6 +101,9 @@ namespace finder
 
         int SensorPort::getValue(int index)
         {
+            FileLoggerLock lock = FileLoggerLock();
+            logToFile("VALUE.GET: " + std::to_string(index) + " FROM: " + getBasePath());
+
             if (isEnabled())
             {
                 if (index < 0 || index >= _file_value_path.size())
@@ -113,6 +116,7 @@ namespace finder
                 {
                     int value;
                     *_file_value_path[index] >> value;
+                    logToFile(" WITH_RESULT: " + std::to_string(value));
                     return value;
                 }
             }
@@ -121,6 +125,9 @@ namespace finder
 
         void SensorPort::setMode(sensor_mode_t mode)
         {
+            FileLoggerLock lock = FileLoggerLock();
+            logToFile("MODE.SET: " + mode + " FOR: " + getBasePath());
+
             if (isEnabled())
             {
                 if (_file_mode_path->is_open())
@@ -133,6 +140,9 @@ namespace finder
 
         std::vector<sensor_mode_t> SensorPort::getModes()
         {
+            FileLoggerLock lock = FileLoggerLock();
+            logToFile("MODES.GET: " + getBasePath());
+
             // read modes from file into vector
             if (isEnabled())
             {
@@ -145,6 +155,10 @@ namespace finder
                         _modes.push_back(mode);
                     }
                     _modes = _modes;
+                    for (auto m : _modes)
+                    {
+                        logToFile(" WITH_RESULT: " + m);
+                    }
                 }
                 return _modes;
             }
@@ -153,12 +167,16 @@ namespace finder
 
         int SensorPort::getNumValues()
         {
+            FileLoggerLock lock = FileLoggerLock();
+            logToFile("NUM_VALUES.GET: " + getBasePath());
+
             if (isEnabled())
             {
                 if (_file_num_values_path->is_open())
                 {
                     int num_values;
                     *_file_num_values_path >> num_values;
+                    logToFile(" WITH_RESULT: " + std::to_string(num_values));
                     return num_values;
                 }
             }
@@ -167,12 +185,16 @@ namespace finder
 
         int SensorPort::getPollMs()
         {
+            FileLoggerLock lock = FileLoggerLock();
+            logToFile("POLL_MS.GET: " + getBasePath());
+
             if (isEnabled())
             {
                 if (_file_poll_ms_path->is_open())
                 {
                     int poll_ms;
                     *_file_poll_ms_path >> poll_ms;
+                    logToFile(" WITH_RESULT: " + std::to_string(poll_ms));
                     return poll_ms;
                 }
             }

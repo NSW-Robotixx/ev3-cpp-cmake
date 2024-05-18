@@ -10,7 +10,7 @@ namespace finder::physical::display
 
     WindowManager::WindowManager()
     {
-        _logger.setMinLevel(finder::console::Logger::LogLevel::INFO);
+        _logger.setMinLevel(finder::console::LogLevel::INFO);
     }
 
     WindowManager::~WindowManager()

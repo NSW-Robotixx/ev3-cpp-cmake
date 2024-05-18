@@ -36,7 +36,7 @@ namespace finder
 
                 for (const path_port_t& device_type_dir : dirs) {
                     if (!std::filesystem::exists(device_type_dir)) {
-                        _logger.log(Logger::LogLevel::WARN, "Skipping directory: " + device_type_dir);
+                        _logger.log(LogLevel::WARN, "Skipping directory: " + device_type_dir);
                         std::cout << "Skipping directory: " << device_type_dir << std::endl;
                         continue;
                     }
@@ -49,7 +49,7 @@ namespace finder
                         // std::cout << entry->d_name << std::endl;
                         if (std::string{entry->d_name}.find(".") == std::string::npos) {
                             Port port{device_type_dir + "/" + std::string{entry->d_name}};
-                            _logger.log(Logger::LogLevel::DEBUG, "PortBasePath:" + port.getBasePath());
+                            _logger.log(LogLevel::DEBUG, "PortBasePath:" + port.getBasePath());
 
                             //read file
                             std::ifstream file(port.getAddressPath());
@@ -68,7 +68,7 @@ namespace finder
                             
                             for (auto &address : adresses) {
                                 if (address == line) {
-                                    _logger.log(Logger::LogLevel::INFO, "Port found: " + line);
+                                    _logger.log(LogLevel::INFO, "Port found: " + line);
                                     _ports.push_back(std::shared_ptr<Port>(new Port{port.getBasePath()}));
                                     foundDevices++;
                                     break;
@@ -122,7 +122,7 @@ namespace finder
                                     // should throw an error here but not enough time to fix all the errors
                                     // throw std::logic_error("Port is not of the correct type: " + port_address + " (borrowDevice)");
                                 } else {
-                                    _logger.log(::finder::console::Logger::LogLevel::INFO, "Port is not of the correct type: " + port_address + " (borrowDevice)");
+                                    _logger.log(::finder::console::LogLevel::INFO, "Port is not of the correct type: " + port_address + " (borrowDevice)");
                                 }
                             }
                             _logger.debug("Port borrowed: " + _borrowed_ports.back()->getBasePath() + " (borrowDevice)");
