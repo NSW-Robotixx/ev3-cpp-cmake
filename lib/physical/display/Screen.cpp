@@ -15,7 +15,7 @@ namespace finder::physical::display
 
 Screen::Screen()
 {
-    _logger.setMinLevel(::finder::console::Logger::LogLevel::INFO);
+    _logger.setMinLevel(::finder::console::LogLevel::INFO);
 
     fbfd = open("/dev/fb0", O_RDWR);
     

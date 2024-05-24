@@ -4,13 +4,13 @@
 
 TEST(MotorPort, Constructor)
 {
-    finder::physical::MotorPort motorPort("/sys/class/tacho-motor/motor0");
+    finder::physical::MotorPort motorPort("./test/motor0");
     ASSERT_EQ(motorPort.getDeviceType(), finder::physical::DeviceType::MOTOR);
 }
 
 TEST(MotorPort, ConstructorWithPort)
 {
-    std::shared_ptr<finder::physical::Port> port = std::make_shared<finder::physical::Port>("/sys/class/tacho-motor/motor0");
+    std::shared_ptr<finder::physical::Port> port = std::make_shared<finder::physical::Port>("./test/motor0");
     finder::physical::MotorPort motorPort(port);
     ASSERT_EQ(motorPort.getDeviceType(), finder::physical::DeviceType::MOTOR);
 }

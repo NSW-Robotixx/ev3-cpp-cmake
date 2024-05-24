@@ -61,7 +61,7 @@ namespace finder::math {
 
     double Line::getAngle() const
     {
-        return atan2(_p2.y - _p1.y, _p2.x - _p1.x);
+        return atan2(_p2.y - _p1.y, _p2.x - _p1.x) * 180 / M_PI;
     }
 
     Vector2 Line::getIntersection(const Line& other) const {
@@ -85,6 +85,14 @@ namespace finder::math {
         return Vector2(x, y);
     }
 
+    bool Line::isIntersecting(const Line &other) const
+    {
+        return counterClockwise(_p1, other._p1, other._p2) != 
+               counterClockwise(_p2, other._p1, other._p2) &&
+               counterClockwise(_p1, _p2, other._p1) != 
+               counterClockwise(_p1, _p2, other._p2);
+    }
+
     bool Line::operator==(const Line &other) const
     {
         return _p1 == other._p1 && _p2 == other._p2;
@@ -93,5 +101,10 @@ namespace finder::math {
     bool Line::operator!=(const Line &other) const
     {
         return !(*this == other);
+    }
+
+    bool Line::counterClockwise(const Vector2 &a, const Vector2 &b, const Vector2 &c) const
+    {
+        return (c.y - a.y) * (b.x - a.x) > (b.y - a.y) * (c.x - a.x);
     }
 } // namespace finder::math

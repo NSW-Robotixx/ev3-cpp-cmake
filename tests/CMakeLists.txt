@@ -1,4 +1,3 @@
-message(STATUS CMAKE_CURRENT_SOURCE_DIR: ${CMAKE_CURRENT_SOURCE_DIR})
 
 file(GLOB SRC_FILES ${CMAKE_CURRENT_SOURCE_DIR}/*.cpp)
 
@@ -31,6 +30,11 @@ target_link_libraries(all_tests
         ServerManager
         RobotMovement
         UserInterface
+        LocationEngine
+        MovementEngine
+        pathfind
+        gearboxEngine
+        Line
 )
 
 target_include_directories(all_tests PUBLIC ${CMAKE_SOURCE_DIR}/lib)

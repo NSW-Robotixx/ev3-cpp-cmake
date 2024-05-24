@@ -2,6 +2,9 @@
 
 namespace finder::engines::location
 {
+    math::Vector2 LocationEngine::_position;
+    double LocationEngine::_heading;
+
     LocationEngine::LocationEngine()
     {
         _position = math::Vector2(0, 0);

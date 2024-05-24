@@ -88,6 +88,9 @@ namespace finder
 
         void MotorPort::setSpeed(int speed)
         {
+            FileLoggerLock lock = FileLoggerLock();
+            logToFile("SPEED.SET: " + std::to_string(speed) + " FOR: " + getBasePath());
+
             if (isEnabled()) {
                 if (_file_speed_path->is_open()) {
                     *_file_speed_path << speed;
@@ -103,6 +106,9 @@ namespace finder
 
         void MotorPort::setPositionSp(int position_sp)
         {
+            FileLoggerLock lock = FileLoggerLock();
+            logToFile("POSITION_SP.SET: " + std::to_string(position_sp) + " FOR: " + getBasePath());
+
             if (isEnabled()) {
                 if (_file_position_sp_path->is_open()) {
                     *_file_position_sp_path << position_sp;
@@ -118,6 +124,9 @@ namespace finder
 
         void MotorPort::setDutyCycle(int duty_cycle)
         {
+            FileLoggerLock lock = FileLoggerLock();
+            logToFile("DUTY_CYCLE.SET: " + std::to_string(duty_cycle) + " FOR: " + getBasePath());
+
             if (isEnabled()) {
                 if (_file_duty_cycle_path->is_open()) {
                     *_file_duty_cycle_path << duty_cycle;
@@ -133,6 +142,9 @@ namespace finder
 
         void MotorPort::setPolarity(MotorPolarity polarity)
         {
+            FileLoggerLock lock = FileLoggerLock();
+            logToFile("POLARITY.SET: " + std::to_string(static_cast<int>(polarity)) + " FOR: " + getBasePath());
+
             if (isEnabled()) {
                 if (_file_polarity_path->is_open()) {
                     *_file_polarity_path << static_cast<int>(polarity);
@@ -148,6 +160,9 @@ namespace finder
 
         void MotorPort::setStopAction(MotorStopAction stop_action)
         {
+            FileLoggerLock lock = FileLoggerLock();
+            logToFile("STOP_ACTION.SET: " + std::to_string(static_cast<int>(stop_action)) + " FOR: " + getBasePath());
+
             if (isEnabled()) {
                 if (_file_stop_action_path->is_open()) {
                     *_file_stop_action_path << static_cast<int>(stop_action);
@@ -163,6 +178,9 @@ namespace finder
 
         void MotorPort::setCommand(MotorCommand command)
         {
+            FileLoggerLock lock = FileLoggerLock();
+            logToFile("COMMAND.SET: " + std::to_string(static_cast<int>(command)) + " FOR: " + getBasePath());
+
             if (isEnabled()) {
                 if (_file_command_path->is_open()) {
                     if (command == MotorCommand::STOP) {
@@ -194,6 +212,9 @@ namespace finder
 
         std::vector<MotorState> MotorPort::getState()
         {
+            FileLoggerLock lock = FileLoggerLock();
+            logToFile("STATE.GET: " + getBasePath());
+
             // return std::async(std::launch::async, [this]() {
                 std::vector<MotorState> states;
                 if (isEnabled()) {
@@ -229,6 +250,9 @@ namespace finder
                 } else {
                     // _init_future.wait();
                     // return getState().get();
+                } 
+                for (auto s : states) {
+                    logToFile(" WITH_RESULT: " + std::to_string(static_cast<int>(s)));
                 }
                 return states;
             // });
@@ -236,11 +260,15 @@ namespace finder
 
         int MotorPort::getCountPerRotation()
         {
+            FileLoggerLock lock = FileLoggerLock();
+            logToFile("COUNT_PER_ROTATION.GET: " + getBasePath());
+
             // return std::async(std::launch::async, [this]() {
                 if (isEnabled()) {
                     if (_file_count_per_rotation_path->is_open()) {
                         int count_per_rotation;
                         *_file_count_per_rotation_path >> count_per_rotation;
+                        logToFile(" WITH_RESULT: " + std::to_string(count_per_rotation));
                         return count_per_rotation;
                     } else {
                         _logger.error("MotorPort failed to get count_per_rotation");
@@ -256,8 +284,8 @@ namespace finder
         DeviceType MotorPort::getDeviceType()
         {
             if(Port::getDeviceType() != DeviceType::MOTOR) {
-                _logger.warn(
-                    "MotorPort is not a motor"
+                throw new std::runtime_error(
+                    "MotorPort::getDeviceType() called on non-motor port"
                 );
             }
             return DeviceType::MOTOR;

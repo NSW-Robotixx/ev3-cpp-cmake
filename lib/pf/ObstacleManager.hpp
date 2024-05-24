@@ -11,7 +11,9 @@ namespace finder::pathfind
         public:
             ObstacleManager();
 
-            bool checkForIntersect(math::Vector2 origin, math::Vector2 destination);
+            static bool isColliding(math::Vector2 origin, math::Vector2 destination);
+
+            static void addObstacle(math::Line obstacle);
 
         private:
             static std::vector<math::Line> _obstacles;

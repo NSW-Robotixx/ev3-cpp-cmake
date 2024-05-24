@@ -25,6 +25,7 @@ namespace finder::math {
             double getAngle() const;
 
             Vector2 getIntersection(const Line& other) const;
+            bool isIntersecting(const Line& other) const;
 
             bool operator==(const Line& other) const;
             bool operator!=(const Line& other) const;
@@ -32,6 +33,8 @@ namespace finder::math {
         private:
             Vector2 _p1;
             Vector2 _p2;
+
+            bool counterClockwise(const Vector2& a, const Vector2& b, const Vector2& c) const;
     };
 
 } // namespace finder::math

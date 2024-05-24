@@ -1,4 +1,4 @@
-#include <physical/portManager/port/Port.hpp>
+ #include <physical/portManager/port/Port.hpp>
 #include "Port.hpp"
 
 namespace finder
@@ -6,17 +6,6 @@ namespace finder
     namespace physical
     {
         ::finder::console::Logger Port::_logger = ::finder::console::Logger{};
-
-        /*
-        Port::Port()
-        {
-            _f_enabled = false;
-            if (_path.empty()) {
-                return;
-            }
-            // _f_enabled = initFiles(); // not needed, will not happen
-        }
-        */
 
         Port::Port(const path_port_t &port)
         {
@@ -76,9 +65,12 @@ namespace finder
 
         std::string Port::getAddress()
         {
+            FileLoggerLock lock = FileLoggerLock();
+            logToFile("ADDRESS.GET: " + _path);
             if (isEnabled()) {
                 std::string address;
                 *_file_address_path >> address;
+                logToFile(" WITH RESULT: " + address);
                 return address;
             }
             return "";
@@ -86,6 +78,9 @@ namespace finder
 
         bool Port::setCommand(std::string command)
         {
+            FileLoggerLock lock = FileLoggerLock();
+            logToFile("COMMAND.SET: " + command + " TO: " + _path);
+
             if (isEnabled()) {
                 *_file_command_path << command;
                 return true;
@@ -95,6 +90,9 @@ namespace finder
 
         std::vector<std::string> Port::getCommands()
         {
+            FileLoggerLock lock = FileLoggerLock();
+            logToFile("COMMANDS.GET: " + _path);
+
             if (isEnabled()) {
                 std::vector<std::string> commands;
                 std::string command_total;
@@ -104,6 +102,7 @@ namespace finder
                 std::string command;
                 while (iss >> command) {
                     commands.push_back(command);
+                    logToFile(" WITH_RESULT: " + command);
                 }
                 return commands;
             }
@@ -186,6 +185,9 @@ namespace finder
 
         bool Port::isEnabled()
         {
+            if (this == nullptr) {
+                throw std::invalid_argument("Port is nullptr");
+            }
             return _f_enabled;
         }
     } // namespace physical

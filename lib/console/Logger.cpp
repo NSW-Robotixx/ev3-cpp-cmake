@@ -6,13 +6,13 @@ namespace finder
     namespace console
     {
         bool Logger::_logLevelEnforced = false;
-        Logger::LogLevel Logger::_enforcedLogLevel = Logger::LogLevel::DEBUG;
+        LogLevel Logger::_enforcedLogLevel = LogLevel::DEBUG;
 
         Logger::Logger(LogLevel minLogLevel) {
             _minlLevel = minLogLevel;
         }
 
-        Logger::LogLevel Logger::getActiveLogLevel()
+        LogLevel Logger::getActiveLogLevel()
         {
             if (_logLevelEnforced)
             {
@@ -46,8 +46,10 @@ namespace finder
                         break;
                     case LogLevel::POSITIVE:
                         color = "\033[3;42;30m";
-                        std::cout << color << "[POSITIVE]" << "\033[0m " << "\033[32m";
+                        std::cout << color << "[SUCCESS]" << "\033[0m " << "\033[32m";
                         break;
+                    case LogLevel::SILENT:
+                        return;
                     default:
                         color = "\033[3;47;35m";
                         break;

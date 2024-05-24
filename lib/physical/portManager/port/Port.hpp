@@ -4,6 +4,7 @@
 #include <memory>
 #include <fstream>
 #include <console/Logger.hpp>
+#include <console/FileLogger.hpp>
 #include <filesystem>
 #include <vector>
 namespace finder
@@ -35,7 +36,7 @@ namespace finder
             ANY = 4
         };
 
-        struct Port
+        struct Port : public console::FileLogger
         {
             public:
                 // Port();
@@ -64,6 +65,7 @@ namespace finder
                  * @return The address of the port as a string.
                  */
                 std::string getAddress();
+                
                 /**
                  * Sets the command for the port.
                  *
@@ -71,6 +73,7 @@ namespace finder
                  * @return True if the command was set successfully, false otherwise.
                  */
                 bool setCommand(std::string command);
+
                 /// @brief get the commands that the port can execute from file 
                 /// @return vector of strings of the commands that the port can execute
                 std::vector<std::string> getCommands();
@@ -84,8 +87,8 @@ namespace finder
                 /// @return true if the port is enabled, false otherwise
                 bool isEnabled();
 
-                /// @brief NOT TO BE USED IN PRODUCTION!
-                /// This is a testing function to override the enabled status of the port
+                /// @brief This is a testing function to override the enabled status of the port
+                /// @warning NOT TO BE USED IN PRODUCTION! ONLY FOR TESTING PURPOSES!
                 /// @param enabled the new enabled status
                 void overrideEnabled(bool enabled) { _f_enabled = enabled; };
 

@@ -6,8 +6,8 @@ set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED True)
 
 # Add compiler flags for coverage
-set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -g -O1 --coverage")
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -g -O1 --coverage")
+set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS}")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS}")
 
 # add cmake-modules directory
 LIST(APPEND CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/cmake-modules)
@@ -27,6 +27,7 @@ add_executable(Test ${PROJECT_SOURCE_DIR}/src/test.cpp)
 add_subdirectory(lib)
 add_subdirectory(src)
 add_subdirectory(tests)
+add_subdirectory(doc)
 
 # set executables to be static
 SET_TARGET_PROPERTIES(Main PROPERTIES LINK_FLAGS "-static -lc -lm -L/usr/local/lib/")
@@ -70,6 +71,8 @@ target_include_directories(Main PUBLIC ${CMAKE_SOURCE_DIR}/lib)
     webServer
     webComponents
     RobotMovement
+    Vector2
+    MovementEngine
     # yaml-cpp::yaml-cpp
     )
     
@@ -92,6 +95,14 @@ target_include_directories(Main PUBLIC ${CMAKE_SOURCE_DIR}/lib)
       PortManager
       Vector3
       Vector2
+      pathfinder
+      MovementEngine
+      RobotMovement
+      webServer
+      webComponents
+      WindowManager
+      yaml-cpp::yaml-cpp
+      LocationEngine
       )
       
       
