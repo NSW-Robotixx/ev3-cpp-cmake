@@ -21,6 +21,7 @@ namespace finder::engines::movement
 
         private:
             static pathfind::AStar::Generator _astar;
+            static MovementParser _movementParser;
 
     };
 } // namespace finder::movement

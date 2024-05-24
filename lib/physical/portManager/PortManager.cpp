@@ -38,6 +38,7 @@ namespace finder
                     if (!std::filesystem::exists(device_type_dir)) {
                         _logger.log(LogLevel::WARN, "Skipping directory: " + device_type_dir);
                         std::cout << "Skipping directory: " << device_type_dir << std::endl;
+                        throw std::logic_error("Directory not found: " + device_type_dir + "invalid path");
                         continue;
                     }
 

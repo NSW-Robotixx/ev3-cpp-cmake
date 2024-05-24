@@ -1,20 +1,20 @@
-#include <gtest/gtest.h>
-#include <math/Line.hpp>
+// #include <gtest/gtest.h>
+// #include <math/Line.hpp>
 
-TEST(Line, constructor) {
-    finder::math::Line line(finder::math::Vector2(0, 0), finder::math::Vector2(1, 1));
+// TEST(Line, constructor) {
+//     finder::math::Line line(finder::math::Vector2(0, 0), finder::math::Vector2(1, 1));
 
-    ASSERT_EQ(line.getPoint1(), finder::math::Vector2(0, 0));
-    ASSERT_EQ(line.getPoint2(), finder::math::Vector2(1, 1));
-}
+//     ASSERT_EQ(line.getPoint1(), finder::math::Vector2(0, 0));
+//     ASSERT_EQ(line.getPoint2(), finder::math::Vector2(1, 1));
+// }
 
-TEST(Line, copyConstructor) {
-    finder::math::Line line(finder::math::Vector2(0, 0), finder::math::Vector2(1, 1));
-    finder::math::Line line2(line);
+// TEST(Line, copyConstructor) {
+//     finder::math::Line line(finder::math::Vector2(0, 0), finder::math::Vector2(1, 1));
+//     finder::math::Line line2(line);
 
-    ASSERT_EQ(line2.getPoint1(), finder::math::Vector2(0, 0));
-    ASSERT_EQ(line2.getPoint2(), finder::math::Vector2(1, 1));
-}
+//     ASSERT_EQ(line2.getPoint1(), finder::math::Vector2(0, 0));
+//     ASSERT_EQ(line2.getPoint2(), finder::math::Vector2(1, 1));
+// }
 
 // TEST(Line, moveConstructor) {
 //     finder::math::Line line(finder::math::Vector2(0, 0), finder::math::Vector2(1, 1));

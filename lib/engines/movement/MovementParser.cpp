@@ -27,20 +27,20 @@ namespace finder::engines::movement
 
         if (lineAngle < lineAngleReverse) {
             if (location::LocationEngine::getHeading() > lineAngle) {
-                robot::RobotMovement::move(robot::MovementType::TURN_RIGHT, lineAngle - location::LocationEngine::getHeading(), 100, 1);
+                _robotMovement.move(robot::RobotMovement::MovementType::TURN_RIGHT, lineAngle - location::LocationEngine::getHeading(), 100, 1);
             } else {
-                robot::RobotMovement::move(robot::MovementType::TURN_LEFT, lineAngle - location::LocationEngine::getHeading(), 100, 1);
+                _robotMovement.move(robot::RobotMovement::MovementType::TURN_LEFT, lineAngle - location::LocationEngine::getHeading(), 100, 1);
             }
 
-            robot::RobotMovement::move(robot::MovementType::FORWARD, location::LocationEngine::getPosition().distanceTo(destination), 300, 1);
+            _robotMovement.move(robot::RobotMovement::MovementType::FORWARD, location::LocationEngine::getPosition().distanceTo(destination), 300, 1);
         } else {
             if (location::LocationEngine::getHeading() < lineAngle) {
-                robot::RobotMovement::move(robot::MovementType::TURN_LEFT, location::LocationEngine::getHeading() - lineAngle, 100, 1);
+                _robotMovement.move(robot::RobotMovement::MovementType::TURN_LEFT, location::LocationEngine::getHeading() - lineAngle, 100, 1);
             } else {
-                robot::RobotMovement::move(robot::MovementType::TURN_RIGHT, location::LocationEngine::getHeading() - lineAngle, 100, 1);
+                _robotMovement.move(robot::RobotMovement::MovementType::TURN_RIGHT, location::LocationEngine::getHeading() - lineAngle, 100, 1);
             }
 
-            robot::RobotMovement::move(robot::MovementType::BACKWARD, location::LocationEngine::getPosition().distanceTo(destination), 300, 1);
+            _robotMovement.move(robot::RobotMovement::MovementType::BACKWARD, location::LocationEngine::getPosition().distanceTo(destination), 300, 1);
         }
     }
 } // namespace finder::engines::movement

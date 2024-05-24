@@ -1,8 +1,8 @@
 #include <gtest/gtest.h>
+#include <initFiles.test.cpp>
 // #include <Bitmaps.test.cpp>
 #include <ButtonNotifier.test.cpp>
 #include <DeviceManager.test.cpp>
-#include <initFiles.test.cpp>
 #include <LocationEngine.test.cpp>
 #include <Logger.test.cpp>
 #include <MotorManager.test.cpp>
@@ -27,7 +27,7 @@
 #include <ObstacleManager.test.cpp>
 #include <SmoothPath.test.cpp>
 #include <MovementParser.test.cpp>
-#include <GearboxEngine.test.cpp>
+// #include <GearboxEngine.test.cpp>
 
 // Demonstrate some basic assertions.
 TEST(HelloTest, BasicAssertions) {

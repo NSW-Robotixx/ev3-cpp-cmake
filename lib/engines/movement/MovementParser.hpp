@@ -15,8 +15,11 @@ namespace finder::engines::movement
             MovementParser();
             ~MovementParser();
 
-            static void parse(std::vector<math::Vector2> path);
-            static void parse(math::Vector2 destination);
+            void parse(std::vector<math::Vector2> path);
+            void parse(math::Vector2 destination);
+
+        private:
+            robot::RobotMovement _robotMovement;
     };
 } // namespace finder::engines::movement
 

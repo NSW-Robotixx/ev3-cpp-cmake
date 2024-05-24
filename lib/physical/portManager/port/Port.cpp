@@ -185,6 +185,9 @@ namespace finder
 
         bool Port::isEnabled()
         {
+            if (this == nullptr) {
+                throw std::invalid_argument("Port is nullptr");
+            }
             return _f_enabled;
         }
     } // namespace physical

@@ -7,10 +7,10 @@
 #include <future>
 #include <mutex>
 #include <queue>
+#include <functional>
+#include <atomic>
 #include <condition_variable>
 #include <physical/DeviceManager.hpp>
-#include <physical/portManager/port/MotorPort.hpp>
-#include <physical/portManager/port/SensorPort.hpp>
 #include <console/Logger.hpp>
 #include "MovementAction.hpp"
 
@@ -18,46 +18,58 @@
 
 namespace finder::robot
 {
-    class RobotMovement
+    class RobotMovement : public physical::DeviceManager
     {
+
         public:
+            enum class MovementType {
+                FORWARD = 0,
+                BACKWARD = 1,
+                TURN_LEFT = 2,
+                TURN_RIGHT = 3,
+                TURN_ARC_LEFT = 4,
+                TURN_ARC_RIGHT = 5
+            };
+
             RobotMovement();
             ~RobotMovement();
 
-            static void move(MovementType type, int distance, int speed, float arcRatio);
+            void move(MovementType type, int distance, int speed, float arcRatio);
 
-            static void stop();
+            void stop();
 
 
-            static void setSpeed(int speed);
-            static void setDutyCycle(int dutyCycle);
+            void setSpeed(int speed);
+            void setDutyCycle(int dutyCycle);
 
-            static void awaitMotorReady();
+            void awaitMotorReady();
+
+            void processMovementQueue();
+
 
         
         private:
-            static std::shared_ptr<physical::MotorPort> _motorLeft;
-            static std::shared_ptr<physical::MotorPort> _motorRight;
-            static std::shared_ptr<physical::MotorPort> _motorShift;
-            static std::shared_ptr<physical::MotorPort> _motorTool;
-            
+            int _speed;
+            int _dutyCycle;
+            double _arcRatio;
 
-            static int _speed;
-            static int _dutyCycle;
+            static std::atomic<bool> _isProcessingMovementQueue;
 
             static finder::console::Logger _logger;
 
             static unsigned long int _movementID;
-            static unsigned long int _movementIDAhead;
-            static std::mutex _movementIDMutex;
 
-            static std::queue<std::future<void>> _movementFuture;
-            static std::mutex _movementFutureMutex;
+            static std::queue<std::function<void(int, int, double)>> _movementQueue;
+            static std::mutex _movementQueueMutex;
 
-            static std::queue<std::shared_ptr<std::condition_variable>> _movementQueueCV;
-            static std::queue<std::shared_ptr<std::mutex>> _movementQueueCVMutex;
+            static std::future<void> _movementQueueFuture;
             
-            static void processQueueChanges();
+            static void moveForward(int distance, int speed, float arcRatio);
+            static void moveBackward(int distance, int speed, float arcRatio);
+            static void turnLeft(int distance, int speed, float arcRatio);
+            static void turnRight(int distance, int speed, float arcRatio);
+            static void turnArcLeft(int distance, int speed, float arcRatio);
+            static void turnArcRight(int distance, int speed, float arcRatio);
     };
 } // namespace finder::robot
 

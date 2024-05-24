@@ -48,6 +48,8 @@ namespace finder
                         color = "\033[3;42;30m";
                         std::cout << color << "[SUCCESS]" << "\033[0m " << "\033[32m";
                         break;
+                    case LogLevel::SILENT:
+                        return;
                     default:
                         color = "\033[3;47;35m";
                         break;
