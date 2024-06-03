@@ -24,7 +24,7 @@ namespace finder::physical
     class MotorManager : public DeviceManager
     {
         public:
-            MotorManager();
+            MotorManager(std::string portBasePath);
             ~MotorManager();
 
             static void setMotorSpeed(DeviceID motor, int speed);

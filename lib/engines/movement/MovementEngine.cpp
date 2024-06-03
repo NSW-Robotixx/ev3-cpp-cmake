@@ -16,11 +16,11 @@ namespace finder::engines::movement
     {
         if (pathfind::ObstacleManager::isColliding(location::LocationEngine::getPosition(), destination))
         {
-            _movementParser.parse(destination);
+            // _movementParser.parse(destination);
         } else {
             std::vector<math::Vector2> path = _astar.findPath(location::LocationEngine::getPosition(), destination);
             path = pathfind::SmoothPath::smoothPath(path);
-            _movementParser.parse(path);
+            // _movementParser.parse(path);
         }
     }
 } // namespace finder::movement

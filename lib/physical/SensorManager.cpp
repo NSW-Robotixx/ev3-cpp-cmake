@@ -20,7 +20,7 @@ namespace finder::physical
 
     console::Logger SensorManager::_logger;
 
-    SensorManager::SensorManager() : DeviceManager()
+    SensorManager::SensorManager(std::string portBasePath) : DeviceManager(portBasePath)
     {
         _dispatcherFuture = std::async(std::launch::async, Dispatcher);
     }

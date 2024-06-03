@@ -25,7 +25,14 @@ namespace finder
             _motor_dir = dir + "/tacho-motor";
             init();
         }
-        
+
+        PortManager::~PortManager()
+        {
+            for (auto &port : _borrowed_ports) {
+                returnDevice(port);
+            }
+        }
+
         void PortManager::readPorts() 
         {
                 using namespace ::finder::console;
@@ -37,8 +44,7 @@ namespace finder
                 for (const path_port_t& device_type_dir : dirs) {
                     if (!std::filesystem::exists(device_type_dir)) {
                         _logger.log(LogLevel::WARN, "Skipping directory: " + device_type_dir);
-                        std::cout << "Skipping directory: " << device_type_dir << std::endl;
-                        throw std::logic_error("Directory not found: " + device_type_dir + "invalid path");
+                        throw std::logic_error("Directory not found: " + device_type_dir + " invalid path");
                         continue;
                     }
 
@@ -49,11 +55,14 @@ namespace finder
                     while ((entry = readdir(directory)) != nullptr) {
                         // std::cout << entry->d_name << std::endl;
                         if (std::string{entry->d_name}.find(".") == std::string::npos) {
-                            Port port{device_type_dir + "/" + std::string{entry->d_name}};
-                            _logger.log(LogLevel::DEBUG, "PortBasePath:" + port.getBasePath());
+                            // Port port{device_type_dir + "/" + std::string{entry->d_name}};
+
+                            path_address_t port = Port::getAddressPath(device_type_dir + "/" + std::string{entry->d_name});
+
+                            _logger.log(LogLevel::DEBUG, "PortBasePath:" + port);
 
                             //read file
-                            std::ifstream file(port.getAddressPath());
+                            std::ifstream file(port);
                             std::string line;
                             std::getline(file, line);
                             file.close();
@@ -70,7 +79,7 @@ namespace finder
                             for (auto &address : adresses) {
                                 if (address == line) {
                                     _logger.log(LogLevel::INFO, "Port found: " + line);
-                                    _ports.push_back(std::shared_ptr<Port>(new Port{port.getBasePath()}));
+                                    _ports.push_back(std::make_shared<Port>(port));
                                     foundDevices++;
                                     break;
                                 }
@@ -121,7 +130,7 @@ namespace finder
                                     _logger.warn("Port is not of the correct type: " + port_address + " type: " + std::to_string((int)(type)) + " (borrowDevice)");
 
                                     // should throw an error here but not enough time to fix all the errors
-                                    // throw std::logic_error("Port is not of the correct type: " + port_address + " (borrowDevice)");
+                                    throw std::logic_error("Port type mismatch: " + port_address + " (borrowDevice)");
                                 } else {
                                     _logger.log(::finder::console::LogLevel::INFO, "Port is not of the correct type: " + port_address + " (borrowDevice)");
                                 }
@@ -184,12 +193,24 @@ namespace finder
 
         void PortManager::returnDevice(std::shared_ptr<SensorPort> port)
         {
-            returnDevice(std::dynamic_pointer_cast<Port>(port));
+            for (auto &borrowed_port : _borrowed_ports) {
+                if (borrowed_port->getPortKey() == port->getPortKey()) {
+                    _borrowed_ports.erase(std::remove(_borrowed_ports.begin(), _borrowed_ports.end(), borrowed_port), _borrowed_ports.end());
+                    return;
+                }
+            }
+            throw std::logic_error("Port not found: " + port->getBasePath() + " (returnDevice)");
         }
 
         void PortManager::returnDevice(std::shared_ptr<MotorPort> port)
         {
-            returnDevice(std::dynamic_pointer_cast<Port>(port));
+            for (auto &borrowed_port : _borrowed_ports) {
+                if (borrowed_port->getPortKey() == port->getPortKey()) {
+                    _borrowed_ports.erase(std::remove(_borrowed_ports.begin(), _borrowed_ports.end(), borrowed_port), _borrowed_ports.end());
+                    return;
+                }
+            }
+            throw std::logic_error("Port not found: " + port->getBasePath() + " (returnDevice)");
         }
     } // namespace physical
 

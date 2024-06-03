@@ -56,6 +56,7 @@ namespace finder
                 };
                 path_port_t getBasePath();
                 path_address_t getAddressPath();
+                static path_address_t getAddressPath(const path_port_t& path);
                 path_command_t getCommandPath();
                 path_commands_t getCommandsPath();
 

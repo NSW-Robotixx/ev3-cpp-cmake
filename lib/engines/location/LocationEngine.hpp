@@ -8,7 +8,7 @@ namespace finder::engines::location
 {
     class LocationEngine : public physical::DeviceManager {
         public:
-            LocationEngine();
+            LocationEngine(std::string portBasePath);
             ~LocationEngine();
 
             static void update();

@@ -4,13 +4,13 @@
 
 TEST(MotorPort, Constructor)
 {
-    finder::physical::MotorPort motorPort("./test/motor0");
+    finder::physical::MotorPort motorPort("./test/tacho-motor/motor0");
     ASSERT_EQ(motorPort.getDeviceType(), finder::physical::DeviceType::MOTOR);
 }
 
 TEST(MotorPort, ConstructorWithPort)
 {
-    std::shared_ptr<finder::physical::Port> port = std::make_shared<finder::physical::Port>("./test/motor0");
+    std::shared_ptr<finder::physical::Port> port = std::make_shared<finder::physical::Port>("./test/tacho-motor/motor0");
     finder::physical::MotorPort motorPort(port);
     ASSERT_EQ(motorPort.getDeviceType(), finder::physical::DeviceType::MOTOR);
 }
@@ -75,7 +75,7 @@ TEST(MotorPort, filestreams)
 
 
 
-    finder::physical::MotorPort motorPort("./test/motor0");
+    finder::physical::MotorPort motorPort("./test/tacho-motor/motor0");
 
     motorPort.setSpeed(0);
     motorPort.setPositionSp(0);
@@ -83,12 +83,12 @@ TEST(MotorPort, filestreams)
     motorPort.setPolarity(finder::physical::MotorPolarity::INVERSED);
     motorPort.setStopAction(finder::physical::MotorStopAction::HOLD);
     
-    std::ifstream fs_speed_read("./test/motor0/speed_sp");
-    std::ifstream fs_position_sp_read("./test/motor0/position_sp");
-    std::ifstream fs_duty_cycle_read("./test/motor0/duty_cycle_sp");
-    std::ifstream fs_state_read("./test/motor0/state");
-    std::ifstream fs_polarity_read("./test/motor0/polarity");
-    std::ifstream fs_stop_action_read("./test/motor0/stop_action");
+    std::ifstream fs_speed_read("./test/tacho-motor/motor0/speed_sp");
+    std::ifstream fs_position_sp_read("./test/tacho-motor/motor0/position_sp");
+    std::ifstream fs_duty_cycle_read("./test/tacho-motor/motor0/duty_cycle_sp");
+    std::ifstream fs_state_read("./test/tacho-motor/motor0/state");
+    std::ifstream fs_polarity_read("./test/tacho-motor/motor0/polarity");
+    std::ifstream fs_stop_action_read("./test/tacho-motor/motor0/stop_action");
 
     ASSERT_TRUE(fs_speed_read.is_open());
     ASSERT_TRUE(fs_position_sp_read.is_open());

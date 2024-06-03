@@ -3,7 +3,7 @@
 
 namespace finder::physical
 {
-    MotorManager::MotorManager()
+    MotorManager::MotorManager(std::string portBasePath) : DeviceManager(portBasePath)
     {
         _motorLeft->setStopAction(MotorStopAction::HOLD);
         _motorRight->setStopAction(MotorStopAction::HOLD);

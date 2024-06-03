@@ -5,7 +5,7 @@ namespace finder::engines::location
     math::Vector2 LocationEngine::_position;
     double LocationEngine::_heading;
 
-    LocationEngine::LocationEngine()
+    LocationEngine::LocationEngine(std::string portBasePath) : DeviceManager(portBasePath)
     {
         _position = math::Vector2(0, 0);
     }

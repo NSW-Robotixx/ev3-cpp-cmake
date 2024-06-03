@@ -7,9 +7,9 @@ TEST(PortManager, readPorts)
 {
     using namespace finder::physical;
 
-    PortManager DM = PortManager{};
+    PortManager DM = PortManager{"./test"};
 
     DM.readPorts();
 
-    ASSERT_EQ(DM.getNumberOfDevices(), 0);
+    ASSERT_EQ(DM.getNumberOfDevices(), 4);
 } 

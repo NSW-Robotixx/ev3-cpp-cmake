@@ -24,7 +24,7 @@ namespace finder
         class DeviceManager
         {
             public:
-                DeviceManager();
+                DeviceManager(std::string portBasePath);
                 ~DeviceManager();
 
             protected:
@@ -43,7 +43,7 @@ namespace finder
             private:
                 static bool _initialized;
 
-                static void init();
+                static void init(std::string portBasePath);
         };
     } // namespace physical
 } // namespace finder

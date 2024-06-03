@@ -50,6 +50,20 @@ if(NOT yaml-cpp_POPULATED)
   add_subdirectory(${yaml-cpp_SOURCE_DIR} ${yaml-cpp_BINARY_DIR})
 endif()
 
+# # lvgl display library
+# # Specify path to own LVGL config header
+message(STATUS "CMAKE_CURRENT_SOURCE_DIR: ${CMAKE_CURRENT_SOURCE_DIR}/lib/lv_conf.h")
+
+set(LV_CONF_PATH
+    ${CMAKE_CURRENT_SOURCE_DIR}/lib/lv_conf.h
+    CACHE STRING "" FORCE)
+
+message(STATUS "LV_CONF_PATH: ${LV_CONF_PATH}")
+
+# # Fetch LVGL from GitHub
+FetchContent_Declare(lvgl GIT_REPOSITORY  https://github.com/lvgl/lvgl.git)
+FetchContent_MakeAvailable(lvgl)
+
 # google test
 FetchContent_Declare(
 googletest
@@ -63,24 +77,24 @@ target_include_directories(Test PUBLIC ${CMAKE_SOURCE_DIR}/tests)
 target_include_directories(Test PUBLIC ${CMAKE_SOURCE_DIR}/lib)
 target_include_directories(Main PUBLIC ${CMAKE_SOURCE_DIR}/lib)
     
-    target_link_libraries(Main 
-    PUBLIC
-    WindowManager
-    Logger
-    Window
-    webServer
-    webComponents
-    RobotMovement
-    Vector2
-    MovementEngine
-    # yaml-cpp::yaml-cpp
-    )
+target_link_libraries(Main 
+PUBLIC
+  WindowManager
+  Logger
+  Window
+  webServer
+  webComponents
+  RobotMovement
+  Vector2
+  MovementEngine
+  # yaml-cpp::yaml-cpp
+)
     
     
     
     
-    # make cmake not print the commands it runs
-    set(CMAKE_VERBOSE_MAKEFILE OFF)
+# make cmake not print the commands it runs
+set(CMAKE_VERBOSE_MAKEFILE OFF)
     
     
     # enable testing
@@ -117,28 +131,28 @@ include(GoogleTest)
 endif()
 
 
-# code coverage
-if (CMAKE_COMPILER_IS_GNUCXX)
-    include(CodeCoverage)
-    append_coverage_compiler_flags()
+# # code coverage
+# if (CMAKE_COMPILER_IS_GNUCXX)
+#     include(CodeCoverage)
+#     append_coverage_compiler_flags()
 
-    # we need to turn off optimization for non-skewed coverage reports
-    set(CMAKE_CXX_FLAGS  "${CMAKE_CXX_FLAGS} -O0")
-    set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -O0")
+#     # we need to turn off optimization for non-skewed coverage reports
+#     set(CMAKE_CXX_FLAGS  "${CMAKE_CXX_FLAGS} -O0")
+#     set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -O0")
 
-    # optional excludes - None needed here
-    set(COVERAGE_EXCLUDES build/* lib/*.test.cpp) # this is optional if you want to exclude some directory from the report
+#     # optional excludes - None needed here
+#     set(COVERAGE_EXCLUDES build/* lib/*.test.cpp) # this is optional if you want to exclude some directory from the report
 
-    # importantly, set the path to the gcovr executable that you downladed
-    set(GCOVR_PATH "/home/niklas/.local/bin/gcovr")
-    # Works
-    setup_target_for_coverage_gcovr_xml(
-            NAME TestDoMathCoverageXml
-            EXECUTABLE Test
-    )
-    # Works
-    setup_target_for_coverage_gcovr_html(
-            NAME TestDoMathCoverageHtml
-            EXECUTABLE Test
-    )
-endif()
+#     # importantly, set the path to the gcovr executable that you downladed
+#     set(GCOVR_PATH "/home/niklas/.local/bin/gcovr")
+#     # Works
+#     setup_target_for_coverage_gcovr_xml(
+#             NAME TestDoMathCoverageXml
+#             EXECUTABLE Test
+#     )
+#     # Works
+#     setup_target_for_coverage_gcovr_html(
+#             NAME TestDoMathCoverageHtml
+#             EXECUTABLE Test
+#     )
+# endif()

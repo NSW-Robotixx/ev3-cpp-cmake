@@ -38,6 +38,7 @@ namespace finder
                 
                 PortManager();
                 PortManager(path_port_t dir);
+                ~PortManager();
                 
                 static void readPorts();
 

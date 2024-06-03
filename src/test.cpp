@@ -28,6 +28,7 @@
 #include <SmoothPath.test.cpp>
 #include <MovementParser.test.cpp>
 // #include <GearboxEngine.test.cpp>
+// #include <cleanupFiles.test.cpp>
 
 // Demonstrate some basic assertions.
 TEST(HelloTest, BasicAssertions) {

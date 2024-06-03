@@ -2,7 +2,7 @@
 
 namespace finder::engines::movement
 {
-    MovementParser::MovementParser()
+    MovementParser::MovementParser(std::string portBasePath) : _robotMovement(portBasePath)
     {
     }
 

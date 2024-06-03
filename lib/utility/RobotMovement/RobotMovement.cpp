@@ -11,7 +11,7 @@ namespace finder::robot
 
     std::future<void> RobotMovement::_movementQueueFuture;
 
-    RobotMovement::RobotMovement(): physical::DeviceManager()
+    RobotMovement::RobotMovement(std::string portBasePath): DeviceManager(portBasePath)
     {
 
         _logger.debug("Initializing RobotMovement");

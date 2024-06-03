@@ -12,7 +12,7 @@ namespace finder::engines::movement
 {
     class MovementParser {
         public:
-            MovementParser();
+            MovementParser(std::string portBasePath);
             ~MovementParser();
 
             void parse(std::vector<math::Vector2> path);

@@ -17,11 +17,11 @@ namespace finder
 
 
 
-        DeviceManager::DeviceManager()
+        DeviceManager::DeviceManager(std::string portBasePath)
         {
             if (!_initialized)
             {
-                init();
+                init(portBasePath);
             }
         }
 
@@ -29,9 +29,9 @@ namespace finder
         {
         }
 
-        void DeviceManager::init()
+        void DeviceManager::init(std::string portBasePath)
         {
-            _portManager = std::make_shared<PortManager>();
+            _portManager = std::make_shared<PortManager>(portBasePath);
             _portManager->readPorts();
 
             // is it possible to borrow a port that is not connected?

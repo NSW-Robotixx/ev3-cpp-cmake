@@ -31,7 +31,7 @@ namespace finder::robot
                 TURN_ARC_RIGHT = 5
             };
 
-            RobotMovement();
+            RobotMovement(std::string portBasePath);
             ~RobotMovement();
 
             void move(MovementType type, int distance, int speed, float arcRatio);

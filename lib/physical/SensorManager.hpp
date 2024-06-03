@@ -15,7 +15,7 @@ namespace finder::physical
     class SensorManager : public DeviceManager
     {
         public:
-            SensorManager();
+            SensorManager(std::string portBasePath);
             ~SensorManager();
 
             static void readAllSensors();

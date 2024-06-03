@@ -47,6 +47,11 @@ namespace finder
             return "";
         }
 
+        path_address_t Port::getAddressPath(const path_port_t &path)
+        {
+            return path_address_t(path + "/address");
+        }
+
         path_command_t Port::getCommandPath()
         {
             if (isEnabled()) {
