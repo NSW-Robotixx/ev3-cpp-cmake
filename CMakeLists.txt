@@ -27,7 +27,7 @@ add_executable(Test ${PROJECT_SOURCE_DIR}/src/test.cpp)
 add_subdirectory(lib)
 add_subdirectory(src)
 add_subdirectory(tests)
-add_subdirectory(doc)
+# add_subdirectory(doc)
 
 # set executables to be static
 SET_TARGET_PROPERTIES(Main PROPERTIES LINK_FLAGS "-static -lc -lm -L/usr/local/lib/")
