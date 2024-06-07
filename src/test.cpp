@@ -29,6 +29,7 @@
 #include <MovementParser.test.cpp>
 // #include <GearboxEngine.test.cpp>
 // #include <cleanupFiles.test.cpp>
+#include <GraphicalInterface.test.cpp>
 
 // Demonstrate some basic assertions.
 TEST(HelloTest, BasicAssertions) {

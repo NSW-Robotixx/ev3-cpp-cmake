@@ -35,6 +35,7 @@ target_link_libraries(all_tests
         pathfind
         gearboxEngine
         Line
+        GraphicalInterface
 )
 
 target_include_directories(all_tests PUBLIC ${CMAKE_SOURCE_DIR}/lib)
