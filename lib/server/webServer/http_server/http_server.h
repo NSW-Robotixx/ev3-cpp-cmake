@@ -1,3 +1,5 @@
+#if !defined(_MSC_VER)
+
 // Defines the HTTP server object with some constants and structs
 // useful for request handling and improving performance
 
@@ -100,3 +102,5 @@ class HttpServer {
 }  // namespace simple_http_server
 
 #endif  // HTTP_SERVER_H_
+
+#endif  // !defined(_MSC_VER)

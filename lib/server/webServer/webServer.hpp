@@ -1,3 +1,6 @@
+#if !defined(_MSC_VER)
+
+
 #ifndef __WEBSERVER_H__
 #define __WEBSERVER_H__
 
@@ -31,3 +34,5 @@ namespace finder::server
 } // namespace finder::server
 
 #endif // __WEBSERVER_H__
+
+#endif // !defined(_MSC_VER)

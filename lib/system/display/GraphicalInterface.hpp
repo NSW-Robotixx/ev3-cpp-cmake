@@ -2,7 +2,7 @@
 #define __LIB_SYSTEM_DISPLAY_GRAPHICALINTERFACE_HPP__
 
 
-#include "lvgl/lvgl.h"
+//#include <lvgl.h>
 
 class GraphicalInterface
 {

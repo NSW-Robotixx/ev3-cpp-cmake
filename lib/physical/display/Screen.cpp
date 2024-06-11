@@ -1,3 +1,6 @@
+#if !defined(_MSC_VER)
+
+
 #include "Screen.hpp"
 #include <fstream>
 #include <iostream>
@@ -98,3 +101,5 @@ Screen::~Screen()
         }
     }
 } // namespace finder::physical::display
+
+#endif // !defined(_MSC_VER)

@@ -1,3 +1,6 @@
+#if !defined(_MSC_VER)
+
+
 #include <linux/fb.h>
 #include <sys/mman.h>
 #include <stdint.h>
@@ -42,3 +45,5 @@ namespace finder::physical::display
 } // namespace finder::physical::display
 
 #endif
+
+#endif // !defined(_MSC_VER)

@@ -27,7 +27,7 @@
  *====================*/
 
 /*Color depth: 8 (A8), 16 (RGB565), 24 (RGB888), 32 (XRGB8888)*/
-#define LV_COLOR_DEPTH 16
+#define LV_COLOR_DEPTH 32
 
 /*=========================
    STDLIB WRAPPER SETTINGS
@@ -976,8 +976,12 @@
 #define LV_USE_RENESAS_GLCDC    0
 
 /* LVGL Windows backend */
-#define LV_USE_WINDOWS    0
 
+#ifdef _MSC_VER
+#define LV_USE_WINDOWS    1
+#else
+#define LV_USE_WINDOWS    0
+#endif
 /*==================
 * EXAMPLES
 *==================*/

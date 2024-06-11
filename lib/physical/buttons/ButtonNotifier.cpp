@@ -1,3 +1,5 @@
+#if !defined(_MSC_VER)
+
 #include "ButtonNotifier.hpp"
 
 namespace finder::physical::buttons
@@ -144,3 +146,5 @@ namespace finder::physical::buttons
         }
     }
 } // namespace finder::physical::buttons
+
+#endif // !_MSC_VER

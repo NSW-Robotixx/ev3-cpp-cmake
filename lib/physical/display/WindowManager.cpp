@@ -1,3 +1,5 @@
+#if !defined(_MSC_VER)
+
 #include <physical/display/WindowManager.hpp>
 #include "WindowManager.hpp"
 
@@ -226,3 +228,5 @@ namespace finder::physical::display
         throw new std::invalid_argument{"No matching window name to assign to active Window"};
     }
 } // namespace finder::physical::display
+
+#endif // !defined(_MSC_VER)

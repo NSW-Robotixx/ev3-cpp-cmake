@@ -71,7 +71,27 @@ URL https://github.com/google/googletest/archive/03597a01ee50ed33e9dfd640b249b4b
 )
 set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
 FetchContent_MakeAvailable(googletest)
-    
+
+##################
+#  VCPKG CONFIG  #
+##################
+
+set(CMAKE_TOOLCHAIN_FILE "${CMAKE_CURRENT_SOURCE_DIR}/deps/vcpkg/scripts/buildsystems/vcpkg.cmake"
+  CACHE STRING "Vcpkg toolchain file")
+
+##################
+# VCPKG PACKAGES #
+##################
+
+# find SDL2
+find_package(SDL2 CONFIG REQUIRED)
+target_link_libraries(Main
+    PRIVATE
+    $<TARGET_NAME_IF_EXISTS:SDL2::SDL2main>
+    $<IF:$<TARGET_EXISTS:SDL2::SDL2>,SDL2::SDL2,SDL2::SDL2-static>
+)
+
+
     
 target_include_directories(Test PUBLIC ${CMAKE_SOURCE_DIR}/tests)
 target_include_directories(Test PUBLIC ${CMAKE_SOURCE_DIR}/lib)

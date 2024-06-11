@@ -4,12 +4,9 @@
 
 #include <string>
 #include <array>
-#include <dirent.h>
 #include <fstream>
 #include <iostream>
 #include <algorithm>
-#include <cctype>
-#include <unistd.h>
 #include <filesystem>
 #include <console/Logger.hpp>
 #include <physical/portManager/port/SensorPort.hpp>

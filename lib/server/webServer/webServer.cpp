@@ -1,3 +1,6 @@
+#if !defined(_MSC_VER)
+
+
 #include "webServer.hpp"
 
 namespace finder::server
@@ -73,3 +76,5 @@ namespace finder::server
         server->RegisterHttpRequestHandler("/", HttpMethod::GET, mainPage);
     }
 } // namespace finder::server
+
+#endif // !_MSC_VER

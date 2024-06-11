@@ -1,10 +1,10 @@
 #include <console/Logger.hpp>
 #include <iostream>
 #include <stdio.h>
-#include <thread>
 #include <chrono>
 #include <engines/movement/MovementEngine.hpp>
 #include <math/Vector2.hpp>
+//#include <SDL.h>
 
 finder::console::Logger logger = finder::console::Logger();
 

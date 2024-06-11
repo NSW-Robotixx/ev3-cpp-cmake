@@ -1,3 +1,6 @@
+#if !defined(_MSC_VER)
+
+
 #include "http_server.h"
 
 #include <arpa/inet.h>
@@ -270,3 +273,5 @@ void HttpServer::control_epoll_event(int epoll_fd, int op, int fd,
 }
 
 }  // namespace simple_http_server
+
+#endif  // !defined(_MSC_VER)

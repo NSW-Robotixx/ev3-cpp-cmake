@@ -48,45 +48,43 @@ namespace finder
                         continue;
                     }
 
-                    DIR *directory = opendir(device_type_dir.c_str());
-                    struct dirent *entry;
+                    std::filesystem::path path = device_type_dir;
+
+                    std::filesystem::directory_iterator directory(path);
                     // entry = readdir(directory);
 
-                    while ((entry = readdir(directory)) != nullptr) {
+                    for (const auto& dir_entry : std::filesystem::directory_iterator{ path }) {
                         // std::cout << entry->d_name << std::endl;
-                        if (std::string{entry->d_name}.find(".") == std::string::npos) {
-                            // Port port{device_type_dir + "/" + std::string{entry->d_name}};
+                        // Port port{device_type_dir + "/" + std::string{entry->d_name}};
 
-                            path_address_t port = Port::getAddressPath(device_type_dir + "/" + std::string{entry->d_name});
+                        path_address_t port = Port::getAddressPath(device_type_dir + "/" + dir_entry.path().string());
 
-                            _logger.log(LogLevel::DEBUG, "PortBasePath:" + port);
+                        _logger.log(LogLevel::DEBUG, "PortBasePath:" + port);
 
-                            //read file
-                            std::ifstream file(port);
-                            std::string line;
-                            std::getline(file, line);
-                            file.close();
+                        //read file
+                        std::ifstream file(port);
+                        std::string line;
+                        std::getline(file, line);
+                        file.close();
 
-                            line.erase(std::remove_if(
-                                line.begin(),
-                                line.end(),
-                                [](unsigned char c){
-                                    return !std::isprint(c);
-                                }),
-                                line.end()
-                            );
-                            
-                            for (auto &address : adresses) {
-                                if (address == line) {
-                                    _logger.log(LogLevel::INFO, "Port found: " + line);
-                                    _ports.push_back(std::make_shared<Port>(port));
-                                    foundDevices++;
-                                    break;
-                                }
+                        line.erase(std::remove_if(
+                            line.begin(),
+                            line.end(),
+                            [](unsigned char c) {
+                                return !std::isprint(c);
+                            }),
+                            line.end()
+                        );
+
+                        for (auto& address : adresses) {
+                            if (address == line) {
+                                _logger.log(LogLevel::INFO, "Port found: " + line);
+                                _ports.push_back(std::make_shared<Port>(port));
+                                foundDevices++;
+                                break;
                             }
                         }
                     }
-                    closedir(directory);
 
                 }
                 _ports_read = true;

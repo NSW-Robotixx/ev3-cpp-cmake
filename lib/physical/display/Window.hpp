@@ -1,3 +1,5 @@
+#if !defined(_MSC_VER)
+
 #ifndef __WINDOW_HPP__
 #define __WINDOW_HPP__
 
@@ -91,3 +93,5 @@ namespace finder::physical::display
 } // namespace finder::physical::display
 
 #endif // __WINDOW_HPP__
+
+#endif // !defined(_MSC_VER)

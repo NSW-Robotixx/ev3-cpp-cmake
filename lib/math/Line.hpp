@@ -1,6 +1,8 @@
 #ifndef __LINE_HPP__
 #define __LINE_HPP__
 
+#define _USE_MATH_DEFINES
+#include <cmath>
 #include "Vector2.hpp"
 
 namespace finder::math {

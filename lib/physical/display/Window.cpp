@@ -1,4 +1,6 @@
-#include <physical/display/Window.hpp>
+#if !defined(_MSC_VER)
+
+include <physical/display/Window.hpp>
 
 namespace finder::physical::display
 {
@@ -248,3 +250,5 @@ namespace finder::physical::display
         return 0;
     }
 } // namespace finder::physical::display
+
+#endif // !defined(__WINDOW_CPP__)

@@ -1,14 +1,16 @@
+#if !defined(_MSC_VER)
+
 #ifndef __BUTTONNOTIFIER_H__
 #define __BUTTONNOTIFIER_H__ 
 
 #include <future>
 #include <vector>
 #include <linux/input.h>
+#include <linux/input-event-codes.h>
 #include <fstream>
 #include <stdexcept>
 #include <string>
 #include <iostream>
-#include <linux/input-event-codes.h>
 #include <mutex>
 
 #define EVENT_PATH "/dev/input/by-path/platform-gpio_keys-event"
@@ -55,4 +57,6 @@ namespace finder::physical::buttons
     };
 } // namespace finder::physical::buttons
 
-#endif
+#endif // __BUTTONNOTIFIER_H__
+
+#endif // _MSC_VER
