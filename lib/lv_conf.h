@@ -90,7 +90,12 @@
  * - LV_OS_WINDOWS
  * - LV_OS_MQX
  * - LV_OS_CUSTOM */
+
+#ifdef _MSC_VER
+	#define LV_USE_OS   LV_OS_WINDOWS
+#else
 #define LV_USE_OS   LV_OS_PTHREAD
+#endif
 
 #if LV_USE_OS == LV_OS_CUSTOM
     #define LV_OS_CUSTOM_INCLUDE <stdint.h>
@@ -890,7 +895,12 @@
  *==================*/
 
 /*Use SDL to open window on PC and handle mouse and keyboard*/
+#ifndef _MSC_VER
+#define LV_USE_SDL              1
+#else
 #define LV_USE_SDL              0
+#endif
+
 #if LV_USE_SDL
     #define LV_SDL_INCLUDE_PATH     <SDL2/SDL.h>
     #define LV_SDL_RENDER_MODE      LV_DISPLAY_RENDER_MODE_DIRECT   /*LV_DISPLAY_RENDER_MODE_DIRECT is recommended for best performance*/
@@ -912,7 +922,12 @@
 #endif
 
 /*Driver for /dev/fb*/
+#ifndef _MSC_VER
 #define LV_USE_LINUX_FBDEV      1
+#else
+#define LV_USE_LINUX_FBDEV      0
+#endif
+
 #if LV_USE_LINUX_FBDEV
     #define LV_LINUX_FBDEV_BSD           0
     #define LV_LINUX_FBDEV_RENDER_MODE   LV_DISPLAY_RENDER_MODE_PARTIAL
@@ -948,7 +963,7 @@
 #define LV_USE_TFT_ESPI         0
 
 /*Driver for evdev input devices*/
-#define LV_USE_EVDEV    1
+#define LV_USE_EVDEV    0
 
 /*Driver for libinput input devices*/
 #define LV_USE_LIBINPUT    0

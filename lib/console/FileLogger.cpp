@@ -1,4 +1,5 @@
 #include "FileLogger.hpp"
+#include "FileLogger.hpp"
 
 namespace finder::console {
     std::ofstream FileLogger::_file;
@@ -6,6 +7,9 @@ namespace finder::console {
 
     FileLogger::FileLogger() {
         _file.open(DEFAULT_LOG_FILE, std::ios::trunc);
+        if (_file.bad()) {
+			throw std::runtime_error("File is bad");
+		}
         if (!_file.is_open()) {
             throw std::runtime_error("Could not open file " + std::string(DEFAULT_LOG_FILE));
         }
@@ -21,6 +25,7 @@ namespace finder::console {
             throw std::runtime_error("File is not open");
         }
         _file << message;
+        _file.flush();
     }
 
     void FileLogger::endLogFileMessage() {
@@ -37,5 +42,18 @@ namespace finder::console {
     void FileLogger::clear() {
         _file.close();
         _file.open(DEFAULT_LOG_FILE, std::ios::trunc);
+    }
+    bool finder::console::FileLogger::openFile()
+    {
+        if (_file.is_open()) {
+            _file.open(DEFAULT_LOG_FILE, std::ios::trunc);
+        }
+		if (_file.bad()) {
+			throw std::runtime_error("File is bad");
+		}
+		if (!_file.is_open()) {
+			throw std::runtime_error("Could not open file " + std::string(DEFAULT_LOG_FILE));
+		}
+		return true;
     }
 } // namespace finder::console

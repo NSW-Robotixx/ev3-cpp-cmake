@@ -27,6 +27,7 @@ add_executable(Test ${PROJECT_SOURCE_DIR}/src/test.cpp)
 add_subdirectory(lib)
 add_subdirectory(src)
 add_subdirectory(tests)
+add_subdirectory(deps)
 # add_subdirectory(doc)
 
 # set executables to be static
@@ -52,17 +53,17 @@ endif()
 
 # # lvgl display library
 # # Specify path to own LVGL config header
-message(STATUS "CMAKE_CURRENT_SOURCE_DIR: ${CMAKE_CURRENT_SOURCE_DIR}/lib/lv_conf.h")
-
-set(LV_CONF_PATH
-    ${CMAKE_CURRENT_SOURCE_DIR}/lib/lv_conf.h
-    CACHE STRING "" FORCE)
-
-message(STATUS "LV_CONF_PATH: ${LV_CONF_PATH}")
-
-# # Fetch LVGL from GitHub
-FetchContent_Declare(lvgl GIT_REPOSITORY  https://github.com/lvgl/lvgl.git)
-FetchContent_MakeAvailable(lvgl)
+#   message(STATUS "CMAKE_CURRENT_SOURCE_DIR: ${CMAKE_CURRENT_SOURCE_DIR}/lib/lv_conf.h")
+#   
+#   set(LV_CONF_PATH
+#       ${CMAKE_CURRENT_SOURCE_DIR}/lib/lv_conf.h
+#       CACHE STRING "" FORCE)
+#   
+#   message(STATUS "LV_CONF_PATH: ${LV_CONF_PATH}")
+#   
+#   # # Fetch LVGL from GitHub
+#   FetchContent_Declare(lvgl GIT_REPOSITORY  https://github.com/lvgl/lvgl.git)
+#   FetchContent_MakeAvailable(lvgl)
 
 # google test
 FetchContent_Declare(
@@ -72,33 +73,42 @@ URL https://github.com/google/googletest/archive/03597a01ee50ed33e9dfd640b249b4b
 set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
 FetchContent_MakeAvailable(googletest)
 
-##################
-#  VCPKG CONFIG  #
-##################
+# if (FALSE)
+# message(STATUS "Enabling VCPKG for dependencies")
+# 
+# ##################
+# #  VCPKG CONFIG  #
+# ##################
+# 
+# set(CMAKE_TOOLCHAIN_FILE "${CMAKE_CURRENT_SOURCE_DIR}/deps/vcpkg/scripts/buildsystems/vcpkg.cmake"
+#   CACHE STRING "Vcpkg toolchain file")
+# 
+# ##################
+# # VCPKG PACKAGES #
+# ##################
+# 
+# # find SDL2
+# find_package(SDL2 CONFIG REQUIRED)
+# target_link_libraries(Main
+#     PRIVATE
+#     $<TARGET_NAME_IF_EXISTS:SDL2::SDL2main>
+#     $<IF:$<TARGET_EXISTS:SDL2::SDL2>,SDL2::SDL2,SDL2::SDL2-static>
+# )
+# endif()
 
-set(CMAKE_TOOLCHAIN_FILE "${CMAKE_CURRENT_SOURCE_DIR}/deps/vcpkg/scripts/buildsystems/vcpkg.cmake"
-  CACHE STRING "Vcpkg toolchain file")
+# SDL2
+#  if( ${CMAKE_SYSTEM_NAME} MATCHES "Windows")
+#      set( CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>" )
+#      set_property( DIRECTORY PROPERTY VS_STARTUP_PROJECT ${CMAKE_PROJECT_NAME} )
+#      set_property( TARGET Main PROPERTY WIN32_EXECUTABLE true )
+#  endif()
 
-##################
-# VCPKG PACKAGES #
-##################
-
-# find SDL2
-find_package(SDL2 CONFIG REQUIRED)
-target_link_libraries(Main
-    PRIVATE
-    $<TARGET_NAME_IF_EXISTS:SDL2::SDL2main>
-    $<IF:$<TARGET_EXISTS:SDL2::SDL2>,SDL2::SDL2,SDL2::SDL2-static>
-)
-
-
-    
 target_include_directories(Test PUBLIC ${CMAKE_SOURCE_DIR}/tests)
 target_include_directories(Test PUBLIC ${CMAKE_SOURCE_DIR}/lib)
 target_include_directories(Main PUBLIC ${CMAKE_SOURCE_DIR}/lib)
+target_include_directories(Main PUBLIC ${CMAKE_SOURCE_DIR}/deps)
     
 target_link_libraries(Main 
-PUBLIC
   WindowManager
   Logger
   Window
@@ -107,6 +117,7 @@ PUBLIC
   RobotMovement
   Vector2
   MovementEngine
+  lvgl::lvgl
   # yaml-cpp::yaml-cpp
 )
     

@@ -4,7 +4,7 @@
 #include <chrono>
 #include <engines/movement/MovementEngine.hpp>
 #include <math/Vector2.hpp>
-//#include <SDL.h>
+//#include <lvgl.h>
 
 finder::console::Logger logger = finder::console::Logger();
 
@@ -24,16 +24,16 @@ int main(int argc, char const *argv[])
 {
     std::cout << ascii_art_literal << std::endl;
 
-    // wait for 500ms
-    std::this_thread::sleep_for(std::chrono::milliseconds(500));
     logger.info("Starting application...");
 
-    finder::engines::movement::MovementEngine movementEngine = finder::engines::movement::MovementEngine();
+//    finder::engines::movement::MovementEngine movementEngine = finder::engines::movement::MovementEngine();
+//
+//    movementEngine.move(finder::math::Vector2{100, 100});
+//    movementEngine.move(finder::math::Vector2{100, 100});
+//    movementEngine.move(finder::math::Vector2{100, 100});
+//    movementEngine.move(finder::math::Vector2{100, 100});
 
-    movementEngine.move(finder::math::Vector2{100, 100});
-    movementEngine.move(finder::math::Vector2{100, 100});
-    movementEngine.move(finder::math::Vector2{100, 100});
-    movementEngine.move(finder::math::Vector2{100, 100});
+    
 
     while (true)
     {
