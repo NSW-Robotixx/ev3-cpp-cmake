@@ -117,7 +117,6 @@ target_link_libraries(Main
   RobotMovement
   Vector2
   MovementEngine
-  lvgl::lvgl
   # yaml-cpp::yaml-cpp
 )
     
