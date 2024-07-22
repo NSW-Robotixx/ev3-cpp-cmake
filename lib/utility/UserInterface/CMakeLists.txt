@@ -1,4 +1,4 @@
-add_library(UserInterface STATIC UserInterface.cpp)
+add_library(UserInterface UserInterface.cpp)
 
 target_sources(UserInterface
     PRIVATE

@@ -2,13 +2,13 @@ add_subdirectory(guidanceLine)
 add_subdirectory(obstacle)
 
 
-add_library(pathfinder 
+add_library(pathfind
     AStar.cpp
     ObstacleManager.cpp
     SmoothPath.cpp
 )
 
-target_sources(pathfinder
+target_sources(pathfind
     PRIVATE
         ${CMAKE_CURRENT_LIST_DIR}/AStar.cpp
         ${CMAKE_CURRENT_LIST_DIR}/ObstacleManager.cpp
@@ -19,7 +19,7 @@ target_sources(pathfinder
         ${CMAKE_CURRENT_LIST_DIR}/SmoothPath.hpp
 )   
 
-target_link_libraries(pathfinder 
+target_link_libraries(pathfind
     PUBLIC
         Vector2
         Logger

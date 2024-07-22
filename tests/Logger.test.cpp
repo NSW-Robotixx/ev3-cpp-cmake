@@ -1,9 +1,9 @@
 #include <gtest/gtest.h>
 
-#include "console/Logger.hpp"
+#include "log/Logger.hpp"
 
 TEST(Logger, log) {
-    using namespace finder::console;
+    using namespace finder::log;
 
     Logger logger;
 
@@ -25,12 +25,13 @@ TEST(Logger, log) {
     logger.warn(LogLevel::WARN);
     logger.error(LogLevel::ERROR);
     logger.positive(LogLevel::POSITIVE);
+    logger.debug((LogLevel)10);
 
     ASSERT_EQ(logger.getActiveLogLevel(), LogLevel::DEBUG);
 }
 
 TEST(Logger, enforceLogLevel) {
-    using namespace finder::console;
+    using namespace finder::log;
 
     Logger logger;
 
@@ -46,7 +47,7 @@ TEST(Logger, enforceLogLevel) {
 }
 
 TEST(Logger, setMinLevel) {
-    using namespace finder::console;
+    using namespace finder::log;
 
     Logger logger(LogLevel::INFO);
 

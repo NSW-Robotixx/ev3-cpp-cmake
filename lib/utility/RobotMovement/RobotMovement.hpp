@@ -10,8 +10,8 @@
 #include <functional>
 #include <atomic>
 #include <condition_variable>
-#include <physical/DeviceManager.hpp>
-#include <console/Logger.hpp>
+#include <DeviceManager.hpp>
+#include <log/Logger.hpp>
 #include "MovementAction.hpp"
 
 #define LEFT_RIGHT_SWITCH -1
@@ -55,7 +55,7 @@ namespace finder::robot
 
             static std::atomic<bool> _isProcessingMovementQueue;
 
-            static finder::console::Logger _logger;
+            static finder::log::Logger _logger;
 
             static unsigned long int _movementID;
 

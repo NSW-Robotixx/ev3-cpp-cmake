@@ -1,6 +1,6 @@
 #if !defined(_MSC_VER)
 
-#include <console/Logger.hpp>
+#include <log/Logger.hpp>
 #include <server/webServer/webServer.hpp>
 #include <server/webServer/webComponents/ComponentFullBody.hpp>
 

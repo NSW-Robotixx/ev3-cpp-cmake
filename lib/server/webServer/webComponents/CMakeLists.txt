@@ -1,5 +1,4 @@
 add_library(webComponents 
-    STATIC
         WebComponentBase.cpp
         ComponentFullBody.cpp
         ComponentFactory.cpp

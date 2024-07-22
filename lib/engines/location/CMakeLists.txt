@@ -1,4 +1,4 @@
-add_library(LocationEngine STATIC LocationEngine.cpp)
+add_library(LocationEngine LocationEngine.cpp)
 
 target_sources(LocationEngine
     PRIVATE
@@ -10,6 +10,6 @@ target_sources(LocationEngine
 target_link_libraries(LocationEngine
     PUBLIC
         Logger
-        DeviceManager
+        EV3_filesystem
         Vector2
         )

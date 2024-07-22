@@ -4,7 +4,7 @@
 
 namespace finder::physical::display
 {
-    ::finder::console::Logger Window::_logger = ::finder::console::Logger();
+    ::finder::log::Logger Window::_logger = ::finder::log::Logger();
 
     Window::Window(std::string name, int width, int height, int x, int y)
     {
@@ -14,6 +14,7 @@ namespace finder::physical::display
         this->x = x;
         this->y = y;
         this->pixels.resize(width * height);
+        this->fill(DISPLAY_WHITE);
     }
 
     int Window::getWidth()

@@ -7,7 +7,7 @@
 
 #include <physical/display/Screen.hpp>
 #include <physical/display/Window.hpp>
-#include <console/Logger.hpp>
+#include <log/Logger.hpp>
 #include <linux/input-event-codes.h>
 
 namespace finder::physical::display
@@ -36,7 +36,7 @@ namespace finder::physical::display
             static void buttonPressed(int code);
             static void buttonReleased(int code);
         private:
-            static finder::console::Logger _logger;
+            static finder::log::Logger _logger;
             static std::vector<std::shared_ptr<Window>> windows;
             static Screen screen;
             static std::shared_ptr<Window> _active_window;

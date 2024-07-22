@@ -1,4 +1,4 @@
-add_library(http-server STATIC http_server.cc)
+add_library(http-server http_server.cc)
 
 target_sources(http-server
     PRIVATE

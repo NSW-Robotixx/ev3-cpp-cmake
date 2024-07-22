@@ -6,7 +6,7 @@
 #include <atomic>
 #include <physical/display/WindowManager.hpp>
 #include <physical/buttons/ButtonNotifier.hpp>
-#include <console/Logger.hpp>
+#include <log/Logger.hpp>
 
 namespace finder::utility
 {
@@ -17,7 +17,7 @@ namespace finder::utility
         static void start();
     private:
         static ::finder::physical::display::WindowManager windowManager;
-        static console::Logger logger;
+        static log::Logger logger;
         static std::future<void> _loop_thread;
         static std::atomic<bool> _running;
 

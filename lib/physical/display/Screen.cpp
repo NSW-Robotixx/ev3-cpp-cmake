@@ -14,11 +14,11 @@
 
 namespace finder::physical::display
 {
-::finder::console::Logger Screen::_logger = ::finder::console::Logger();
+::finder::log::Logger Screen::_logger = ::finder::log::Logger();
 
 Screen::Screen()
 {
-    _logger.setMinLevel(::finder::console::LogLevel::INFO);
+    _logger.setMinLevel(::finder::log::LogLevel::INFO);
 
     fbfd = open("/dev/fb0", O_RDWR);
     

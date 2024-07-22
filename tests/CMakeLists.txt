@@ -1,29 +1,23 @@
 
 file(GLOB SRC_FILES ${CMAKE_CURRENT_SOURCE_DIR}/*.cpp)
 
-LIST(APPEND SRC_FILES ${CMAKE_CURRENT_SOURCE_DIR}/initFiles.test.cpp)
 
 # message(STATUS SRC_FILES: ${SRC_FILES})
 
-add_library(all_tests STATIC ${SRC_FILES})
+add_library(all_tests ${SRC_FILES})
 
 
 target_link_libraries(all_tests
     PUBLIC    
         gtest_main
         Logger
-        Port
-        PortManager
         Vector3
         Vector2
-        DeviceManager
         ButtonNotifier
         # Bitmaps
         Screen
         WindowManager
         Window
-        MotorPort
-        SensorPort
         http-server
         webComponents
         webServer
@@ -36,6 +30,7 @@ target_link_libraries(all_tests
         gearboxEngine
         Line
         GraphicalInterface
+        # EV3_filesystem
 )
 
 target_include_directories(all_tests PUBLIC ${CMAKE_SOURCE_DIR}/lib)

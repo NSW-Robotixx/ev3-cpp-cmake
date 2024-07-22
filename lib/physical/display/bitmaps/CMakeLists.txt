@@ -1,4 +1,4 @@
-add_library(Bitmaps STATIC Bitmaps.cpp)
+add_library(Bitmaps Bitmaps.cpp)
 
 target_sources(Bitmaps
     PRIVATE

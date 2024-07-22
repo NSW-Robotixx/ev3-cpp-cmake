@@ -1,4 +1,4 @@
-add_library(ButtonNotifier STATIC ButtonNotifier.cpp)
+add_library(ButtonNotifier ButtonNotifier.cpp)
 
 target_sources(ButtonNotifier 
     PRIVATE 

@@ -2,7 +2,7 @@
 
 namespace finder::robot
 {
-    console::Logger RobotMovement::_logger{};
+    log::Logger RobotMovement::_logger{};
 
     unsigned long int RobotMovement::_movementID = 0;
 

@@ -1,7 +1,7 @@
 add_subdirectory(bitmaps)
 
 #screen
-add_library(Screen STATIC Screen.cpp)
+add_library(Screen Screen.cpp)
 
 target_sources(Screen
     PRIVATE
@@ -21,7 +21,7 @@ target_link_libraries(Screen
 )
 
 #WindowManager
-add_library(WindowManager STATIC WindowManager.cpp)
+add_library(WindowManager WindowManager.cpp)
 
 target_sources(WindowManager
     PRIVATE
@@ -42,7 +42,7 @@ target_link_libraries(WindowManager
 )
 
 #window
-add_library(Window STATIC Window.cpp)
+add_library(Window Window.cpp)
 
 target_sources(Window
     PRIVATE

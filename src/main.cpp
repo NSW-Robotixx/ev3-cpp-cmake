@@ -1,12 +1,11 @@
-#include <console/Logger.hpp>
+#include <log/Logger.hpp>
 #include <iostream>
 #include <stdio.h>
 #include <chrono>
-#include <engines/movement/MovementEngine.hpp>
 #include <math/Vector2.hpp>
 //#include <lvgl.h>
 
-finder::console::Logger logger = finder::console::Logger();
+finder::log::Logger logger = finder::log::Logger();
 
 constexpr auto& ascii_art_literal = R"(
   _____ _           _ _____      

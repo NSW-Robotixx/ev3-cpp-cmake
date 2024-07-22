@@ -1,7 +1,7 @@
 add_subdirectory(http_server)
 add_subdirectory(webComponents)
 
-add_library(webServer STATIC
+add_library(webServer
     webServer.cpp
 )
 

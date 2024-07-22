@@ -2,18 +2,11 @@
 #include <initFiles.test.cpp>
 // #include <Bitmaps.test.cpp>
 #include <ButtonNotifier.test.cpp>
-#include <DeviceManager.test.cpp>
 #include <LocationEngine.test.cpp>
 #include <Logger.test.cpp>
-#include <MotorManager.test.cpp>
-#include <MotorPort.test.cpp>
 #include <MovementEngine.test.cpp>
-#include <Port.test.cpp>
-#include <PortManager.test.cpp>
 #include <RobotMovement.test.cpp>
 #include <Screen.test.cpp>
-#include <SensorManager.test.cpp>
-#include <SensorPort.test.cpp>
 #include <ServerManager.test.cpp>
 // #include <UserInterface.test.cpp>
 #include <Vector2.test.cpp>
@@ -30,6 +23,8 @@
 // #include <GearboxEngine.test.cpp>
 // #include <cleanupFiles.test.cpp>
 #include <GraphicalInterface.test.cpp>
+
+// #include <filesystem/include/test_EV3_filesystem.cpp>
 
 // Demonstrate some basic assertions.
 TEST(HelloTest, BasicAssertions) {

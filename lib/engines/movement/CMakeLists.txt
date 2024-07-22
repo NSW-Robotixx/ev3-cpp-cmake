@@ -1,5 +1,4 @@
-add_library(MovementEngine 
-    STATIC 
+add_library(MovementEngine  
         MovementEngine.cpp
         MovementParser.cpp
     )
@@ -16,7 +15,7 @@ target_sources(MovementEngine
 target_link_libraries(MovementEngine
     PUBLIC
         Logger
-        pathfinder
+        pathfind
         Vector2
         RobotMovement
         LocationEngine

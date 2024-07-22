@@ -1,4 +1,4 @@
-add_library(RobotMovement STATIC RobotMovement.cpp MovementAction.cpp)
+add_library(RobotMovement RobotMovement.cpp MovementAction.cpp)
 
 target_sources(RobotMovement
     PRIVATE
@@ -17,8 +17,5 @@ target_include_directories(RobotMovement
 target_link_libraries(RobotMovement
     PUBLIC
         Logger
-        DeviceManager
-        PortManager
-        MotorPort
-        SensorPort
+        EV3_filesystem
 )

@@ -5,7 +5,7 @@
 #include <sys/mman.h>
 #include <stdint.h>
 #include <memory>
-#include <console/Logger.hpp>
+#include <log/Logger.hpp>
 
 
 #ifndef __DISPLAY_HPP__
@@ -25,7 +25,7 @@ namespace finder::physical::display
   class Screen
   {
   private:
-    static ::finder::console::Logger _logger;
+    static ::finder::log::Logger _logger;
   protected:
       int fbfd;
       uint32_t *fbp;

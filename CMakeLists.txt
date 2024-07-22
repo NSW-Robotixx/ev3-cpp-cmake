@@ -13,8 +13,8 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS}")
 LIST(APPEND CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/cmake-modules)
 
 # new and untested stuff
-set(BUILD_SHARED_LIBS OFF)
-set(CMAKE_EXE_LINKER_FLAGS "-static-libgcc -static-libstdc++")
+set(BUILD_SHARED_LIBS ON)
+set(CMAKE_EXE_LINKER_FLAGS "-static-libgcc -static-libstdc++ -Wall -Werror -Wextra")
 # end of new and untested stuff
 
 # add executables
@@ -31,8 +31,8 @@ add_subdirectory(deps)
 # add_subdirectory(doc)
 
 # set executables to be static
-SET_TARGET_PROPERTIES(Main PROPERTIES LINK_FLAGS "-static -lc -lm -L/usr/local/lib/")
-SET_TARGET_PROPERTIES(Test PROPERTIES LINK_FLAGS "-static -lc -lm -L/usr/local/lib/")
+# SET_TARGET_PROPERTIES(Main PROPERTIES LINK_FLAGS "-static -lc -lm -L/usr/local/lib/")
+# SET_TARGET_PROPERTIES(Test PROPERTIES LINK_FLAGS "-static -lc -lm -L/usr/local/lib/")
 
 # fetch dependencies
 include(FetchContent)
@@ -72,6 +72,8 @@ URL https://github.com/google/googletest/archive/03597a01ee50ed33e9dfd640b249b4b
 )
 set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
 FetchContent_MakeAvailable(googletest)
+
+enable_testing()
 
 # if (FALSE)
 # message(STATUS "Enabling VCPKG for dependencies")
@@ -135,11 +137,9 @@ set(CMAKE_VERBOSE_MAKEFILE OFF)
       Test
       gtest_main
       Logger
-      Port
-      PortManager
       Vector3
       Vector2
-      pathfinder
+      pathfind
       MovementEngine
       RobotMovement
       webServer
@@ -147,17 +147,19 @@ set(CMAKE_VERBOSE_MAKEFILE OFF)
       WindowManager
       yaml-cpp::yaml-cpp
       LocationEngine
+      # EV3_filesystem_test
       )
       
       
 message(STATUS "CMAKE_C_COMPILER: ${CMAKE_C_COMPILER}")
+message(STATUS "CMAKE_CXX_COMPILER: ${CMAKE_CXX_COMPILER}")
 
 
 if(CMAKE_C_COMPILER STREQUAL "/usr/bin/arm-linux-gnueabi-gcc")
-SET_TARGET_PROPERTIES (Test PROPERTIES LINK_FLAGS "-static -lc -lm -L/usr/local/lib/")
+# SET_TARGET_PROPERTIES (Test PROPERTIES LINK_FLAGS "-static -lc -lm -L/usr/local/lib/")
 else()
 include(GoogleTest)
-# gtest_discover_tests(Test) # just needed for ctest to discover gtests
+gtest_discover_tests(Test) # just needed for ctest to discover gtests
 endif()
 
 

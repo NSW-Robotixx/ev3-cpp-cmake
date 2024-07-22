@@ -2,7 +2,7 @@
 #define __LOCATION_ENGINE_HPP__
 
 #include <math/Vector2.hpp>
-#include <physical/DeviceManager.hpp>
+#include <DeviceManager.hpp>
 
 namespace finder::engines::location
 {

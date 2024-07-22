@@ -1,4 +1,4 @@
-add_library(gearboxEngine STATIC GearboxEngine.cpp)
+add_library(gearboxEngine GearboxEngine.cpp)
 
 target_sources(gearboxEngine
     PRIVATE

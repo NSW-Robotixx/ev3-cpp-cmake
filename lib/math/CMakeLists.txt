@@ -1,6 +1,6 @@
-add_library(Vector2 STATIC Vector2.cpp)
-add_library(Vector3 STATIC Vector3.cpp)
-add_library(Line STATIC Line.cpp)
+add_library(Vector2 Vector2.cpp)
+add_library(Vector3 Vector3.cpp)
+add_library(Line Line.cpp)
 
 target_sources(Vector2
     PRIVATE

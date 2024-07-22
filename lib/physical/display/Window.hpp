@@ -9,7 +9,7 @@
 #include <vector>
 #include <map>
 #include <iomanip>
-#include <console/Logger.hpp>
+#include <log/Logger.hpp>
 #include <physical/display/bitmaps/Bitmaps.hpp>
 
 namespace finder::physical::display
@@ -67,7 +67,7 @@ namespace finder::physical::display
             int getStartY() { return y; };
             
         private:
-            static ::finder::console::Logger _logger;
+            static ::finder::log::Logger _logger;
             std::string name;
             int width;
             int height;

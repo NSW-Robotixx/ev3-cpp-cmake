@@ -18,5 +18,4 @@ target_include_directories(GraphicalInterface PUBLIC
 target_link_libraries(GraphicalInterface
     PUBLIC
         Logger
-        lvgl
 )

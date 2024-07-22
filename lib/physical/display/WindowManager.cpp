@@ -5,14 +5,14 @@
 
 namespace finder::physical::display
 {
-    finder::console::Logger WindowManager::_logger = finder::console::Logger();
+    finder::log::Logger WindowManager::_logger = finder::log::Logger();
     std::vector<std::shared_ptr<Window>> WindowManager::windows;
     Screen WindowManager::screen = Screen();
     std::shared_ptr<Window> WindowManager::_active_window = nullptr;
 
     WindowManager::WindowManager()
     {
-        _logger.setMinLevel(finder::console::LogLevel::INFO);
+        _logger.setMinLevel(finder::log::LogLevel::INFO);
     }
 
     WindowManager::~WindowManager()

@@ -3,7 +3,7 @@
 namespace finder::utility
 {
     physical::display::WindowManager UserInterface::windowManager = physical::display::WindowManager{};
-    console::Logger UserInterface::logger = console::Logger();
+    log::Logger UserInterface::logger = log::Logger();
 
     UserInterface::UserInterface()
     {
