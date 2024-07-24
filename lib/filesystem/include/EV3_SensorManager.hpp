@@ -1,7 +1,7 @@
 #ifndef __SENSOR_MANAGER_HPP__
 #define __SENSOR_MANAGER_HPP__
 
-#include <DeviceManager.hpp>
+#include <portManager/PortManager.hpp>
 #include <memory>
 #include <functional>
 #include <vector>
@@ -14,7 +14,7 @@
 
 namespace finder::physical
 {
-    class SensorManager : public DeviceManager
+    class SensorManager : public PortManager
     {
         public:
             SensorManager(std::string portBasePath);

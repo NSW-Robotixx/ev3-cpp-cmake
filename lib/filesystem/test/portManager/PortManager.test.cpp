@@ -7,13 +7,18 @@
 
 #include <portManager/PortManager.hpp>
 
+#include <Fakesys.hpp>
+
 TEST(PortManager, readPorts)
 {
     using namespace finder::physical;
+    using namespace finder::physical::test;
 
-    PortManager DM = PortManager{"./fakesys"};
+    FakeSys::init();
+
+    PortManager DM = PortManager{FakeSys::getWorkingDir()};
 
     DM.readPorts();
 
-    ASSERT_EQ(DM.getNumberOfDevices(), 4);
+    ASSERT_EQ(DM.getNumberOfDevices(), 8);
 } 

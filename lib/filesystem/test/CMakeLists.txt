@@ -12,10 +12,6 @@ set(EV3_FILESYSTEM_TEST_SRC
     testMotorManager.cpp
 )
 
-# append the single file from the include directory to the list 
-LIST(GET EV3_FILESYSTEM_INCLUDE_DIR 1 EV3_FILESYSTEM_TEST_INCLUDE_SRC)
-LIST(APPEND EV3_FILESYSTEM_TEST_SRC ${EV3_FILESYSTEM_TEST_INCLUDE_SRC}/EV3_test_filesystem.cpp)
-
 include(GoogleTest)
 
 add_executable(EV3_filesystem_test ${EV3_FILESYSTEM_TEST_SRC})
@@ -31,6 +27,7 @@ target_sources(EV3_filesystem_test
 )
 target_include_directories(EV3_filesystem_test PUBLIC ${EV3_FILESYSTEM_SRC_DIR})
 target_include_directories(EV3_filesystem_test PUBLIC ${EV3_FILESYSTEM_TEST_DIR})
+target_include_directories(EV3_filesystem_test PRIVATE ${EV3_FILESYSTEM_SRC_DIR}/../include)
 
 target_link_libraries(EV3_filesystem_test
     PUBLIC

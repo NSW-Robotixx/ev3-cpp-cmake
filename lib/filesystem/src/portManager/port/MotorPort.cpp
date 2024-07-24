@@ -162,7 +162,16 @@ namespace finder
 
             if (isEnabled()) {
                 if (_file_polarity_path->is_open()) {
-                    *_file_polarity_path << static_cast<int>(polarity);
+                    if (polarity == MotorPolarity::NORMAL) {
+                        *_file_polarity_path << "normal";
+                    } else if (polarity == MotorPolarity::INVERSED) {
+                        *_file_polarity_path << "inversed";
+                    } else {
+#ifdef ENABLE_LOGGING                        
+                        _logger.error("MotorPort failed to set polarity");
+#endif
+                        throw std::runtime_error("MotorPort failed to set polarity");
+                    }
                     _file_polarity_path->flush();
                 } else {
 #ifdef ENABLE_LOGGING                    
@@ -184,7 +193,18 @@ namespace finder
 
             if (isEnabled()) {
                 if (_file_stop_action_path->is_open()) {
-                    *_file_stop_action_path << static_cast<int>(stop_action);
+                    if (stop_action == MotorStopAction::COAST) {
+                        *_file_stop_action_path << "coast";
+                    } else if (stop_action == MotorStopAction::BRAKE) {
+                        *_file_stop_action_path << "brake";
+                    } else if (stop_action == MotorStopAction::HOLD) {
+                        *_file_stop_action_path << "hold";
+                    } else {
+#ifdef ENABLE_LOGGING                        
+                        _logger.error("MotorPort failed to set stop_action");
+#endif
+                        throw std::runtime_error("MotorPort failed to set stop_action");
+                    }
                     _file_stop_action_path->flush();
                 } else {
 #ifdef ENABLE_LOGGING                    

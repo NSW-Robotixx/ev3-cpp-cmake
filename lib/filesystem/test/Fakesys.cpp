@@ -1,11 +1,11 @@
-#include "Fakesys.hpp"
+#include <Fakesys.hpp>
 
 namespace finder::physical::test
 {
     // variables
     bool FakeSys::_initialized = false;
     bool FakeSys::_initializationIsPatial = false;
-    std::string FakeSys::_basePath = "./fakesys";
+    std::string FakeSys::_basePath = "/home/niklas/ev3-cpp-cmake/fakesys";
     std::string FakeSys::_gyroSensorRelPath = "/lego-sensor/sensor0";
     std::string FakeSys::_colorSensorLeftRelPath = "/lego-sensor/sensor1";
     std::string FakeSys::_colorSensorRightRelPath = "/lego-sensor/sensor2";
@@ -59,16 +59,16 @@ namespace finder::physical::test
         }
 
         // create gyro sensor files
-        initSensor(_gyroSensorRelPath, 0);
+        initSensor(_gyroSensorRelPath, 1);
 
         // create color sensor left files
-        initSensor(_colorSensorLeftRelPath, 1);
+        initSensor(_colorSensorLeftRelPath, 2);
 
         // create color sensor right files
-        initSensor(_colorSensorRightRelPath, 2);
+        initSensor(_colorSensorRightRelPath, 3);
 
         // create color sensor front files
-        initSensor(_colorSensorFrontRelPath, 3);
+        initSensor(_colorSensorFrontRelPath, 4);
 
         // create motor left files
         initMotor(_motorLeftRelPath, 'A');

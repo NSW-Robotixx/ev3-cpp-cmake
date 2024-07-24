@@ -22,7 +22,7 @@ namespace finder::physical
     log::Logger SensorManager::_logger;
 #endif
 
-    SensorManager::SensorManager(std::string portBasePath) : DeviceManager(portBasePath)
+    SensorManager::SensorManager(std::string portBasePath) : PortManager(portBasePath)
     {
         _dispatcherFuture = std::async(std::launch::async, Dispatcher);
     }
@@ -46,68 +46,30 @@ namespace finder::physical
 
     int SensorManager::readGyro()
     {
-        std::lock_guard<std::mutex> lock(_gyroValueMutex);
-        _gyroValue = _gyroSensor->getValue(0);
-        return _gyroValue;
+        return -1;
     }
 
     int SensorManager::readColorLeft()
     {
-        std::lock_guard<std::mutex> lock(_colorLeftValueMutex);
-        _colorLeftValue = _colorSensorLeft->getValue(0);
-        return _colorLeftValue;
+        return -1;
     }
 
     int SensorManager::readColorRight()
     {
-        std::lock_guard<std::mutex> lock(_colorRightValueMutex);
-        _colorRightValue = _colorSensorRight->getValue(0);
-        return _colorRightValue;
+        return -1;
     }
 
     int SensorManager::readColorFront()
     {
-        std::lock_guard<std::mutex> lock(_colorFrontValueMutex);
-        _colorFrontValue = _colorSensorFront->getValue(0);
-        return _colorFrontValue;
+        return -1;
     }
     
     void SensorManager::addEventListeners(DeviceType port, std::function<void(int)> callback, int value)
     {
-        std::map<DeviceType, std::function<void(int)>> listener;
-        listener[port] = callback;
-        _eventListeners.push_back(listener);
+        
     }
 
     void SensorManager::Dispatcher()
     {
-        while (_stopDispatcher == false)
-        {
-            int gyroValue = _gyroValue;
-            int colorLeftValue = _colorLeftValue;
-            int colorRightValue = _colorRightValue;
-            int colorFrontValue = _colorFrontValue;
-
-            std::vector<std::future<void>> callbackFutures;
-
-            readAllSensors();
-
-            for (auto &callback : _eventListeners)
-            {
-                if (callback.begin()->first == static_cast<DeviceType>(_gyroSensor->getPortKey()))
-                    callbackFutures.push_back(std::async(std::launch::async, callback.begin()->second, gyroValue));
-                else if (callback.begin()->first == static_cast<DeviceType>(_colorSensorLeft->getPortKey()))
-                    callbackFutures.push_back(std::async(std::launch::async, callback.begin()->second, colorLeftValue));
-                else if (callback.begin()->first == static_cast<DeviceType>(_colorSensorRight->getPortKey()))
-                    callbackFutures.push_back(std::async(std::launch::async, callback.begin()->second, colorRightValue));
-                else if (callback.begin()->first == static_cast<DeviceType>(_colorSensorFront->getPortKey()))
-                    callbackFutures.push_back(std::async(std::launch::async, callback.begin()->second, colorFrontValue));
-                else {
-#ifdef ENABLE_LOGGING                    
-                    _logger.error("SensorManager::Dispatcher, Unknown port key");
-#endif
-                }
-            }
-        }
     }
 } // namespace finder::physical

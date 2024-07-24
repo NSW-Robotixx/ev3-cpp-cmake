@@ -10,12 +10,14 @@ target_sources(EV3_filesystem
         ${EV3_FILESYSTEM_SRC}
     PUBLIC
         ${EV3_FILESYSTEM_HDR}
-)
+) 
 
 target_include_directories(EV3_filesystem PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
-target_include_directories(EV3_filesystem PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/../include)
+target_include_directories(EV3_filesystem PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/../include)
 
 target_link_libraries(EV3_filesystem
     PUBLIC
-        # Logger
+        Logger
 )
+
+set(ENABLE_LOGGING ON CACHE BOOL "Enable logging")

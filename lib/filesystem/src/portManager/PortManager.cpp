@@ -62,7 +62,7 @@ namespace finder
                         // std::cout << entry->d_name << std::endl;
                         // Port port{device_type_dir + "/" + std::string{entry->d_name}};
 
-                        path_address_t port = Port::getAddressPath(device_type_dir + "/" + dir_entry.path().string());
+                        path_address_t port = Port::getAddressPath(dir_entry.path().string());
 #ifdef ENABLE_LOGGING
                         _logger.log(LogLevel::DEBUG, "PortBasePath:" + port);
 #endif

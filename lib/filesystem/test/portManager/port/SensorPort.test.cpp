@@ -1,9 +1,19 @@
 #include <gtest/gtest.h>
 #include <portManager/port/SensorPort.hpp>
+#include <Fakesys.hpp>
+
+TEST(SensorPort, CreateFakeSys) {
+    using namespace finder::physical::test;
+    FakeSys fakesys;
+    fakesys.init();
+    ASSERT_TRUE(fakesys.isInitialized());
+}
 
 TEST(SensorPort, Constructor)
 {
-    finder::physical::SensorPort sensorPort("./test/lego-sensor/sensor0");
+    using namespace finder::physical::test;
+
+    finder::physical::SensorPort sensorPort(FakeSys::getWorkingDir() + "/lego-sensor/sensor0");
     ASSERT_EQ(sensorPort.getDeviceType(), finder::physical::DeviceType::SENSOR);
 
     ASSERT_ANY_THROW(finder::physical::SensorPort sensorPort(""));
@@ -11,25 +21,31 @@ TEST(SensorPort, Constructor)
 
 TEST(SensorPort, ConstructorWithPort)
 {
-    std::shared_ptr<finder::physical::Port> port = std::make_shared<finder::physical::Port>("./test/lego-sensor/sensor0");
+    using namespace finder::physical::test;
+
+    std::shared_ptr<finder::physical::Port> port = std::make_shared<finder::physical::Port>(FakeSys::getWorkingDir() + "/lego-sensor/sensor0");
 
     finder::physical::SensorPort sensorPort(port);
 
     ASSERT_EQ(sensorPort.getDeviceType(), finder::physical::DeviceType::SENSOR);
-    ASSERT_EQ(sensorPort.getBasePath(), "./test/lego-sensor/sensor0");
+    ASSERT_EQ(sensorPort.getBasePath(), FakeSys::getWorkingDir() + "/lego-sensor/sensor0");
 }
 
 TEST(SensorPort, setBasePath)
 {
+    using namespace finder::physical::test;
+
     
     finder::physical::SensorPort sensorPort{"/sys/class/lego-sensor/sensor0"};
-    sensorPort.setBasePath("./test/lego-sensor/sensor0");
+    sensorPort.setBasePath(FakeSys::getWorkingDir() + "/lego-sensor/sensor0");
     ASSERT_EQ(sensorPort.getDeviceType(), finder::physical::DeviceType::SENSOR);
-    ASSERT_EQ(sensorPort.getBasePath(), "./test/lego-sensor/sensor0");
+    ASSERT_EQ(sensorPort.getBasePath(), FakeSys::getWorkingDir() + "/lego-sensor/sensor0");
 }
 
 TEST(SensorPort, getValuePath)
 {
+    using namespace finder::physical::test;
+
     finder::physical::SensorPort sensorPort("/sys/class/lego-sensor/sensor0");
     ASSERT_EQ(sensorPort.getValuePath(0), "");
     sensorPort.overrideEnabled(true);
@@ -38,6 +54,8 @@ TEST(SensorPort, getValuePath)
 
 TEST(SensorPort, getModePath)
 {
+    using namespace finder::physical::test;
+
     finder::physical::SensorPort sensorPort("/sys/class/lego-sensor/sensor0");
     ASSERT_EQ(sensorPort.getModePath(), "");
     sensorPort.overrideEnabled(true);
@@ -46,6 +64,8 @@ TEST(SensorPort, getModePath)
 
 TEST(SensorPort, getModesPath)
 {
+    using namespace finder::physical::test;
+
     finder::physical::SensorPort sensorPort("/sys/class/lego-sensor/sensor0");
     ASSERT_EQ(sensorPort.getModesPath(), "");
     sensorPort.overrideEnabled(true);
@@ -54,6 +74,8 @@ TEST(SensorPort, getModesPath)
 
 TEST(SensorPort, getNumValuesPath)
 {
+    using namespace finder::physical::test;
+
     finder::physical::SensorPort sensorPort("/sys/class/lego-sensor/sensor0");
     ASSERT_EQ(sensorPort.getNumValuesPath(), "");
     sensorPort.overrideEnabled(true);
@@ -62,6 +84,8 @@ TEST(SensorPort, getNumValuesPath)
 
 TEST(SensorPort, getPollMsPath)
 {
+    using namespace finder::physical::test;
+
     finder::physical::SensorPort sensorPort("/sys/class/lego-sensor/sensor0");
     ASSERT_EQ(sensorPort.getPollMsPath(), "");
     sensorPort.overrideEnabled(true);
@@ -70,11 +94,13 @@ TEST(SensorPort, getPollMsPath)
 
 TEST(SensorPort, getValue)
 {
-    finder::physical::SensorPort sensorPort("./test/lego-sensor/sensor0");
+    using namespace finder::physical::test;
+
+    finder::physical::SensorPort sensorPort(FakeSys::getWorkingDir() + "/lego-sensor/sensor0");
     sensorPort.overrideEnabled(false);
     ASSERT_EQ(sensorPort.getValue(0), -1);
     sensorPort.overrideEnabled(true);
-    ASSERT_EQ(sensorPort.getValue(0), 42);
+    ASSERT_EQ(sensorPort.getValue(0), 0);
 
     ASSERT_EQ(sensorPort.getValue(100), -1);
     ASSERT_EQ(sensorPort.getValue(-1), -1);
@@ -82,6 +108,8 @@ TEST(SensorPort, getValue)
 
 TEST(SensorPort, getModes)
 {
+    using namespace finder::physical::test;
+
     finder::physical::SensorPort sensorPort("/sys/class/lego-sensor/sensor0");
     std::vector<std::string> modes = sensorPort.getModes();
     ASSERT_EQ(modes.size(), 0);
@@ -92,15 +120,17 @@ TEST(SensorPort, getModes)
 
 TEST(SensorPort, filestreams)
 {
-    std::filesystem::create_directories("./test/lego-sensor/sensor0");
-    std::ofstream fs_value("./test/lego-sensor/sensor0/value0");
-    std::ofstream fs_address("./test/lego-sensor/sensor0/address");
-    std::ofstream fs_mode("./test/lego-sensor/sensor0/mode");
-    std::ofstream fs_modes("./test/lego-sensor/sensor0/modes");
-    std::ofstream fs_num_values("./test/lego-sensor/sensor0/num_values");
-    std::ofstream fs_poll_ms("./test/lego-sensor/sensor0/poll_ms");
-    std::ofstream fs_commmand("./test/lego-sensor/sensor0/command");
-    std::ofstream fs_commands("./test/lego-sensor/sensor0/commands");
+    using namespace finder::physical::test;
+
+    std::filesystem::create_directories(FakeSys::getWorkingDir() + "/lego-sensor/sensor0");
+    std::ofstream fs_value(FakeSys::getWorkingDir() + "/lego-sensor/sensor0/value0");
+    std::ofstream fs_address(FakeSys::getWorkingDir() + "/lego-sensor/sensor0/address");
+    std::ofstream fs_mode(FakeSys::getWorkingDir() + "/lego-sensor/sensor0/mode");
+    std::ofstream fs_modes(FakeSys::getWorkingDir() + "/lego-sensor/sensor0/modes");
+    std::ofstream fs_num_values(FakeSys::getWorkingDir() + "/lego-sensor/sensor0/num_values");
+    std::ofstream fs_poll_ms(FakeSys::getWorkingDir() + "/lego-sensor/sensor0/poll_ms");
+    std::ofstream fs_commmand(FakeSys::getWorkingDir() + "/lego-sensor/sensor0/command");
+    std::ofstream fs_commands(FakeSys::getWorkingDir() + "/lego-sensor/sensor0/commands");
 
 
     fs_value << "42";
@@ -120,16 +150,16 @@ TEST(SensorPort, filestreams)
     fs_commmand.close();
     fs_commands.close();
 
-    finder::physical::SensorPort sensorPort("./test/lego-sensor/sensor0");
-    // sensorPort.setBasePath("./test/lego-sensor/sensor0");
+    finder::physical::SensorPort sensorPort(FakeSys::getWorkingDir() + "/lego-sensor/sensor0");
+    // sensorPort.setBasePath(FakeSys::getWorkingDir() + "/lego-sensor/sensor0");
     ASSERT_EQ(sensorPort.getDeviceType(), finder::physical::DeviceType::SENSOR);
-    ASSERT_EQ(sensorPort.getValuePath(0), "./test/lego-sensor/sensor0/value0");
+    ASSERT_EQ(sensorPort.getValuePath(0), FakeSys::getWorkingDir() + "/lego-sensor/sensor0/value0");
 
     ASSERT_EQ(sensorPort.getValue(0), 42);
     ASSERT_EQ(sensorPort.getAddress(), "ev3-ports:in1");
 
     sensorPort.setMode("test-mode"); 
-    std::ifstream mode_file("./test/lego-sensor/sensor0/mode");
+    std::ifstream mode_file(FakeSys::getWorkingDir() + "/lego-sensor/sensor0/mode");
     std::string mode_str;
     mode_file >> mode_str;
     ASSERT_EQ(mode_str, "test-mode");
@@ -151,5 +181,5 @@ TEST(SensorPort, filestreams)
     sensorPort.overrideEnabled(true);
 
     // remove temp files
-    std::filesystem::remove_all("./test");
+    std::filesystem::remove_all(FakeSys::getWorkingDir() + "");
 }

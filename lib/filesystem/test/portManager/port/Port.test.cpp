@@ -2,6 +2,15 @@
 
 #include <portManager/port/Port.hpp>
 
+#include <Fakesys.hpp>
+
+TEST(Port, CreateFakeSys) {
+    using namespace finder::physical::test;
+    FakeSys fakesys;
+    fakesys.init();
+    ASSERT_TRUE(fakesys.isInitialized());
+}
+
 TEST(Port, getPortKey)
 {
     finder::physical::Port port{"/sys/class/lego-sensor/sensor0"};
@@ -51,8 +60,10 @@ TEST(Port, getCommandsPath)
 
 TEST(Port, getAddress)
 {
+    using namespace finder::physical::test;
+
     finder::physical::Port port{"sys/class/lego-sensor/sensor0"};
-    port.setBasePath("./test/lego-sensor/sensor0");
+    port.setBasePath(FakeSys::getWorkingDir() + "/lego-sensor/sensor0");
     EXPECT_EQ(port.getAddress(), "ev3-ports:in1");
     port.overrideEnabled(false);
     EXPECT_EQ(port.getAddress(), "");
@@ -60,8 +71,10 @@ TEST(Port, getAddress)
 
 TEST(Port, setCommand)
 {
+    using namespace finder::physical::test;
+
     finder::physical::Port port{"sys/class/lego-sensor/sensor0"};
-    port.setBasePath("./test/lego-sensor/sensor0");
+    port.setBasePath(FakeSys::getWorkingDir() + "/lego-sensor/sensor0");
     EXPECT_EQ(port.setCommand("test"), true);
     port.overrideEnabled(false);
     EXPECT_EQ(port.setCommand("test"), false);
