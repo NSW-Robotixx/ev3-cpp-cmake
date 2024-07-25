@@ -11,7 +11,7 @@ namespace finder::network::tcp
         sendSockAddr.sin_addr.s_addr = inet_addr(inet_ntoa(*(struct in_addr*)*host->h_addr_list));
         sendSockAddr.sin_port = htons(port);
         clientSd = socket(AF_INET, SOCK_STREAM, 0);
-        //try to connect...
+        std::cout << "try to connect...";
         int status = connect(clientSd, (sockaddr*) &sendSockAddr, sizeof(sendSockAddr));
         if(status < 0)
         {
@@ -27,14 +27,14 @@ namespace finder::network::tcp
         std::cout << "Connection closed" << std::endl;
     }
 
-    void TCPClient::sendMessage(const char *message)
-    {
-        send(clientSd, (char*)&message, strlen(message), 0);
-    }
-
     void TCPClient::sendMessage(const std::string message)
     {
-        send(clientSd, (char*)&message, message.length(), 0);
+        // clear the buffer
+        memset(&msg, 0, sizeof(msg));
+        // copy message to buffer
+        strcpy(msg, message.c_str());
+
+        send(clientSd, (char*)&msg, strlen(msg), 0);
     }
 
     std::string TCPClient::receiveMessage()

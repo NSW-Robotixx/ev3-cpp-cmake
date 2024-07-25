@@ -53,7 +53,6 @@ namespace finder::network::tcp
         //also keep track of the amount of data sent as well
         bytesRead = 0;
         bytesWritten = 0;
-    
     }
 
     void TCPServer::stop()
@@ -62,28 +61,27 @@ namespace finder::network::tcp
         close(newSd);
     }
 
-    void TCPServer::sendMessage(const char* message)
-    {
-        bytesWritten += send(newSd, (char*)message, strlen(message), 0);
-    }
-
     void TCPServer::sendMessage(const std::string message)
     {
-        sendMessage(message.c_str());
+        memset(&msg, 0, sizeof(message));
+        strcpy(msg, message.c_str());
+        bytesWritten += send(newSd, (char*)msg, strlen(msg), 0);
     }
 
     std::string TCPServer::receiveMessage()
     {
-        char msg[1500];
+        // clear the message buffer
+        memset(&msg, 0, sizeof(msg));
 
-        recv(newSd, (char*)&msg, sizeof(msg), 0);
-        bytesRead += strlen(msg);
+        bytesRead += recv(newSd, (char*)&msg, sizeof(msg), 0);
 
         if (strcmp(msg, "exit") == 0)
         {
             this->stop();
             return "exit";
         }
+
+        std::cout << "Received: " << msg << std::endl;
 
         return std::string(msg);
     }

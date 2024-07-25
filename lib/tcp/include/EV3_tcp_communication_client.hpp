@@ -22,10 +22,10 @@ namespace finder::network::tcp
     public:
         TCPClient(const char *serverIp, int port);
         ~TCPClient();
-        void sendMessage(const char *message);
         void sendMessage(const std::string message);
         std::string receiveMessage();
     private:
+        char msg[1500];
         int clientSd;
         struct sockaddr_in sendSockAddr;
     };

@@ -27,7 +27,6 @@ namespace finder::network::tcp
         void start(int port);
         void stop();
 
-        void sendMessage(const char* message);
         void sendMessage(const std::string message);
 
         std::string receiveMessage();
@@ -39,6 +38,7 @@ namespace finder::network::tcp
         socklen_t newSockAddrSize;
         struct timeval start1, end1;
         int bytesRead, bytesWritten;
+        char msg[1500];
     };
 
     

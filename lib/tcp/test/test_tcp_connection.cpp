@@ -13,12 +13,21 @@ namespace finder::network::tcp
         {
             TCPServer server{};
             server.start(54000);
+            std::string message = server.receiveMessage();
+
+            EXPECT_EQ(message, "Hello, server!");
+
+            server.sendMessage("Hello, client!");
         });
 
         std::this_thread::sleep_for(std::chrono::milliseconds(10));
 
         TCPClient client("localhost", 54000);
         client.sendMessage("Hello, server!");
+
+        std::string response = client.receiveMessage();
+
+        EXPECT_EQ(response, "Hello, client!");
 
         serverThread.join();
     }
