@@ -24,6 +24,12 @@ add_executable(Test ${PROJECT_SOURCE_DIR}/src/test.cpp)
 # add include directories
 # include_directories(${CMAKE_SOURCE_DIR}/lib)
 # include_directories(${CMAKE_SOURCE_DIR}/tests)
+
+# set the list of sources for all tests
+set_property(GLOBAL PROPERTY EV3_TESTS_SRC ${CMAKE_SOURCE_DIR}/src/tests.cpp)
+# set the list of libs to link to
+set_property(GLOBAL PROPERTY EV3_TESTS_LIBS gtest_main)
+
 add_subdirectory(lib)
 add_subdirectory(src)
 add_subdirectory(tests)
@@ -122,7 +128,34 @@ target_link_libraries(Main
   # yaml-cpp::yaml-cpp
 )
     
-    
+  
+
+# add all tests executable
+
+# get global property EV3_TESTS_SRC
+get_property(EV3_TESTS_SRC GLOBAL PROPERTY EV3_TESTS_SRC)
+message(STATUS EV3_TESTS_SRC: ${EV3_TESTS_SRC})
+
+# get global property EV3_TESTS_HDR
+get_property(EV3_TESTS_HDR GLOBAL PROPERTY EV3_TESTS_HDR)
+message(STATUS EV3_TESTS_HDR: ${EV3_TESTS_HDR})
+
+# get global property EV3_TESTS_LIBS
+get_property(EV3_TESTS_LIBS GLOBAL PROPERTY EV3_TESTS_LIBS)
+message(STATUS EV3_TESTS_LIBS: ${EV3_TESTS_LIBS})
+
+
+
+add_executable(FullTest ${EV3_TESTS_SRC})
+
+target_sources(FullTest
+    PRIVATE
+        ${EV3_TESTS_SRC}
+    PUBLIC
+        ${EV3_TESTS_HDR}
+)
+
+target_link_libraries(FullTest PUBLIC ${EV3_TESTS_LIBS})
     
     
 # make cmake not print the commands it runs

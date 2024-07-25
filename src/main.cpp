@@ -2,7 +2,7 @@
 #include <iostream>
 #include <stdio.h>
 #include <chrono>
-#include <math/Vector2.hpp>
+#include <Vector2.hpp>
 //#include <lvgl.h>
 
 finder::log::Logger logger = finder::log::Logger();

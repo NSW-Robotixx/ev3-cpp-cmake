@@ -3,8 +3,8 @@
 
 #include <vector>
 
-#include <math/Vector2.hpp>
-#include <math/Line.hpp>
+#include <Vector2.hpp>
+#include <Line.hpp>
 #include <utility/RobotMovement/RobotMovement.hpp>
 #include <engines/location/LocationEngine.hpp>
 

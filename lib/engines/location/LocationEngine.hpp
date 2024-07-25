@@ -1,7 +1,7 @@
 #ifndef __LOCATION_ENGINE_HPP__
 #define __LOCATION_ENGINE_HPP__
 
-#include <math/Vector2.hpp>
+#include <Vector2.hpp>
 #include <DeviceManager.hpp>
 
 namespace finder::engines::location

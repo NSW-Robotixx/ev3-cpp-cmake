@@ -113,7 +113,7 @@ namespace finder
                 bool _f_enabled;
                 // bool _enabled;
 #ifdef ENABLE_LOGGING
-                stati<::finder::log::Logger _logger;
+                static ::finder::log::Logger _logger;
 #endif
 
         };

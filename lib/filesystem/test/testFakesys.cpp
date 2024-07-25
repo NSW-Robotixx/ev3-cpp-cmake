@@ -1,6 +1,6 @@
 #include <gtest/gtest.h>
 
-#include "Fakesys.hpp"
+#include <Fakesys.hpp>
 
 #ifndef FAKESYS_PATH
 #define FAKESYS_PATH "./fakesys"

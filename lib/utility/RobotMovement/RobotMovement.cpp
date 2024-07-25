@@ -1,267 +1,272 @@
-#include "RobotMovement.hpp"
+// disabled because of dependency on physical::DeviceManager
 
-namespace finder::robot
-{
-    log::Logger RobotMovement::_logger{};
 
-    unsigned long int RobotMovement::_movementID = 0;
 
-    std::queue<std::function<void(int, int, double)>> RobotMovement::_movementQueue;
-    std::atomic<bool> RobotMovement::_isProcessingMovementQueue;
 
-    std::future<void> RobotMovement::_movementQueueFuture;
+// #include "RobotMovement.hpp"
 
-    RobotMovement::RobotMovement(std::string portBasePath): DeviceManager(portBasePath)
-    {
+// namespace finder::robot
+// {
+//     log::Logger RobotMovement::_logger{};
 
-        _logger.debug("Initializing RobotMovement");
-        _logger.debug(_motorLeft->getBasePath());
-        _logger.debug(_motorRight->getBasePath());
-        _logger.debug(_motorShift->getBasePath());
-        _logger.debug(_motorTool->getBasePath());
-        _logger.debug("RobotMovement initialized");
+//     unsigned long int RobotMovement::_movementID = 0;
 
-        _isProcessingMovementQueue = false;
-        // _movementQueueFuture = std::async(std::launch::async, processMovementQueue);
-        processMovementQueue();
-    }
+//     std::queue<std::function<void(int, int, double)>> RobotMovement::_movementQueue;
+//     std::atomic<bool> RobotMovement::_isProcessingMovementQueue;
 
-    RobotMovement::~RobotMovement()
-    {
-        stop();
-    }
+//     std::future<void> RobotMovement::_movementQueueFuture;
 
-    void RobotMovement::move(MovementType type, int distance = 0, int speed = 300, float arcRatio = 1)
-    {
-        switch (type)
-        {
-        case MovementType::FORWARD:
-            _movementQueue.push(&moveForward);
-            break;
+//     RobotMovement::RobotMovement(std::string portBasePath): DeviceManager(portBasePath)
+//     {
 
-        case MovementType::BACKWARD:
-            _movementQueue.push(&moveBackward);
-            break;
+//         _logger.debug("Initializing RobotMovement");
+//         _logger.debug(_motorLeft->getBasePath());
+//         _logger.debug(_motorRight->getBasePath());
+//         _logger.debug(_motorShift->getBasePath());
+//         _logger.debug(_motorTool->getBasePath());
+//         _logger.debug("RobotMovement initialized");
 
-        case MovementType::TURN_LEFT:
-            _movementQueue.push(&turnLeft);
-            break;
+//         _isProcessingMovementQueue = false;
+//         // _movementQueueFuture = std::async(std::launch::async, processMovementQueue);
+//         processMovementQueue();
+//     }
 
-        case MovementType::TURN_RIGHT:
-            _movementQueue.push(&turnRight);
-            break;
+//     RobotMovement::~RobotMovement()
+//     {
+//         stop();
+//     }
 
-        case MovementType::TURN_ARC_LEFT:
-            _movementQueue.push(&turnArcLeft);
-            break;
+//     void RobotMovement::move(MovementType type, int distance = 0, int speed = 300, float arcRatio = 1)
+//     {
+//         switch (type)
+//         {
+//         case MovementType::FORWARD:
+//             _movementQueue.push(&moveForward);
+//             break;
 
-        case MovementType::TURN_ARC_RIGHT:
-            _movementQueue.push(&turnArcRight);
-            break;
+//         case MovementType::BACKWARD:
+//             _movementQueue.push(&moveBackward);
+//             break;
+
+//         case MovementType::TURN_LEFT:
+//             _movementQueue.push(&turnLeft);
+//             break;
+
+//         case MovementType::TURN_RIGHT:
+//             _movementQueue.push(&turnRight);
+//             break;
+
+//         case MovementType::TURN_ARC_LEFT:
+//             _movementQueue.push(&turnArcLeft);
+//             break;
+
+//         case MovementType::TURN_ARC_RIGHT:
+//             _movementQueue.push(&turnArcRight);
+//             break;
         
-        default:
-            throw std::invalid_argument("Invalid movement type");
-        }
+//         default:
+//             throw std::invalid_argument("Invalid movement type");
+//         }
 
-        // if (!_isProcessingMovementQueue) {
-            // _movementQueueFuture = std::async(std::launch::async, RobotMovement::processMovementQueue);
-        // } 
-        processMovementQueue();
-    }
+//         // if (!_isProcessingMovementQueue) {
+//             // _movementQueueFuture = std::async(std::launch::async, RobotMovement::processMovementQueue);
+//         // } 
+//         processMovementQueue();
+//     }
 
 
-    void RobotMovement::stop()
-    {
+//     void RobotMovement::stop()
+//     {
        
-    }
+//     }
 
-    void RobotMovement::setSpeed(int speed)
-    {
-        _speed = speed;
-    }
+//     void RobotMovement::setSpeed(int speed)
+//     {
+//         _speed = speed;
+//     }
 
-    void RobotMovement::setDutyCycle(int dutyCycle)
-    {
-        _dutyCycle = dutyCycle;
-    }
+//     void RobotMovement::setDutyCycle(int dutyCycle)
+//     {
+//         _dutyCycle = dutyCycle;
+//     }
 
-    void RobotMovement::awaitMotorReady()
-    {
-        // std::vector<::finder::physical::MotorState> _leftState = _motorLeft->getState();
-        // std::vector<::finder::physical::MotorState> _rightState = _motorRight->getState();
+//     void RobotMovement::awaitMotorReady()
+//     {
+//         // std::vector<::finder::physical::MotorState> _leftState = _motorLeft->getState();
+//         // std::vector<::finder::physical::MotorState> _rightState = _motorRight->getState();
 
-        // while (
-        //     std::find(_rightState.begin(), _rightState.end(), ::finder::physical::MotorState::HOLDING) == _rightState.end() ||
-        //     std::find(_leftState.begin(), _leftState.end(), ::finder::physical::MotorState::HOLDING) == _leftState.end()
-        // ) {
-        //     _leftState = _motorLeft->getState();
-        //     _rightState = _motorRight->getState();
-        // }
-    }
+//         // while (
+//         //     std::find(_rightState.begin(), _rightState.end(), ::finder::physical::MotorState::HOLDING) == _rightState.end() ||
+//         //     std::find(_leftState.begin(), _leftState.end(), ::finder::physical::MotorState::HOLDING) == _leftState.end()
+//         // ) {
+//         //     _leftState = _motorLeft->getState();
+//         //     _rightState = _motorRight->getState();
+//         // }
+//     }
 
-    void RobotMovement::processMovementQueue()
-    {
-        _isProcessingMovementQueue = true;
+//     void RobotMovement::processMovementQueue()
+//     {
+//         _isProcessingMovementQueue = true;
 
-        while (_movementQueue.size() > 0) {
-            std::function<void(int, int, double)> action = _movementQueue.front();
-            _movementQueue.pop();
+//         while (_movementQueue.size() > 0) {
+//             std::function<void(int, int, double)> action = _movementQueue.front();
+//             _movementQueue.pop();
 
-            awaitMotorReady();
+//             awaitMotorReady();
 
-            action(_speed, _dutyCycle, _arcRatio);
-        }
+//             action(_speed, _dutyCycle, _arcRatio);
+//         }
 
-        _isProcessingMovementQueue = false;
-    }
-
-
+//         _isProcessingMovementQueue = false;
+//     }
 
 
 
 
-    void RobotMovement::moveForward(int distance, int speed, float arcRatio = 1)
-    {
-        if (_motorLeft->isEnabled() && _motorRight->isEnabled()) {
-            _motorLeft->setPolarity(physical::MotorPolarity::NORMAL);
-            _motorRight->setPolarity(physical::MotorPolarity::NORMAL);
 
-            _motorLeft->setSpeed(speed);
-            _motorRight->setSpeed(speed);
 
-            if (distance <= 0) {
-                _motorLeft->setCommand(physical::MotorCommand::RUN_FOREVER);
-                _motorRight->setCommand(physical::MotorCommand::RUN_FOREVER);
-            } else {
-                _motorLeft->setPositionSp(distance);
-                _motorRight->setPositionSp(distance);
+//     void RobotMovement::moveForward(int distance, int speed, float arcRatio = 1)
+//     {
+//         if (_motorLeft->isEnabled() && _motorRight->isEnabled()) {
+//             _motorLeft->setPolarity(physical::MotorPolarity::NORMAL);
+//             _motorRight->setPolarity(physical::MotorPolarity::NORMAL);
 
-                _motorLeft->setCommand(physical::MotorCommand::RUN_TO_REL_POS);
-                _motorRight->setCommand(physical::MotorCommand::RUN_TO_REL_POS);
-            }
-        } else {
-            _logger.error("Motors are not enabled");
-        }
-    }
+//             _motorLeft->setSpeed(speed);
+//             _motorRight->setSpeed(speed);
 
-    void RobotMovement::moveBackward(int distance, int speed, float arcRatio = 1)
-    {
-        if (_motorLeft->isEnabled() && _motorRight->isEnabled()) {
-            _motorLeft->setPolarity(physical::MotorPolarity::INVERSED);
-            _motorRight->setPolarity(physical::MotorPolarity::INVERSED);
+//             if (distance <= 0) {
+//                 _motorLeft->setCommand(physical::MotorCommand::RUN_FOREVER);
+//                 _motorRight->setCommand(physical::MotorCommand::RUN_FOREVER);
+//             } else {
+//                 _motorLeft->setPositionSp(distance);
+//                 _motorRight->setPositionSp(distance);
 
-            _motorLeft->setSpeed(speed);
-            _motorRight->setSpeed(speed);
+//                 _motorLeft->setCommand(physical::MotorCommand::RUN_TO_REL_POS);
+//                 _motorRight->setCommand(physical::MotorCommand::RUN_TO_REL_POS);
+//             }
+//         } else {
+//             _logger.error("Motors are not enabled");
+//         }
+//     }
 
-            if (distance <= 0) {
-                _motorLeft->setCommand(physical::MotorCommand::RUN_FOREVER);
-                _motorRight->setCommand(physical::MotorCommand::RUN_FOREVER);
-            } else {
-                _motorLeft->setPositionSp(distance);
-                _motorRight->setPositionSp(distance);
+//     void RobotMovement::moveBackward(int distance, int speed, float arcRatio = 1)
+//     {
+//         if (_motorLeft->isEnabled() && _motorRight->isEnabled()) {
+//             _motorLeft->setPolarity(physical::MotorPolarity::INVERSED);
+//             _motorRight->setPolarity(physical::MotorPolarity::INVERSED);
 
-                _motorLeft->setCommand(physical::MotorCommand::RUN_TO_REL_POS);
-                _motorRight->setCommand(physical::MotorCommand::RUN_TO_REL_POS);
-            }
-        } else {
-            _logger.error("Motors are not enabled");
-        }
-    }
+//             _motorLeft->setSpeed(speed);
+//             _motorRight->setSpeed(speed);
 
-    void RobotMovement::turnLeft(int distance, int speed, float arcRatio = 1)
-    {
-        if (_motorLeft->isEnabled() && _motorRight->isEnabled()) {
-            _motorLeft->setPolarity(physical::MotorPolarity::NORMAL);
-            _motorRight->setPolarity(physical::MotorPolarity::NORMAL);
+//             if (distance <= 0) {
+//                 _motorLeft->setCommand(physical::MotorCommand::RUN_FOREVER);
+//                 _motorRight->setCommand(physical::MotorCommand::RUN_FOREVER);
+//             } else {
+//                 _motorLeft->setPositionSp(distance);
+//                 _motorRight->setPositionSp(distance);
 
-            _motorLeft->setDutyCycle(speed);
-            _motorRight->setDutyCycle(speed * LEFT_RIGHT_SWITCH);
+//                 _motorLeft->setCommand(physical::MotorCommand::RUN_TO_REL_POS);
+//                 _motorRight->setCommand(physical::MotorCommand::RUN_TO_REL_POS);
+//             }
+//         } else {
+//             _logger.error("Motors are not enabled");
+//         }
+//     }
 
-            if (distance <= 0) {
-                _motorLeft->setCommand(physical::MotorCommand::RUN_DIRECT);
-                _motorRight->setCommand(physical::MotorCommand::RUN_DIRECT);
-            } else {
-                _motorLeft->setPositionSp(distance);
-                _motorRight->setPositionSp(distance);
+//     void RobotMovement::turnLeft(int distance, int speed, float arcRatio = 1)
+//     {
+//         if (_motorLeft->isEnabled() && _motorRight->isEnabled()) {
+//             _motorLeft->setPolarity(physical::MotorPolarity::NORMAL);
+//             _motorRight->setPolarity(physical::MotorPolarity::NORMAL);
 
-                _motorLeft->setCommand(physical::MotorCommand::RUN_DIRECT);
-                _motorRight->setCommand(physical::MotorCommand::RUN_DIRECT);
-            }
-        } else {
-            _logger.error("Motors are not enabled");
-        }
-    }
+//             _motorLeft->setDutyCycle(speed);
+//             _motorRight->setDutyCycle(speed * LEFT_RIGHT_SWITCH);
 
-    void RobotMovement::turnRight(int distance, int speed, float arcRatio = 1)
-    {
-        if (_motorLeft->isEnabled() && _motorRight->isEnabled()) {
-            _motorLeft->setPolarity(physical::MotorPolarity::INVERSED);
-            _motorRight->setPolarity(physical::MotorPolarity::INVERSED);
+//             if (distance <= 0) {
+//                 _motorLeft->setCommand(physical::MotorCommand::RUN_DIRECT);
+//                 _motorRight->setCommand(physical::MotorCommand::RUN_DIRECT);
+//             } else {
+//                 _motorLeft->setPositionSp(distance);
+//                 _motorRight->setPositionSp(distance);
 
-            _motorLeft->setDutyCycle(speed);
-            _motorRight->setDutyCycle(speed * LEFT_RIGHT_SWITCH);
+//                 _motorLeft->setCommand(physical::MotorCommand::RUN_DIRECT);
+//                 _motorRight->setCommand(physical::MotorCommand::RUN_DIRECT);
+//             }
+//         } else {
+//             _logger.error("Motors are not enabled");
+//         }
+//     }
 
-            if (distance <= 0) {
-                _motorLeft->setCommand(physical::MotorCommand::RUN_DIRECT);
-                _motorRight->setCommand(physical::MotorCommand::RUN_DIRECT);
-            } else {
-                _motorLeft->setPositionSp(distance);
-                _motorRight->setPositionSp(distance);
+//     void RobotMovement::turnRight(int distance, int speed, float arcRatio = 1)
+//     {
+//         if (_motorLeft->isEnabled() && _motorRight->isEnabled()) {
+//             _motorLeft->setPolarity(physical::MotorPolarity::INVERSED);
+//             _motorRight->setPolarity(physical::MotorPolarity::INVERSED);
 
-                _motorLeft->setCommand(physical::MotorCommand::RUN_DIRECT);
-                _motorRight->setCommand(physical::MotorCommand::RUN_DIRECT);
-            }
-        } else {
-            _logger.error("Motors are not enabled");
-        }
-    }
+//             _motorLeft->setDutyCycle(speed);
+//             _motorRight->setDutyCycle(speed * LEFT_RIGHT_SWITCH);
 
-    void RobotMovement::turnArcLeft(int distance, int speed, float arcRatio)
-    {
-        if (_motorLeft->isEnabled() && _motorRight->isEnabled()) {
-            _motorLeft->setPolarity(physical::MotorPolarity::INVERSED);
-            _motorRight->setPolarity(physical::MotorPolarity::INVERSED);
+//             if (distance <= 0) {
+//                 _motorLeft->setCommand(physical::MotorCommand::RUN_DIRECT);
+//                 _motorRight->setCommand(physical::MotorCommand::RUN_DIRECT);
+//             } else {
+//                 _motorLeft->setPositionSp(distance);
+//                 _motorRight->setPositionSp(distance);
 
-            _motorLeft->setDutyCycle(speed * arcRatio);
-            _motorRight->setDutyCycle(speed * LEFT_RIGHT_SWITCH);
+//                 _motorLeft->setCommand(physical::MotorCommand::RUN_DIRECT);
+//                 _motorRight->setCommand(physical::MotorCommand::RUN_DIRECT);
+//             }
+//         } else {
+//             _logger.error("Motors are not enabled");
+//         }
+//     }
 
-            if (distance <= 0) {
-                _motorLeft->setCommand(physical::MotorCommand::RUN_DIRECT);
-                _motorRight->setCommand(physical::MotorCommand::RUN_DIRECT);
-            } else {
-                _motorLeft->setPositionSp(distance);
-                _motorRight->setPositionSp(distance);
+//     void RobotMovement::turnArcLeft(int distance, int speed, float arcRatio)
+//     {
+//         if (_motorLeft->isEnabled() && _motorRight->isEnabled()) {
+//             _motorLeft->setPolarity(physical::MotorPolarity::INVERSED);
+//             _motorRight->setPolarity(physical::MotorPolarity::INVERSED);
 
-                _motorLeft->setCommand(physical::MotorCommand::RUN_DIRECT);
-                _motorRight->setCommand(physical::MotorCommand::RUN_DIRECT);
-            }
-        } else {
-            _logger.error("Motors are not enabled");
-        }
-    }
+//             _motorLeft->setDutyCycle(speed * arcRatio);
+//             _motorRight->setDutyCycle(speed * LEFT_RIGHT_SWITCH);
 
-    void RobotMovement::turnArcRight(int distance, int speed, float arcRatio)
-    {
-        if (_motorLeft->isEnabled() && _motorRight->isEnabled()) {
-            _motorLeft->setPolarity(physical::MotorPolarity::INVERSED);
-            _motorRight->setPolarity(physical::MotorPolarity::INVERSED);
+//             if (distance <= 0) {
+//                 _motorLeft->setCommand(physical::MotorCommand::RUN_DIRECT);
+//                 _motorRight->setCommand(physical::MotorCommand::RUN_DIRECT);
+//             } else {
+//                 _motorLeft->setPositionSp(distance);
+//                 _motorRight->setPositionSp(distance);
 
-            _motorLeft->setDutyCycle(speed);
-            _motorRight->setDutyCycle(speed * LEFT_RIGHT_SWITCH * arcRatio);
+//                 _motorLeft->setCommand(physical::MotorCommand::RUN_DIRECT);
+//                 _motorRight->setCommand(physical::MotorCommand::RUN_DIRECT);
+//             }
+//         } else {
+//             _logger.error("Motors are not enabled");
+//         }
+//     }
 
-            if (distance <= 0) {
-                _motorLeft->setCommand(physical::MotorCommand::RUN_DIRECT);
-                _motorRight->setCommand(physical::MotorCommand::RUN_DIRECT);
-            } else {
-                _motorLeft->setPositionSp(distance);
-                _motorRight->setPositionSp(distance);
+//     void RobotMovement::turnArcRight(int distance, int speed, float arcRatio)
+//     {
+//         if (_motorLeft->isEnabled() && _motorRight->isEnabled()) {
+//             _motorLeft->setPolarity(physical::MotorPolarity::INVERSED);
+//             _motorRight->setPolarity(physical::MotorPolarity::INVERSED);
 
-                _motorLeft->setCommand(physical::MotorCommand::RUN_DIRECT);
-                _motorRight->setCommand(physical::MotorCommand::RUN_DIRECT);
-            }
-        } else {
-            _logger.error("Motors are not enabled");
-        }
-    }
+//             _motorLeft->setDutyCycle(speed);
+//             _motorRight->setDutyCycle(speed * LEFT_RIGHT_SWITCH * arcRatio);
 
-} // namespace finder::robot
+//             if (distance <= 0) {
+//                 _motorLeft->setCommand(physical::MotorCommand::RUN_DIRECT);
+//                 _motorRight->setCommand(physical::MotorCommand::RUN_DIRECT);
+//             } else {
+//                 _motorLeft->setPositionSp(distance);
+//                 _motorRight->setPositionSp(distance);
+
+//                 _motorLeft->setCommand(physical::MotorCommand::RUN_DIRECT);
+//                 _motorRight->setCommand(physical::MotorCommand::RUN_DIRECT);
+//             }
+//         } else {
+//             _logger.error("Motors are not enabled");
+//         }
+//     }
+
+// } // namespace finder::robot

@@ -6,7 +6,6 @@
 #include <string>
 #include <fstream>
 #include <filesystem>
-#include <cstdlib>
 
 namespace finder::physical::test
 {

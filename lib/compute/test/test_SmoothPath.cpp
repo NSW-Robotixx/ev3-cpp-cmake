@@ -1,7 +1,7 @@
 #include <gtest/gtest.h>
 
 #include <pf/SmoothPath.hpp>
-#include <math/Vector2.hpp>
+#include <Vector2.hpp>
 #include <vector>
 
 TEST(SmoothPath, smoothPath) {

@@ -25,6 +25,7 @@ target_link_libraries(all_tests
         RobotMovement
         UserInterface
         Line
+        MovementEngine
         # EV3_filesystem
 )
 

@@ -1,33 +1,48 @@
-file(GLOB_RECURSE EV3_FILESYSTEM_TEST_HDR CONFIGURE_DEPENDS "*.hpp")
+# file(GLOB_RECURSE EV3_FILESYSTEM_TEST_HDR CONFIGURE_DEPENDS "*.hpp")
 
 set(EV3_FILESYSTEM_TEST_SRC
-    Fakesys.cpp
-    SensorManager.test.cpp
-    portManager/PortManager.test.cpp
-    portManager/port/MotorPort.test.cpp
-    portManager/port/Port.test.cpp
-    portManager/port/SensorPort.test.cpp
-    testDeviceManager.cpp
-    testFakesys.cpp
-    testMotorManager.cpp
+    ${EV3_FILESYSTEM_TEST_DIR}/Fakesys.cpp
+    ${EV3_FILESYSTEM_TEST_DIR}/SensorManager.test.cpp
+    ${EV3_FILESYSTEM_TEST_DIR}/portManager/PortManager.test.cpp
+    ${EV3_FILESYSTEM_TEST_DIR}/portManager/port/MotorPort.test.cpp
+    ${EV3_FILESYSTEM_TEST_DIR}/portManager/port/Port.test.cpp
+    ${EV3_FILESYSTEM_TEST_DIR}/portManager/port/SensorPort.test.cpp
+    ${EV3_FILESYSTEM_TEST_DIR}/testDeviceManager.cpp
+    ${EV3_FILESYSTEM_TEST_DIR}/testFakesys.cpp
+    ${EV3_FILESYSTEM_TEST_DIR}/testMotorManager.cpp
 )
 
-include(GoogleTest)
+get_property(EV3_TESTS_SRC GLOBAL PROPERTY EV3_TESTS_SRC)
+get_property(EV3_TESTS_HDR GLOBAL PROPERTY EV3_TESTS_HDR)
+
+# check if EV3_TESTS_SRC is defined
+if(EV3_TESTS_SRC)
+    message(STATUS "EV3_TESTS_SRC is defined")
+    
+    # set global property for EV3_TESTS_SRC
+    set_property(GLOBAL PROPERTY EV3_TESTS_SRC ${EV3_TESTS_SRC} ${EV3_FILESYSTEM_TEST_SRC})
+    set_property(GLOBAL PROPERTY EV3_TESTS_HDR ${EV3_TESTS_HDR} ${EV3_FILESYSTEM_INCLUDE_DIR}/Fakesys.hpp)
+
+    # get the global property for the libs to be linked to the test
+    get_property(EV3_TESTS_LIBS GLOBAL PROPERTY EV3_TESTS_LIBS)
+    
+    # add the lib to be linked to the test
+    set_property(GLOBAL PROPERTY EV3_TESTS_LIBS ${EV3_TESTS_LIBS} EV3_filesystem)
+else()
+    message(STATUS "EV3_TESTS_SRC is not defined")
+endif()
 
 add_executable(EV3_filesystem_test ${EV3_FILESYSTEM_TEST_SRC})
-
-# add alias of lib to be used in tests (not needed for executable)
-# add_library(EV3_filesystem::test ALIAS EV3_filesystem_test)
 
 target_sources(EV3_filesystem_test
     PRIVATE
         ${EV3_FILESYSTEM_TEST_SRC}
     PUBLIC
-        ${EV3_FILESYSTEM_TEST_HDR}
+        ${EV3_FILESYSTEM_INCLUDE_DIR}/Fakesys.hpp
 )
-target_include_directories(EV3_filesystem_test PUBLIC ${EV3_FILESYSTEM_SRC_DIR})
-target_include_directories(EV3_filesystem_test PUBLIC ${EV3_FILESYSTEM_TEST_DIR})
-target_include_directories(EV3_filesystem_test PRIVATE ${EV3_FILESYSTEM_SRC_DIR}/../include)
+
+target_include_directories(EV3_filesystem_test PUBLIC ${EV3_FILESYSTEM_INCLUDE_DIR})
+target_include_directories(EV3_filesystem_test PRIVATE ${EV3_FILESYSTEM_SRC_DIR})
 
 target_link_libraries(EV3_filesystem_test
     PUBLIC

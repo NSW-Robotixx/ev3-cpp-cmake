@@ -23,7 +23,7 @@ FetchContent_MakeAvailable(googletest)
 enable_testing()
 
 # set variables to paths of source files
-set(EV3_FILESYSTEM_INCLUDE_DIR PUBLIC   ${CMAKE_CURRENT_SOURCE_DIR}/include CACHE INTERNAL "")
+set(EV3_FILESYSTEM_INCLUDE_DIR          ${CMAKE_CURRENT_SOURCE_DIR}/include CACHE INTERNAL "")
 set(EV3_FILESYSTEM_SRC_DIR              ${CMAKE_CURRENT_SOURCE_DIR}/src     CACHE INTERNAL "")
 set(EV3_FILESYSTEM_TEST_DIR             ${CMAKE_CURRENT_SOURCE_DIR}/test    CACHE INTERNAL "")
 

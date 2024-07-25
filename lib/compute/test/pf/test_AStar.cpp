@@ -3,7 +3,7 @@
 #include <pf/AStar.hpp>
 #include <pf/SmoothPath.hpp>
 #include <pf/ObstacleManager.hpp>
-#include <math/Vector2.hpp>
+#include <Vector2.hpp>
 #include <vector>
 
 TEST(AStar, findPath) {

@@ -1,5 +1,5 @@
 #include <EV3_tcp_communication_server.hpp>
-#include <math/Vector2.hpp>
+#include <Vector2.hpp>
 #include <pf/AStar.hpp>
 #include <pf/SmoothPath.hpp>
 #include <memory>

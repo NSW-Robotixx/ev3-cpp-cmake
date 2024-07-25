@@ -8,7 +8,7 @@
 
 #include <vector>
 #include <functional>
-#include <math/Vector2.hpp>
+#include <Vector2.hpp>
 #include "ObstacleManager.hpp"
 
 

@@ -1,7 +1,7 @@
 #ifndef __OBSTACLE_MANAGER_HPP__
 #define __OBSTACLE_MANAGER_HPP__
 
-#include <math/Line.hpp>
+#include <Line.hpp>
 #include <vector>
 
 namespace finder::pathfind
