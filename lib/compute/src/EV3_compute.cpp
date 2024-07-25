@@ -9,12 +9,11 @@ namespace finder::compute
         m_running = true;
 
         start();
-
-        
     }
 
     EV3_compute::~EV3_compute()
     {
+        m_tcp_communication_server->sendMessage("exit");
         stop();
         m_client_thread.join();
     }
@@ -80,9 +79,12 @@ namespace finder::compute
         
         // find path
         std::vector<::finder::math::Vector2> path = m_pathfinder.findPath(start, end);
-        
+
         // smooth path
         std::vector<::finder::math::Vector2> smooth_path = m_smooth_path.smoothPath(path);
+
+        // flip path so that it starts at the start point
+        std::reverse(smooth_path.begin(), smooth_path.end());
 
         // format of response: "x1,y1;x2,y2;...;xn,yn"
         std::string response;

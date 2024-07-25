@@ -10,7 +10,7 @@
 #include <ServerManager.test.cpp>
 // #include <UserInterface.test.cpp>
 #include <Vector2.test.cpp>
-// #include <Vector3.test.cpp>
+#include <Vector3.test.cpp>
 // #include <WebComponentBase.test.cpp>
 // #include <webServer.test.cpp>
 #include <Window.test.cpp>

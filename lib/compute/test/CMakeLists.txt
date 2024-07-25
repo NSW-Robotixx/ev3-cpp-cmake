@@ -1,7 +1,8 @@
 file(GLOB_RECURSE EV3_COMPUTE_TEST_HDR CONFIGURE_DEPENDS "*.hpp")
 
 set(EV3_COMPUTE_TEST_SRC
-    ${CMAKE_CURRENT_SOURCE_DIR}/test_EV3_compute.cpp
+    ${EV3_COMPUTE_TEST_DIR}/test_EV3_compute.cpp
+    ${EV3_COMPUTE_TEST_DIR}/test_SmoothPath.cpp
 )
 
 include(GoogleTest)

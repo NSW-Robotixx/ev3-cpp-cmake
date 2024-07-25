@@ -17,9 +17,9 @@ TEST(EV3_compute, DefaultConstructor)
 
 
 
-    tcp_client.sendMessage("1.0,2.0;3.0,4.0");
+    tcp_client.sendMessage("1.0,2.0;12.0,15.0");
 
     std::string response = tcp_client.receiveMessage();
 
-    EXPECT_EQ(response, "1.0,2.0;3.0,4.0");
+    EXPECT_EQ(response, "1.000000,2.000000;12.000000,15.000000");
 }

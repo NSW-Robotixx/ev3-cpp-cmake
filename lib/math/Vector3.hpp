@@ -1,6 +1,3 @@
-#ifndef FINDER_MATH_VECTOR_HPP
-#define FINDER_MATH_VECTOR_HPP
-
 #include <math.h>
 #include <iostream>
 
@@ -149,5 +146,3 @@ namespace finder
         };
     } // namespace math
 } // namespace finder
-
-#endif // FINDER_MATH_VECTOR_HPP
