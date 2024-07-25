@@ -2,7 +2,7 @@
 #define __MOVEMENT_ENGINE_HPP__
 
 #include <math/Vector2.hpp>
-#include <pf/AStar.hpp>
+#include <compute/include/EV3_compute.hpp>
 #include <pf/SmoothPath.hpp>
 #include <utility/RobotMovement/RobotMovement.hpp>
 #include <utility/RobotMovement/MovementAction.hpp>

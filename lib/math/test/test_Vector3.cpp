@@ -1,6 +1,6 @@
 #include <gtest/gtest.h>
 
-#include <math/Vector3.hpp>
+#include <Vector3.hpp>
 
 TEST(Vector3, DefaultConstructor)
 {

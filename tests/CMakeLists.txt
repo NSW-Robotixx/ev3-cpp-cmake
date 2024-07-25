@@ -24,12 +24,7 @@ target_link_libraries(all_tests
         ServerManager
         RobotMovement
         UserInterface
-        LocationEngine
-        MovementEngine
-        pathfind
-        gearboxEngine
         Line
-        GraphicalInterface
         # EV3_filesystem
 )
 

@@ -1,5 +1,5 @@
 #include <gtest/gtest.h>
-#include <math/Line.hpp>
+#include <Line.hpp>
 
 TEST(Line, constructor) {
     finder::math::Line line(finder::math::Vector2(0, 0), finder::math::Vector2(1, 1));

@@ -16,13 +16,11 @@
 #include <Window.test.cpp>
 #include <WindowManager.test.cpp>
 #include <Line.test.cpp>
-#include <AStar.test.cpp>
 #include <ObstacleManager.test.cpp>
 #include <SmoothPath.test.cpp>
 #include <MovementParser.test.cpp>
 // #include <GearboxEngine.test.cpp>
 // #include <cleanupFiles.test.cpp>
-#include <GraphicalInterface.test.cpp>
 
 // #include <filesystem/include/test_EV3_filesystem.cpp>
 

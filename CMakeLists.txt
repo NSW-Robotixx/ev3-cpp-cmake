@@ -139,8 +139,6 @@ set(CMAKE_VERBOSE_MAKEFILE OFF)
       Logger
       Vector3
       Vector2
-      pathfind
-      MovementEngine
       RobotMovement
       webServer
       webComponents

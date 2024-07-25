@@ -1,4 +1,4 @@
-#include "Line.hpp"
+#include <Line.hpp>
 
 namespace finder::math {
 

@@ -15,8 +15,7 @@ target_sources(MovementEngine
 target_link_libraries(MovementEngine
     PUBLIC
         Logger
-        pathfind
         Vector2
         RobotMovement
-        LocationEngine
+        EV3_compute
     )
