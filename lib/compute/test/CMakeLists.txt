@@ -8,8 +8,6 @@ get_property(EV3_TESTS_SRC GLOBAL PROPERTY EV3_TESTS_SRC)
 
 # check if EV3_TESTS_SRC is defined
 if(EV3_TESTS_SRC)
-    message(STATUS "EV3_TESTS_SRC is defined")
-    
     # set global property for EV3_TESTS_SRC
     set_property(GLOBAL PROPERTY EV3_TESTS_SRC ${EV3_TESTS_SRC} ${EV3_COMPUTE_TEST_SRC})
 

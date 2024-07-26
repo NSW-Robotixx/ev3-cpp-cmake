@@ -1,46 +1,50 @@
-#include "MovementParser.hpp"
+// missing dependencies
 
-namespace finder::engines::movement
-{
-    MovementParser::MovementParser(std::string portBasePath) : _robotMovement(portBasePath)
-    {
-    }
 
-    MovementParser::~MovementParser()
-    {
-    }
 
-    void MovementParser::parse(std::vector<math::Vector2> path)
-    {
-        double lineAngle;
+// #include "MovementParser.hpp"
 
-        for (math::Vector2 point : path) {
-            parse(point);
-        }        
-    }
+// namespace finder::engines::movement
+// {
+//     MovementParser::MovementParser(std::string portBasePath) : _robotMovement(portBasePath)
+//     {
+//     }
 
-    void MovementParser::parse(math::Vector2 destination)
-    {
-        double lineAngle = math::Line(location::LocationEngine::getPosition(), destination).getAngle();
-        double lineAngleReverse = lineAngle + 180;
-        lineAngleReverse = lineAngleReverse > 360 ? lineAngleReverse - 360 : lineAngleReverse;
+//     MovementParser::~MovementParser()
+//     {
+//     }
 
-        if (lineAngle < lineAngleReverse) {
-            if (location::LocationEngine::getHeading() > lineAngle) {
-                _robotMovement.move(robot::RobotMovement::MovementType::TURN_RIGHT, lineAngle - location::LocationEngine::getHeading(), 100, 1);
-            } else {
-                _robotMovement.move(robot::RobotMovement::MovementType::TURN_LEFT, lineAngle - location::LocationEngine::getHeading(), 100, 1);
-            }
+//     void MovementParser::parse(std::vector<math::Vector2> path)
+//     {
+//         double lineAngle;
 
-            _robotMovement.move(robot::RobotMovement::MovementType::FORWARD, location::LocationEngine::getPosition().distanceTo(destination), 300, 1);
-        } else {
-            if (location::LocationEngine::getHeading() < lineAngle) {
-                _robotMovement.move(robot::RobotMovement::MovementType::TURN_LEFT, location::LocationEngine::getHeading() - lineAngle, 100, 1);
-            } else {
-                _robotMovement.move(robot::RobotMovement::MovementType::TURN_RIGHT, location::LocationEngine::getHeading() - lineAngle, 100, 1);
-            }
+//         for (math::Vector2 point : path) {
+//             parse(point);
+//         }        
+//     }
 
-            _robotMovement.move(robot::RobotMovement::MovementType::BACKWARD, location::LocationEngine::getPosition().distanceTo(destination), 300, 1);
-        }
-    }
-} // namespace finder::engines::movement
+//     void MovementParser::parse(math::Vector2 destination)
+//     {
+//         double lineAngle = math::Line(location::LocationEngine::getPosition(), destination).getAngle();
+//         double lineAngleReverse = lineAngle + 180;
+//         lineAngleReverse = lineAngleReverse > 360 ? lineAngleReverse - 360 : lineAngleReverse;
+
+//         if (lineAngle < lineAngleReverse) {
+//             if (location::LocationEngine::getHeading() > lineAngle) {
+//                 _robotMovement.move(robot::RobotMovement::MovementType::TURN_RIGHT, lineAngle - location::LocationEngine::getHeading(), 100, 1);
+//             } else {
+//                 _robotMovement.move(robot::RobotMovement::MovementType::TURN_LEFT, lineAngle - location::LocationEngine::getHeading(), 100, 1);
+//             }
+
+//             _robotMovement.move(robot::RobotMovement::MovementType::FORWARD, location::LocationEngine::getPosition().distanceTo(destination), 300, 1);
+//         } else {
+//             if (location::LocationEngine::getHeading() < lineAngle) {
+//                 _robotMovement.move(robot::RobotMovement::MovementType::TURN_LEFT, location::LocationEngine::getHeading() - lineAngle, 100, 1);
+//             } else {
+//                 _robotMovement.move(robot::RobotMovement::MovementType::TURN_RIGHT, location::LocationEngine::getHeading() - lineAngle, 100, 1);
+//             }
+
+//             _robotMovement.move(robot::RobotMovement::MovementType::BACKWARD, location::LocationEngine::getPosition().distanceTo(destination), 300, 1);
+//         }
+//     }
+// } // namespace finder::engines::movement

@@ -24,7 +24,7 @@ target_sources(EV3_compute
 ) 
 
 target_include_directories(EV3_compute PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
-target_include_directories(EV3_compute PRIVATE ${EV3_COMPUTE_INCLUDE_DIR})
+target_include_directories(EV3_compute PUBLIC ${EV3_COMPUTE_INCLUDE_DIR})
 
 target_link_libraries(EV3_compute
     PUBLIC

@@ -9,7 +9,7 @@ set(EV3_FILESYSTEM_TEST_SRC
     ${EV3_FILESYSTEM_TEST_DIR}/portManager/port/SensorPort.test.cpp
     ${EV3_FILESYSTEM_TEST_DIR}/testDeviceManager.cpp
     ${EV3_FILESYSTEM_TEST_DIR}/testFakesys.cpp
-    ${EV3_FILESYSTEM_TEST_DIR}/testMotorManager.cpp
+    ${EV3_FILESYSTEM_TEST_DIR}/test_MotorManager.cpp
 )
 
 get_property(EV3_TESTS_SRC GLOBAL PROPERTY EV3_TESTS_SRC)

@@ -1,26 +1,28 @@
-#ifndef __MOVEMENT_PARSER_HPP__
-#define __MOVEMENT_PARSER_HPP__
+// missing dependencies
 
-#include <vector>
+// #ifndef __MOVEMENT_PARSER_HPP__
+// #define __MOVEMENT_PARSER_HPP__
 
-#include <Vector2.hpp>
-#include <Line.hpp>
-#include <utility/RobotMovement/RobotMovement.hpp>
-#include <engines/location/LocationEngine.hpp>
+// #include <vector>
 
-namespace finder::engines::movement
-{
-    class MovementParser {
-        public:
-            MovementParser(std::string portBasePath);
-            ~MovementParser();
+// #include <Vector2.hpp>
+// #include <Line.hpp>
+// #include <utility/RobotMovement/RobotMovement.hpp>
+// #include <engines/location/LocationEngine.hpp>
 
-            void parse(std::vector<math::Vector2> path);
-            void parse(math::Vector2 destination);
+// namespace finder::engines::movement
+// {
+//     class MovementParser {
+//         public:
+//             MovementParser(std::string portBasePath);
+//             ~MovementParser();
 
-        private:
-            robot::RobotMovement _robotMovement;
-    };
-} // namespace finder::engines::movement
+//             void parse(std::vector<math::Vector2> path);
+//             void parse(math::Vector2 destination);
 
-#endif // __MOVEMENT_PARSER_HPP__
+//         private:
+//             robot::RobotMovement _robotMovement;
+//     };
+// } // namespace finder::engines::movement
+
+// #endif // __MOVEMENT_PARSER_HPP__
