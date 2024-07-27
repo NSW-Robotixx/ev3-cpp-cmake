@@ -13,7 +13,7 @@ namespace finder::compute
 
     EV3_compute::~EV3_compute()
     {
-        m_tcp_communication_server->sendMessage("exit");
+        // m_tcp_communication_server->sendMessage("exit");
         stop();
         m_client_thread.join();
     }
@@ -41,8 +41,10 @@ namespace finder::compute
             std::string message = m_tcp_communication_server->receiveMessage();
             if (message.length() > 0)
             {
+                std::cout << "received message: " << message << std::endl;
                 std::string response = parse_message(message);
 
+                std::cout << "sending response: " << response << std::endl;
                 m_tcp_communication_server->sendMessage(response);
             } else {
                 m_tcp_communication_server->sendMessage("invalid");

@@ -19,19 +19,35 @@ namespace finder
     namespace physical
     {
         #define MAX_DEVICES 8
+        #define MAX_SENSORS 4
+        #define MAX_MOTORS 4
+
+        enum struct DevicePort {
+            INPUT_1  = '1',
+            INPUT_2  = '2',
+            INPUT_3  = '3',
+            INPUT_4  = '4',
+            OUTPUT_A = 'A',
+            OUTPUT_B = 'B',
+            OUTPUT_C = 'C',
+            OUTPUT_D = 'D'
+        };
+        enum struct DeviceID
+        {
+            GYRO          = static_cast<char>(DevicePort::INPUT_1),
+            COLOR_LEFT    = static_cast<char>(DevicePort::INPUT_2),
+            COLOR_RIGHT   = static_cast<char>(DevicePort::INPUT_3),
+            COLOR_FRONT   = static_cast<char>(DevicePort::INPUT_4),
+            MOTOR_LEFT    = static_cast<char>(DevicePort::OUTPUT_A),
+            MOTOR_RIGHT   = static_cast<char>(DevicePort::OUTPUT_B),
+            MOTOR_SHIFT   = static_cast<char>(DevicePort::OUTPUT_C),
+            MOTOR_TOOL    = static_cast<char>(DevicePort::OUTPUT_D),
+        };
+        
+
         class PortManager {
             
             public:
-                enum struct DevicePort {
-                    INPUT_1 = '1',
-                    INPUT_2 = '2',
-                    INPUT_3 = '3',
-                    INPUT_4 = '4',
-                    OUTPUT_A = 'A',
-                    OUTPUT_B = 'B',
-                    OUTPUT_C = 'C',
-                    OUTPUT_D = 'D'
-                };
                 static std::vector<std::string> adresses;
                 
                 PortManager();
@@ -40,16 +56,15 @@ namespace finder
                 
                 static void readPorts();
 
-                static std::shared_ptr<Port> borrowRaw(std::string port_address);
-                static std::shared_ptr<Port> borrowDevice(DeviceType type, std::string port_address);
-                static std::shared_ptr<SensorPort> borrowSensor(std::string port_address);
-                static std::shared_ptr<MotorPort> borrowMotor(std::string port_address);
-                static std::shared_ptr<MotorPort> borrowMotor(DevicePort port);
-                static void returnDevice(std::shared_ptr<Port> port);
-                static void returnDevice(std::shared_ptr<SensorPort> port);
-                static void returnDevice(std::shared_ptr<MotorPort> port);
+                static std::shared_ptr<Port> borrowDevice(DevicePort port_address);
+                
+                static std::shared_ptr<SensorPort> borrowSensor(DevicePort port_address);
+                static std::shared_ptr<SensorPort> borrowSensor(DeviceID port);
 
-                static int getNumberOfDevices() {return _ports.size();}
+                static std::shared_ptr<MotorPort> borrowMotor(DevicePort port);
+                static std::shared_ptr<MotorPort> borrowMotor(DeviceID port_address);
+
+                static int getNumberOfDevices() {return _motor_ports.size() + _sensor_ports.size();}
 
             private:
                 static std::vector<std::shared_ptr<Port>> _borrowed_ports;
@@ -57,10 +72,11 @@ namespace finder
 
                 static bool _ports_read;
 
-                static std::vector<std::shared_ptr<Port>> _ports;
-
                 static path_port_t _sensor_dir;
                 static path_port_t _motor_dir;
+
+                static std::array<std::shared_ptr<SensorPort>, MAX_SENSORS> _sensor_ports;
+                static std::array<std::shared_ptr<MotorPort>, MAX_MOTORS> _motor_ports;
 
                 static void init();
 

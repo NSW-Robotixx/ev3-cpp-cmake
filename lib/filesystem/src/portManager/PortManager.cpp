@@ -9,8 +9,9 @@ namespace finder
         bool PortManager::_ports_read = false;
         path_port_t PortManager::_sensor_dir = "/sys/class/lego-sensor";
         path_port_t PortManager::_motor_dir = "/sys/class/tacho-motor";
-        std::vector<std::shared_ptr<Port>> PortManager::_ports;
         std::vector<std::string> PortManager::adresses;
+        std::array<std::shared_ptr<SensorPort>, MAX_SENSORS> PortManager::_sensor_ports;
+        std::array<std::shared_ptr<MotorPort>, MAX_MOTORS> PortManager::_motor_ports;
 
 #ifdef ENABLE_LOGGING
         ::finder::log::Logger PortManager::_logger = ::finder::log::Logger{};
@@ -30,9 +31,7 @@ namespace finder
 
         PortManager::~PortManager()
         {
-            for (auto &port : _borrowed_ports) {
-                returnDevice(port);
-            }
+
         }
 
         void PortManager::readPorts() 
@@ -86,7 +85,11 @@ namespace finder
 #ifdef ENABLE_LOGGING
                                 _logger.log(LogLevel::INFO, "Port found: " + line);
 #endif                                
-                                _ports.push_back(std::make_shared<Port>(port));
+                                if (device_type_dir == _sensor_dir) {
+                                    _sensor_ports[address.back() - '1'] = std::make_shared<SensorPort>(port);
+                                } else {
+                                    _motor_ports[address.back() - 'A'] = std::make_shared<MotorPort>(port);
+                                }
                                 foundDevices++;
                                 break;
                             }
@@ -96,6 +99,9 @@ namespace finder
                 }
                 _ports_read = true;
                 _read_ports_future = foundDevices;
+                if (foundDevices > 8) {
+                    throw std::logic_error("Too many devices found: " + std::to_string(foundDevices));
+                }
             // });
         }
 
@@ -112,124 +118,47 @@ namespace finder
             adresses.push_back(std::string{"ev3-ports:outD"});
         }
 
-        std::shared_ptr<Port> PortManager::borrowRaw(std::string port_address)
-        {
-            return borrowDevice(DeviceType::ANY, port_address);
-        }
 
-        std::shared_ptr<Port> PortManager::borrowDevice(DeviceType type, std::string port_address)
+        
+        /// @warning DO NOT USE THIS FUNCTION : DEPRECATED
+        /// @param port_address 
+        /// @return shared pointer to a port object
+        std::shared_ptr<Port> PortManager::borrowDevice(DevicePort port_address)
         {
-            // check if addess is valid
-            for (auto &address : adresses) {
-                if (address == port_address) {
-#ifdef ENABLE_LOGGING
-                    _logger.positive("Found port: " + port_address + " (borrowDevice)");
-#endif
-                    // get correct port
-                    for (auto &port : _ports) {
-#ifdef ENABLE_LOGGING
-                        _logger.debug("port->getPortKey(): " + std::string{port->getPortKey()} + " port_address.back(): " + port_address.back() + " (borrowDevice)");
-#endif
-                        if (port->getPortKey() == port_address.back()) {
-#ifdef ENABLE_LOGGING
-                            _logger.positive("Port key matches: " + std::string{port_address.back()} + " (borrowDevice)");
-#endif
-                            // set port as borrowed
-                            _borrowed_ports.push_back(port);
-                            if (port->getDeviceType() != type || port->getDeviceType() == DeviceType::UNKNOWN) {
-                                if (type != DeviceType::ANY) {
-#ifdef ENABLE_LOGGING
-                                    _logger.warn("Port is not of the correct type: " + port_address + " type: " + std::to_string((int)(type)) + " (borrowDevice)");
-#endif
-                                    // should throw an error here but not enough time to fix all the errors
-                                    throw std::logic_error("Port type mismatch: " + port_address + " (borrowDevice)");
-                                } else {
-#ifdef ENABLE_LOGGING                                    
-                                    _logger.log(::finder::log::LogLevel::INFO, "Port is not of the correct type: " + port_address + " (borrowDevice)");
-#endif                                    
-                                }
-                            }
-#ifdef ENABLE_LOGGING                            
-                            _logger.debug("Port borrowed: " + _borrowed_ports.back()->getBasePath() + " (borrowDevice)");
-#endif                            
-                            return _borrowed_ports.back();
-                        }
-                    }
-                } else {
-#ifdef ENABLE_LOGGING                    
-                    _logger.debug("address: " + address + " (borrowDevice)");
-                    _logger.debug("Port not found: " + port_address + " (borrowDevice)");
-#endif                    
-                }
+            if (!_ports_read) {
+                readPorts();
             }
-            throw std::logic_error("Port not found: " + port_address + " (borrowDevice)");
-            // return std::shared_ptr<Port>(new Port{});
+
+            // check if requested device is a sensor or motor
+            if (port_address >= DevicePort::INPUT_1 && port_address <= DevicePort::INPUT_4) {
+                return std::shared_ptr<Port>(new Port{_sensor_ports[static_cast<char>(port_address) - '1']});
+            } else if (port_address >= DevicePort::OUTPUT_A && port_address <= DevicePort::OUTPUT_D) {
+                return std::shared_ptr<Port>(new Port{_motor_ports[static_cast<char>(port_address) - 'A']});
+            } else {
+                throw std::logic_error("Port not found: " + std::to_string(static_cast<char>(port_address)) + " (borrowDevice)");
+            }
         }
 
-        std::shared_ptr<SensorPort> PortManager::borrowSensor(std::string port_address)
+        std::shared_ptr<SensorPort> PortManager::borrowSensor(DevicePort port_address)
         {
-            return std::shared_ptr<SensorPort>(new SensorPort{borrowDevice(DeviceType::SENSOR, port_address)});
+            return _sensor_ports[static_cast<char>(port_address) - '1'];
         }
 
-        std::shared_ptr<MotorPort> PortManager::borrowMotor(std::string port_address)
+        std::shared_ptr<SensorPort> PortManager::borrowSensor(DeviceID port)
         {
-            return std::shared_ptr<MotorPort>(new MotorPort{borrowDevice(DeviceType::MOTOR, port_address)});
+            return borrowSensor(static_cast<DevicePort>(port));
         }
 
         std::shared_ptr<MotorPort> PortManager::borrowMotor(DevicePort port)
         {
-            switch (port)
-            {
-            case DevicePort::OUTPUT_A:
-                return std::shared_ptr<MotorPort>(new MotorPort{borrowDevice(DeviceType::MOTOR, "ev3-ports:outA")});
-
-            case DevicePort::OUTPUT_B:
-                return std::shared_ptr<MotorPort>(new MotorPort{borrowDevice(DeviceType::MOTOR, "ev3-ports:outB")});
-
-            case DevicePort::OUTPUT_C:
-                return std::shared_ptr<MotorPort>(new MotorPort{borrowDevice(DeviceType::MOTOR, "ev3-ports:outC")});
-
-            case DevicePort::OUTPUT_D:
-                return std::shared_ptr<MotorPort>(new MotorPort{borrowDevice(DeviceType::MOTOR, "ev3-ports:outD")});
-
-            default:
-                // _logger.error("Motor Port not recognized: " + std::to_string(static_cast<char>(port)));
-                throw std::logic_error("Motor Port not recognized: " + std::to_string(static_cast<char>(port)));
-                break;
-            }
+            return _motor_ports[static_cast<char>(port) - 'A'];
         }
-        void PortManager::returnDevice(std::shared_ptr<Port> port)
+
+        std::shared_ptr<MotorPort> PortManager::borrowMotor(DeviceID port_address)
         {
-            for (auto &borrowed_port : _borrowed_ports) {
-                if (borrowed_port->getPortKey() == port->getPortKey()) {
-                    _borrowed_ports.erase(std::remove(_borrowed_ports.begin(), _borrowed_ports.end(), borrowed_port), _borrowed_ports.end());
-                    return;
-                }
-            }
-            throw std::logic_error("Port not found: " + port->getBasePath() + " (returnDevice)");
+            return borrowMotor(static_cast<DevicePort>(port_address));
         }
 
-        void PortManager::returnDevice(std::shared_ptr<SensorPort> port)
-        {
-            for (auto &borrowed_port : _borrowed_ports) {
-                if (borrowed_port->getPortKey() == port->getPortKey()) {
-                    _borrowed_ports.erase(std::remove(_borrowed_ports.begin(), _borrowed_ports.end(), borrowed_port), _borrowed_ports.end());
-                    return;
-                }
-            }
-            throw std::logic_error("Port not found: " + port->getBasePath() + " (returnDevice)");
-        }
-
-        void PortManager::returnDevice(std::shared_ptr<MotorPort> port)
-        {
-            for (auto &borrowed_port : _borrowed_ports) {
-                if (borrowed_port->getPortKey() == port->getPortKey()) {
-                    _borrowed_ports.erase(std::remove(_borrowed_ports.begin(), _borrowed_ports.end(), borrowed_port), _borrowed_ports.end());
-                    return;
-                }
-            }
-            throw std::logic_error("Port not found: " + port->getBasePath() + " (returnDevice)");
-        }
     } // namespace physical
 
 } // namespace finder

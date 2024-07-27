@@ -1,12 +1,12 @@
 #ifndef __SENSOR_MANAGER_HPP__
 #define __SENSOR_MANAGER_HPP__
 
-#include <portManager/PortManager.hpp>
+#include <DeviceManager.hpp>
 #include <memory>
 #include <functional>
 #include <vector>
 #include <mutex>
-#include <future>
+#include <thread>
 #include <map>
 #ifdef ENABLE_LOGGING
 #include <log/Logger.hpp>
@@ -14,7 +14,7 @@
 
 namespace finder::physical
 {
-    class SensorManager : public PortManager
+    class SensorManager : public DeviceManager
     {
         public:
             SensorManager(std::string portBasePath);
@@ -45,7 +45,7 @@ namespace finder::physical
 
             static std::mutex _stopDispatcherMutex;
             static bool _stopDispatcher;
-            static std::future<void> _dispatcherFuture;
+            static std::thread _dispatcherFuture;
 
 #ifdef ENABLE_LOGGING
             static log::Logger _logger; 

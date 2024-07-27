@@ -95,6 +95,7 @@ TEST(SensorPort, getPollMsPath)
 TEST(SensorPort, getValue)
 {
     using namespace finder::physical::test;
+    FakeSys::reinit();
 
     finder::physical::SensorPort sensorPort(FakeSys::getWorkingDir() + "/lego-sensor/sensor0");
     sensorPort.overrideEnabled(false);

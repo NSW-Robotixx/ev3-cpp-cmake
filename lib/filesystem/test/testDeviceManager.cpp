@@ -7,11 +7,12 @@
 namespace finder::physical
 {
     using namespace finder::physical::test;
-
+    
     TEST(DeviceManagerTest, testDeviceManager)
     {
-        DeviceManager deviceManager(FakeSys::getWorkingDir());
-        
+        FakeSys::init();
+
+        EXPECT_NO_THROW(DeviceManager deviceManager(FakeSys::getWorkingDir()));
     }
 }
 

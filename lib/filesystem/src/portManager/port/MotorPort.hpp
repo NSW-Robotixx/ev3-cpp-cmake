@@ -113,6 +113,9 @@ namespace finder
                 /// @param command Command to send to the motor.
                 void setCommand(MotorCommand command);
 
+                /// @brief shorthand for setting the command to "stop".
+                void stop();
+
                 /// @brief Get the current states of the motor a vector
                 /// @return Vector of current motor states.
                 std::vector<MotorState> getState();

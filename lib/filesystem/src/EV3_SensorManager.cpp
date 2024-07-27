@@ -16,15 +16,15 @@ namespace finder::physical
 
     std::mutex SensorManager::_stopDispatcherMutex;
     bool SensorManager::_stopDispatcher = false;
-    std::future<void> SensorManager::_dispatcherFuture;
+    std::thread SensorManager::_dispatcherFuture;
 
 #ifdef ENABLE_LOGGING
     log::Logger SensorManager::_logger;
 #endif
 
-    SensorManager::SensorManager(std::string portBasePath) : PortManager(portBasePath)
+    SensorManager::SensorManager(std::string portBasePath) : DeviceManager(portBasePath)
     {
-        _dispatcherFuture = std::async(std::launch::async, Dispatcher);
+        _dispatcherFuture = std::thread(Dispatcher);
     }
 
     SensorManager::~SensorManager()
@@ -33,7 +33,7 @@ namespace finder::physical
             std::lock_guard<std::mutex> lock(_stopDispatcherMutex);
             _stopDispatcher = true;
         }
-        _dispatcherFuture.wait();
+        _dispatcherFuture.join();
     }
 
     void SensorManager::readAllSensors()
@@ -46,7 +46,8 @@ namespace finder::physical
 
     int SensorManager::readGyro()
     {
-        return -1;
+        _gyroValue = _gyroSensor->getValue(0);
+        return _gyroValue;
     }
 
     int SensorManager::readColorLeft()

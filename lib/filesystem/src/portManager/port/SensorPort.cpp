@@ -240,30 +240,39 @@ namespace finder
             bool full_success = true;
 
             // open files
-            _file_value_path.push_back(std::make_shared<std::ifstream>(getValuePath(0)));
+            for (int i = 0; i < 10; i++)
+            {
+                _file_value_path.push_back(std::make_shared<std::ifstream>(getValuePath(i)));
+                if (!_file_value_path[i]->fail())
+                {
+                    if (!_file_value_path[i]->is_open())
+                    {
+#ifdef ENABLE_LOGGING                        
+                        _logger.warn("Failed to open value" + std::to_string(i) + " file at: " + getValuePath(i));
+#endif
+                        _file_value_path[i].reset();
+                        full_success = false;
+                    }
+                    else
+                    {
+#ifdef ENABLE_LOGGING                        
+                        _logger.success("Opened value file at: " + getValuePath(i));
+#endif
+                    }
+                }
+                else
+                {
+#ifdef ENABLE_LOGGING                    
+                    _logger.error("File does not exist at: " + getValuePath(i));
+#endif
+                }
+            }  
+
             _file_mode_path = std::make_shared<std::ofstream>(getModePath());
             _file_modes_path = std::make_shared<std::ifstream>(getModesPath());
             _file_num_values_path = std::make_shared<std::ifstream>(getNumValuesPath());
             _file_poll_ms_path = std::make_shared<std::ifstream>(getPollMsPath());
 
-            // check if value[0] path is opened
-            if (!_file_value_path[0]->fail()) {
-                if (!_file_value_path[0]->is_open()) {
-#ifdef ENABLE_LOGGING                    
-                    _logger.warn("Failed to open value0 file at: " + getValuePath(0));
-#endif                    
-                    _file_value_path[0].reset();
-                    full_success = false;
-                } else {
-#ifdef ENABLE_LOGGING                    
-                    _logger.success("Opened value file at: " + getValuePath(0));
-#endif                    
-                }
-            } else {
-#ifdef ENABLE_LOGGING                
-                _logger.error("File does not exist at: " + getValuePath(0));
-#endif                
-            }
 
             // check if mode path is opened
             if (!_file_mode_path->fail()) {

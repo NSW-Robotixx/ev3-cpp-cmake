@@ -9,18 +9,6 @@ namespace finder
 {
     namespace physical
     {
-        enum struct DeviceID
-        {
-            GYRO = 1,
-            COLOR_LEFT = 2,
-            COLOR_RIGHT = 3,
-            COLOR_FRONT = 4,
-            MOTOR_LEFT = 5,
-            MOTOR_RIGHT = 6,
-            MOTOR_SHIFT = 7,
-            MOTOR_TOOL  = 8,
-        };
-
         class DeviceManager
         {
             public:

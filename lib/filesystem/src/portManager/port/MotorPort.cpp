@@ -257,6 +257,21 @@ namespace finder
             }
         }
 
+        void MotorPort::stop()
+        {
+#ifdef ENABLE_LOGGING            
+            FileLoggerLock lock = FileLoggerLock();
+            logToFile("STOP: " + getBasePath());
+#endif
+    
+            if (isEnabled()) {
+                setCommand(MotorCommand::STOP);
+            } else {
+                // _init_future.wait();
+                // stop();
+            }
+        }
+
         std::vector<MotorState> MotorPort::getState()
         {
 #ifdef ENABLE_LOGGING            

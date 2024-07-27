@@ -73,19 +73,19 @@ namespace finder::physical
         switch (motor)
         {
         case DeviceID::MOTOR_LEFT:
-            stopMotor(DeviceID::MOTOR_LEFT);
+            _motorLeft->stop();
             break;
 
         case DeviceID::MOTOR_RIGHT:
-            stopMotor(DeviceID::MOTOR_RIGHT);
+            _motorRight->stop();
             break;
 
         case DeviceID::MOTOR_SHIFT:
-            stopMotor(DeviceID::MOTOR_SHIFT);
+            _motorShift->stop();
             break;
 
         case DeviceID::MOTOR_TOOL:
-            stopMotor(DeviceID::MOTOR_TOOL);
+            _motorTool->stop();
             break;
         
         default:
