@@ -9,7 +9,7 @@
 #include <vector>
 #include <map>
 #include <iomanip>
-#include <log/Logger.hpp>
+#include <Logger.hpp>
 #include <physical/display/bitmaps/Bitmaps.hpp>
 
 namespace finder::physical::display

@@ -24,10 +24,28 @@ namespace finder
             init();
         }
 
-        path_speed_t MotorPort::getSpeedPath()
+        path_speed_t MotorPort::getSpeedSpPath()
         {
             if (isEnabled()) {
                 return getBasePath() + "/speed_sp";
+            } else {
+                return "";
+            }
+        }
+
+        path_position_t MotorPort::getPositionPath()
+        {
+            if (isEnabled()) {
+                return getBasePath() + "/position";
+            } else {
+                return "";
+            }
+        }
+
+        path_speed_t MotorPort::getSpeedPath()
+        {
+            if (isEnabled()) {
+                return getBasePath() + "/speed";
             } else {
                 return "";
             }
@@ -95,9 +113,9 @@ namespace finder
 #endif
 
             if (isEnabled()) {
-                if (_file_speed_path->is_open()) {
-                    *_file_speed_path << speed;
-                    _file_speed_path->flush();
+                if (_file_speed_sp_path->is_open()) {
+                    *_file_speed_sp_path << speed;
+                    _file_speed_sp_path->flush();
                 } else {
 #ifdef ENABLE_LOGGING                    
                     _logger.error("MotorPort failed to set speed");
@@ -272,6 +290,43 @@ namespace finder
             }
         }
 
+        int MotorPort::getSpeed()
+        {
+#ifdef ENABLE_LOGGING            
+            FileLoggerLock lock = FileLoggerLock();
+            logToFile("SPEED.GET: " + getBasePath());
+#endif
+            if (isEnabled()) {
+                if (_file_speed_path->is_open()) {
+                    if (!_file_speed_path->bad()) {
+                        int speed;
+                        *_file_speed_path >> speed;
+#ifdef ENABLE_LOGGING
+                        logToFile(" WITH_RESULT: " + std::to_string(speed));
+#endif
+                        return speed;
+                    }
+                }
+            } 
+        }
+
+        int MotorPort::getPosition()
+        {
+            if (isEnabled()) {
+                if (_file_position_path->is_open()) {
+                    if (!_file_position_path->bad()) {
+                        int position;
+                        *_file_position_path >> position;
+#ifdef ENABLE_LOGGING
+                        logToFile("POSITION_SP.GET: " + getBasePath() + " WITH_RESULT: " + std::to_string(position_sp));
+#endif
+                        return position;
+                    }
+                }
+            }
+            throw std::runtime_error("MotorPort failed to get position_sp");
+        }
+
         std::vector<MotorState> MotorPort::getState()
         {
 #ifdef ENABLE_LOGGING            
@@ -376,6 +431,8 @@ namespace finder
                     std::filesystem::exists(getAddressPath()) &&
                     std::filesystem::exists(getCommandPath()) &&
                     std::filesystem::exists(getSpeedPath()) &&
+                    std::filesystem::exists(getSpeedSpPath()) &&
+                    std::filesystem::exists(getPositionPath()) &&
                     std::filesystem::exists(getPositionSpPath()) &&
                     std::filesystem::exists(getDutyCyclePath()) &&
                     std::filesystem::exists(getStatePath()) &&
@@ -384,7 +441,9 @@ namespace finder
                     std::filesystem::exists(getCountPerRotationPath())
                 ) {
                     _file_command_path = std::make_shared<std::ofstream>(getCommandPath());
-                    _file_speed_path = std::make_shared<std::ofstream>(getSpeedPath());
+                    _file_speed_path = std::make_shared<std::ifstream>(getSpeedPath());
+                    _file_speed_sp_path = std::make_shared<std::ofstream>(getSpeedSpPath());
+                    _file_position_path = std::make_shared<std::ifstream>(getPositionPath());
                     _file_position_sp_path = std::make_shared<std::ofstream>(getPositionSpPath());
                     _file_duty_cycle_path = std::make_shared<std::ofstream>(getDutyCyclePath());
                     _file_state_path = std::make_shared<std::ifstream>(getStatePath());
@@ -395,6 +454,8 @@ namespace finder
                     if (
                         _file_command_path->is_open() &&
                         _file_speed_path->is_open() &&
+                        _file_speed_sp_path->is_open() &&
+                        _file_position_path->is_open() &&
                         _file_position_sp_path->is_open() &&
                         _file_duty_cycle_path->is_open() &&
                         _file_state_path->is_open() &&

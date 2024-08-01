@@ -6,8 +6,8 @@
 #include <filesystem>
 #include <vector>
 #ifdef ENABLE_LOGGING
-#include <log/Logger.hpp>
-#include <log/FileLogger.hpp>
+#include <Logger.hpp>
+#include <FileLogger.hpp>
 #endif
 namespace finder
 {
@@ -20,8 +20,10 @@ namespace finder
         typedef std::string path_modes_t;
         typedef std::string path_command_t;
         typedef std::string path_commands_t;
+        typedef std::string path_position_t;
         typedef std::string path_position_sp_t;
         typedef std::string path_speed_t;
+        typedef std::string path_speed_sp_t;
         typedef std::string path_count_per_rotation_t;
         typedef std::string path_duty_cycle_t;
         typedef std::string path_stop_action_t;

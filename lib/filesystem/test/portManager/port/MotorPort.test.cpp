@@ -45,6 +45,14 @@ TEST(MotorPort, getDutyCyclePath)
     ASSERT_EQ(motorPort.getDutyCyclePath(), "/sys/class/tacho-motor/motor0/duty_cycle_sp");
 }
 
+TEST(MotorPort, getPositionPath) 
+{
+    finder::physical::MotorPort motorPort("/sys/class/tacho-motor/motor0");
+    ASSERT_EQ(motorPort.getPositionPath(), "");
+    motorPort.overrideEnabled(true);
+    ASSERT_EQ(motorPort.getPositionPath(), "/sys/class/tacho-motor/motor0/position");
+}
+
 TEST(MotorPort, getPositionSpPath)
 {
     finder::physical::MotorPort motorPort("/sys/class/tacho-motor/motor0");
@@ -53,12 +61,20 @@ TEST(MotorPort, getPositionSpPath)
     ASSERT_EQ(motorPort.getPositionSpPath(), "/sys/class/tacho-motor/motor0/position_sp");
 }
 
-TEST(MotorPort, getSpeedPath)
+TEST(MotorPort, getSpeedPath) 
 {
     finder::physical::MotorPort motorPort("/sys/class/tacho-motor/motor0");
     ASSERT_EQ(motorPort.getSpeedPath(), "");
     motorPort.overrideEnabled(true);
-    ASSERT_EQ(motorPort.getSpeedPath(), "/sys/class/tacho-motor/motor0/speed_sp");
+    ASSERT_EQ(motorPort.getSpeedPath(), "/sys/class/tacho-motor/motor0/speed");
+}
+
+TEST(MotorPort, getSpeedSpPath)
+{
+    finder::physical::MotorPort motorPort("/sys/class/tacho-motor/motor0");
+    ASSERT_EQ(motorPort.getSpeedSpPath(), "");
+    motorPort.overrideEnabled(true);
+    ASSERT_EQ(motorPort.getSpeedSpPath(), "/sys/class/tacho-motor/motor0/speed_sp");
 }
 TEST(MotorPort, getStatePath)
 {

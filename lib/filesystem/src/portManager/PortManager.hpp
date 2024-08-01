@@ -2,6 +2,8 @@
 #ifndef DEVICE_MANAGER_HPP
 #define DEVICE_MANAGER_HPP
 
+#define ENABLE_LOGGING
+
 #include <string>
 #include <array>
 #include <fstream>
@@ -11,7 +13,7 @@
 #include <portManager/port/SensorPort.hpp>
 #include <portManager/port/MotorPort.hpp>
 #ifdef ENABLE_LOGGING
-#include <log/Logger.hpp>
+#include <Logger.hpp>
 #endif
 
 namespace finder
@@ -42,6 +44,9 @@ namespace finder
             MOTOR_RIGHT   = static_cast<char>(DevicePort::OUTPUT_B),
             MOTOR_SHIFT   = static_cast<char>(DevicePort::OUTPUT_C),
             MOTOR_TOOL    = static_cast<char>(DevicePort::OUTPUT_D),
+            ANY           = 0,
+            ANY_MOTOR     = 254,
+            ANY_SENSOR    = 253,
         };
         
 

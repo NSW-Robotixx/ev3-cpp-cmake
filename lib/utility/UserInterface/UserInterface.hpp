@@ -6,7 +6,7 @@
 #include <atomic>
 #include <physical/display/WindowManager.hpp>
 #include <physical/buttons/ButtonNotifier.hpp>
-#include <log/Logger.hpp>
+#include <Logger.hpp>
 
 namespace finder::utility
 {

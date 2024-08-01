@@ -1,6 +1,6 @@
 #include <gtest/gtest.h>
 
-#include "log/Logger.hpp"
+#include <Logger.hpp>
 
 TEST(Logger, log) {
     using namespace finder::log;

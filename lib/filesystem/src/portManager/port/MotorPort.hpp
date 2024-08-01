@@ -65,8 +65,16 @@ namespace finder
                 /// @return The Path for reading the speed of the motor.
                 path_speed_t getSpeedPath();
 
+                /// @brief Get the path for setting the speed of the motor using the initialized path.
+                /// @return The Path for setting the speed of the motor.
+                path_speed_sp_t getSpeedSpPath();
+
                 /// @brief Get the path for reading the current position of the motor, or setting the target position to move to. Use run-to-rel-pos to move to set position.
-                /// @return Path to set or read the position.
+                /// @return Path to read the current position.
+                path_position_t getPositionPath();
+
+                /// @brief Get the path for setting the current position of the motor, or setting the target position to move to. Use run-to-rel-pos to move to set position.
+                /// @return Path to set the target position.
                 path_position_sp_t getPositionSpPath();
 
                 /// @brief Get the path to set the duty cycle of the motor to turn at. Start the motor using run-direct. Else this value is ignored.
@@ -116,6 +124,10 @@ namespace finder
                 /// @brief shorthand for setting the command to "stop".
                 void stop();
 
+                int getSpeed();
+
+                int getPosition();
+
                 /// @brief Get the current states of the motor a vector
                 /// @return Vector of current motor states.
                 std::vector<MotorState> getState();
@@ -132,7 +144,9 @@ namespace finder
 #ifdef ENABLE_LOGGING
                 static ::finder::log::Logger _logger;
 #endif
-                std::shared_ptr<std::ofstream> _file_speed_path;
+                std::shared_ptr<std::ifstream> _file_speed_path;
+                std::shared_ptr<std::ofstream> _file_speed_sp_path;
+                std::shared_ptr<std::ifstream> _file_position_path;
                 std::shared_ptr<std::ofstream> _file_position_sp_path;
                 std::shared_ptr<std::ofstream> _file_duty_cycle_path;
                 std::shared_ptr<std::ifstream> _file_state_path;

@@ -2,6 +2,10 @@
 
 namespace finder::physical
 {
+    TurnDirection MotorManager::_prevTurnDirection = TurnDirection::FORWARD;
+    std::vector<std::function<void(TurnDirection)>> MotorManager::_directionChangeListeners;
+    
+
     MotorManager::MotorManager(std::string portBasePath) : DeviceManager(portBasePath)
     {
         _motorLeft->setStopAction(MotorStopAction::HOLD);
@@ -105,6 +109,26 @@ namespace finder::physical
 
     void MotorManager::moveNow(int speed, int distance, std::function<void()> stopCallback)
     {
+        // call the direction change listeners
+        if (speed < 0)
+        {
+            if (_prevTurnDirection == TurnDirection::BACKWARD) {
+                for (auto listener : _directionChangeListeners)
+                {
+                    listener(TurnDirection::FORWARD);
+                }
+            }
+            _prevTurnDirection = TurnDirection::BACKWARD;
+        } else {
+            if (_prevTurnDirection == TurnDirection::FORWARD) {
+                for (auto listener : _directionChangeListeners)
+                {
+                    listener(TurnDirection::BACKWARD);
+                }
+            }
+            _prevTurnDirection = TurnDirection::FORWARD;
+        }
+
         while (!((_motorLeft->getState().front() != MotorState::HOLDING || _motorLeft->getState().front() != MotorState::STOPPED) &&
                (_motorRight->getState().front() != MotorState::HOLDING || _motorRight->getState().front() != MotorState::STOPPED)))
         {

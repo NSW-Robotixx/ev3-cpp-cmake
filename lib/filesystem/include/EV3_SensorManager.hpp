@@ -7,9 +7,10 @@
 #include <vector>
 #include <mutex>
 #include <thread>
+#include <atomic>
 #include <map>
 #ifdef ENABLE_LOGGING
-#include <log/Logger.hpp>
+#include <Logger.hpp>
 #endif
 
 namespace finder::physical
@@ -25,26 +26,28 @@ namespace finder::physical
             static int readColorLeft();
             static int readColorRight();
             static int readColorFront();
+            static int readMotorLeft();
+            static int readMotorRight();
+            static int readMotorShift();
+            static int readMotorTool();
 
-            static void addEventListeners(DeviceType port, std::function<void(int)> callback, int value);
+            static void addEventListeners(DeviceID port, std::function<void(DeviceID, int)> callback);
 
             static void Dispatcher();
 
         private:
-            static int _gyroValue;
-            static int _colorLeftValue;
-            static int _colorRightValue;
-            static int _colorFrontValue;
+            static std::atomic<int> _gyroValue;
+            static std::atomic<int> _colorLeftValue;
+            static std::atomic<int> _colorRightValue;
+            static std::atomic<int> _colorFrontValue;
+            static std::atomic<int> _motorLeftValue;
+            static std::atomic<int> _motorRightValue;
+            static std::atomic<int> _motorShiftValue;
+            static std::atomic<int> _motorToolValue;
 
-            static std::mutex _gyroValueMutex;
-            static std::mutex _colorLeftValueMutex;
-            static std::mutex _colorRightValueMutex;
-            static std::mutex _colorFrontValueMutex;
+            static std::map<DeviceID, std::function<void(DeviceID, int)>> _eventListeners;
 
-            static std::vector<std::map<DeviceType, std::function<void(int)>>> _eventListeners;
-
-            static std::mutex _stopDispatcherMutex;
-            static bool _stopDispatcher;
+            static std::atomic<bool> _stopDispatcher;
             static std::thread _dispatcherFuture;
 
 #ifdef ENABLE_LOGGING

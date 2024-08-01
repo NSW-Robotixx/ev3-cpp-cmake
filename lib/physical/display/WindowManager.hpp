@@ -7,7 +7,7 @@
 
 #include <physical/display/Screen.hpp>
 #include <physical/display/Window.hpp>
-#include <log/Logger.hpp>
+#include <Logger.hpp>
 #include <linux/input-event-codes.h>
 
 namespace finder::physical::display

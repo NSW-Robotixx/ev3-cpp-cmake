@@ -34,7 +34,7 @@ target_include_directories(EV3_filesystem PUBLIC ${EV3_FILESYSTEM_SRC_DIR})
 
 target_link_libraries(EV3_filesystem
     PUBLIC
-        # Logger
+        Logger
 )
 
 # set(ENABLE_LOGGING ON CACHE BOOL "Enable logging")

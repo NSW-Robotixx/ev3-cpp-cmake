@@ -1,5 +1,6 @@
 #include <math.h>
 #include <iostream>
+#include "Vector2.hpp"
 
 namespace finder
 {
@@ -11,6 +12,7 @@ namespace finder
                 Vector3() = default;
                 Vector3(const Vector3& other) = default;
                 Vector3(Vector3&& other) = default;
+                Vector3(const math::Vector2 xy, float z): x(xy.x), y(xy.y), z(z) {};
                 Vector3& operator=(const Vector3& other) = default;
                 Vector3& operator=(Vector3&& other) = default;
                 ~Vector3() = default;

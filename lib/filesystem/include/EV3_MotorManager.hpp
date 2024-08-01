@@ -19,6 +19,8 @@ namespace finder::physical
     {
         LEFT = 0,
         RIGHT = 1,
+        FORWARD = 2,
+        BACKWARD = 3,
     };
 
     class MotorManager : public DeviceManager
@@ -39,12 +41,18 @@ namespace finder::physical
             static void stopAllMotors();
             static void stopMotor(DeviceID motor);
 
+            static void onDirectionChange(std::function<void(TurnDirection)> callback);
+
         private:
             static void move(LaunchType launch, int speed, int distance, std::function<void()> stopCallback);
             static void turn(LaunchType launch, int speed, int distance, std::function<void()> stopCallback, TurnDirection direction);
 
             static void moveNow(int speed, int distance, std::function<void()> stopCallback);
             // static void moveAsync(int speed, int distance, std::function<void()> stopCallback, DeviceID motor);
+
+            static TurnDirection _prevTurnDirection;
+
+            static std::vector<std::function<void(TurnDirection)>> _directionChangeListeners;
     };
 }
 

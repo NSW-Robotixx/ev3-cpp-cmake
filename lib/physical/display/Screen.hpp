@@ -5,7 +5,7 @@
 #include <sys/mman.h>
 #include <stdint.h>
 #include <memory>
-#include <log/Logger.hpp>
+#include <Logger.hpp>
 
 
 #ifndef __DISPLAY_HPP__
