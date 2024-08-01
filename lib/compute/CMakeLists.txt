@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.10)
+cmake_minimum_required(VERSION 3.7.2)
 
 # set the project name
 project(EV3_compute C CXX)
