@@ -29,38 +29,3 @@ TEST(Logger, log) {
 
     ASSERT_EQ(logger.getActiveLogLevel(), LogLevel::DEBUG);
 }
-
-TEST(Logger, enforceLogLevel) {
-    using namespace finder::log;
-
-    Logger logger;
-
-    logger.enforceLogLevel(LogLevel::INFO);
-
-    ASSERT_EQ(logger.getActiveLogLevel(), LogLevel::INFO);
-    ASSERT_EQ(logger.getMinLevel(), LogLevel::DEBUG);
-
-    logger.enforceLogLevel(LogLevel::ERROR);
-
-    ASSERT_EQ(logger.getActiveLogLevel(), LogLevel::ERROR);
-    ASSERT_EQ(logger.getMinLevel(), LogLevel::DEBUG);
-}
-
-TEST(Logger, setMinLevel) {
-    using namespace finder::log;
-
-    Logger logger(LogLevel::INFO);
-
-    logger.removeLogLevelEnforcement();
-    logger.setMinLevel(LogLevel::INFO);
-
-    logger.log(LogLevel::DEBUG, logger.getActiveLogLevel());
-
-    ASSERT_EQ(logger.getActiveLogLevel(), LogLevel::INFO);
-    ASSERT_EQ(logger.getMinLevel(), LogLevel::INFO);
-
-    logger.setMinLevel(LogLevel::ERROR);
-
-    ASSERT_EQ(logger.getActiveLogLevel(), LogLevel::ERROR);
-    ASSERT_EQ(logger.getMinLevel(), LogLevel::ERROR);
-}

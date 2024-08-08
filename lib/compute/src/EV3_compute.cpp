@@ -42,7 +42,7 @@ namespace finder::compute
             if (message.length() > 0)
             {
                 std::cout << "received message: " << message << std::endl;
-                std::string response = parse_message(message);
+                std::string response = extract_coordinates(message);
 
                 std::cout << "sending response: " << response << std::endl;
                 m_tcp_communication_server->sendMessage(response);
@@ -52,10 +52,11 @@ namespace finder::compute
         }
     }
 
-    std::string EV3_compute::parse_message(const std::string &message)
+    std::string EV3_compute::extract_coordinates(const std::string &message)
     {
         ::finder::math::Vector2 start{};
-         ::finder::math::Vector2 end{};
+        ::finder::math::Vector2 end{};
+        
         // format of message: "start_x,start_y;end_x,end_y"
         size_t delimiter = message.find(';');
         if (delimiter == std::string::npos)

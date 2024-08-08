@@ -1,5 +1,8 @@
 #ifndef PORT_HPP
 #define PORT_HPP
+
+#define ENABLE_LOGGING
+
 #include <string>
 #include <memory>
 #include <fstream>
@@ -46,7 +49,7 @@ namespace finder
 #endif
         {
             public:
-                // Port();
+                Port() = delete;
                 Port(const path_port_t& port);
                 Port(std::shared_ptr<Port> port);
                 Port(Port&) = delete;

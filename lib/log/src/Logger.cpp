@@ -5,19 +5,10 @@ namespace finder
 {
     namespace log
     {
-        bool Logger::_logLevelEnforced = false;
-        LogLevel Logger::_enforcedLogLevel = LogLevel::DEBUG;
-
-        Logger::Logger(LogLevel minLogLevel) {
-            _minlLevel = minLogLevel;
-        }
+        LogLevel Logger::_minlLevel = LogLevel::DEBUG;
 
         LogLevel Logger::getActiveLogLevel()
         {
-            if (_logLevelEnforced)
-            {
-                return _enforcedLogLevel;
-            }
             return _minlLevel;
         }
 
@@ -112,12 +103,6 @@ namespace finder
         void Logger::positive(const LogLevel& message)
         {
             log(LogLevel::POSITIVE, message);
-        }
-        
-        void Logger::enforceLogLevel(LogLevel level)
-        {
-            _logLevelEnforced = true;
-            _enforcedLogLevel = level;
         }
     } // namespace log
     

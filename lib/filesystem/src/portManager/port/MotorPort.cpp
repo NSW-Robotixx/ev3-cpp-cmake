@@ -290,7 +290,7 @@ namespace finder
             }
         }
 
-        int MotorPort::getSpeed()
+        int MotorPort::getSpeed() 
         {
 #ifdef ENABLE_LOGGING            
             FileLoggerLock lock = FileLoggerLock();
@@ -308,6 +308,7 @@ namespace finder
                     }
                 }
             } 
+            return -1;
         }
 
         int MotorPort::getPosition()
@@ -318,13 +319,15 @@ namespace finder
                         int position;
                         *_file_position_path >> position;
 #ifdef ENABLE_LOGGING
-                        logToFile("POSITION_SP.GET: " + getBasePath() + " WITH_RESULT: " + std::to_string(position_sp));
+                        logToFile("POSITION_SP.GET: " + getBasePath() + " WITH_RESULT: " + std::to_string(position));
 #endif
                         return position;
                     }
+                    throw std::runtime_error("MotorPort failed to get position, File bad");
                 }
+                throw std::runtime_error("MotorPort failed to get position, File not open");
             }
-            throw std::runtime_error("MotorPort failed to get position_sp");
+            throw std::runtime_error("MotorPort failed to get position, Port not enabled");
         }
 
         std::vector<MotorState> MotorPort::getState()

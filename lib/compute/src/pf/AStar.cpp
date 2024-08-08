@@ -21,7 +21,7 @@ namespace finder::pathfind
     AStar::Generator::Generator()
     {
         setHeuristic(&Heuristic::manhattan);
-        setWorldSize({178, 128});
+        setWorldSize({EV3_FIELD_WIDTH, EV3_FIELD_HEIGHT});
         setDiagonalMovement(true);
         direction = {
             { 0, 1 }, { 1, 0 }, { 0, -1 }, { -1, 0 },

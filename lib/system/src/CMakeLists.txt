@@ -1,0 +1,32 @@
+find_package(yaml-cpp REQUIRED)
+
+set(EV3_SYSTEM_SRC
+    ${EV3_SYSTEM_SRC_DIR}/EV3_System.cpp
+)
+
+set(EV3_SYSTEM_HDR
+    ${EV3_SYSTEM_INCLUDE_DIR}/EV3_System.hpp
+)
+
+add_library(EV3_system ${EV3_SYSTEM_SRC})
+
+target_sources(EV3_system
+    PRIVATE
+        ${EV3_SYSTEM_SRC}
+    PUBLIC
+        ${EV3_SYSTEM_HDR}
+)
+
+target_include_directories(EV3_system
+    PUBLIC
+        ${EV3_SYSTEM_INCLUDE_DIR}
+    PRIVATE
+        ${EV3_SYSTEM_SRC_DIR}
+)
+
+target_link_libraries(EV3_system
+    PUBLIC
+        Logger
+        Vector3
+        yaml-cpp::yaml-cpp
+)

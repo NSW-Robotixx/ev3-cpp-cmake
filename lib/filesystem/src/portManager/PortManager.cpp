@@ -86,9 +86,9 @@ namespace finder
                                 _logger.log(LogLevel::INFO, "Port found: " + line);
 #endif                                
                                 if (device_type_dir == _sensor_dir) {
-                                    _sensor_ports[address.back() - '1'] = std::make_shared<SensorPort>(port);
+                                    _sensor_ports[address.back() - '1'] = std::make_shared<SensorPort>(dir_entry.path().string());
                                 } else {
-                                    _motor_ports[address.back() - 'A'] = std::make_shared<MotorPort>(port);
+                                    _motor_ports[address.back() - 'A'] = std::make_shared<MotorPort>(dir_entry.path().string());
                                 }
                                 foundDevices++;
                                 break;

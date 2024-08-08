@@ -1,11 +1,11 @@
 set(EV3_FILESYSTEM_SRC
-${EV3_FILESYSTEM_SRC_DIR}/DeviceManager.cpp
-${EV3_FILESYSTEM_SRC_DIR}/EV3_MotorManager.cpp
-${EV3_FILESYSTEM_SRC_DIR}/EV3_SensorManager.cpp
-${EV3_FILESYSTEM_SRC_DIR}/portManager/PortManager.cpp
-${EV3_FILESYSTEM_SRC_DIR}/portManager/port/MotorPort.cpp
-${EV3_FILESYSTEM_SRC_DIR}/portManager/port/Port.cpp
-${EV3_FILESYSTEM_SRC_DIR}/portManager/port/SensorPort.cpp
+    ${EV3_FILESYSTEM_SRC_DIR}/DeviceManager.cpp
+    ${EV3_FILESYSTEM_SRC_DIR}/EV3_MotorManager.cpp
+    ${EV3_FILESYSTEM_SRC_DIR}/EV3_SensorManager.cpp
+    ${EV3_FILESYSTEM_SRC_DIR}/portManager/PortManager.cpp
+    ${EV3_FILESYSTEM_SRC_DIR}/portManager/port/MotorPort.cpp
+    ${EV3_FILESYSTEM_SRC_DIR}/portManager/port/Port.cpp
+    ${EV3_FILESYSTEM_SRC_DIR}/portManager/port/SensorPort.cpp
 )
 
 set(EV3_FILESYSTEM_HDR

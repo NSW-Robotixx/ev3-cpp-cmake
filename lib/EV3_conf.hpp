@@ -12,9 +12,6 @@
     #define EV3_SENSOR_COLOR_FRONT_OFFSET_X 0                           // to be implemented
     #define EV3_SENSOR_COLOR_FRONT_OFFSET_Y 0                           // to be implemented
 
-    // define the offsets of the motors on the robot
-    #define EV3_MOTOR_WHEELBASE 0                                       // to be implemented
-
     // define the trigger values for the color sensors
     #define EV3_COLOR_SENSOR_TRIGGER 42
 
@@ -25,4 +22,14 @@
     #define EV3_COLOR_SENSOR_TRIGGER_RED 42                             // to be implemented
     #define EV3_COLOR_SENSOR_TRIGGER_GREEN 42                           // to be implemented
     #define EV3_COLOR_SENSOR_TRIGGER_BLUE 42                            // to be implemented
+
+    // define the offsets of the motors on the robot
+    #define EV3_MOTOR_WHEELBASE 0                                       // to be implemented
+
+    // define the field parameters
+    #define EV3_FIELD_WIDTH 2000
+    #define EV3_FIELD_HEIGHT 1000
+
+    // define the destinations.yaml path
+    #define EV3_DESTINATIONS_FILE_PATH "./destinations.yaml"
 #endif

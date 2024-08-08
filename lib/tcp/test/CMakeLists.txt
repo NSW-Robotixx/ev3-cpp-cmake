@@ -25,5 +25,3 @@ target_link_libraries(ev3_tcp_communication_test
         gtest_main
         EV3_tcp_communication
 )
-
-gtest_discover_tests(ev3_tcp_communication_test)

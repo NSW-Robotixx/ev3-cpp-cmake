@@ -1,6 +1,8 @@
 #ifndef __SENSOR_PORT_HPP__
 #define __SENSOR_PORT_HPP__
 
+#define ENABLE_LOGGING
+
 #include <portManager/port/Port.hpp>
 #include <filesystem>
 #include <vector>

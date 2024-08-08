@@ -21,41 +21,36 @@ namespace finder
             public:
 
 
-                Logger() : _minlLevel(LogLevel::DEBUG) {}
-                Logger(LogLevel minLogLevel);
+                Logger() = default;
+                Logger(LogLevel minLogLevel) { _minlLevel = minLogLevel; };
 
-                LogLevel getMinLevel() {return _minlLevel;}
-                LogLevel getActiveLogLevel();
+                LogLevel getMinLevel() { return _minlLevel; }
+                static LogLevel getActiveLogLevel();
 
                 void setMinLevel(LogLevel level) {_minlLevel = level;}
 
-                void log(LogLevel level, const std::string& message);
-                void log(LogLevel level, const LogLevel& message);
+                static void log(LogLevel level, const std::string& message);
+                static void log(LogLevel level, const LogLevel& message);
 
-                void error(const std::string& message);
-                void error(const LogLevel& message);
+                static void error(const std::string& message);
+                static void error(const LogLevel& message);
 
-                void warn(const std::string& message);
-                void warn(const LogLevel& message);
+                static void warn(const std::string& message);
+                static void warn(const LogLevel& message);
 
-                void info(const std::string& message);
-                void info(const LogLevel& message);
+                static void info(const std::string& message);
+                static void info(const LogLevel& message);
 
-                void debug(const std::string& message);
-                void debug(const LogLevel& message);
+                static void debug(const std::string& message);
+                static void debug(const LogLevel& message);
 
-                void positive(const std::string& message);
-                void positive(const LogLevel& message);
-                void success(const std::string& message) { this->positive(message); };
+                static void positive(const std::string& message);
+                static void positive(const LogLevel& message);
+                static void success(const std::string& message) { Logger::positive(message); };
 
-                static void enforceLogLevel(LogLevel level);
-                static void removeLogLevelEnforcement() {_logLevelEnforced = false;}
-                static bool isLogLevelEnforced() {return _logLevelEnforced;}
 
             private:
-                LogLevel _minlLevel;
-                static bool _logLevelEnforced;
-                static LogLevel _enforcedLogLevel;
+                static LogLevel _minlLevel;
         };
     } // namespace log
 } // namespace finder

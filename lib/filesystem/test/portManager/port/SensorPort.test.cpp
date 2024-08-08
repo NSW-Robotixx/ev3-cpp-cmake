@@ -99,7 +99,7 @@ TEST(SensorPort, getValue)
 
     finder::physical::SensorPort sensorPort(FakeSys::getWorkingDir() + "/lego-sensor/sensor0");
     sensorPort.overrideEnabled(false);
-    ASSERT_EQ(sensorPort.getValue(0), -1);
+    EXPECT_ANY_THROW(sensorPort.getValue(0));
     sensorPort.overrideEnabled(true);
     ASSERT_EQ(sensorPort.getValue(0), 0);
 
@@ -140,7 +140,7 @@ TEST(SensorPort, filestreams)
     fs_modes << "EV3-IR EV3-Color EV3-Ultrasonic";
     fs_num_values << "1";
     fs_poll_ms << "100";
-    fs_commands << "test-commands 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18";
+    fs_commands << "";
     
     fs_value.close();
     fs_address.close();

@@ -19,10 +19,13 @@ namespace finder::log {
         _input_finished = false;
 
         if (_file.bad()) {
-            throw std::runtime_error("File is bad");
+                throw std::runtime_error("File is bad");
         }
         if (!_file.is_open()) {
-            throw std::runtime_error("File is not open");
+            if (!openFile())
+            {
+                throw std::runtime_error("File is not open");
+            }
         }
         _file << message;
         _file.flush();
@@ -43,16 +46,17 @@ namespace finder::log {
         _file.close();
         _file.open(DEFAULT_LOG_FILE, std::ios::trunc);
     }
+
     bool finder::log::FileLogger::openFile()
     {
-        if (_file.is_open()) {
+        if (!_file.is_open()) {
             _file.open(DEFAULT_LOG_FILE, std::ios::trunc);
         }
 		if (_file.bad()) {
-			throw std::runtime_error("File is bad");
+            return false;
 		}
 		if (!_file.is_open()) {
-			throw std::runtime_error("Could not open file " + std::string(DEFAULT_LOG_FILE));
+            return false;
 		}
 		return true;
     }

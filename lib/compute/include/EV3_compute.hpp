@@ -30,6 +30,6 @@ namespace finder::compute
         ::finder::pathfind::SmoothPath m_smooth_path;
 
         void handle_client();
-        std::string parse_message(const std::string &message);
+        std::string extract_coordinates(const std::string &message);
     };
 } // namespace finder::compute

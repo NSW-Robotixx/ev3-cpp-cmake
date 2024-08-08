@@ -126,9 +126,9 @@ namespace finder
                     logToFile(" WITH_RESULT: " + std::to_string(value));
 #endif                    
                     return value;
-                }
-            }
-            return -1;
+                } 
+            } 
+            throw new std::runtime_error("SensorPort is not enabled");
         }
 
         void SensorPort::setMode(sensor_mode_t mode)

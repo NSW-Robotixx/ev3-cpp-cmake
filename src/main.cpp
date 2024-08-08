@@ -2,8 +2,6 @@
 #include <iostream>
 #include <stdio.h>
 #include <chrono>
-#include <Vector2.hpp>
-//#include <lvgl.h>
 
 finder::log::Logger logger = finder::log::Logger();
 

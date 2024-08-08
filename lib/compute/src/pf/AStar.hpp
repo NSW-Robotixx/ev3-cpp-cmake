@@ -10,15 +10,15 @@
 #include <functional>
 #include <Vector2.hpp>
 #include "ObstacleManager.hpp"
+#include "../../EV3_conf.hpp"
 
 
 namespace finder::pathfind {
     class AStar {
     public:
-        using uint = unsigned int;
-        using HeuristicFunction = std::function<uint(math::Vector2, math::Vector2)>;
-
-        using CoordinateList = std::vector<math::Vector2>;
+        typedef unsigned int uint;
+        typedef std::function<uint(math::Vector2, math::Vector2)> HeuristicFunction;
+        typedef std::vector<math::Vector2> CoordinateList;
 
         struct Node
         {

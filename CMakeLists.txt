@@ -40,22 +40,9 @@ add_subdirectory(deps)
 # SET_TARGET_PROPERTIES(Main PROPERTIES LINK_FLAGS "-static -lc -lm -L/usr/local/lib/")
 # SET_TARGET_PROPERTIES(Test PROPERTIES LINK_FLAGS "-static -lc -lm -L/usr/local/lib/")
 
-# fetch dependencies
-include(FetchContent)
+# find dependencies
+find_package(Eigen3 REQUIRED)
 
-# yaml parser 
-FetchContent_Declare(
-  yaml-cpp
-  GIT_REPOSITORY https://github.com/jbeder/yaml-cpp.git
-  GIT_TAG master # Can be a tag (yaml-cpp-x.x.x), a commit hash, or a branch name (master)
-)
-
-FetchContent_GetProperties(yaml-cpp)
-
-if(NOT yaml-cpp_POPULATED)
-  FetchContent_Populate(yaml-cpp)
-  add_subdirectory(${yaml-cpp_SOURCE_DIR} ${yaml-cpp_BINARY_DIR})
-endif()
 
 # # lvgl display library
 # # Specify path to own LVGL config header
@@ -71,6 +58,8 @@ endif()
 #   FetchContent_Declare(lvgl GIT_REPOSITORY  https://github.com/lvgl/lvgl.git)
 #   FetchContent_MakeAvailable(lvgl)
 
+include(FetchContent)
+
 # google test
 FetchContent_Declare(
 googletest
@@ -81,53 +70,15 @@ FetchContent_MakeAvailable(googletest)
 
 enable_testing()
 
-# if (FALSE)
-# message(STATUS "Enabling VCPKG for dependencies")
-# 
-# ##################
-# #  VCPKG CONFIG  #
-# ##################
-# 
-# set(CMAKE_TOOLCHAIN_FILE "${CMAKE_CURRENT_SOURCE_DIR}/deps/vcpkg/scripts/buildsystems/vcpkg.cmake"
-#   CACHE STRING "Vcpkg toolchain file")
-# 
-# ##################
-# # VCPKG PACKAGES #
-# ##################
-# 
-# # find SDL2
-# find_package(SDL2 CONFIG REQUIRED)
-# target_link_libraries(Main
-#     PRIVATE
-#     $<TARGET_NAME_IF_EXISTS:SDL2::SDL2main>
-#     $<IF:$<TARGET_EXISTS:SDL2::SDL2>,SDL2::SDL2,SDL2::SDL2-static>
-# )
-# endif()
-
-# SDL2
-#  if( ${CMAKE_SYSTEM_NAME} MATCHES "Windows")
-#      set( CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>" )
-#      set_property( DIRECTORY PROPERTY VS_STARTUP_PROJECT ${CMAKE_PROJECT_NAME} )
-#      set_property( TARGET Main PROPERTY WIN32_EXECUTABLE true )
-#  endif()
-
 target_include_directories(Test PUBLIC ${CMAKE_SOURCE_DIR}/tests)
 target_include_directories(Test PUBLIC ${CMAKE_SOURCE_DIR}/lib)
 target_include_directories(Main PUBLIC ${CMAKE_SOURCE_DIR}/lib)
 target_include_directories(Main PUBLIC ${CMAKE_SOURCE_DIR}/deps)
     
 target_link_libraries(Main 
-  WindowManager
   Logger
-  Window
-  webServer
-  webComponents
-  RobotMovement
-  Vector2
-  MovementEngine
-  # yaml-cpp::yaml-cpp
-)
-    
+  EV3_system
+)    
   
 
 # add all tests executable
@@ -176,7 +127,6 @@ set(CMAKE_VERBOSE_MAKEFILE OFF)
       webServer
       webComponents
       WindowManager
-      yaml-cpp::yaml-cpp
       LocationEngine
       # EV3_filesystem_test
       )
