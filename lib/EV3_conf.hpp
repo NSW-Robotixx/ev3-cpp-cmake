@@ -30,6 +30,16 @@
     #define EV3_FIELD_WIDTH 2000
     #define EV3_FIELD_HEIGHT 1000
 
-    // define the destinations.yaml path
-    #define EV3_DESTINATIONS_FILE_PATH "./destinations.yaml"
+    // set the file format of the destinations file
+    #define EV3_DESTINATIONS_FILE_FORMAT_YAML 1
+    #if     EV3_DESTINATIONS_FILE_FORMAT_YAML
+        // define the destinations.yaml path
+        #define EV3_DESTINATIONS_FILE_PATH "./destinations.yaml"
+    #else
+        // define the destinations.txt path
+        #define EV3_DESTINATIONS_FILE_PATH "./destinations.list"
+    #endif
+
+    // define the port for the tcp communication of the compute module
+    #define EV3_COMPUTE_PORT 34001
 #endif

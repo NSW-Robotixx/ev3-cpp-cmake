@@ -5,15 +5,19 @@
 #include <Vector3.hpp>
 #include "../../EV3_conf.hpp"
 #include <vector>
+#include <fstream>
+
+#if EV3_DESTINATIONS_FILE_FORMAT_YAML
 #include <yaml-cpp/yaml.h>
+#endif
 
 namespace finder::system
 {
-    class YamlReader
+    class ConfigReader
     {
         public:
-            YamlReader() = default;
-            ~YamlReader() = default;
+            ConfigReader() = default;
+            ~ConfigReader() = default;
 
             std::vector<math::Vector3> readDestinationsFromFile();
     };

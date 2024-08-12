@@ -2,7 +2,7 @@
 
 set(EV3_LOGGER_TEST_SRC
     ${CMAKE_CURRENT_SOURCE_DIR}/test_EV3_System.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/test_YamlReader.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/test_ConfigReader.cpp
 )
 
 get_property(EV3_TESTS_SRC GLOBAL PROPERTY EV3_TESTS_SRC)

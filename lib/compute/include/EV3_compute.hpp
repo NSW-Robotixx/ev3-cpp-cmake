@@ -2,6 +2,7 @@
 #include <Vector2.hpp>
 #include <pf/AStar.hpp>
 #include <pf/SmoothPath.hpp>
+#include "../../EV3_conf.hpp"
 #include <memory>
 #include <future>
 #include <atomic>

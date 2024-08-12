@@ -2,10 +2,12 @@ find_package(yaml-cpp REQUIRED)
 
 set(EV3_SYSTEM_SRC
     ${EV3_SYSTEM_SRC_DIR}/EV3_System.cpp
+    ${EV3_SYSTEM_SRC_DIR}/ConfigReader.cpp
 )
 
 set(EV3_SYSTEM_HDR
     ${EV3_SYSTEM_INCLUDE_DIR}/EV3_System.hpp
+    ${EV3_SYSTEM_SRC_DIR}/ConfigReader.hpp
 )
 
 add_library(EV3_system ${EV3_SYSTEM_SRC})

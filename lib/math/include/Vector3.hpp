@@ -1,5 +1,6 @@
 #include <math.h>
 #include <iostream>
+#include <sstream>
 #include "Vector2.hpp"
 
 namespace finder
@@ -13,6 +14,15 @@ namespace finder
                 Vector3(const Vector3& other) = default;
                 Vector3(Vector3&& other) = default;
                 Vector3(const math::Vector2 xy, float z): x(xy.x), y(xy.y), z(z) {};
+                Vector3(const std::string& str)
+                {
+                    std::string s = str;
+                    s.erase(std::remove(s.begin(), s.end(), '('), s.end());
+                    s.erase(std::remove(s.begin(), s.end(), ')'), s.end());
+                    std::replace(s.begin(), s.end(), ',', ' ');
+                    std::istringstream ss(s);
+                    ss >> x >> y >> z;
+                }
                 Vector3& operator=(const Vector3& other) = default;
                 Vector3& operator=(Vector3&& other) = default;
                 ~Vector3() = default;
@@ -22,6 +32,11 @@ namespace finder
                 float x = 0.0f;
                 float y = 0.0f;
                 float z = 0.0f;
+
+                std::string toString() const
+                {
+                    return "Vector3(" + std::to_string(x) + ", " + std::to_string(y) + ", " + std::to_string(z) + ")";
+                }
 
                 float magnitude() const
                 {

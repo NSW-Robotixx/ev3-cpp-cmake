@@ -22,7 +22,7 @@ namespace finder::compute
     {
         m_client_thread = std::thread([this]()
         {
-            m_tcp_communication_server->start(34001);
+            m_tcp_communication_server->start(EV3_COMPUTE_PORT);
             handle_client();
         });
     }
