@@ -5,6 +5,7 @@
 #include <Vector3.hpp>
 #include <ConfigReader.hpp>
 #include <vector>
+#include <deque>
 
 #if EV3_COMPUTE_LOCAL
 #include <EV3_compute.hpp>
@@ -22,7 +23,7 @@ namespace finder::system
             void stop();
 
         private:
-            std::vector<math::Vector3> m_destinations;
+            std::deque<math::Vector3> m_destinations;
             compute::EV3_compute m_compute;
     };
 } // namespace finder::system

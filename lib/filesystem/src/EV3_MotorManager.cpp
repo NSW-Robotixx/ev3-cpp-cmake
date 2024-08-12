@@ -16,7 +16,8 @@ namespace finder::physical
 
     MotorManager::~MotorManager()
     {
-        stopAllMotors();
+        _motorLeft->stop();
+        _motorRight->stop();
     }
 
     void MotorManager::setMotorSpeed(DeviceID motor, int speed)
@@ -64,37 +65,9 @@ namespace finder::physical
         turn(launch, speed, distance, stopCallback, TurnDirection::RIGHT);
     }
 
-    void MotorManager::stopAllMotors()
+    void MotorManager::onDirectionChange(std::function<void(TurnDirection)> callback)
     {
-        stopMotor(DeviceID::MOTOR_LEFT);
-        stopMotor(DeviceID::MOTOR_RIGHT);
-        stopMotor(DeviceID::MOTOR_SHIFT);
-        stopMotor(DeviceID::MOTOR_TOOL);
-    }
-
-    void MotorManager::stopMotor(DeviceID motor)
-    {
-        switch (motor)
-        {
-        case DeviceID::MOTOR_LEFT:
-            _motorLeft->stop();
-            break;
-
-        case DeviceID::MOTOR_RIGHT:
-            _motorRight->stop();
-            break;
-
-        case DeviceID::MOTOR_SHIFT:
-            _motorShift->stop();
-            break;
-
-        case DeviceID::MOTOR_TOOL:
-            _motorTool->stop();
-            break;
-        
-        default:
-            break;
-        }
+        _directionChangeListeners.push_back(callback);
     }
 
     void MotorManager::move(LaunchType launch, int speed, int distance, std::function<void()> stopCallback)
@@ -104,7 +77,31 @@ namespace finder::physical
 
     void MotorManager::turn(LaunchType launch, int speed, int distance, std::function<void()> stopCallback, TurnDirection direction)
     {
-        // not implemented yet
+        while (!((_motorLeft->getState().front() != MotorState::HOLDING || _motorLeft->getState().front() != MotorState::STOPPED) &&
+               (_motorRight->getState().front() != MotorState::HOLDING || _motorRight->getState().front() != MotorState::STOPPED)))
+        {
+            // wait
+        }
+
+        if (direction == TurnDirection::LEFT)
+        {
+            _motorLeft->setDutyCycle(speed);
+            _motorLeft->setCommand(MotorCommand::RUN_DIRECT);
+        }
+        else if (direction == TurnDirection::RIGHT)
+        {
+            _motorRight->setDutyCycle(speed);
+            _motorRight->setCommand(MotorCommand::RUN_DIRECT);
+        }
+
+
+        while (SensorManager::readGyro() < distance - EV3_GYRO_TURN_TOLERANCE || SensorManager::readGyro() > distance + EV3_GYRO_TURN_TOLERANCE)
+        {
+            // wait
+        }
+
+        _motorLeft->stop();
+        _motorRight->stop();
     }
 
     void MotorManager::moveNow(int speed, int distance, std::function<void()> stopCallback)
@@ -136,16 +133,19 @@ namespace finder::physical
         }
 
         if (speed != 0)
-            setMotorSpeed(DeviceID::MOTOR_LEFT, speed);
-            setMotorSpeed(DeviceID::MOTOR_RIGHT, speed);
+            _motorLeft->setSpeed(speed);
+            _motorRight->setSpeed(speed);
 
         if (distance != 0)
         {
-            stopMotor(DeviceID::MOTOR_LEFT);
-            stopMotor(DeviceID::MOTOR_RIGHT);
+            _motorLeft->stop();
+            _motorRight->stop();
 
             _motorLeft->setPositionSp(distance);
             _motorRight->setPositionSp(distance);
+
+            _motorLeft->setCommand(MotorCommand::RUN_TO_REL_POS);
+            _motorRight->setCommand(MotorCommand::RUN_TO_REL_POS);
 
 
             if (stopCallback != nullptr)

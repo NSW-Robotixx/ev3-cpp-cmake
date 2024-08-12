@@ -1,6 +1,8 @@
 #ifndef __EV3_CONF_HPP__
 #define __EV3_CONF_HPP__
-    // all values are given in mm
+
+    // define the tolerance for the gyro sensor
+    #define EV3_GYRO_TURN_TOLERANCE 3
 
     // define the offsets of the sensors on the robot
     #define EV3_SENSOR_COLOR_RIGHT_OFFSET_X 0                           // to be implemented
@@ -45,8 +47,11 @@
 
     // local or external compute module
     #define EV3_COMPUTE_LOCAL 1
-    #if     !EV3_COMPUTE_LOCAL
+    #if     EV3_COMPUTE_LOCAL
         // define the ip address of the local compute module
+        #define EV3_COMPUTE_IP "localhost"
+    #else
+        // define the ip address of the external compute module
         #define EV3_COMPUTE_IP "localhost"
     #endif
 #endif

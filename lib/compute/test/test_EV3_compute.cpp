@@ -13,7 +13,7 @@ TEST(EV3_compute, DefaultConstructor)
 
 
     std::cout << "EV3_compute started" << std::endl;
-    ::finder::network::tcp::TCPClient tcp_client("localhost", EV3_COMPUTE_PORT);
+    ::finder::network::tcp::TCPClient tcp_client(EV3_COMPUTE_IP, EV3_COMPUTE_PORT);
 
 
 

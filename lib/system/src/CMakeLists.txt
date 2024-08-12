@@ -22,7 +22,6 @@ target_sources(EV3_system
 target_include_directories(EV3_system
     PUBLIC
         ${EV3_SYSTEM_INCLUDE_DIR}
-    PRIVATE
         ${EV3_SYSTEM_SRC_DIR}
 )
 

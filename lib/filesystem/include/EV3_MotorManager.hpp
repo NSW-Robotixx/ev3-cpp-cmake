@@ -2,6 +2,8 @@
 #define __MOTOR_MANAGER_HPP__
 
 #include <DeviceManager.hpp>
+#include <EV3_SensorManager.hpp>
+#include "../../EV3_conf.hpp"
 #include <queue>
 #include <mutex>
 #include <functional>
@@ -37,9 +39,6 @@ namespace finder::physical
             static void turnLeft(LaunchType launch, int speed, int distance, std::function<void()> stopCallback);
 
             static void turnRight(LaunchType launch, int speed, int distance, std::function<void()> stopCallback);
-
-            static void stopAllMotors();
-            static void stopMotor(DeviceID motor);
 
             static void onDirectionChange(std::function<void(TurnDirection)> callback);
 
