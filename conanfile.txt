@@ -1,6 +1,8 @@
 [requires]
 eigen/3.4.0
 yaml-cpp/0.8.0
+ydcpp-tcpcat/1.0.4
+watcher/0.11.0
 
 [generators]
 CMakeDeps

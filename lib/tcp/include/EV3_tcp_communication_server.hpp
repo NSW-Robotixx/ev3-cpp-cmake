@@ -1,3 +1,6 @@
+#ifndef __EV3_TCP_COMMUNICATION_SERVER_HPP__
+#define __EV3_TCP_COMMUNICATION_SERVER_HPP__
+
 #include <iostream>
 #include <string>
 #include <stdio.h>
@@ -43,3 +46,5 @@ namespace finder::network::tcp
 
     
 }
+
+#endif // __EV3_TCP_COMMUNICATION_SERVER_HPP__

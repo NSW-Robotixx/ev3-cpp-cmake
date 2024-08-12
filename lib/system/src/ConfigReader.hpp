@@ -19,7 +19,7 @@ namespace finder::system
             ConfigReader() = default;
             ~ConfigReader() = default;
 
-            std::vector<math::Vector3> readDestinationsFromFile();
+            static std::vector<math::Vector3> readDestinationsFromFile();
     };
 } // namespace finder::system
 

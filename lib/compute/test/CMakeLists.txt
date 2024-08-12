@@ -37,6 +37,7 @@ target_link_libraries(EV3_compute_test
         EV3_tcp_communication
         Vector2
         Line
+        ydcpp-tcpcat
         # Logger
 )
 

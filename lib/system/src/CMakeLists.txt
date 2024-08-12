@@ -30,5 +30,6 @@ target_link_libraries(EV3_system
     PUBLIC
         Logger
         Vector3
+        EV3_compute
         yaml-cpp::yaml-cpp
 )

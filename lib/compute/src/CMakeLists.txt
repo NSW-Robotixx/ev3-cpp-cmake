@@ -1,3 +1,5 @@
+find_package(ydcpp-tcpcat REQUIRED)
+
 set(EV3_COMPUTE_SRC
     ${CMAKE_CURRENT_SOURCE_DIR}/EV3_compute.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/pf/AStar.cpp
@@ -32,6 +34,7 @@ target_link_libraries(EV3_compute
         EV3_tcp_communication
         Vector2
         Line
+        ydcpp-tcpcat
 )
 
 set(ENABLE_LOGGING ON CACHE BOOL "Enable logging")

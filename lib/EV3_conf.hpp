@@ -42,4 +42,11 @@
 
     // define the port for the tcp communication of the compute module
     #define EV3_COMPUTE_PORT 34001
+
+    // local or external compute module
+    #define EV3_COMPUTE_LOCAL 1
+    #if     !EV3_COMPUTE_LOCAL
+        // define the ip address of the local compute module
+        #define EV3_COMPUTE_IP "localhost"
+    #endif
 #endif

@@ -12,6 +12,11 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS}")
 # add cmake-modules directory
 LIST(APPEND CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/cmake-modules)
 
+# build options
+option(BUILD_TESTS "Build tests" ON)
+option(BUILD_DOCS "Build documentation" OFF)
+option(BUILD_INTERNAL_TCP_SERVER "Build internal tcp server" ON)
+
 # new and untested stuff
 set(BUILD_SHARED_LIBS ON)
 set(CMAKE_EXE_LINKER_FLAGS "-static-libgcc -static-libstdc++ -Wall -Werror -Wextra")
@@ -34,8 +39,10 @@ add_subdirectory(lib)
 add_subdirectory(src)
 add_subdirectory(tests)
 add_subdirectory(deps)
-# add_subdirectory(doc)
 
+if (BUILD_DOCS)
+  add_subdirectory(doc)
+endif()
 # set executables to be static
 # SET_TARGET_PROPERTIES(Main PROPERTIES LINK_FLAGS "-static -lc -lm -L/usr/local/lib/")
 # SET_TARGET_PROPERTIES(Test PROPERTIES LINK_FLAGS "-static -lc -lm -L/usr/local/lib/")
