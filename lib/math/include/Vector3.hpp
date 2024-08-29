@@ -3,6 +3,7 @@
 #include <math.h>
 #include <iostream>
 #include <sstream>
+#include <algorithm>
 #include "Vector2.hpp"
 
 namespace finder

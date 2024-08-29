@@ -8,7 +8,9 @@
 #include <deque>
 
 #if EV3_COMPUTE_LOCAL
-#include <EV3_compute.hpp>
+#include <EV3_compute_tcp.hpp>
+#else
+
 #endif
 
 namespace finder::system

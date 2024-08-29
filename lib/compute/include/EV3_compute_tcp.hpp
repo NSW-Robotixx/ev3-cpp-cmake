@@ -9,6 +9,11 @@
 #include <string>
 #include <vector>
 #include <thread>
+#include "../../EV3_conf.hpp"
+
+#ifdef EV3_COMPUTE_NO_TCP
+    //#error "COMPUTE_NO_TCP set, this file should not be imported!"
+#endif
 
 namespace finder::compute
 {

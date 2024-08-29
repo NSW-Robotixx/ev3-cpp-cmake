@@ -36,7 +36,12 @@
     #define EV3_DESTINATIONS_FILE_FORMAT_YAML 1
     #if     EV3_DESTINATIONS_FILE_FORMAT_YAML
         // define the destinations.yaml path
-        #define EV3_DESTINATIONS_FILE_PATH "./destinations.yaml"
+        #define EV3_DESTINATIONS_FILE_ABS_PATH  1
+        #if     EV3_DESTINATIONS_FILE_ABS_PATH
+            #define EV3_DESTINATIONS_FILE_PATH "/home/dennis/src/niklas/ev3-cpp-cmake/lib/system/src/destinations.yaml"
+        #else 
+            #define EV3_DESTINATIONS_FILE_PATH "./destinations.yaml"
+        #endif
     #else
         // define the destinations.txt path
         #define EV3_DESTINATIONS_FILE_PATH "./destinations.list"
@@ -45,13 +50,20 @@
     // define the port for the tcp communication of the compute module
     #define EV3_COMPUTE_PORT 34001
 
-    // local or external compute module
-    #define EV3_COMPUTE_LOCAL 1
-    #if     EV3_COMPUTE_LOCAL
-        // define the ip address of the local compute module
-        #define EV3_COMPUTE_IP "localhost"
+
+    // disable tcp requests
+    #define EV3_COMPUTE_NO_TCP 0
+    #if     EV3_COMPUTE_NO_TCP
+        #define EV3_COMPUTE_NO_TCP 0
     #else
-        // define the ip address of the external compute module
-        #define EV3_COMPUTE_IP "localhost"
+        // local or external compute module
+        #define EV3_COMPUTE_LOCAL 1
+        #if     EV3_COMPUTE_LOCAL
+            // define the ip address of the local compute module
+            #define EV3_COMPUTE_IP "localhost"
+        #else
+            // define the ip address of the external compute module
+            #define EV3_COMPUTE_IP "localhost"
+        #endif
     #endif
 #endif

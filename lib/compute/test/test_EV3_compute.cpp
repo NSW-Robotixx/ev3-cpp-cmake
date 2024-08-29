@@ -1,6 +1,6 @@
 #include <gtest/gtest.h>
 
-#include <EV3_compute.hpp>
+#include <EV3_compute_tcp.hpp>
 #include <EV3_tcp_communication_client.hpp>
 #include <thread>
 
