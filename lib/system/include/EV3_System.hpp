@@ -2,7 +2,7 @@
 
 #include <Vector2.hpp>
 #include <Vector3.hpp>
-#include <EV3_compute.hpp>
+#include <EV3_compute_local.hpp>
 #include <ConfigReader.hpp>
 #include <Logger.hpp>
 

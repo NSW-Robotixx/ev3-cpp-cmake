@@ -2,7 +2,7 @@ find_package(ydcpp-tcpcat REQUIRED)
 
 set(EV3_COMPUTE_SRC
     ${CMAKE_CURRENT_SOURCE_DIR}/EV3_compute_tcp.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/EV3_compute.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/EV3_compute_local.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/pf/AStar.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/pf/ObstacleManager.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/pf/SmoothPath.cpp
@@ -10,7 +10,7 @@ set(EV3_COMPUTE_SRC
 
 set(EV3_COMPUTE_HDR
     ${EV3_COMPUTE_INCLUDE_DIR}/EV3_compute_tcp.hpp
-    ${EV3_COMPUTE_INCLUDE_DIR}/EV3_compute.hpp
+    ${EV3_COMPUTE_INCLUDE_DIR}/EV3_compute_local.hpp
     ${EV3_COMPUTE_SRC_DIR}/pf/AStar.hpp
     ${EV3_COMPUTE_SRC_DIR}/pf/ObstacleManager.hpp
     ${EV3_COMPUTE_SRC_DIR}/pf/SmoothPath.hpp

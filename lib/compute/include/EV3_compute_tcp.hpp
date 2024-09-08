@@ -17,11 +17,11 @@
 
 namespace finder::compute
 {
-    class EV3_compute
+    class EV3_compute_tcp
     {
     public:
-        EV3_compute();
-        ~EV3_compute();
+        EV3_compute_tcp();
+        ~EV3_compute_tcp();
 
         void start();
         void stop();

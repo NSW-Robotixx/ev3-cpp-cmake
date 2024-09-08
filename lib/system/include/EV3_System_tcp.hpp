@@ -9,8 +9,8 @@
 #include <deque>
 #include <memory>
 #include <condition_variable>
-
 #include <tcpcat/tcpcat.h>
+
 namespace finder::system
 {
     class ComputeModuleEventHandler : public tcpcat::EventHandler

@@ -33,7 +33,7 @@
     #define EV3_FIELD_HEIGHT 1000
 
     // set the file format of the destinations file
-    #define EV3_DESTINATIONS_FILE_FORMAT_YAML 1
+    #define EV3_DESTINATIONS_FILE_FORMAT_YAML 0
     #if     EV3_DESTINATIONS_FILE_FORMAT_YAML
         // define the destinations.yaml path
         #define EV3_DESTINATIONS_FILE_ABS_PATH  1

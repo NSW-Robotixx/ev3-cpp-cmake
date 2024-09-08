@@ -2,7 +2,7 @@
 
 namespace finder::compute
 {
-    EV3_compute::EV3_compute()
+    EV3_compute_tcp::EV3_compute_tcp()
     {
         m_tcp_communication_server = std::make_unique<::finder::network::tcp::TCPServer>();
 
@@ -11,14 +11,14 @@ namespace finder::compute
         start();
     }
 
-    EV3_compute::~EV3_compute()
+    EV3_compute_tcp::~EV3_compute_tcp()
     {
         // m_tcp_communication_server->sendMessage("exit");
         stop();
         m_client_thread.join();
     }
 
-    void EV3_compute::start()
+    void EV3_compute_tcp::start()
     {
         m_client_thread = std::thread([this]()
         {
@@ -27,13 +27,13 @@ namespace finder::compute
         });
     }
 
-    void EV3_compute::stop()
+    void EV3_compute_tcp::stop()
     {
         m_tcp_communication_server->stop();
         m_running = false;
     }
 
-    void EV3_compute::handle_client()
+    void EV3_compute_tcp::handle_client()
     {
         while (m_running)
         {
@@ -52,7 +52,7 @@ namespace finder::compute
         }
     }
 
-    std::string EV3_compute::extract_coordinates(const std::string &message)
+    std::string EV3_compute_tcp::extract_coordinates(const std::string &message)
     {
         ::finder::math::Vector2 start{};
         ::finder::math::Vector2 end{};
