@@ -1,5 +1,5 @@
 set(EV3_COMPUTE_TEST_SRC
-    ${EV3_COMPUTE_TEST_DIR}/test_EV3_compute.cpp
+    ${EV3_COMPUTE_TEST_DIR}/test_EV3_compute_tcp.cpp
     ${EV3_COMPUTE_TEST_DIR}/test_SmoothPath.cpp
     ${EV3_COMPUTE_TEST_DIR}/pf/test_AStar.cpp
 )

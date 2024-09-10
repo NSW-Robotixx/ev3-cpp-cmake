@@ -47,8 +47,9 @@
         #define EV3_DESTINATIONS_FILE_PATH "./destinations.list"
     #endif
 
-    // define the port for the tcp communication of the compute module
-    #define EV3_COMPUTE_PORT 34001
+    #define EV3_COMPUTE_MODULE_TCP_ENABLED 0
+        // define the port for the tcp communication of the compute module
+        #define EV3_COMPUTE_PORT 34001
 
 
     // disable tcp requests

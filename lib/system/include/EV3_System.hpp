@@ -1,33 +1,37 @@
-#ifndef __EV3_SYSTEM_HPP__
-#define __EV3_SYSTEM_HPP__
+#include "../../EV3_conf.hpp"
 
-#include <Logger.hpp>
+#include <Vector2.hpp>
 #include <Vector3.hpp>
+#include <EV3_compute.hpp>
 #include <ConfigReader.hpp>
-#include <vector>
+#include <Logger.hpp>
+
 #include <deque>
 
-#if EV3_COMPUTE_LOCAL
-#include <EV3_compute_tcp.hpp>
-#else
-
+#if EV3_COMPUTE_MODULE_TCP_ENABLED
+#include <EV3_System_tcp.hpp>
 #endif
 
 namespace finder::system
 {
     class System
     {
-        public:
-            System();
-            ~System();
+    public:
+        System() = default;
+        ~System() = default;
 
-            void start();
-            void stop();
+        void start();
+        void stop();
 
-        private:
-            std::deque<math::Vector3> m_destinations;
-            compute::EV3_compute m_compute;
+    private:
+        #if EV3_COMPUTE_MODULE_TCP_ENABLED
+        finder::system::SystemTcp m_compute;
+        #else
+        finder::compute::EV3_compute m_compute;
+        #endif
+
+        static math::Vector2 m_currentPosition;
+        static std::deque<math::Vector3> m_destinations;
+        static std::deque<math::Vector2> m_path;
     };
 } // namespace finder::system
-
-#endif // __EV3_SYSTEM_HPP__

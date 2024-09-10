@@ -6,7 +6,7 @@
 
 TEST(EV3_compute, DefaultConstructor)
 {
-    finder::compute::EV3_compute ev3_compute;
+    finder::compute::EV3_compute_tcp ev3_compute;
     // ev3_compute.start();
 
     std::this_thread::sleep_for(std::chrono::milliseconds(100));

@@ -1,9 +1,15 @@
+#include "EV3_conf.hpp"
+
 #include <Logger.hpp>
 #include <iostream>
 #include <stdio.h>
 #include <chrono>
 
+
+#include <EV3_System_tcp.hpp>
+
 finder::log::Logger logger = finder::log::Logger();
+finder::system::SystemTcp ev3_system = finder::system::SystemTcp();
 
 constexpr auto& ascii_art_literal = R"(
   _____ _           _ _____      
@@ -22,6 +28,8 @@ int main(int argc, char const *argv[])
     std::cout << ascii_art_literal << std::endl;
 
     logger.info("Starting application...");
+
+    ev3_system.start();
 
 //    finder::engines::movement::MovementEngine movementEngine = finder::engines::movement::MovementEngine();
 //

@@ -24,7 +24,6 @@ set(CMAKE_EXE_LINKER_FLAGS "-static-libgcc -static-libstdc++ -Wall -Werror -Wext
 
 # add executables
 add_executable(Main src/main.cpp)
-add_executable(Test ${PROJECT_SOURCE_DIR}/src/test.cpp)
 
 # add include directories
 # include_directories(${CMAKE_SOURCE_DIR}/lib)
@@ -37,7 +36,6 @@ set_property(GLOBAL PROPERTY EV3_TESTS_LIBS gtest_main)
 
 add_subdirectory(lib)
 add_subdirectory(src)
-add_subdirectory(tests)
 add_subdirectory(deps)
 
 if (BUILD_DOCS)
@@ -49,6 +47,7 @@ endif()
 
 # find dependencies
 find_package(Eigen3 REQUIRED)
+
 
 
 # # lvgl display library
@@ -77,8 +76,6 @@ FetchContent_MakeAvailable(googletest)
 
 enable_testing()
 
-target_include_directories(Test PUBLIC ${CMAKE_SOURCE_DIR}/tests)
-target_include_directories(Test PUBLIC ${CMAKE_SOURCE_DIR}/lib)
 target_include_directories(Main PUBLIC ${CMAKE_SOURCE_DIR}/lib)
 target_include_directories(Main PUBLIC ${CMAKE_SOURCE_DIR}/deps)
     
@@ -118,37 +115,9 @@ target_link_libraries(FullTest PUBLIC ${EV3_TESTS_LIBS})
     
 # make cmake not print the commands it runs
 set(CMAKE_VERBOSE_MAKEFILE OFF)
-    
-    
-    # enable testing
-    # include(CTest)
-    # enable_testing()
-    
-    target_link_libraries(
-      Test
-      gtest_main
-      Logger
-      Vector3
-      Vector2
-      RobotMovement
-      webServer
-      webComponents
-      WindowManager
-      LocationEngine
-      # EV3_filesystem_test
-      )
-      
       
 message(STATUS "CMAKE_C_COMPILER: ${CMAKE_C_COMPILER}")
 message(STATUS "CMAKE_CXX_COMPILER: ${CMAKE_CXX_COMPILER}")
-
-
-if(CMAKE_C_COMPILER STREQUAL "/usr/bin/arm-linux-gnueabi-gcc")
-# SET_TARGET_PROPERTIES (Test PROPERTIES LINK_FLAGS "-static -lc -lm -L/usr/local/lib/")
-else()
-include(GoogleTest)
-gtest_discover_tests(Test) # just needed for ctest to discover gtests
-endif()
 
 
 # # code coverage
