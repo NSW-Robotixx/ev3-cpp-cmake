@@ -18,6 +18,8 @@ namespace finder::network::tcp
             EXPECT_EQ(message, "Hello, server!");
 
             server.sendMessage("Hello, client!");
+
+            server.sendMessage("exit");
         });
 
         std::this_thread::sleep_for(std::chrono::milliseconds(10));

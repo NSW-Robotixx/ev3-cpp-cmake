@@ -29,6 +29,8 @@ namespace finder
 
                 void setMinLevel(LogLevel level) {_minlLevel = level;}
 
+                Logger& operator<<(const std::string& message);
+
                 static void log(LogLevel level, const std::string& message);
                 static void log(LogLevel level, const LogLevel& message);
 

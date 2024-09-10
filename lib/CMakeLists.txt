@@ -9,6 +9,8 @@ add_subdirectory(engines)
 add_subdirectory(position)
 add_subdirectory(system)
 add_subdirectory(tcp)
+add_subdirectory(gearbox)
+add_subdirectory(display)
 
 if (BUILD_INTERNAL_TCP_SERVER)
 endif()

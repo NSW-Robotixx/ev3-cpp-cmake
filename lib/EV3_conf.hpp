@@ -47,7 +47,7 @@
         #define EV3_DESTINATIONS_FILE_PATH "./destinations.list"
     #endif
 
-    #define EV3_COMPUTE_MODULE_TCP_ENABLED 0
+    #define EV3_COMPUTE_MODULE_TCP_ENABLED 1
         // define the port for the tcp communication of the compute module
         #define EV3_COMPUTE_PORT 34001
 
@@ -66,5 +66,15 @@
             // define the ip address of the external compute module
             #define EV3_COMPUTE_IP "localhost"
         #endif
+<<<<<<< HEAD
+=======
+
+    // enable display of the robot
+    #define EV3_DISPLAY_ENABLED 1
+    #if     EV3_DISPLAY_ENABLED
+        // use color display
+        #define EV3_DISPLAY_COLOR 1
+        
+>>>>>>> 3a368e7 (Cleanup and file creation)
     #endif
 #endif

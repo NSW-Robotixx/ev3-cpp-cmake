@@ -1,6 +1,6 @@
 #if !defined(_MSC_VER)
 
-#include <physical/display/Window.hpp>
+#include "Window.hpp"
 
 namespace finder::physical::display
 {

@@ -2,6 +2,7 @@
 #include <Vector2.hpp>
 #include <pf/AStar.hpp>
 #include <pf/SmoothPath.hpp>
+#include <Logger.hpp>
 #include "../../EV3_conf.hpp"
 #include <memory>
 #include <future>
@@ -27,6 +28,8 @@ namespace finder::compute
         void stop();
 
     private:
+        ::finder::log::Logger _logger;
+
         std::unique_ptr<::finder::network::tcp::TCPServer> m_tcp_communication_server;
         std::atomic_bool m_running = true;
         std::thread m_client_thread;

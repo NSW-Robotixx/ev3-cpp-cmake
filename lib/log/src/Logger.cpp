@@ -12,7 +12,13 @@ namespace finder
             return _minlLevel;
         }
 
-        void Logger::log(LogLevel level, const std::string& message)
+        Logger& Logger::operator<<(const std::string &message)
+        {
+            debug(message);
+            return *this;
+        }
+
+        void Logger::log(LogLevel level, const std::string &message)
         {
             if (level >= getActiveLogLevel())
             {

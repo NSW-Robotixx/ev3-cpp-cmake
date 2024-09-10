@@ -37,17 +37,22 @@ namespace finder::compute
     {
         while (m_running)
         {
-            std::cout << "waiting for client message..." << std::endl;
+            _logger << "waiting for client message...";
             std::string message = m_tcp_communication_server->receiveMessage();
             if (message.length() > 0)
             {
-                std::cout << "received message: " << message << std::endl;
+                if (message == "exit")
+                {
+                    _logger << "received exit message from client";
+                    break;
+                }
+                _logger << "received message: " << message;
                 std::string response = extract_coordinates(message);
 
-                std::cout << "sending response: " << response << std::endl;
+                _logger << "sending response: " << response;
                 m_tcp_communication_server->sendMessage(response);
             } else {
-                m_tcp_communication_server->sendMessage("invalid");
+                // throw std::runtime_error("Received empty message from client");
             }
         }
     }
