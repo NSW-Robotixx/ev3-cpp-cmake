@@ -66,8 +66,6 @@
             // define the ip address of the external compute module
             #define EV3_COMPUTE_IP "localhost"
         #endif
-<<<<<<< HEAD
-=======
 
     // enable display of the robot
     #define EV3_DISPLAY_ENABLED 1
@@ -75,6 +73,5 @@
         // use color display
         #define EV3_DISPLAY_COLOR 1
         
->>>>>>> 3a368e7 (Cleanup and file creation)
     #endif
 #endif
