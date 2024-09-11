@@ -31,7 +31,7 @@ jobs:
       uses: actions/cache@v2
       with:
         path: path/to/.conan2
-        key: # choose a key here
+        key: "conan-key"
 # if we did hit the cache, then you do not want to create a new default  
 # profile since you already have one
     - if: ${{steps.cache-conan.outputs.cache-hit != 'true'}}
