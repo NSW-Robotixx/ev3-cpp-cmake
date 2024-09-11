@@ -36,7 +36,7 @@ jobs:
 # profile since you already have one
     - if: ${{steps.cache-conan.outputs.cache-hit != 'true'}}
       name: Create default Conan profile
-      run: conan profile new default --detect
+      run: conan profile detect --force
 
     - name: Conan profile update
       run:  |
