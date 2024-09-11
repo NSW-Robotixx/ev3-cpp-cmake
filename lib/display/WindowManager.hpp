@@ -5,8 +5,8 @@
 #include <vector>
 #include <string>
 
-#include <physical/display/Screen.hpp>
-#include <physical/display/Window.hpp>
+#include "Screen.hpp"
+#include "Window.hpp"
 #include <Logger.hpp>
 #include <linux/input-event-codes.h>
 

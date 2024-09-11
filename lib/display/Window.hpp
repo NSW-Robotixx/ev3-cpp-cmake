@@ -10,7 +10,7 @@
 #include <map>
 #include <iomanip>
 #include <Logger.hpp>
-#include <physical/display/bitmaps/Bitmaps.hpp>
+#include "bitmaps/Bitmaps.hpp"
 
 namespace finder::physical::display
 {
