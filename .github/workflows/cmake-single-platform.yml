@@ -57,3 +57,6 @@ jobs:
       # Build your program with the given configuration
       run: cmake --build ${{github.workspace}}/build/build/Release --config ${{env.BUILD_TYPE}}
 
+    - name: Run
+      run : ${{github.workspace}}/build/build/Release/FullTest
+
