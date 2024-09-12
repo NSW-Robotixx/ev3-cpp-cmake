@@ -5,7 +5,7 @@ namespace finder::physical::test
     // variables
     bool FakeSys::_initialized = false;
     bool FakeSys::_initializationIsPatial = false;
-    std::string FakeSys::_basePath = "/home/niklas/ev3-cpp-cmake/fakesys";
+    std::string FakeSys::_basePath = "./fakesys";
     std::string FakeSys::_gyroSensorRelPath = "/lego-sensor/sensor0";
     std::string FakeSys::_colorSensorLeftRelPath = "/lego-sensor/sensor1";
     std::string FakeSys::_colorSensorRightRelPath = "/lego-sensor/sensor2";
