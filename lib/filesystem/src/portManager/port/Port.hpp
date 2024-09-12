@@ -62,7 +62,7 @@ namespace finder
                     {
                         return _path.back();
                     }
-                    return -1;
+                    return 255;
                 };
                 path_port_t getBasePath();
                 path_address_t getAddressPath();
