@@ -1,5 +1,9 @@
 #include <gtest/gtest.h>
 
+#include "../../EV3_conf.hpp"
+
+#if EV3_COMPUTE_NO_TCP
+
 #include <EV3_compute_tcp.hpp>
 #include <EV3_tcp_communication_client.hpp>
 #include <thread>
@@ -23,3 +27,5 @@ TEST(EV3_compute, DefaultConstructor)
 
     EXPECT_EQ(response, "1.000000,2.000000;12.000000,15.000000");
 }
+
+#endif

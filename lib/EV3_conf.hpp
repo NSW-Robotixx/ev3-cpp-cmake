@@ -53,7 +53,7 @@
 
 
     // disable tcp requests
-    #define EV3_COMPUTE_NO_TCP 0
+    #define EV3_COMPUTE_NO_TCP 1
     #if     EV3_COMPUTE_NO_TCP
         #define EV3_COMPUTE_NO_TCP 0
     #else
