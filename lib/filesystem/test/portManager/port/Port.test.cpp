@@ -13,8 +13,12 @@ TEST(Port, CreateFakeSys) {
 
 TEST(Port, getPortKey)
 {
+    using namespace finder::physical::test;
+    FakeSys fakesys;
+
     finder::physical::Port port{"/sys/class/lego-sensor/sensor0"};
-    port.setBasePath("/sys/class/lego-sensor/sensor0");
+    port.setBasePath(fakesys.getWorkingDir() + "/lego-sensor/sensor0");
+    port.overrideEnabled(false);
     ASSERT_EQ(port.getPortKey(), -1);
 
     port.overrideEnabled(true);
