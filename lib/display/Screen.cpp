@@ -18,8 +18,6 @@ namespace finder::physical::display
 
 Screen::Screen()
 {
-    _logger.setMinLevel(::finder::log::LogLevel::INFO);
-
     fbfd = open("/dev/fb0", O_RDWR);
     
     if(fbfd == -1) {
@@ -52,7 +50,7 @@ Screen::Screen()
     );
     if(fbp == MAP_FAILED) {
         perror("Error: failed to map framebuffer device to memory");
-        exit(4);
+        throw std::runtime_error("Error: failed to map framebuffer device to memory");
     }
     width = vinfo.xres;
     height = vinfo.yres;
@@ -90,7 +88,7 @@ Screen::~Screen()
             }
         }
     }
-    void Screen::fill(uint32_t color)
+    void Screen::fillScreen(uint32_t color)
     {
         for (int y = 0; y < height; y++)
         {

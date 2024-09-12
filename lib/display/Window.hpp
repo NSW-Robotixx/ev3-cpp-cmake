@@ -10,6 +10,7 @@
 #include <map>
 #include <iomanip>
 #include <Logger.hpp>
+#include "Screen.hpp"
 #include "bitmaps/Bitmaps.hpp"
 
 namespace finder::physical::display
@@ -35,7 +36,7 @@ namespace finder::physical::display
     };
 
 
-    class Window
+    class Window : public Screen
     {
         friend class WindowManager;
 
@@ -49,11 +50,8 @@ namespace finder::physical::display
 
             void setName(std::string name);
             
-            std::vector<uint32_t>& getPixels();
-
             virtual void update() = 0;
 
-            int drawPixel(int x, int y, DisplayColors color);
             int drawLine(int x0, int y0, int x1, int y1, DisplayColors color);
             int drawRectangle(int x0, int y0, int x1, int y1, DisplayColors color);
             int drawRectangle(int x0, int y0, int x1, int y1, int x2, int y2, int x3, int y3, DisplayColors color);
@@ -73,7 +71,6 @@ namespace finder::physical::display
             int height;
             int x;
             int y;
-            std::vector<uint32_t> pixels;
 
             std::atomic_bool _dirty;
             std::atomic_bool _button_left_pressed;

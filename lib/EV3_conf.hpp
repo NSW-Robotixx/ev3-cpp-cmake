@@ -66,6 +66,7 @@
             // define the ip address of the external compute module
             #define EV3_COMPUTE_IP "localhost"
         #endif
+    #endif
 
     // enable display of the robot
     #define EV3_DISPLAY_ENABLED 1
@@ -74,5 +75,12 @@
         #define EV3_DISPLAY_COLOR 1
         
     #endif
-#endif
+
+    // define the webserver settings
+    #define EV3_WEBSERVER_ENABLED 1
+    #if     EV3_WEBSERVER_ENABLED
+        // define the port for the webserver
+        #define EV3_WEBSERVER_PORT 8080
+        #define EV3_WEBSERVER_HOST "localhost"
+    #endif 
 #endif

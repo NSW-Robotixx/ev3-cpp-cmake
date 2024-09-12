@@ -27,20 +27,21 @@ namespace finder::physical::display
   private:
     static ::finder::log::Logger _logger;
   protected:
-      int fbfd;
-      uint32_t *fbp;
-      size_t screensize = 0;
-
-      unsigned int width;
-      unsigned int height;
-  public:
       Screen();
       ~Screen();
 
-
+      unsigned int width;
+      unsigned int height;
       void drawPixel(int x, int y, uint32_t color);
       void clear();
-      void fill(uint32_t color);
+      void fillScreen(uint32_t color);
+
+      int fbfd;
+      uint32_t *fbp;
+      size_t screensize = 0;
+  public:
+
+
   };
 } // namespace finder::physical::display
 

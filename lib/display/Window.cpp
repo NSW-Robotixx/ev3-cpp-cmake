@@ -6,14 +6,13 @@ namespace finder::physical::display
 {
     ::finder::log::Logger Window::_logger = ::finder::log::Logger();
 
-    Window::Window(std::string name, int width, int height, int x, int y)
+    Window::Window(std::string name, int width, int height, int x, int y) : Screen()
     {
         this->name = name;
         this->width = width;
         this->height = height;
         this->x = x;
         this->y = y;
-        this->pixels.resize(width * height);
         this->fill(DISPLAY_WHITE);
     }
 
@@ -35,20 +34,6 @@ namespace finder::physical::display
     void Window::setName(std::string name)
     {
         this->name = name;
-    }
-
-    std::vector<uint32_t>& Window::getPixels()
-    {
-        return this->pixels;
-    }
-
-    int Window::drawPixel(int x, int y, DisplayColors color)
-    {
-        if (x < 0 || x >= this->width || y < 0 || y >= this->height)
-            return -1;
-
-        this->pixels[y * this->width + x] = color;
-        return 0;
     }
 
     int Window::drawLine(int x0, int y0, int x1, int y1, DisplayColors color)
@@ -223,7 +208,7 @@ namespace finder::physical::display
 
     int Window::drawBitmap(int x, int y, std::shared_ptr<bitmaps::ImageFormat> bitmap)
     {
-        _logger.debug("Drawing monochrome bitmap at: " + std::to_string(x) + ", " + std::to_string(y));
+        _logger.debug("Drawing bitmap at: " + std::to_string(x) + ", " + std::to_string(y));
         _logger.debug("Bitmap width: " + std::to_string(bitmap->width));
         _logger.debug("Bitmap height: " + std::to_string(bitmap->height));
         for (int i = 0; i < bitmap->height; i++)
@@ -245,7 +230,7 @@ namespace finder::physical::display
 
     int Window::fill(DisplayColors color)
     {
-        std::fill(this->pixels.begin(), this->pixels.end(), color);
+        fillScreen(color);
 
         _logger.debug("Filled window with color: " + std::to_string(color));
         return 0;

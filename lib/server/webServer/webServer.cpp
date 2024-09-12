@@ -1,5 +1,7 @@
 #if !defined(_MSC_VER)
 
+#include "../../EV3_conf.hpp"
+
 
 #include "webServer.hpp"
 
@@ -12,8 +14,8 @@ namespace finder::server
 
     WebServer::WebServer()
     {
-        _hostname = "localhost";
-        _port = 8080;
+        _hostname = EV3_WEBSERVER_HOST;
+        _port = EV3_WEBSERVER_PORT;
         server = std::make_shared<simple_http_server::HttpServer>(_hostname, _port);
         fullBody = std::make_shared<webComponents::ComponentFullBody>();
     }
