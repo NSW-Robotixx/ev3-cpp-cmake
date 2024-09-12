@@ -2,7 +2,7 @@
 
 #include "../../EV3_conf.hpp"
 
-#if EV3_COMPUTE_NO_TCP
+#if !EV3_COMPUTE_NO_TCP
 
 #include <EV3_compute_tcp.hpp>
 #include <EV3_tcp_communication_client.hpp>

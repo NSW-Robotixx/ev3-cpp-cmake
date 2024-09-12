@@ -47,16 +47,16 @@
         #define EV3_DESTINATIONS_FILE_PATH "./destinations.list"
     #endif
 
-    #define EV3_COMPUTE_MODULE_TCP_ENABLED 1
-        // define the port for the tcp communication of the compute module
-        #define EV3_COMPUTE_PORT 34001
 
 
     // disable tcp requests
     #define EV3_COMPUTE_NO_TCP 1
     #if     EV3_COMPUTE_NO_TCP
-        #define EV3_COMPUTE_NO_TCP 0
+        #define EV3_COMPUTE_MODULE_TCP_ENABLED 0
     #else
+        #define EV3_COMPUTE_MODULE_TCP_ENABLED 1
+            // define the port for the tcp communication of the compute module
+            #define EV3_COMPUTE_PORT 34001
         // local or external compute module
         #define EV3_COMPUTE_LOCAL 1
         #if     EV3_COMPUTE_LOCAL

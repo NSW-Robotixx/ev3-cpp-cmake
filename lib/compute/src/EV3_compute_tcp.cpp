@@ -2,6 +2,8 @@
 
 namespace finder::compute
 {
+    #if !EV3_COMPUTE_NO_TCP
+
     EV3_compute_tcp::EV3_compute_tcp()
     {
         m_tcp_communication_server = std::make_unique<::finder::network::tcp::TCPServer>();
@@ -107,4 +109,5 @@ namespace finder::compute
         return std::string("invalid");
     }
 
+    #endif
 } // namespace finder::compute

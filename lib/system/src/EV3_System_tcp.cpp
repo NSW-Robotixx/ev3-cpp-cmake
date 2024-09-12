@@ -3,6 +3,8 @@
 
 namespace finder::system
 {
+    #if !EV3_COMPUTE_NO_TCP
+
     math::Vector2 SystemTcp::m_currentPosition = math::Vector2(0, 0);
     std::deque<math::Vector3> SystemTcp::m_destinations;
     std::shared_ptr<tcpcat::EventHandler> SystemTcp::m_eventHandler = std::make_shared<ComputeModuleEventHandler>();
@@ -134,5 +136,7 @@ namespace finder::system
     {
         log::Logger::debug("Sent message to the compute module: " + std::string(buf.begin(), buf.end()));
     }
+
+    #endif
 
 } // namespace finder::system

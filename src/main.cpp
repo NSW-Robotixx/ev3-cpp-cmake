@@ -6,10 +6,10 @@
 #include <chrono>
 
 
-#include <EV3_System_tcp.hpp>
+#include <EV3_System.hpp>
 
 finder::log::Logger logger = finder::log::Logger();
-finder::system::SystemTcp ev3_system = finder::system::SystemTcp();
+finder::system::System ev3_system = finder::system::System();
 
 constexpr auto& ascii_art_literal = R"(
   _____ _           _ _____      
