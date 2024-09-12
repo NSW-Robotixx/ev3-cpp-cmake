@@ -26,17 +26,20 @@ jobs:
       id: conan
       uses: turtlebrowser/get-conan@v1.0
 
-    - name: Cache Conan Dependencies
-      id: cache-conan
-      uses: actions/cache@v2
-      with:
-        path: path/to/.conan2
-        key: "conan-key"
-# if we did hit the cache, then you do not want to create a new default  
-# profile since you already have one
-    - if: ${{steps.cache-conan.outputs.cache-hit != 'true'}}
-      name: Create default Conan profile
+    - name: Fetch Conan deps
       run: conan profile detect --force
+
+#     - name: Cache Conan Dependencies
+#       id: cache-conan
+#       uses: actions/cache@v2
+#       with:
+#         path: path/to/.conan2
+#         key: "conan-key"
+# # if we did hit the cache, then you do not want to create a new default  
+# # profile since you already have one
+#     - if: ${{steps.cache-conan.outputs.cache-hit != 'true'}}
+#       name: Create default Conan profile
+#       run: conan profile detect --force
 
     # - name: Conan profile update
     #   run:  |
