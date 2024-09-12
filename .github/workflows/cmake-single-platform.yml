@@ -26,7 +26,7 @@ jobs:
       run: pip install conan
 
     - name: Fetch Conan deps
-      run: conan profile detect --force
+      run: /home/github-actions/.local/bin/conan profile detect --force
 
 #     - name: Cache Conan Dependencies
 #       id: cache-conan
