@@ -3,6 +3,7 @@
 #ifndef __WINDOW_HPP__
 #define __WINDOW_HPP__
 
+#include "../../EV3_conf.hpp"
 #include <memory>
 #include <string>
 #include <atomic>
@@ -12,6 +13,11 @@
 #include <Logger.hpp>
 #include "Screen.hpp"
 #include "bitmaps/Bitmaps.hpp"
+
+#if EV3_DISPLAY_USE_FREETYPE
+#include <ft2build.h>
+#include FT_FREETYPE_H
+#endif
 
 namespace finder::physical::display
 {
@@ -42,7 +48,7 @@ namespace finder::physical::display
 
         public:
             Window(std::string name, int width, int height, int x, int y);
-            ~Window() = default;
+            ~Window();
 
             int getWidth();
             int getHeight();
@@ -53,6 +59,8 @@ namespace finder::physical::display
             virtual void update() = 0;
 
             int drawLine(int x0, int y0, int x1, int y1, DisplayColors color);
+            int drawVerticalLine(int x0, int y0, int y1, DisplayColors color);
+            int drawHorizontalLine(int x0, int y0, int x1, DisplayColors color);
             int drawRectangle(int x0, int y0, int x1, int y1, DisplayColors color);
             int drawRectangle(int x0, int y0, int x1, int y1, int x2, int y2, int x3, int y3, DisplayColors color);
             int drawCircle(int x0, int y0, int radius, DisplayColors color);
@@ -86,6 +94,11 @@ namespace finder::physical::display
             std::atomic_bool _button_down_released;
             std::atomic_bool _button_enter_released;
             std::atomic_bool _button_back_released;
+
+            #if EV3_DISPLAY_USE_FREETYPE
+            FT_Library ft;
+            FT_Face face;
+            #endif
     };
 } // namespace finder::physical::display
 

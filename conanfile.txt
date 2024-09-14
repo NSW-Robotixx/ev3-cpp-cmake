@@ -2,7 +2,8 @@
 eigen/3.4.0
 yaml-cpp/0.8.0
 ydcpp-tcpcat/1.0.4
-watcher/0.11.0
+freetype/2.13.2
+doxygen/1.9.4
 
 [generators]
 CMakeDeps

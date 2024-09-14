@@ -39,8 +39,8 @@ add_subdirectory(src)
 add_subdirectory(deps)
 
 if (BUILD_DOCS)
-  add_subdirectory(doc)
 endif()
+add_subdirectory(doc)
 # set executables to be static
 # SET_TARGET_PROPERTIES(Main PROPERTIES LINK_FLAGS "-static -lc -lm -L/usr/local/lib/")
 # SET_TARGET_PROPERTIES(Test PROPERTIES LINK_FLAGS "-static -lc -lm -L/usr/local/lib/")

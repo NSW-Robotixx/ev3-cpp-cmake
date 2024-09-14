@@ -73,6 +73,13 @@
     #if     EV3_DISPLAY_ENABLED
         // use color display
         #define EV3_DISPLAY_COLOR 1
+
+        // draw text with freetype
+        #define EV3_DISPLAY_USE_FREETYPE 1
+        #if     EV3_DISPLAY_USE_FREETYPE
+            // define the path to the font file
+            #define EV3_DISPLAY_FONT_PATH "/usr/share/fonts/truetype/ubuntu/UbuntuMono-R.ttf"
+        #endif
         
     #endif
 

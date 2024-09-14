@@ -16,6 +16,12 @@ namespace finder::physical::display
         this->fill(DISPLAY_WHITE);
     }
 
+    Window::~Window()
+    {
+        _logger.debug("Window destroyed: " + this->name);
+        FT_Done_FreeType(ft);
+    }
+
     int Window::getWidth()
     {
         return this->width;
@@ -42,8 +48,17 @@ namespace finder::physical::display
         if (x0 < 0 || x0 >= this->width || y0 < 0 || y0 >= this->height)
             return -1;
 
-        if (x1 < 0 || x1 >= this->width || y1 < 0 || y1 >= this->height)
-            return -1;
+        // check if line is vertical
+        if (x0 == x1)
+        {
+            return this->drawVerticalLine(x0, y0, y1, color);
+        }
+
+        // check if line is horizontal
+        if (y0 == y1)
+        {
+            return this->drawHorizontalLine(x0, y0, x1, color);
+        }
 
         // Bresenham's line algorithm
         int dx = x1 - x0;
@@ -104,6 +119,40 @@ namespace finder::physical::display
                 fraction += dx;
                 this->drawPixel(x0, y0, color);
             }
+        }
+
+        return 0;
+    }
+
+    int Window::drawVerticalLine(int x0, int y0, int y1, DisplayColors color)
+    {
+                // out of bounds check
+        if (x0 < 0 || x0 >= this->width || y0 < 0 || y0 >= this->height)
+            return -1;
+
+        if (y1 < 0 || y1 >= this->height)
+            return -1;
+
+        for (int i = y0; i <= y1; i++)
+        {
+            this->drawPixel(x0, i, color);
+        }
+
+        return 0;
+    }
+
+    int Window::drawHorizontalLine(int x0, int y0, int x1, DisplayColors color)
+    {
+        // out of bounds check
+        if (x0 < 0 || x0 >= this->width || y0 < 0 || y0 >= this->height)
+            return -1;
+
+        if (x1 < 0 || x1 >= this->width)
+            return -1;
+
+        for (int i = x0; i <= x1; i++)
+        {
+            this->drawPixel(i, y0, color);
         }
 
         return 0;
@@ -180,6 +229,50 @@ namespace finder::physical::display
 
     int Window::drawText(int x, int y, std::string text, DisplayColors color)
     {
+        #if EV3_DISPLAY_USE_FREETYPE
+        if (FT_Init_FreeType(&ft))
+        {
+            _logger.error("Could not init freetype library");
+            return -1;
+        }
+
+        if (FT_New_Face(ft, EV3_DISPLAY_FONT_PATH, 0, &face))
+        {
+            _logger.error("Could not open font");
+            return -1;
+        }
+
+        for (int i = 0; i < text.size(); i++)
+        {
+            if (FT_Set_Pixel_Sizes(face, 0, 6))
+            {
+                _logger.error("Could not set pixel size");
+                return -1;
+            }
+
+            if (FT_Load_Char(face, text[i], FT_LOAD_RENDER))
+            {
+                _logger.error("Could not load character");
+                return -1;
+            }
+
+            FT_GlyphSlot g = face->glyph;
+
+            for (int j = 0; j < g->bitmap.rows; j++)
+            {
+                for (int k = 0; k < g->bitmap.width; k++)
+                {
+                    if (g->bitmap.buffer[j * g->bitmap.width + k] > 0)
+                    {
+                        this->drawPixel(x + k, y + j, color);
+                    }
+                }
+            }
+
+            x += g->bitmap.width;
+        }
+
+        #else
         unsigned int xpos = x;
         unsigned int ypos = y;
         for (int i = 0; i < text.size(); i++)
@@ -204,6 +297,7 @@ namespace finder::physical::display
             xpos += bitmaps::Keyboard::Keyboard_images[ascii]->width + 1;
         }
         return 0;
+        #endif
     }
 
     int Window::drawBitmap(int x, int y, std::shared_ptr<bitmaps::ImageFormat> bitmap)
