@@ -99,6 +99,7 @@ jobs:
     steps:
     - uses: actions/checkout@v3  
     - uses: turtlebrowser/get-conan@main
+    - uses: ssciwr/doxygen-install@v1
   
     - name: Conan version
       run: echo "${{ steps.conan.outputs.version }}"
