@@ -1,4 +1,13 @@
-cmake_minimum_required(VERSION 3.7.2)
+cmake_minimum_required(VERSION 3.24)
+
+if(NOT EXISTS "${CMAKE_BINARY_DIR}/conan.cmake")
+message(STATUS "Downloading conan.cmake from https://github.com/conan-io/cmake-conan")
+    file(DOWNLOAD "https://raw.githubusercontent.com/conan-io/cmake-conan/develop2/conan_provider.cmake"
+    "${CMAKE_BINARY_DIR}/conan.cmake"
+    TLS_VERIFY ON)
+    endif()
+
+set(CMAKE_PROJECT_TOP_LEVEL_INCLUDES ${CMAKE_BINARY_DIR}/conan.cmake)
 
 project(robotixx-ev3dev)
 
@@ -16,6 +25,14 @@ LIST(APPEND CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/cmake-modules)
 option(BUILD_TESTS "Build tests" ON)
 option(BUILD_DOCS "Build documentation" OFF)
 option(BUILD_INTERNAL_TCP_SERVER "Build internal tcp server" ON)
+
+# find dependencies
+find_package(GTest REQUIRED)
+find_package(Doxygen)
+find_package(Eigen3 REQUIRED)
+find_package(yaml-cpp REQUIRED)
+find_package(ydcpp-tcpcat REQUIRED)
+find_package(freetype REQUIRED)
 
 # new and untested stuff
 set(BUILD_SHARED_LIBS ON)
@@ -64,17 +81,6 @@ find_package(Eigen3 REQUIRED)
 #   FetchContent_Declare(lvgl GIT_REPOSITORY  https://github.com/lvgl/lvgl.git)
 #   FetchContent_MakeAvailable(lvgl)
 
-include(FetchContent)
-
-# google test
-FetchContent_Declare(
-googletest
-URL https://github.com/google/googletest/archive/03597a01ee50ed33e9dfd640b249b4be3799d395.zip
-)
-set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
-FetchContent_MakeAvailable(googletest)
-
-enable_testing()
 
 target_include_directories(Main PUBLIC ${CMAKE_SOURCE_DIR}/lib)
 target_include_directories(Main PUBLIC ${CMAKE_SOURCE_DIR}/deps)
@@ -97,7 +103,7 @@ message(STATUS EV3_TESTS_HDR: ${EV3_TESTS_HDR})
 
 # get global property EV3_TESTS_LIBS
 get_property(EV3_TESTS_LIBS GLOBAL PROPERTY EV3_TESTS_LIBS)
-message(STATUS EV3_TESTS_LIBS: ${EV3_TESTS_LIBS})
+message(STATUS EV3_TESTS_LIBS: ${EV3_TESTS_LIBS} GTest::gtest_main)
 
 
 
@@ -111,6 +117,7 @@ target_sources(FullTest
 )
 
 target_link_libraries(FullTest PUBLIC ${EV3_TESTS_LIBS})
+target_link_libraries(FullTest PUBLIC GTest::gtest_main)
     
     
 # make cmake not print the commands it runs

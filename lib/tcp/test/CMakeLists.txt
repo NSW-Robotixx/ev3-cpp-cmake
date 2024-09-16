@@ -1,8 +1,8 @@
+find_package(GTest REQUIRED)
+
 set(EV3_TCP_COMMUNICATION_TEST_SRC
     test_tcp_connection.cpp
 )
-
-include(GoogleTest)
 
 add_executable(ev3_tcp_communication_test
     ${EV3_TCP_COMMUNICATION_TEST_SRC}
@@ -22,6 +22,6 @@ target_include_directories(ev3_tcp_communication_test
 
 target_link_libraries(ev3_tcp_communication_test
     PRIVATE
-        gtest_main
+        GTest::gtest_main
         EV3_tcp_communication
 )

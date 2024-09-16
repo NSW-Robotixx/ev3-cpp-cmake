@@ -37,42 +37,18 @@ jobs:
     - name: Conan installation
       run: pip install conan
 
-    - name: Fetch Conan deps  
-      run: /home/github-actions/.local/bin/conan profile detect --force
-
-#     - name: Cache Conan Dependencies      
-#       id: cache-conan
-#       uses: actions/cache@v2
-#       with:
-#         path: path/to/.conan2  
-#         key: "conan-key"
-# # if we did hit the cache, then you do not want to create a new default  
-# # profile since you already have one
-#     - if: ${{steps.cache-conan.outputs.cache-hit != 'true'}}
-#       name: Create default Conan profile
-#       run: conan profile detect --force
-
-    # - name: Conan profile update
-    #   run:  |
-    #         conan profile update settings.compiler=gcc default
-    #         conan profile update settings.compiler.cppstd=20 default
-    #         conan profile update conf.tools.cmake.cmaketoolchain:generator=Ninja default
-    #         conan profile show default
-
-    - name: Conan install dependencies
-      run:  /home/github-actions/.local/bin/conan install ${{github.workspace}} --output-folder=build --build=missing
 
     - name: Configure CMake  
       # Configure CMake in a 'build' subdirectory. `CMAKE_BUILD_TYPE` is only required if you are using a single-configuration generator such as make.
       # See https://cmake.org/cmake/help/latest/variable/CMAKE_BUILD_TYPE.html?highlight=cmake_build_type
-      run: cmake -DCMAKE_POLICY_DEFAULT_CMP0091=NEW -DCMAKE_BUILD_TYPE=Release -DCMAKE_TOOLCHAIN_FILE=generators/conan_toolchain.cmake -S${{github.workspace}} -B${{github.workspace}}/build/build/Release -G "Unix Makefiles"
+      run: cmake -DCMAKE_POLICY_DEFAULT_CMP0091=NEW -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}} -S${{github.workspace}} -B${{github.workspace}}/build -G "Unix Makefiles"
 
     - name: Build  
       # Build your program with the given configuration
-      run: cmake --build ${{github.workspace}}/build/build/Release --config ${{env.BUILD_TYPE}}
+      run: cmake --build ${{github.workspace}}/build --config ${{env.BUILD_TYPE}}
 
-    - name: Run  
-      run : ${{github.workspace}}/build/build/Release/FullTest
+    - name: Run
+      run : ${{github.workspace}}/build/FullTest
       
   # Single deploy job since we're just deploying    
   deploy:
@@ -88,7 +64,7 @@ jobs:
       - name: Upload artifact  
         uses: actions/upload-pages-artifact@v3
         with:
-          path: '${{github.workspace}}/build/build/Release/doc/html'
+          path: '${{github.workspace}}/build/doc/html'
       - name: Deploy to GitHub Pages    
         id: deployment
         uses: actions/deploy-pages@v4

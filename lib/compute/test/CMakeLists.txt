@@ -1,3 +1,5 @@
+find_package(GTest REQUIRED)
+
 set(EV3_COMPUTE_TEST_SRC
     ${EV3_COMPUTE_TEST_DIR}/test_EV3_compute_tcp.cpp
     ${EV3_COMPUTE_TEST_DIR}/test_SmoothPath.cpp
