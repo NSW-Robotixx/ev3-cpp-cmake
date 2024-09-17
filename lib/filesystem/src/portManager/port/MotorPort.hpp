@@ -96,6 +96,8 @@ namespace finder
                 /// @brief Get the motor pulses per rotation of the motor. Represents the pulses of the rotary encoder. Defaults to 360.
                 /// @return Path to read the encoder pulses from.
                 path_count_per_rotation_t getCountPerRotationPath();
+
+                path_max_speed_t getMaxSpeedPath();
                 
                 /// @brief Set the speed the motor should move at, max ca. 800.
                 /// @param speed Speed in pulses per second.
@@ -136,6 +138,8 @@ namespace finder
                 /// @return Number of motor pulses per rotation of the motor.
                 int getCountPerRotation();
 
+                int getMaxSpeed();
+
                 /// @brief Get the type of device registered in the constructor, as there are no checks for the correct device beforehand.
                 /// @return Type of device registered by constructor.
                 DeviceType getDeviceType() override;
@@ -153,6 +157,7 @@ namespace finder
                 std::shared_ptr<std::ofstream> _file_polarity_path;
                 std::shared_ptr<std::ofstream> _file_stop_action_path;
                 std::shared_ptr<std::ifstream> _file_count_per_rotation_path;
+                std::shared_ptr<std::ifstream> _file_max_speed_path;
                 
                 bool _is_initialized;
 

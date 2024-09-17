@@ -18,13 +18,17 @@
 
 namespace finder::compute
 {
+    /// @brief Class for pathfinding using TCP communication
     class EV3_compute_tcp
     {
     public:
         EV3_compute_tcp();
         ~EV3_compute_tcp();
 
+        /// @brief Start the TCP server and handle incoming connections
         void start();
+
+        /// @brief Stop the TCP server
         void stop();
 
     private:
@@ -38,7 +42,12 @@ namespace finder::compute
         ::finder::pathfind::AStar::Generator m_pathfinder;
         ::finder::pathfind::SmoothPath m_smooth_path;
 
+        /// @brief Handle incoming client connections
         void handle_client();
+
+        /// @brief Extract coordinates from the received message
+        /// @param message Received message
+        /// @return Returncode
         std::string extract_coordinates(const std::string &message);
     };
 } // namespace finder::compute

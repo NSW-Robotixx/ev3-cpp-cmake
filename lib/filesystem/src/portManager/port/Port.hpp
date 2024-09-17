@@ -34,6 +34,7 @@ namespace finder
         typedef std::string path_state_t;
         typedef std::string path_num_values_t;
         typedef std::string path_poll_ms_t;
+        typedef std::string path_max_speed_t;
 
         enum struct DeviceType {
             SENSOR = 0,

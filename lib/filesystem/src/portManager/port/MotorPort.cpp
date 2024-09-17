@@ -105,6 +105,15 @@ namespace finder
             }
         }
 
+        
+        path_max_speed_t MotorPort::getMaxSpeedPath()
+        {
+            if (isEnabled()) {
+                return _path + "/max_speed";
+            }
+            return "";
+        }
+
         void MotorPort::setSpeed(int speed)
         {
 #ifdef ENABLE_LOGGING            
@@ -415,6 +424,35 @@ namespace finder
             // });
         }
 
+        int MotorPort::getMaxSpeed()
+        {
+#ifdef ENABLE_LOGGING            
+            FileLoggerLock lock = FileLoggerLock();
+            logToFile("MAX_SPEED.GET: " + getBasePath());
+#endif
+    
+                // return std::async(std::launch::async, [this]() {
+                    if (isEnabled()) {
+                        if (_file_max_speed_path->is_open()) {
+                            int max_speed;
+                            *_file_max_speed_path >> max_speed;
+#ifdef ENABLE_LOGGING
+                            logToFile(" WITH_RESULT: " + std::to_string(max_speed));
+#endif
+                            return max_speed;
+                        } else {
+#ifdef ENABLE_LOGGING                        
+                            _logger.error("MotorPort failed to get max_speed");
+#endif
+                        }
+                    } else {
+                        // _init_future.wait();
+                        // return getMaxSpeed().get();
+                    }
+                    return -1;
+                // });
+        }
+
         DeviceType MotorPort::getDeviceType()
         {
             if(Port::getDeviceType() != DeviceType::MOTOR) {
@@ -442,6 +480,7 @@ namespace finder
                     std::filesystem::exists(getPolarityPath()) &&
                     std::filesystem::exists(getStopActionPath()) &&
                     std::filesystem::exists(getCountPerRotationPath())
+
                 ) {
                     _file_command_path = std::make_shared<std::ofstream>(getCommandPath());
                     _file_speed_path = std::make_shared<std::ifstream>(getSpeedPath());

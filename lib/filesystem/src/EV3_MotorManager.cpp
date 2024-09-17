@@ -70,6 +70,11 @@ namespace finder::physical
         _directionChangeListeners.push_back(callback);
     }
 
+    int MotorManager::getMaxSpeed()
+    {
+        return _motorLeft->getMaxSpeed();
+    }
+
     void MotorManager::move(LaunchType launch, int speed, int distance, std::function<void()> stopCallback)
     {
         moveNow(speed, distance, stopCallback);
