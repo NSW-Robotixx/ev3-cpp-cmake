@@ -185,6 +185,7 @@ namespace finder::physical::test
         }
     }
 
+
     void FakeSys::initSensor(std::string relPath, int index)
     {
         // write default values to files
@@ -315,6 +316,50 @@ namespace finder::physical::test
             value += std::to_string(v) + " ";
         }
         writeToFile(relPath, value, init);
+    }
+
+    void FakeSys::readFromFile(std::string relPath, std::string value)
+    {
+        std::ifstream file(_basePath + relPath);
+        if (file.is_open())
+        {
+            std::string fileContent;
+            std::getline(file, fileContent);
+            if (fileContent != value)
+            {
+                throw std::runtime_error("Could not read from file: " + _basePath + relPath);
+            }
+            file.close();
+        }
+        else
+        {
+            throw std::runtime_error("Could not read from file: " + relPath);
+        }
+    }
+
+    void FakeSys::readFromFile(std::string relPath, int value)
+    {
+        readFromFile(relPath, std::to_string(value));
+    }
+
+    void FakeSys::readFromFile(std::string relPath, std::vector<std::string> values)
+    {
+        std::string value;
+        for (auto v : values)
+        {
+            value += v + " ";
+        }
+        readFromFile(relPath, value);
+    }
+
+    void FakeSys::readFromFile(std::string relPath, std::vector<int> values)
+    {
+        std::string value;
+        for (auto v : values)
+        {
+            value += std::to_string(v) + " ";
+        }
+        readFromFile(relPath, value);
     }
 
 } // namespace finder::physical::test

@@ -20,12 +20,5 @@ TEST(Logger, log) {
     logger.error("Error message");
     logger.positive("Positive message");
 
-    logger.debug(LogLevel::DEBUG);
-    logger.info(LogLevel::INFO);
-    logger.warn(LogLevel::WARN);
-    logger.error(LogLevel::ERROR);
-    logger.positive(LogLevel::POSITIVE);
-    logger.debug((LogLevel)10);
-
     ASSERT_EQ(logger.getActiveLogLevel(), LogLevel::DEBUG);
 }

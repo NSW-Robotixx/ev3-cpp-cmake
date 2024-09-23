@@ -113,7 +113,7 @@ namespace finder
                 if (index < 0 || index >= _file_value_path.size())
                 {
 #ifdef ENABLE_LOGGING
-                    _logger.error("Index out of range for value file");
+                    _logger.warn("Index out of range for value file");
 #endif
                     return -1;
                 }

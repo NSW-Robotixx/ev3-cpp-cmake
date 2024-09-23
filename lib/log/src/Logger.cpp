@@ -66,17 +66,7 @@ namespace finder
             log(LogLevel::ERROR, message);
         }
 
-        void Logger::error(const LogLevel& message)
-        {
-            log(LogLevel::ERROR, message);
-        }
-
         void Logger::warn(const std::string& message)
-        {
-            log(LogLevel::WARN, message);
-        }
-
-        void Logger::warn(const LogLevel& message)
         {
             log(LogLevel::WARN, message);
         }
@@ -86,27 +76,12 @@ namespace finder
             log(LogLevel::INFO, message);
         }
 
-        void Logger::info(const LogLevel& message)
-        {
-            log(LogLevel::INFO, message);
-        }
-
         void Logger::debug(const std::string& message)
         {
             log(LogLevel::DEBUG, message);
         }
 
-        void Logger::debug(const LogLevel& message)
-        {
-            log(LogLevel::DEBUG, message);
-        }
-
         void Logger::positive(const std::string& message)
-        {
-            log(LogLevel::POSITIVE, message);
-        }
-
-        void Logger::positive(const LogLevel& message)
         {
             log(LogLevel::POSITIVE, message);
         }

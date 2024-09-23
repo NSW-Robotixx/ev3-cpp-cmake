@@ -22,16 +22,26 @@
 
 namespace finder::network::tcp
 {
+    /// @brief Tcp server class
     class TCPServer
     {
     public:
         TCPServer();
         ~TCPServer();
+
+        /// @brief Start the server
+        /// @param port Port to start the server
         void start(int port);
+
+        /// @brief Stop the server
         void stop();
 
+        /// @brief Send a message to the client
+        /// @param message Message to send
         void sendMessage(const std::string message);
-
+        
+        /// @brief Receive a message from the client
+        /// @return Message received
         std::string receiveMessage();
     private:
         int serverSd;

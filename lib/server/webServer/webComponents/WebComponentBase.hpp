@@ -44,7 +44,7 @@ namespace finder::server::webComponents
         BODY = 31,
         HTML = 32,
 };
-
+    /// @brief Base class for all web components
     class WebComponentBase
     {
         public:
@@ -52,14 +52,34 @@ namespace finder::server::webComponents
             virtual ~WebComponentBase() = default;
 
             // following methods are not declared so any reference to them will be a compile error
+
+            /// @brief Render the component to HTML
+            /// @return HTML string
             virtual std::string render();
+
+            /// @brief Get the name of the component
+            /// @return Name of the component
             virtual std::string getComponentName();
+
+            /// @brief Get the type of the component
+            /// @return Type of the component
             virtual std::string getComponentType();
+
+            /// @brief Get the HTML of the component
+            /// @return HTML string
             virtual std::string getComponentHTML();
             // end of methods that are not declared
 
+            /// @brief Add a child to the component
+            /// @param child Shared pointer to the child to add
             void addChild(std::shared_ptr<WebComponentBase> child);
+
+            /// @brief Remove a child from the component
+            /// @param child Shared pointer to the child to remove
             void removeChild(std::shared_ptr<WebComponentBase> child);
+
+            /// @brief Get children of the component
+            /// @return List of children components
             std::vector<std::shared_ptr<WebComponentBase>> getChildren();
 
         private:

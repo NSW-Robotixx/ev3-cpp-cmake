@@ -3,15 +3,21 @@
 
 namespace finder::position
 {
+    /// @brief Class that represents the motor position and handles the motor position estimate
     class MotorPosition
     {
         public:
             MotorPosition();
             ~MotorPosition();
 
+            /// @brief Update the position estimate of the robot
             static void updatePosition();
+
+            /// @brief Initialize the motor position estimate
             static void init();
 
+            /// @brief Get the current position of the robot
+            /// @return The current position estimate of the robot
             static inline math::Vector2 getPosition() { return _position; }
 
         private:

@@ -16,22 +16,41 @@ namespace finder::position {
     // not recommended to do this 
     using namespace finder::physical;
 
+    /// @brief Class that represents the sensor position and handles the sensor position estimate
     class SensorPosition {
     public:
+        /// @brief Constructor
+        /// @param portBasePath Path to the base directory of the ports 
         SensorPosition(std::string portBasePath);
 
+        /// @brief Update the position estimate of the robot
         static void update(DeviceID port, int value);
 
+        /// @brief Initialize the sensor position estimate
         static void init();
 
+        /// @brief Update the position estimate of the robot, notify the estimate of the direction change
+        /// @param direction The direction the robot is turning
         static void movementDirectionChange(TurnDirection direction);
 
     protected:
+        /// @brief Update the color sensor left position estimate
+        /// @param value The value of the color sensor
         static void updateColorLeft(int value);
+
+        /// @brief Update the color sensor position estimate
+        /// @param value The value of the color sensor
         static void updateColorRight(int value);
+
+        /// @brief Update the color sensor position estimate
+        /// @param value The value of the color sensor
         static void updateColorFront(int value);
+
+        /// @brief Update the gyro sensor position estimate
+        /// @param value The value of the gyro sensor
         static void updateGyro(int value);
 
+        /// @brief Update the general sensor position estimate
         static void updatePosition();
 
     private:

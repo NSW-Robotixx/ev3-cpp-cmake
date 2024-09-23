@@ -28,6 +28,7 @@ namespace finder::physical
         BACKWARD = 3,
     };
 
+    /// @brief Manage the connected motors
     class MotorManager : public DeviceManager
     {
         public:
@@ -54,12 +55,26 @@ namespace finder::physical
             /// @param stopCallback 
             static void moveBackward(LaunchType launch, int speed, int distance, std::function<void()> stopCallback);
 
+            /// @brief Turn the robot left.
+            /// @param launch Launch type
+            /// @param speed Speed to turn at
+            /// @param distance Distance to turn
+            /// @param stopCallback Function to call when the turn has finished.
             static void turnLeft(LaunchType launch, int speed, int distance, std::function<void()> stopCallback);
 
+            /// @brief Turn the robot right.
+            /// @param launch Launch type
+            /// @param speed Speed to turn at
+            /// @param distance Distance to turn
+            /// @param stopCallback Function to call when the turn has finished.
             static void turnRight(LaunchType launch, int speed, int distance, std::function<void()> stopCallback);
 
+            /// @brief Callback for when the direction changes
+            /// @param callback Function to call when the direction changes
             static void onDirectionChange(std::function<void(TurnDirection)> callback);
 
+            /// @brief Get the max speed of the motors
+            /// @return The max speed of the motors
             static int getMaxSpeed();
 
         private:

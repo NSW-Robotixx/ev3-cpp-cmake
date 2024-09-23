@@ -1,3 +1,5 @@
+#ifdef EV3_ENABLE_UI
+
 #include "UserInterface.hpp"
 
 namespace finder::utility
@@ -98,3 +100,5 @@ namespace finder::utility
     }
 
 } // namespace finder::utility
+
+#endif // EV3_ENABLE_UI

@@ -14,10 +14,6 @@ project(robotixx-ev3dev)
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED True)
 
-# Add compiler flags for coverage
-set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS}")
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS}")
-
 # add cmake-modules directory
 LIST(APPEND CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/cmake-modules)
 
@@ -33,14 +29,17 @@ find_package(Eigen3 REQUIRED)
 find_package(yaml-cpp REQUIRED)
 find_package(ydcpp-tcpcat REQUIRED)
 find_package(freetype REQUIRED)
+find_package(watcher REQUIRED)
+find_package(kcov REQUIRED)
 
 # new and untested stuff
-set(BUILD_SHARED_LIBS ON)
+set(BUILD_SHARED_LIBS OFF)
 set(CMAKE_EXE_LINKER_FLAGS "-static-libgcc -static-libstdc++ -Wall -Werror -Wextra")
 # end of new and untested stuff
 
 # add executables
 add_executable(Main src/main.cpp)
+# add_executable(Test src/tests.cpp)
 
 # add include directories
 # include_directories(${CMAKE_SOURCE_DIR}/lib)
@@ -103,7 +102,7 @@ message(STATUS EV3_TESTS_HDR: ${EV3_TESTS_HDR})
 
 # get global property EV3_TESTS_LIBS
 get_property(EV3_TESTS_LIBS GLOBAL PROPERTY EV3_TESTS_LIBS)
-message(STATUS EV3_TESTS_LIBS: ${EV3_TESTS_LIBS} GTest::gtest_main)
+message(STATUS EV3_TESTS_LIBS: ${EV3_TESTS_LIBS} GTest::gtest_main kcov::kcov)
 
 
 
@@ -130,25 +129,28 @@ message(STATUS "CMAKE_CXX_COMPILER: ${CMAKE_CXX_COMPILER}")
 # # code coverage
 # if (CMAKE_COMPILER_IS_GNUCXX)
 #     include(CodeCoverage)
-#     append_coverage_compiler_flags()
+#     # append_coverage_compiler_flags()
 
 #     # we need to turn off optimization for non-skewed coverage reports
-#     set(CMAKE_CXX_FLAGS  "${CMAKE_CXX_FLAGS} -O0")
+#     # set(CMAKE_CXX_FLAGS  "${CMAKE_CXX_FLAGS} -O1 -fprofile-abs-path -fprofile-arcs -ftest-coverage -fPIC --coverage")
+#     target_compile_options(FullTest PUBLIC -fprofile-arcs -ftest-coverage -fPIC --coverage -O0 -g)
+#     set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} --coverage")
+#     target_link_libraries(FullTest PUBLIC gcov)
 #     set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -O0")
 
 #     # optional excludes - None needed here
-#     set(COVERAGE_EXCLUDES build/* lib/*.test.cpp) # this is optional if you want to exclude some directory from the report
-
+#     set(COVERAGE_EXCLUDES lib/*.test.cpp test_*) # this is optional if you want to exclude some directory from the report
+ 
 #     # importantly, set the path to the gcovr executable that you downladed
-#     set(GCOVR_PATH "/home/niklas/.local/bin/gcovr")
+#     set(GCOVR_PATH "/usr/local/bin/gcovr")
 #     # Works
 #     setup_target_for_coverage_gcovr_xml(
 #             NAME TestDoMathCoverageXml
-#             EXECUTABLE Test
+#             EXECUTABLE FullTest
 #     )
 #     # Works
 #     setup_target_for_coverage_gcovr_html(
 #             NAME TestDoMathCoverageHtml
-#             EXECUTABLE Test
+#             EXECUTABLE FullTest
 #     )
 # endif()

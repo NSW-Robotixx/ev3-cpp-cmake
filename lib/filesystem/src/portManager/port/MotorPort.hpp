@@ -10,7 +10,7 @@ namespace finder
     namespace physical
     {
 
-        // The command to send to the motor
+        /// @brief The command to send to the motor
         enum class MotorCommand
         {
             STOP = 0,
@@ -22,7 +22,7 @@ namespace finder
             RUN_DIRECT = 6,
         };
 
-        // How to stop the motor after completing a command
+        /// @brief How to stop the motor after completing a command
         enum class MotorStopAction
         {
             COAST = 0,
@@ -48,6 +48,7 @@ namespace finder
             HOLDING = 5,
         };
 
+        /// @brief Motor port class to control motors
         class MotorPort : public Port {
             public:
                 // MotorPort();
@@ -97,6 +98,8 @@ namespace finder
                 /// @return Path to read the encoder pulses from.
                 path_count_per_rotation_t getCountPerRotationPath();
 
+                /// @brief Get the maximum speed of the motor. This is the maximum speed the motor can move at.
+                /// @return Path to read the maximum speed of the motor.
                 path_max_speed_t getMaxSpeedPath();
                 
                 /// @brief Set the speed the motor should move at, max ca. 800.
@@ -126,8 +129,12 @@ namespace finder
                 /// @brief shorthand for setting the command to "stop".
                 void stop();
 
+                /// @brief Get the current speed of the motor.
+                /// @return Current speed of the motor.
                 int getSpeed();
 
+                /// @brief Get the current position of the motor.
+                /// @return Current position of the motor.
                 int getPosition();
 
                 /// @brief Get the current states of the motor a vector
@@ -138,6 +145,8 @@ namespace finder
                 /// @return Number of motor pulses per rotation of the motor.
                 int getCountPerRotation();
 
+                /// @brief Get the maximum speed of the motor. Read from MotorCommand::getMaxSpeedPath()
+                /// @return Maximum speed of the motor.
                 int getMaxSpeed();
 
                 /// @brief Get the type of device registered in the constructor, as there are no checks for the correct device beforehand.

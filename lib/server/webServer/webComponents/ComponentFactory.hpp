@@ -4,6 +4,7 @@
 
 namespace finder::server::webComponents
 {
+    /// @brief Factory class to create components
     class ComponentFactory
     {
         public:

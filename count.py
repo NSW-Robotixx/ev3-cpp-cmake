@@ -16,6 +16,6 @@ def count_lines_of_code(directory):
     return total_lines
 
 # Example usage
-directory = "/path/to/directory"  # Replace with the directory you want to count lines of code in
+directory = "./lib"  # Replace with the directory you want to count lines of code in
 lines_of_code = count_lines_of_code(directory)
 print(f"Total lines of code in {directory}: {lines_of_code}")

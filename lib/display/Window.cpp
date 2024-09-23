@@ -300,6 +300,8 @@ namespace finder::physical::display
         #endif
     }
 
+#if EV3_DISPLAY_USE_BITMAPS
+
     int Window::drawBitmap(int x, int y, std::shared_ptr<bitmaps::ImageFormat> bitmap)
     {
         _logger.debug("Drawing bitmap at: " + std::to_string(x) + ", " + std::to_string(y));
@@ -321,6 +323,8 @@ namespace finder::physical::display
         }
         return 0;
     }
+
+#endif
 
     int Window::fill(DisplayColors color)
     {

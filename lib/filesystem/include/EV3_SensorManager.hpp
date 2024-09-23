@@ -15,24 +15,46 @@
 
 namespace finder::physical
 {
+    /// @brief Manage the connected sensors
     class SensorManager : public DeviceManager
     {
         public:
+            /// @brief Constructor
+            /// @param portBasePath Path to the base directory of the ports 
             SensorManager(std::string portBasePath);
             ~SensorManager();
 
+            /// @brief Read all sensors
             static void readAllSensors();
+
+            /// @brief Read the gyro sensor
             static int readGyro();
+
+            /// @brief Read the left color sensor
             static int readColorLeft();
+
+            /// @brief Read the right color sensor
             static int readColorRight();
+
+            /// @brief Read the front color sensor
             static int readColorFront();
+
+            /// @brief Read the left motor
             static int readMotorLeft();
+
+            /// @brief Read the right motor
             static int readMotorRight();
+
+            /// @brief Read the shift motor
             static int readMotorShift();
+
+            /// @brief Read the tool motor
             static int readMotorTool();
 
+            /// @brief Add an event listener
             static void addEventListeners(DeviceID port, std::function<void(DeviceID, int)> callback);
 
+            /// @brief Dispatcher for the event listeners
             static void Dispatcher();
 
         private:

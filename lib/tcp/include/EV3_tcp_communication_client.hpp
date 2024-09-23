@@ -17,12 +17,23 @@
 
 namespace finder::network::tcp
 {
+    /// @brief Tcp client class
     class TCPClient
     {
     public:
+        /// @brief Constructor
+        /// @param serverIp Hostname of the server
+        /// @param port Port to connect
         TCPClient(const char *serverIp, int port);
+
         ~TCPClient();
+
+        /// @brief Send a message to the server
+        /// @param message Message to send
         void sendMessage(const std::string message);
+
+        /// @brief Receive a message from the server
+        /// @return Message received
         std::string receiveMessage();
     private:
         char msg[1500];

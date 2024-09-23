@@ -6,6 +6,7 @@
 
 namespace finder::pathfind
 {
+    /// @brief Obstacle manager class
     class ObstacleManager
     {
         public:

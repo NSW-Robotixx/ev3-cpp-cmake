@@ -9,6 +9,7 @@
 
 namespace finder::pathfind
 {
+    /// @brief Smooth path class to remove unnecessary points from a path
     class SmoothPath
     {
     public:

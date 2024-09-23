@@ -21,6 +21,8 @@
 
 namespace finder::physical::display
 {
+
+    /// @brief Display colors that can be used
     enum DisplayColors {
         DISPLAY_BLACK = 0x00000000,
         DISPLAY_DARK = 0x78787878,
@@ -42,34 +44,132 @@ namespace finder::physical::display
     };
 
 
+    /// @brief Class that represents a window on the display
     class Window : public Screen
     {
         friend class WindowManager;
 
         public:
+            /// @brief Constructor
+            /// @param name Name of the window
+            /// @param width Width of the window
+            /// @param height Height of the window
+            /// @param x X start position of the window on the display
+            /// @param y Y start position of the window on the display
             Window(std::string name, int width, int height, int x, int y);
             ~Window();
 
+            /// @brief Get the width of the window
+            /// @return Width of the window
             int getWidth();
+
+            /// @brief Get the height of the window
+            /// @return Height of the window
             int getHeight();
+
+            /// @brief Get the name of the window
+            /// @return Name of the window
             std::string getName();
 
+            /// @brief Set the name of the window
+            /// @param name Name of the window
             void setName(std::string name);
-            
+
+            /// @brief Update the content of the window        
             virtual void update() = 0;
 
+            /// @brief Draw a Line on the window
+            /// @param x0 X0 Coordinate
+            /// @param y0 Y0 Coordinate
+            /// @param x1 X1 Coordinate
+            /// @param y1 Y1 Coordinate
+            /// @param color Color of the line
+            /// @return 0 if successful, -1 if not
             int drawLine(int x0, int y0, int x1, int y1, DisplayColors color);
+
+            /// @brief Draw a Vertical Line on the window
+            /// @param x0 X0 Coordinate
+            /// @param y0 Y0 Coordinate
+            /// @param y1 Y1 Coordinate
+            /// @param color Color of the line
+            /// @return 0 if successful, -1 if not
             int drawVerticalLine(int x0, int y0, int y1, DisplayColors color);
+
+            /// @brief Draw a Horizontal Line on the window
+            /// @param x0 X0 Coordinate
+            /// @param y0 Y0 Coordinate
+            /// @param x1 X1 Coordinate
+            /// @param color Color of the line
+            /// @return 0 if successful, -1 if not
             int drawHorizontalLine(int x0, int y0, int x1, DisplayColors color);
+
+            /// @brief Draw a Rectangle on the window
+            /// @param x0 Lower left X Coordinate
+            /// @param y0 Lower left Y Coordinate
+            /// @param x1 Upper right X Coordinate
+            /// @param y1 Upper right Y Coordinate
+            /// @param color Color of the rectangle
+            /// @return 0 if successful, -1 if not
             int drawRectangle(int x0, int y0, int x1, int y1, DisplayColors color);
+
+            /// @brief Draw a rotated Rectangle on the window
+            /// @param x0 X0 Coordinate
+            /// @param y0 Y0 Coordinate
+            /// @param x1 X1 Coordinate
+            /// @param y1 Y1 Coordinate
+            /// @param x2 X2 Coordinate
+            /// @param y2 Y2 Coordinate
+            /// @param x3 X3 Coordinate
+            /// @param y3 Y3 Coordinate
+            /// @param color Color of the rectangle
+            /// @return 0 if successful, -1 if not
             int drawRectangle(int x0, int y0, int x1, int y1, int x2, int y2, int x3, int y3, DisplayColors color);
+
+            /// @brief Draw a Circle on the window
+            /// @param x0 X Coordinate
+            /// @param y0 Y Coordinate
+            /// @param radius Radius of the circle
+            /// @param color Color of the circle
+            /// @return 0 if successful, -1 if not
             int drawCircle(int x0, int y0, int radius, DisplayColors color);
+
+            /// @brief Draw a triangle on the window
+            /// @param x0 X0 Coordinate
+            /// @param y0 Y0 Coordinate
+            /// @param x1 X1 Coordinate
+            /// @param y1 Y1 Coordinate
+            /// @param x2 X2 Coordinate
+            /// @param y2 Y2 Coordinate
+            /// @param color Color of the triangle
+            /// @return 0 if successful, -1 if not
             int drawTriangle(int x0, int y0, int x1, int y1, int x2, int y2, DisplayColors color);
+
+            /// @brief Draw Text on the window
+            /// @param x Offset X Coordinate
+            /// @param y Offset Y Coordinate
+            /// @param text Text to draw 
+            /// @param color Color of the text
+            /// @return 0 if successful, -1 if not
             int drawText(int x, int y, std::string text, DisplayColors color);
+
+#if EV3_DISPLAY_USE_BITMAPS
+            /// @brief Draw Bitmap on the window
+            /// @param x Offset X Coordinate
+            /// @param y Offset Y Coordinate
+            /// @param bitmap Bitmap to draw
             int drawBitmap(int x, int y, std::shared_ptr<bitmaps::ImageFormat> bitmap);
+#endif
+
+            /// @brief Fill the window with a color
+            /// @param color Color to fill the window with
             int fill(DisplayColors color);
-            
+
+            /// @brief Get the X start position of the window on the display
+            /// @return X start position of the window
             int getStartX() { return x; };
+
+            /// @brief Get the Y start position of the window on the display
+            /// @return Y start position of the window
             int getStartY() { return y; };
             
         private:

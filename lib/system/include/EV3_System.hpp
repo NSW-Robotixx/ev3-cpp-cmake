@@ -14,13 +14,18 @@
 
 namespace finder::system
 {
+
+    /// @brief Class that represents the system and handles the communication with the compute module
     class System
     {
     public:
         System() = default;
         ~System() = default;
 
+        /// @brief Start the system, if enabled the system will connect to the compute module
         void start();
+
+        /// @brief Stop the system and disconnect from the compute module
         void stop();
 
     private:

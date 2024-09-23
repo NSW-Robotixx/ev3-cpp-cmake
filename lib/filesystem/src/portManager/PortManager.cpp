@@ -120,9 +120,7 @@ namespace finder
 
 
         
-        /// @warning DO NOT USE THIS FUNCTION : DEPRECATED
-        /// @param port_address 
-        /// @return shared pointer to a port object
+
         std::shared_ptr<Port> PortManager::borrowDevice(DevicePort port_address)
         {
             if (!_ports_read) {

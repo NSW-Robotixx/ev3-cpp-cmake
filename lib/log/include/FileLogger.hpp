@@ -14,11 +14,14 @@
 
 
 namespace finder::log {
+
+    /// @brief Logger that logs messages to a file
     class FileLogger : public Logger{
         public:
             FileLogger();
             ~FileLogger() = default;
 
+            /// @brief Lock that allows the FileLogger to log a message to the file
             struct FileLoggerLock {
                 FileLoggerLock() = default;
                 ~FileLoggerLock() {
@@ -37,6 +40,8 @@ namespace finder::log {
             /// @warning This will delete all the content of the file, should be used with caution.
             void clear();
 
+            /// @brief Open the file for logging
+            /// @return True if the file was opened successfully, false otherwise.
             static bool openFile();
 
         private:

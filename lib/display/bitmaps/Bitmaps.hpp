@@ -1,3 +1,5 @@
+#ifdef EV3_ENABLE_USE_BITMAPS
+
 #if !defined(_MSC_VER)
 
 #ifndef __BITMAPS_HPP__
@@ -365,3 +367,5 @@ namespace finder::physical::display::bitmaps
 #endif // __BITMAPS_HPP__
 
 #endif // !defined(_MSC_VER)
+
+#endif // EV3_ENABLE_USE_BITMAPS

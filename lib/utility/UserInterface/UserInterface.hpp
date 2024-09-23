@@ -1,3 +1,5 @@
+#ifdef EV3_ENABLE_UI
+
 #ifndef __USERINTERFACE_HPP__
 #define __USERINTERFACE_HPP__
 
@@ -42,3 +44,5 @@ namespace finder::utility
 
 
 #endif // __USERINTERFACE_HPP__
+
+#endif // EV3_ENABLE_UI

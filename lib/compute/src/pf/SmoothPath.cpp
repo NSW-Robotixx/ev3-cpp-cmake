@@ -1,4 +1,5 @@
 #include "SmoothPath.hpp"
+#include "ObstacleManager.hpp"
 
 namespace finder::pathfind
 {

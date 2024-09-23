@@ -13,12 +13,15 @@
 
 namespace finder::system
 {
+    /// @brief Read destinations from a file
     class ConfigReader
     {
         public:
             ConfigReader() = default;
             ~ConfigReader() = default;
 
+            /// @brief Read the destinations from the file and return them. File format is YAML or TXT
+            /// @return Vector of destinations, z is the angle
             static std::vector<math::Vector3> readDestinationsFromFile();
     };
 } // namespace finder::system

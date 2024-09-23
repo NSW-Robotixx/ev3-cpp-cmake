@@ -44,6 +44,7 @@ namespace finder
             ANY = 4
         };
 #ifdef ENABLE_LOGGING
+        /// @brief Port for the physical ports on the EV3
         struct Port : public log::FileLogger
 #else
         struct Port
@@ -51,13 +52,26 @@ namespace finder
         {
             public:
                 Port() = delete;
+
+                /// @brief Constructor
+                /// @param port The path to the port
                 Port(const path_port_t& port);
+
+                /// @brief Constructor
+                /// @param port The path to the port
                 Port(std::shared_ptr<Port> port);
+
+                /// @brief Copy constructor
                 Port(Port&) = delete;
                 ~Port() = default;
 
+                /// @brief Set the base path of the port
+                /// @param path The path to set
                 virtual void setBasePath(const path_port_t& path);
                 
+                /// @brief Get the key of the port
+                /// @details The key is the last character of the port path.
+                /// @return The key of the port
                 inline char getPortKey() {
                     if (isEnabled())
                     {
@@ -65,10 +79,20 @@ namespace finder
                     }
                     return 255;
                 };
+
+                /// @brief Get the path of the port
                 path_port_t getBasePath();
+
+                /// @brief Get the address of the port
                 path_address_t getAddressPath();
+
+                /// @brief Get the address of the port
                 static path_address_t getAddressPath(const path_port_t& path);
+
+                /// @brief Get the value of the port
                 path_command_t getCommandPath();
+
+                /// @brief Get the value of the port
                 path_commands_t getCommandsPath();
 
                 /**
@@ -105,20 +129,26 @@ namespace finder
                 void overrideEnabled(bool enabled) { _f_enabled = enabled; };
 
             protected:  
-                /**
-                 * Initializes the files for the port.
-                 * 
-                 * @return true if the files were successfully initialized, false otherwise.
-                 */
+                /// @brief Initializes the files for the port.
+                /// @return true if the files were successfully initialized, false otherwise.
                 bool initFiles();
+
+                /// @brief File stream for the address file
                 std::shared_ptr<std::ifstream> _file_address_path;
+
+                /// @brief File stream for the address file
                 std::shared_ptr<std::ofstream> _file_command_path;
+
+                /// @brief File stream for the commands file
                 std::shared_ptr<std::ifstream> _file_commands_path;
+
+                /// @brief Directory path of the port
                 path_port_t _path;
             private:
                 bool _f_enabled;
                 // bool _enabled;
 #ifdef ENABLE_LOGGING
+                /// @brief Logger for the port
                 static ::finder::log::Logger _logger;
 #endif
 

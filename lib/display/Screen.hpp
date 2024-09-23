@@ -22,6 +22,7 @@
 
 namespace finder::physical::display
 {
+  /// @brief Screen class, controlling the display of the EV3
   class Screen
   {
   private:
@@ -30,14 +31,28 @@ namespace finder::physical::display
       Screen();
       ~Screen();
 
+      /// @brief Width of the screen
       unsigned int width;
+
+      /// @brief Height of the screen
       unsigned int height;
+
+      /// @brief Draw a pixel on the screen
       void drawPixel(int x, int y, uint32_t color);
+
+      /// @brief Clear the screen
       void clear();
+
+      /// @brief Fill the screen with a color
       void fillScreen(uint32_t color);
 
+      /// @brief Framebuffer file descriptor
       int fbfd;
+
+      /// @brief File descriptor of the framebuffer
       uint32_t *fbp;
+
+      /// @brief Screen size
       size_t screensize = 0;
   public:
 

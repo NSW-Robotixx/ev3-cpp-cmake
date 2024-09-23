@@ -49,26 +49,50 @@ namespace finder
             ANY_SENSOR    = 253,
         };
         
-
+        /// @brief Class to manage the ports
         class PortManager {
             
             public:
+                /// @brief List of all the ports
                 static std::vector<std::string> adresses;
                 
                 PortManager();
+
+                /// @brief Constructor
+                /// @param dir The path to the directory of the ports
                 PortManager(path_port_t dir);
                 ~PortManager();
                 
+                /// @brief Read all the ports
                 static void readPorts();
 
+                /// @warning DO NOT USE THIS FUNCTION : DEPRECATED
+                /// @param port_address 
+                /// @return shared pointer to a port object
                 static std::shared_ptr<Port> borrowDevice(DevicePort port_address);
                 
+                /// @brief Borrow a port from the port manager
+                /// @param port_address The address of the port
+                /// @return The port
                 static std::shared_ptr<SensorPort> borrowSensor(DevicePort port_address);
+
+                /// @brief Borrow a port from the port manager
+                /// @param port The address of the port
+                /// @return The port
                 static std::shared_ptr<SensorPort> borrowSensor(DeviceID port);
 
+                /// @brief Borrow a port from the port manager
+                /// @param port The address of the port
+                /// @return The port
                 static std::shared_ptr<MotorPort> borrowMotor(DevicePort port);
+
+                /// @brief Borrow a port from the port manager
+                /// @param port_address The address of the port
+                /// @return The port
                 static std::shared_ptr<MotorPort> borrowMotor(DeviceID port_address);
 
+                /// @brief Get the number of devices
+                /// @return The number of devices
                 static int getNumberOfDevices() {return _motor_ports.size() + _sensor_ports.size();}
 
             private:

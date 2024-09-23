@@ -3,8 +3,12 @@ eigen/3.4.0
 yaml-cpp/0.8.0
 ydcpp-tcpcat/1.0.4
 freetype/2.13.2
-doxygen/1.9.4
 gtest/1.15.0
+watcher/0.11.0
+
+[tool_requires]
+doxygen/1.9.4
+kcov/42
 
 [generators]
 CMakeDeps
