@@ -30,7 +30,6 @@ find_package(yaml-cpp REQUIRED)
 find_package(ydcpp-tcpcat REQUIRED)
 find_package(freetype REQUIRED)
 find_package(watcher REQUIRED)
-find_package(kcov REQUIRED)
 
 # new and untested stuff
 set(BUILD_SHARED_LIBS OFF)
@@ -102,7 +101,7 @@ message(STATUS EV3_TESTS_HDR: ${EV3_TESTS_HDR})
 
 # get global property EV3_TESTS_LIBS
 get_property(EV3_TESTS_LIBS GLOBAL PROPERTY EV3_TESTS_LIBS)
-message(STATUS EV3_TESTS_LIBS: ${EV3_TESTS_LIBS} GTest::gtest_main kcov::kcov)
+message(STATUS EV3_TESTS_LIBS: ${EV3_TESTS_LIBS} GTest::gtest_main)
 
 
 
