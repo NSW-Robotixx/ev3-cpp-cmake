@@ -7,8 +7,9 @@ gtest/1.15.0
 watcher/0.11.0
 
 [tool_requires]
-doxygen/1.9.4
 kcov/42
+cmake/3.30.1
+doxygen/1.9.4
 
 [generators]
 CMakeDeps

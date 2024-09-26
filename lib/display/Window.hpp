@@ -162,6 +162,7 @@ namespace finder::physical::display
 
             /// @brief Fill the window with a color
             /// @param color Color to fill the window with
+            /// @return 0 if successful, -1 if not
             int fill(DisplayColors color);
 
             /// @brief Get the X start position of the window on the display

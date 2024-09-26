@@ -47,6 +47,7 @@ namespace finder::pathfind {
             Node(math::Vector2 coord_, Node *parent_ = nullptr);
 
             /// @brief Get the Score of the node
+            /// @return uint The score of the node
             uint getScore();
         };
 

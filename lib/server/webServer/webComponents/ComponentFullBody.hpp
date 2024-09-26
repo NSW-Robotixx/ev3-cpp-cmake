@@ -31,12 +31,15 @@ namespace finder::server::webComponents
             std::string render() override;
 
             /// @brief Get the name of the component
+            /// @return Name of the component
             std::string getComponentName() override;
 
             /// @brief Get the type of the component
+            /// @return Type of the component
             std::string getComponentType() override;
 
             /// @brief Get the HTML of the component
+            /// @return HTML string
             std::string getComponentHTML() override;
     };
 } // namespace finder::server::webComponents

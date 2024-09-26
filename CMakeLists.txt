@@ -32,8 +32,8 @@ find_package(freetype REQUIRED)
 find_package(watcher REQUIRED)
 
 # new and untested stuff
-set(BUILD_SHARED_LIBS OFF)
-set(CMAKE_EXE_LINKER_FLAGS "-static-libgcc -static-libstdc++ -Wall -Werror -Wextra")
+set(BUILD_SHARED_LIBS ON)
+# set(CMAKE_EXE_LINKER_FLAGS "-static-libgcc -static-libstdc++ -Wall -Werror -Wextra")
 # end of new and untested stuff
 
 # add executables
@@ -47,7 +47,7 @@ add_executable(Main src/main.cpp)
 # set the list of sources for all tests
 set_property(GLOBAL PROPERTY EV3_TESTS_SRC ${CMAKE_SOURCE_DIR}/src/tests.cpp)
 # set the list of libs to link to
-set_property(GLOBAL PROPERTY EV3_TESTS_LIBS gtest_main)
+set_property(GLOBAL PROPERTY EV3_TESTS_LIBS gtest_main GTest::gtest_main)
 
 add_subdirectory(lib)
 add_subdirectory(src)
@@ -116,6 +116,8 @@ target_sources(FullTest
 
 target_link_libraries(FullTest PUBLIC ${EV3_TESTS_LIBS})
 target_link_libraries(FullTest PUBLIC GTest::gtest_main)
+
+add_dependencies(FullTest docs)
     
     
 # make cmake not print the commands it runs

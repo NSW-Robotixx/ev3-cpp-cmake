@@ -1,31 +1,50 @@
-find_package(Doxygen REQUIRED)
+# execute_process(COMMAND find ${CONAN_HOME} -type f -name doxygen OUTPUT_VARIABLE DOXYGEN_PATH)
+# find_program(DOXYGEN_PATH doxygen)
+find_file(DOXYGEN_PATH doxygen HINTS /home/niklas/.conan2/)
 
-# set(DOXYGEN_HTML_OUTPUT            ${PROJECT_BINARY_DIR}/docs/html)
-set(DOXYGEN_JAVADOC_AUTOBRIEF      YES)
-set(DOXYGEN_GENERATE_HTML          YES)
-set(DOXYGEN_HAVE_DOT               NO)
-set(DOXYGEN_EXCLUDE_PATTERNS       "*/build/*")
-set(DOXYGEN_USE_MDFILE_AS_MAINPAGE README.md)  # requires a README.md in /myproject/
+execute_process(COMMAND find /home -type f -name doxygen OUTPUT_VARIABLE DOXYGEN_PATH)
 
-# other DOXYGEN_... options
+# take the first line
+string(REGEX MATCH "([^\n]+)" DOXYGEN_PATH "${DOXYGEN_PATH}")
 
-
-message(STATUS "Do release stuff")
-doxygen_add_docs(docs_target
-  ${PROJECT_SOURCE_DIR}
-  ALL  # does not seem to work
-  COMMENT "Generate HTML documentation"
+message(STATUS "Doxygen found: ${DOXYGEN_PATH}")
+add_custom_target(docs
+  COMMAND ${DOXYGEN_PATH}
+  WORKING_DIRECTORY ${PROJECT_SOURCE_DIR}
+  COMMENT "Generating API documentation with Doxygen"
+  VERBATIM
 )
 
+# file(READ ${CMAKE_BINARY_DIR}/conan/build/Debug/generators/conanbuild.sh CONAN_ENV)
+# message(STATUS "Conan environment variables: ${CONAN_ENV}")
 
-  if(CMAKE_BUILD_TYPE STREQUAL Debug) 
-      message(STATUS "Do debug stuff")
-  elseif(CMAKE_BUILD_TYPE STREQUAL Release)
-  elseif(CMAKE_BUILD_TYPE STREQUAL RelWithDebInfo)
-      message(STATUS "Do release with debug info stuff")
-      doxygen_add_docs(docs_target
-        ${PROJECT_SOURCE_DIR}
-        ALL  # does not seem to work
-        COMMENT "Generate HTML documentation"
-      )
-  endif()
+# # remove everything what is not char or /
+# STRING(REGEX REPLACE "[^ a-zA-Z\\/_0-9-]" "" CONAN_ENV "${CONAN_ENV}")
+
+# message(STATUS "Conan environment variables: ${CONAN_ENV}")
+
+# # STRING(REGEX MATCH "/build/conan.+.sh$" "" CONAN_ENV_PATH "${CONAN_ENV}")
+
+# message(STATUS "Conan environment variables: ${CONAN_ENV_PATH}")
+
+# # cut the last part of the path
+# STRING(REGEX REPLACE "conan.+.sh$" "" CONAN_ENV_PATH "${CONAN_ENV}")
+
+# message(STATUS "Conan environment variables: ${CONAN_ENV}")
+
+# STRING(REPLACE ${CONAN_ENV} "" CONAN_ENV_PATHp "${CONAN_ENV_PATH}")
+
+# file(READ ${CONAN_ENV_PATH} CONAN_ENV_PATH)
+
+# message(STATUS "Conan environment variables: ${CONAN_ENV_PATH}")
+
+# add_custom_target(envVariables
+#   COMMAND chmod +x ${CMAKE_BINARY_DIR}/conan/build/Debug/generators/conanbuild.sh
+#   COMMAND . ${CMAKE_BINARY_DIR}/conan/build/Debug/generators/conanbuild.sh
+#   COMMAND doxygen version
+#   WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
+#   COMMENT "Setting environment variables"
+#   VERBATIM
+# )
+
+# add_dependencies(docs envVariables)
