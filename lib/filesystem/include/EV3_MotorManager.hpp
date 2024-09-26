@@ -33,6 +33,7 @@ namespace finder::physical
     {
         public:
             /// @brief Constructor for MotorManager
+            /// @param portBasePath Path to the base path of the motors
             MotorManager(std::string portBasePath);
             ~MotorManager();
 

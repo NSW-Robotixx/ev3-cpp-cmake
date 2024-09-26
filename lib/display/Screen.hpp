@@ -38,12 +38,16 @@ namespace finder::physical::display
       unsigned int height;
 
       /// @brief Draw a pixel on the screen
+      /// @param x X coordinate of the pixel
+      /// @param y Y coordinate of the pixel
+      /// @param color Color of the pixel
       void drawPixel(int x, int y, uint32_t color);
 
       /// @brief Clear the screen
       void clear();
 
       /// @brief Fill the screen with a color
+      /// @param color Color to fill the screen with
       void fillScreen(uint32_t color);
 
       /// @brief Framebuffer file descriptor

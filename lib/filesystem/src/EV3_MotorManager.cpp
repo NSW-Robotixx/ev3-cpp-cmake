@@ -5,7 +5,8 @@ namespace finder::physical
     TurnDirection MotorManager::_prevTurnDirection = TurnDirection::FORWARD;
     std::vector<std::function<void(TurnDirection)>> MotorManager::_directionChangeListeners;
     
-
+    /// @brief Constructor for MotorManager
+    /// @param portBasePath Path to the base path of the motors
     MotorManager::MotorManager(std::string portBasePath) : DeviceManager(portBasePath)
     {
         _motorLeft->setStopAction(MotorStopAction::HOLD);

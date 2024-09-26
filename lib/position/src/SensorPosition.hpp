@@ -24,6 +24,8 @@ namespace finder::position {
         SensorPosition(std::string portBasePath);
 
         /// @brief Update the position estimate of the robot
+        /// @param port The port of the sensor
+        /// @param value The value of the sensor
         static void update(DeviceID port, int value);
 
         /// @brief Initialize the sensor position estimate

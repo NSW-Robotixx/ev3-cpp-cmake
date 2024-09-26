@@ -28,30 +28,40 @@ namespace finder::physical
             static void readAllSensors();
 
             /// @brief Read the gyro sensor
+            /// @return The value of the gyro sensor
             static int readGyro();
 
             /// @brief Read the left color sensor
+            /// @return The value of the left color sensor
             static int readColorLeft();
 
             /// @brief Read the right color sensor
+            /// @return The value of the right color sensor
             static int readColorRight();
 
             /// @brief Read the front color sensor
+            /// @return The value of the front color sensor
             static int readColorFront();
 
             /// @brief Read the left motor
+            /// @return The value of the left motor
             static int readMotorLeft();
 
             /// @brief Read the right motor
+            /// @return The value of the right motor
             static int readMotorRight();
 
             /// @brief Read the shift motor
+            /// @return The value of the shift motor
             static int readMotorShift();
 
             /// @brief Read the tool motor
+            /// @return The value of the tool motor
             static int readMotorTool();
 
             /// @brief Add an event listener
+            /// @param port Port to listen to
+            /// @param callback Callback to call when the event occurs
             static void addEventListeners(DeviceID port, std::function<void(DeviceID, int)> callback);
 
             /// @brief Dispatcher for the event listeners

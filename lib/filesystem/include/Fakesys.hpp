@@ -31,6 +31,7 @@ namespace finder::physical::test
             static void deinit() {std::filesystem::remove_all(_basePath); _initialized = false; }
 
             /// @brief add check for sys files
+            /// @return True if all files are present
             static bool isInitialized() {return _initialized;}
 
             /// @brief get the base dir

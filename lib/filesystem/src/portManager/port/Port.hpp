@@ -81,18 +81,24 @@ namespace finder
                 };
 
                 /// @brief Get the path of the port
+                /// @return The path of the port
                 path_port_t getBasePath();
 
                 /// @brief Get the address of the port
+                /// @return The address of the port
                 path_address_t getAddressPath();
 
                 /// @brief Get the address of the port
+                /// @param path The path to get the address from
+                /// @return The address of the port
                 static path_address_t getAddressPath(const path_port_t& path);
 
-                /// @brief Get the value of the port
+                /// @brief Get the command path of the port
+                /// @return The command path of the port
                 path_command_t getCommandPath();
 
-                /// @brief Get the value of the port
+                /// @brief Get the commands path of the port
+                /// @return The commands path of the port
                 path_commands_t getCommandsPath();
 
                 /**
