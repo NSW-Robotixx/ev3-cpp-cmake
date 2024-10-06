@@ -296,8 +296,8 @@ namespace finder::physical::display
             this->drawBitmap(xpos, ypos, bitmaps::Keyboard::Keyboard_images[ascii]);
             xpos += bitmaps::Keyboard::Keyboard_images[ascii]->width + 1;
         }
-        return 0;
         #endif
+        return 0;
     }
 
 #if EV3_DISPLAY_USE_BITMAPS

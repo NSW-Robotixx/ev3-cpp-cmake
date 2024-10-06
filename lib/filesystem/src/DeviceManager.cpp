@@ -36,7 +36,7 @@ namespace finder
 
             // is it possible to borrow a port that is not connected?
             // can stay like this for now, but should be changed in the future
-            _gyroSensor = _portManager->borrowSensor(DevicePort::INPUT_1);
+            _gyroSensor = _portManager->borrowSensor(DeviceID::GYRO);
             _colorSensorLeft = _portManager->borrowSensor(DeviceID::COLOR_LEFT);
             _colorSensorRight = _portManager->borrowSensor(DeviceID::COLOR_RIGHT);
             _colorSensorFront = _portManager->borrowSensor(DeviceID::COLOR_FRONT);

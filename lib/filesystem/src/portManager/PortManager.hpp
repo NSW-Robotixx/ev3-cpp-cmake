@@ -4,6 +4,7 @@
 
 #define ENABLE_LOGGING
 
+#include "../../../EV3_conf.hpp"
 #include <string>
 #include <array>
 #include <fstream>
@@ -24,26 +25,18 @@ namespace finder
         #define MAX_SENSORS 4
         #define MAX_MOTORS 4
 
-        enum struct DevicePort {
-            INPUT_1  = '1',
-            INPUT_2  = '2',
-            INPUT_3  = '3',
-            INPUT_4  = '4',
-            OUTPUT_A = 'A',
-            OUTPUT_B = 'B',
-            OUTPUT_C = 'C',
-            OUTPUT_D = 'D'
-        };
+        
+        
         enum struct DeviceID
         {
-            GYRO          = static_cast<char>(DevicePort::INPUT_1),
-            COLOR_LEFT    = static_cast<char>(DevicePort::INPUT_2),
-            COLOR_RIGHT   = static_cast<char>(DevicePort::INPUT_3),
-            COLOR_FRONT   = static_cast<char>(DevicePort::INPUT_4),
-            MOTOR_LEFT    = static_cast<char>(DevicePort::OUTPUT_A),
-            MOTOR_RIGHT   = static_cast<char>(DevicePort::OUTPUT_B),
-            MOTOR_SHIFT   = static_cast<char>(DevicePort::OUTPUT_C),
-            MOTOR_TOOL    = static_cast<char>(DevicePort::OUTPUT_D),
+            GYRO          = EV3_PORT_INPUT_1,
+            COLOR_LEFT    = EV3_PORT_INPUT_2,
+            COLOR_RIGHT   = EV3_PORT_INPUT_3,
+            COLOR_FRONT   = EV3_PORT_INPUT_4,
+            MOTOR_LEFT    = EV3_PORT_OUTPUT_A,
+            MOTOR_RIGHT   = EV3_PORT_OUTPUT_B,
+            MOTOR_SHIFT   = EV3_PORT_OUTPUT_C,
+            MOTOR_TOOL    = EV3_PORT_OUTPUT_D,
             ANY           = 0,
             ANY_MOTOR     = 254,
             ANY_SENSOR    = 253,

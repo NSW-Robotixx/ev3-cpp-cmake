@@ -128,9 +128,9 @@ namespace finder
             }
 
             // check if requested device is a sensor or motor
-            if (port_address >= DevicePort::INPUT_1 && port_address <= DevicePort::INPUT_4) {
-                return std::shared_ptr<Port>(new Port{_sensor_ports[static_cast<char>(port_address) - '1']});
-            } else if (port_address >= DevicePort::OUTPUT_A && port_address <= DevicePort::OUTPUT_D) {
+            if (port_address >= EV3_PORT_INPUT_1 && port_address <= EV3_PORT_INPUT_4) {
+                return std::shared_ptr<Port>(new Port{_sensor_ports[port_address - '1']});
+            } else if (port_address >= EV3_PORT_OUTPUT_A && port_address <= EV3_PORT_OUTPUT_D) {
                 return std::shared_ptr<Port>(new Port{_motor_ports[static_cast<char>(port_address) - 'A']});
             } else {
                 throw std::logic_error("Port not found: " + std::to_string(static_cast<char>(port_address)) + " (borrowDevice)");
@@ -149,12 +149,20 @@ namespace finder
 
         std::shared_ptr<MotorPort> PortManager::borrowMotor(DevicePort port)
         {
-            return _motor_ports[static_cast<char>(port) - 'A'];
+            try
+            {
+                return _motor_ports[static_cast<char>(port) - 'A'];
+            }
+            catch(const std::exception& e)
+            {
+                std::cerr << e.what() << '\n';
+                return std::shared_ptr<MotorPort>(new MotorPort(""));
+            }
         }
 
         std::shared_ptr<MotorPort> PortManager::borrowMotor(DeviceID port_address)
         {
-            return borrowMotor(static_cast<DevicePort>(port_address));
+            return borrowMotor(static_cast<char>(port_address));
         }
 
     } // namespace physical

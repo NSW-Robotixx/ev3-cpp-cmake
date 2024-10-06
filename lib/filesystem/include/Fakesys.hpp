@@ -1,12 +1,15 @@
 #ifndef __FAKESYS_HPP__
 #define __FAKESYS_HPP__
 
+
+#include "../../EV3_conf.hpp"
 #include <memory>
 #include <vector>
 #include <string>
 #include <fstream>
 #include <filesystem>
 #include <gtest/gtest.h>
+#include <sys/inotify.h>
 
 namespace finder::physical::test
 {
@@ -288,6 +291,11 @@ namespace finder::physical::test
             /// @param polarity Polarity of the motor
             /// @param state State of the motor after movement
             static void emulateMotorMovement(std::string relPath, int position, int speed, int dutyCycle, std::string stopAction, std::string polarity, std::string state);
+
+            /// @brief Simulate motor movement for testing
+            /// @param endState State to set for the motor when the movement is finshed
+            /// @param callback Function to call when the movement is passed
+            static void simulateMotorLeftMovement(std::string endState, std::function<void()> callback);
 
         private:
             static bool _initialized;

@@ -362,4 +362,18 @@ namespace finder::physical::test
         readFromFile(relPath, value);
     }
 
+    void FakeSys::simulateMotorLeftMovement(std::string endState, std::function<void()> callback)
+    {
+        std::string command, destination, position;
+        std::ifstream fcommand, fdestination, fposition;
+
+        fcommand.open(_motorLeftRelPath + "/command");
+        fdestination.open(_motorLeftRelPath + "/position_sp");
+        fposition.open(_motorLeftRelPath + "/position_sp");
+
+        if (!fcommand.is_open()) {
+            throw new std::runtime_error("[Fakesys]: Failed to open command file of ");
+        }
+    }
+
 } // namespace finder::physical::test
