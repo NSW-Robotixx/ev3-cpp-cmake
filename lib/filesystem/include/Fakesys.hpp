@@ -293,9 +293,10 @@ namespace finder::physical::test
             static void emulateMotorMovement(std::string relPath, int position, int speed, int dutyCycle, std::string stopAction, std::string polarity, std::string state);
 
             /// @brief Simulate motor movement for testing
+            /// @param motor Motor to simulate movement for
             /// @param endState State to set for the motor when the movement is finshed
             /// @param callback Function to call when the movement is passed
-            static void simulateMotorLeftMovement(std::string endState, std::function<void()> callback);
+            static void simulateMotorLeftMovement(char motor, std::string endState, std::function<void()> callback);
 
         private:
             static bool _initialized;
@@ -313,10 +314,10 @@ namespace finder::physical::test
             static void initSensor(std::string relPath, int index);
             static void initMotor(std::string relPath, char index);
 
-            static void writeToFile(std::string relPath, std::string value, bool init = false);
-            static void writeToFile(std::string relPath, int value, bool init = false);
-            static void writeToFile(std::string relPath, std::vector<std::string> values, bool init = false);
-            static void writeToFile(std::string relPath, std::vector<int> values, bool init = false);
+            static void writeToFile(std::string relPath, std::string value, bool init = false, bool append = false);
+            static void writeToFile(std::string relPath, int value, bool init = false, bool append = false);
+            static void writeToFile(std::string relPath, std::vector<std::string> values, bool init = false, bool append = false);
+            static void writeToFile(std::string relPath, std::vector<int> values, bool init = false, bool append = false);
             
             static void readFromFile(std::string relPath, std::string value);
             static void readFromFile(std::string relPath, int value);

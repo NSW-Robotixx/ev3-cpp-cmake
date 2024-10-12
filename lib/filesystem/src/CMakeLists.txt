@@ -1,3 +1,5 @@
+find_package(log4cplus REQUIRED)
+
 set(EV3_FILESYSTEM_SRC
     ${EV3_FILESYSTEM_SRC_DIR}/DeviceManager.cpp
     ${EV3_FILESYSTEM_SRC_DIR}/EV3_MotorManager.cpp
@@ -33,8 +35,9 @@ target_include_directories(EV3_filesystem PUBLIC ${EV3_FILESYSTEM_INCLUDE_DIR})
 target_include_directories(EV3_filesystem PUBLIC ${EV3_FILESYSTEM_SRC_DIR})
 
 target_link_libraries(EV3_filesystem
-    PUBLIC
-        Logger
+    PRIVATE
+        log4cplus::log4cplus 
+        Logger       
 )
 
 # set(ENABLE_LOGGING ON CACHE BOOL "Enable logging")

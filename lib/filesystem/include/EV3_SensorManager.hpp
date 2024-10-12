@@ -9,9 +9,7 @@
 #include <thread>
 #include <atomic>
 #include <map>
-#ifdef ENABLE_LOGGING
-#include <Logger.hpp>
-#endif
+#include <log4cplus/loggingmacros.h>
 
 namespace finder::physical
 {
@@ -82,9 +80,7 @@ namespace finder::physical
             static std::atomic<bool> _stopDispatcher;
             static std::thread _dispatcherFuture;
 
-#ifdef ENABLE_LOGGING
-            static log::Logger _logger; 
-#endif
+            static log4cplus::Logger _logger; 
     };
 } // namespace finder::physical
 

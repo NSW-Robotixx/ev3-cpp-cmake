@@ -29,7 +29,7 @@ find_package(Eigen3 REQUIRED)
 find_package(yaml-cpp REQUIRED)
 find_package(ydcpp-tcpcat REQUIRED)
 find_package(freetype REQUIRED)
-find_package(watcher REQUIRED)
+find_package(log4cplus REQUIRED)
 
 # new and untested stuff
 set(BUILD_SHARED_LIBS ON)
@@ -126,6 +126,11 @@ set(CMAKE_VERBOSE_MAKEFILE OFF)
 message(STATUS "CMAKE_C_COMPILER: ${CMAKE_C_COMPILER}")
 message(STATUS "CMAKE_CXX_COMPILER: ${CMAKE_CXX_COMPILER}")
 
+# SET(GCC_COVERAGE_COMPILE_FLAGS "-fprofile-arcs -ftest-coverage")
+# SET(GCC_COVERAGE_LINK_FLAGS    "-lgcov")
+
+# SET(CMAKE_CXX_FLAGS  "${CMAKE_CXX_FLAGS} ${GCC_COVERAGE_COMPILE_FLAGS}")
+# SET(CMAKE_EXE_LINKER_FLAGS  "${CMAKE_EXE_LINKER_FLAGS} ${GCC_COVERAGE_LINK_FLAGS}")
 
 # # code coverage
 # if (CMAKE_COMPILER_IS_GNUCXX)
@@ -140,18 +145,11 @@ message(STATUS "CMAKE_CXX_COMPILER: ${CMAKE_CXX_COMPILER}")
 #     set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -O0")
 
 #     # optional excludes - None needed here
-#     set(COVERAGE_EXCLUDES lib/*.test.cpp test_*) # this is optional if you want to exclude some directory from the report
+#     # set(COVERAGE_EXCLUDES lib/*.test.cpp test_*) # this is optional if you want to exclude some directory from the report
  
 #     # importantly, set the path to the gcovr executable that you downladed
 #     set(GCOVR_PATH "/usr/local/bin/gcovr")
-#     # Works
-#     setup_target_for_coverage_gcovr_xml(
-#             NAME TestDoMathCoverageXml
-#             EXECUTABLE FullTest
-#     )
-#     # Works
-#     setup_target_for_coverage_gcovr_html(
-#             NAME TestDoMathCoverageHtml
-#             EXECUTABLE FullTest
-#     )
+#     setup_target_for_coverage_lcov(
+#         NAME coverage
+#         EXECUTABLE FullTest)
 # endif()

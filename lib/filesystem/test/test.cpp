@@ -1,10 +1,7 @@
-// NO MODIFICATIONS NEEDED HERE
-// This file is used to include all the test files in the project
-
 #include <gtest/gtest.h>
 #include <log4cplus/log4cplus.h>
 
-int main(int argc, char const *argv[])
+int main(int argc, char **argv)
 {
     // Initialization and deinitialization.
     log4cplus::Initializer initializer;
@@ -14,6 +11,7 @@ int main(int argc, char const *argv[])
 
     log4cplus::Logger logger = log4cplus::Logger::getInstance(
         LOG4CPLUS_TEXT("main"));
+    LOG4CPLUS_WARN(logger, LOG4CPLUS_TEXT("Hello, World!"));
 
     log4cplus::SharedAppenderPtr _appender(new log4cplus::FileAppender(LOG4CPLUS_TEXT("test.log")));
     _appender->setName(LOG4CPLUS_TEXT("file"));
@@ -21,6 +19,6 @@ int main(int argc, char const *argv[])
 
     logger.setLogLevel(log4cplus::ALL_LOG_LEVEL);
 
-    testing::InitGoogleTest(&argc, (char **)argv);
-    return RUN_ALL_TESTS();    
+    testing::InitGoogleTest(&argc, argv);
+    return RUN_ALL_TESTS();
 }

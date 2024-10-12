@@ -13,17 +13,17 @@ namespace finder
         std::array<std::shared_ptr<SensorPort>, MAX_SENSORS> PortManager::_sensor_ports;
         std::array<std::shared_ptr<MotorPort>, MAX_MOTORS> PortManager::_motor_ports;
 
-#ifdef ENABLE_LOGGING
-        ::finder::log::Logger PortManager::_logger = ::finder::log::Logger{};
-#endif
+        log4cplus::Logger PortManager::_logger = log4cplus::Logger::getInstance(LOG4CPLUS_TEXT("main.PortManager"));
 
         PortManager::PortManager() 
         {
+            LOG4CPLUS_TRACE(_logger, "PortManager::PortManager()");
             init();
         }
 
         PortManager::PortManager(path_port_t dir)
         {
+            LOG4CPLUS_TRACE(_logger, "PortManager::PortManager(path_port_t dir)");
             _sensor_dir = dir + "/lego-sensor";
             _motor_dir = dir + "/tacho-motor";
             init();
@@ -31,24 +31,20 @@ namespace finder
 
         PortManager::~PortManager()
         {
-
         }
 
         void PortManager::readPorts() 
         {
-#ifdef ENABLE_LOGGING
-                using namespace ::finder::log;
-#endif
+            LOG4CPLUS_TRACE(_logger, "PortManager::readPorts()");
+
                 std::array<const std::string, 2> dirs = {_sensor_dir, _motor_dir};
 
                 int foundDevices = 0;
 
                 for (const path_port_t& device_type_dir : dirs) {
                     if (!std::filesystem::exists(device_type_dir)) {
-#ifdef ENABLE_LOGGING                        
-                        _logger.log(LogLevel::WARN, "Skipping directory: " + device_type_dir);
-#endif
-                        throw std::logic_error("Directory not found: " + device_type_dir + " invalid path");
+                        LOG4CPLUS_ERROR_FMT(_logger, LOG4CPLUS_TEXT("Directory not found: %s invalid path"), device_type_dir.c_str());
+                        // throw std::logic_error("Directory not found: " + device_type_dir + " invalid path");
                         continue;
                     }
 
@@ -62,9 +58,7 @@ namespace finder
                         // Port port{device_type_dir + "/" + std::string{entry->d_name}};
 
                         path_address_t port = Port::getAddressPath(dir_entry.path().string());
-#ifdef ENABLE_LOGGING
-                        _logger.log(LogLevel::DEBUG, "PortBasePath:" + port);
-#endif
+                        LOG4CPLUS_DEBUG_FMT(_logger, LOG4CPLUS_TEXT("Checking port: %s"), port.c_str());
                         //read file
                         std::ifstream file(port);
                         std::string line;
@@ -82,9 +76,7 @@ namespace finder
 
                         for (auto& address : adresses) {
                             if (address == line) {
-#ifdef ENABLE_LOGGING
-                                _logger.log(LogLevel::INFO, "Port found: " + line);
-#endif                                
+                                LOG4CPLUS_DEBUG_FMT(_logger, LOG4CPLUS_TEXT("Found device: %s"), address.c_str());
                                 if (device_type_dir == _sensor_dir) {
                                     _sensor_ports[address.back() - '1'] = std::make_shared<SensorPort>(dir_entry.path().string());
                                 } else {
@@ -107,6 +99,8 @@ namespace finder
 
         void PortManager::init()
         {
+            LOG4CPLUS_TRACE(_logger, "PortManager::init()");
+
             adresses.clear();
             adresses.push_back(std::string{"ev3-ports:in1"});
             adresses.push_back(std::string{"ev3-ports:in2"});
@@ -123,6 +117,8 @@ namespace finder
 
         std::shared_ptr<Port> PortManager::borrowDevice(DevicePort port_address)
         {
+            LOG4CPLUS_TRACE(_logger, "PortManager::borrowDevice(DevicePort port_address)");
+
             if (!_ports_read) {
                 readPorts();
             }
@@ -139,16 +135,22 @@ namespace finder
 
         std::shared_ptr<SensorPort> PortManager::borrowSensor(DevicePort port_address)
         {
+            LOG4CPLUS_TRACE(_logger, "PortManager::borrowSensor(DevicePort port_address)");
+
             return _sensor_ports[static_cast<char>(port_address) - '1'];
         }
 
         std::shared_ptr<SensorPort> PortManager::borrowSensor(DeviceID port)
         {
+            LOG4CPLUS_TRACE(_logger, "PortManager::borrowSensor(DeviceID port)");
+
             return borrowSensor(static_cast<DevicePort>(port));
         }
 
         std::shared_ptr<MotorPort> PortManager::borrowMotor(DevicePort port)
         {
+            LOG4CPLUS_TRACE(_logger, "PortManager::borrowMotor(DevicePort port)");
+
             try
             {
                 return _motor_ports[static_cast<char>(port) - 'A'];
@@ -162,6 +164,8 @@ namespace finder
 
         std::shared_ptr<MotorPort> PortManager::borrowMotor(DeviceID port_address)
         {
+            LOG4CPLUS_TRACE(_logger, "PortManager::borrowMotor(DeviceID port_address)");
+            
             return borrowMotor(static_cast<char>(port_address));
         }
 

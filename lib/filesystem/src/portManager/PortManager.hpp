@@ -13,9 +13,6 @@
 #include <filesystem>
 #include <portManager/port/SensorPort.hpp>
 #include <portManager/port/MotorPort.hpp>
-#ifdef ENABLE_LOGGING
-#include <Logger.hpp>
-#endif
 
 namespace finder
 {
@@ -102,9 +99,7 @@ namespace finder
 
                 static void init();
 
-#ifdef ENABLE_LOGGING
-                static ::finder::log::Logger _logger;
-#endif
+                static log4cplus::Logger _logger;
         };
 
     } // namespace physical

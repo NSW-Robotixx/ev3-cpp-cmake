@@ -154,9 +154,8 @@ namespace finder
                 DeviceType getDeviceType() override;
 
             private:
-#ifdef ENABLE_LOGGING
-                static ::finder::log::Logger _logger;
-#endif
+                static log4cplus::Logger _logger;
+                
                 std::shared_ptr<std::ifstream> _file_speed_path;
                 std::shared_ptr<std::ofstream> _file_speed_sp_path;
                 std::shared_ptr<std::ifstream> _file_position_path;

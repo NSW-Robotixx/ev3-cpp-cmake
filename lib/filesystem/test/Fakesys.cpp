@@ -257,7 +257,7 @@ namespace finder::physical::test
         writeToFile(relPath + "/time_sp", 0);
     }
 
-    void FakeSys::writeToFile(std::string relPath, std::string value, bool init)
+    void FakeSys::writeToFile(std::string relPath, std::string value, bool init, bool append)
     {
         if (init) {
             // check if file exists
@@ -269,7 +269,14 @@ namespace finder::physical::test
         }
 
         std::ofstream file;
-        file.open(_basePath + relPath);
+        if (append)
+        {
+            file.open(_basePath + relPath, std::ios_base::app);
+        }
+        else
+        {
+            file.open(_basePath + relPath, std::ios_base::trunc);
+        }
         file << value;
         file.close();
 
@@ -293,12 +300,12 @@ namespace finder::physical::test
         return;
     }
 
-    void FakeSys::writeToFile(std::string relPath, int value, bool init)
+    void FakeSys::writeToFile(std::string relPath, int value, bool init, bool append)
     {
         writeToFile(relPath, std::to_string(value), init);
     }
 
-    void FakeSys::writeToFile(std::string relPath, std::vector<std::string> values, bool init)
+    void FakeSys::writeToFile(std::string relPath, std::vector<std::string> values, bool init, bool append)
     {
         std::string value;
         for (auto v : values)
@@ -308,7 +315,7 @@ namespace finder::physical::test
         writeToFile(relPath, value, init);
     }
 
-    void FakeSys::writeToFile(std::string relPath, std::vector<int> values, bool init)
+    void FakeSys::writeToFile(std::string relPath, std::vector<int> values, bool init, bool append)
     {
         std::string value;
         for (auto v : values)
@@ -362,7 +369,7 @@ namespace finder::physical::test
         readFromFile(relPath, value);
     }
 
-    void FakeSys::simulateMotorLeftMovement(std::string endState, std::function<void()> callback)
+    void FakeSys::simulateMotorLeftMovement(char motor, std::string endState, std::function<void()> callback)
     {
         std::string command, destination, position;
         std::ifstream fcommand, fdestination, fposition;
@@ -372,7 +379,30 @@ namespace finder::physical::test
         fposition.open(_motorLeftRelPath + "/position_sp");
 
         if (!fcommand.is_open()) {
-            throw new std::runtime_error("[Fakesys]: Failed to open command file of ");
+            throw new std::runtime_error("[Fakesys]: Failed to open command file of motor " + motor);
+        }
+
+        if (!fdestination.is_open()) {
+            throw new std::runtime_error("[Fakesys]: Failed to open destination file of motor " + motor);
+        }
+
+        if (!fposition.is_open()) {
+            throw new std::runtime_error("[Fakesys]: Failed to open position file of motor " + motor);
+        }
+
+        fcommand >> command;
+        fdestination >> destination;
+        fposition >> position;
+
+        if (command == "run-to-abs-pos") {
+            // simulate movement
+            int pos = std::stoi(position);
+            while (pos < std::stoi(destination)) {
+                pos++;
+                writeToFile(_motorLeftRelPath + "/position", pos);
+            }
+            writeToFile(_motorLeftRelPath + "/state", endState);
+            callback();
         }
     }
 

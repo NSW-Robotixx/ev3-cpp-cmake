@@ -8,10 +8,10 @@
 #include <fstream>
 #include <filesystem>
 #include <vector>
-#ifdef ENABLE_LOGGING
-#include <Logger.hpp>
-#include <FileLogger.hpp>
-#endif
+#include <log4cplus/logger.h>
+#include <log4cplus/loggingmacros.h>
+#include <log4cplus/consoleappender.h>
+
 namespace finder
 {
     namespace physical
@@ -45,7 +45,7 @@ namespace finder
         };
 #ifdef ENABLE_LOGGING
         /// @brief Port for the physical ports on the EV3
-        struct Port : public log::FileLogger
+        struct Port
 #else
         struct Port
 #endif
@@ -63,7 +63,7 @@ namespace finder
 
                 /// @brief Copy constructor
                 Port(Port&) = delete;
-                ~Port() = default;
+                ~Port();
 
                 /// @brief Set the base path of the port
                 /// @param path The path to set
@@ -153,11 +153,8 @@ namespace finder
             private:
                 bool _f_enabled;
                 // bool _enabled;
-#ifdef ENABLE_LOGGING
                 /// @brief Logger for the port
-                static ::finder::log::Logger _logger;
-#endif
-
+                static ::log4cplus::Logger _logger;
         };
 
     } // namespace physical
