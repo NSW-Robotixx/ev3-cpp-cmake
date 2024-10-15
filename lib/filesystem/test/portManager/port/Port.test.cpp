@@ -17,49 +17,80 @@ TEST(Port, getPortKey)
     FakeSys fakesys;
 
     finder::physical::Port port{"/sys/class/lego-sensor/sensor0"};
-    port.setBasePath(fakesys.getWorkingDir() + "/lego-sensor/sensor0");
+    absl::Status status = port.setBasePath(fakesys.getWorkingDir() + "/lego-sensor/sensor0");
+    ASSERT_TRUE(status.ok());
     port.overrideEnabled(false);
     // ASSERT_EQ(port.getPortKey(), 255);
 
     port.overrideEnabled(true);
 
-    ASSERT_EQ(port.getPortKey(), '0');
+    absl::StatusOr<char> portKey = port.getPortKey();
+    ASSERT_TRUE(portKey.ok());
+    ASSERT_EQ(portKey.value(), '0');
 }
 
 TEST(Port, getBasePath)
 {
-    finder::physical::Port port{"sys/class/lego-sensor/sensor0"};
-    port.setBasePath("/sys/class/lego-sensor/sensor0");
-    EXPECT_EQ(port.getBasePath(), "");
+    finder::physical::Port port{"/sys/class/lego-sensor/sensor0"};
+    absl::Status status = port.setBasePath("/sys/class/lego-sensor/sensor0");
+    ASSERT_TRUE(status.ok());
+    absl::StatusOr<std::string> basePath = port.getBasePath();
+    ASSERT_TRUE(basePath.ok());
+    EXPECT_EQ(basePath.value(), "");
+
     port.overrideEnabled(true);
-    EXPECT_EQ(port.getBasePath(), "/sys/class/lego-sensor/sensor0");
+    
+    basePath = port.getBasePath();
+    ASSERT_TRUE(basePath.ok());
+    EXPECT_EQ(basePath.value(), "/sys/class/lego-sensor/sensor0");
 }
 
 TEST(Port, getAddressPath)
 {
     finder::physical::Port port{"sys/class/lego-sensor/sensor0"};
-    port.setBasePath("/sys/class/lego-sensor/sensor0");
-    EXPECT_EQ(port.getAddressPath(), "");
+    absl::Status status = port.setBasePath("/sys/class/lego-sensor/sensor0");
+    ASSERT_TRUE(status.ok());
+
+    absl::StatusOr<std::string> addressPath = port.getAddressPath();
+    ASSERT_TRUE(addressPath.ok());
+    EXPECT_EQ(addressPath.value(), "");
     port.overrideEnabled(true);
-    EXPECT_EQ(port.getAddressPath(), "/sys/class/lego-sensor/sensor0/address");
+
+    addressPath = port.getAddressPath();
+    ASSERT_TRUE(addressPath.ok());
+    EXPECT_EQ(addressPath.value(), "/sys/class/lego-sensor/sensor0/address");
 }
 
 TEST(Port, getCommandPath)
 {
     finder::physical::Port port{"sys/class/lego-sensor/sensor0"};
-    port.setBasePath("/sys/class/lego-sensor/sensor0");
-    EXPECT_EQ(port.getCommandPath(), "");
+    absl::Status status = port.setBasePath("/sys/class/lego-sensor/sensor0");
+    ASSERT_TRUE(status.ok());
+
+    absl::StatusOr<std::string> commandPath = port.getCommandPath();
+    ASSERT_TRUE(commandPath.ok());
+    EXPECT_EQ(commandPath.value(), "");
     port.overrideEnabled(true);
-    EXPECT_EQ(port.getCommandPath(), "/sys/class/lego-sensor/sensor0/command");
+
+    commandPath = port.getCommandPath();
+    ASSERT_TRUE(commandPath.ok());
+    EXPECT_EQ(commandPath.value(), "/sys/class/lego-sensor/sensor0/command");
 }
 
 TEST(Port, getCommandsPath)
 {
     finder::physical::Port port{"sys/class/lego-sensor/sensor0"};
-    port.setBasePath("/sys/class/lego-sensor/sensor0");
-    EXPECT_EQ(port.getCommandsPath(), "");
+    absl::Status status = port.setBasePath("/sys/class/lego-sensor/sensor0");
+    ASSERT_TRUE(status.ok());
+
+    absl::StatusOr<std::string> commandsPath = port.getCommandsPath();
+    ASSERT_TRUE(commandsPath.ok());
+    EXPECT_EQ(commandsPath.value(), "");
     port.overrideEnabled(true);
-    EXPECT_EQ(port.getCommandsPath(), "/sys/class/lego-sensor/sensor0/commands");
+
+    commandsPath = port.getCommandsPath();
+    ASSERT_TRUE(commandsPath.ok());
+    EXPECT_EQ(commandsPath.value(), "/sys/class/lego-sensor/sensor0/commands");
 }
 
 TEST(Port, getAddress)
@@ -67,10 +98,17 @@ TEST(Port, getAddress)
     using namespace finder::physical::test;
 
     finder::physical::Port port{"sys/class/lego-sensor/sensor0"};
-    port.setBasePath(FakeSys::getWorkingDir() + "/lego-sensor/sensor0");
-    EXPECT_EQ(port.getAddress(), "ev3-ports:in1");
+    absl::Status status = port.setBasePath(FakeSys::getWorkingDir() + "/lego-sensor/sensor0");
+    ASSERT_TRUE(status.ok());
+
+    absl::StatusOr<std::string> address = port.getAddress();
+    ASSERT_TRUE(address.ok());
+    EXPECT_EQ(address.value(), "ev3-ports:in1");
     port.overrideEnabled(false);
-    EXPECT_EQ(port.getAddress(), "");
+
+    address = port.getAddress();
+    ASSERT_TRUE(address.ok());
+    EXPECT_EQ(address.value(), "");
 }
 
 TEST(Port, setCommand)
@@ -78,10 +116,11 @@ TEST(Port, setCommand)
     using namespace finder::physical::test;
 
     finder::physical::Port port{"sys/class/lego-sensor/sensor0"};
-    port.setBasePath(FakeSys::getWorkingDir() + "/lego-sensor/sensor0");
-    EXPECT_EQ(port.setCommand("test"), true);
+    absl::Status status = port.setBasePath(FakeSys::getWorkingDir() + "/lego-sensor/sensor0");
+    ASSERT_TRUE(status.ok());
     port.overrideEnabled(false);
-    EXPECT_EQ(port.setCommand("test"), false);
+    status = port.setCommand("test-command");
+    ASSERT_FALSE(status.ok());
 }
 
 // TEST(Port, getCommands)
@@ -108,8 +147,16 @@ TEST(Port, getDeviceType)
     motorPort.overrideEnabled(true);
     unknownPort.overrideEnabled(true);
     
-    ASSERT_EQ(sensorPort.getDeviceType(), finder::physical::DeviceType::SENSOR);
-    ASSERT_EQ(motorPort.getDeviceType(), finder::physical::DeviceType::MOTOR);
-    ASSERT_EQ(unknownPort.getDeviceType(), finder::physical::DeviceType::UNKNOWN);
+    absl::StatusOr<finder::physical::DeviceType> sensorType = sensorPort.getDeviceType();
+    absl::StatusOr<finder::physical::DeviceType> motorType = motorPort.getDeviceType();
+    absl::StatusOr<finder::physical::DeviceType> unknownType = unknownPort.getDeviceType();
+
+    ASSERT_TRUE(sensorType.ok());
+    ASSERT_TRUE(motorType.ok());
+    ASSERT_TRUE(unknownType.ok());
+
+    ASSERT_EQ(sensorType.value(), finder::physical::DeviceType::SENSOR);
+    ASSERT_EQ(motorType.value(), finder::physical::DeviceType::MOTOR);
+    ASSERT_EQ(unknownType.value(), finder::physical::DeviceType::UNKNOWN);
 }
 

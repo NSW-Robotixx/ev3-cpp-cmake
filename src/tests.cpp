@@ -9,7 +9,7 @@ int main(int argc, char const *argv[])
     // Initialization and deinitialization.
     log4cplus::Initializer initializer;
 
-    log4cplus::BasicConfigurator config;
+    log4cplus::PropertyConfigurator config{LOG4CPLUS_TEXT("")};
     config.configure();
 
     log4cplus::Logger logger = log4cplus::Logger::getInstance(
@@ -17,7 +17,8 @@ int main(int argc, char const *argv[])
 
     log4cplus::SharedAppenderPtr _appender(new log4cplus::FileAppender(LOG4CPLUS_TEXT("test.log")));
     _appender->setName(LOG4CPLUS_TEXT("file"));
-    logger.addAppender(_appender);
+    
+    log4cplus::Logger::getRoot().addAppender(_appender);
 
     logger.setLogLevel(log4cplus::ALL_LOG_LEVEL);
 

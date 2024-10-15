@@ -37,6 +37,7 @@ target_include_directories(EV3_filesystem PUBLIC ${EV3_FILESYSTEM_SRC_DIR})
 target_link_libraries(EV3_filesystem
     PRIVATE
         log4cplus::log4cplus 
+        abseil::abseil
         Logger       
 )
 

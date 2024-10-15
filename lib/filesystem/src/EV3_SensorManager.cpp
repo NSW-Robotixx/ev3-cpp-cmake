@@ -37,41 +37,92 @@ namespace finder::physical
     {
         LOG4CPLUS_TRACE(_logger, "SensorManager::readAllSensors()");
 
-        readGyro();
-        readColorLeft();
-        readColorRight();
-        readColorFront();
+        absl::StatusOr<int> gyroValue = _gyroSensor->getValue(0);
+        if (gyroValue.ok())
+        {
+            _gyroValue = gyroValue.value();
+        } else {
+            LOG4CPLUS_ERROR(_logger, "Error reading gyro sensor");
+        }
+
+        absl::StatusOr<int> colorLeftValue = _colorSensorLeft->getValue(0);
+        if (colorLeftValue.ok())
+        {
+            _colorLeftValue = colorLeftValue.value();
+        } else {
+            LOG4CPLUS_ERROR(_logger, "Error reading left color sensor");
+        }
+
+        absl::StatusOr<int> colorRightValue = _colorSensorRight->getValue(0);
+        if (colorRightValue.ok())
+        {
+            _colorRightValue = colorRightValue.value();
+        } else {
+            LOG4CPLUS_ERROR(_logger, "Error reading right color sensor");
+        }
+
+        absl::StatusOr<int> colorFrontValue = _colorSensorFront->getValue(0);
+        if (colorFrontValue.ok())
+        {
+            _colorFrontValue = colorFrontValue.value();
+        } else {
+            LOG4CPLUS_ERROR(_logger, "Error reading front color sensor");
+        }
     }
 
-    int SensorManager::readGyro()
+    absl::StatusOr<int> SensorManager::readGyro()
     {
         LOG4CPLUS_TRACE(_logger, "SensorManager::readGyro()");
         
-        _gyroValue = _gyroSensor->getValue(0);
+        absl::StatusOr<int> gyroValue = _gyroSensor->getValue(0);
+        if (!gyroValue.ok())
+        {
+            LOG4CPLUS_ERROR(_logger, "Error reading gyro sensor");
+            return absl::InternalError("Error reading gyro sensor");
+        }
+        _gyroValue = gyroValue.value();
         return _gyroValue;
     }
 
-    int SensorManager::readColorLeft()
+    absl::StatusOr<int> SensorManager::readColorLeft()
     {
         LOG4CPLUS_TRACE(_logger, "SensorManager::readColorLeft()");
 
-        _colorLeftValue = _colorSensorLeft->getValue(0);
+        absl::StatusOr<int> colorLeftValue = _colorSensorLeft->getValue(0);
+        if (!colorLeftValue.ok())
+        {
+            LOG4CPLUS_ERROR(_logger, "Error reading left color sensor");
+            return absl::InternalError("Error reading left color sensor");
+        }
+        _colorLeftValue = colorLeftValue.value();
         return _colorLeftValue;
     }
 
-    int SensorManager::readColorRight()
+    absl::StatusOr<int> SensorManager::readColorRight()
     {
         LOG4CPLUS_TRACE(_logger, "SensorManager::readColorRight()");
         
-        _colorRightValue = _colorSensorRight->getValue(0);
+        absl::StatusOr<int> colorRightValue = _colorSensorRight->getValue(0);
+        if (!colorRightValue.ok())
+        {
+            LOG4CPLUS_ERROR(_logger, "Error reading right color sensor");
+            return absl::InternalError("Error reading right color sensor");
+        }
+        _colorRightValue = colorRightValue.value();
         return _colorRightValue;
     }
 
-    int SensorManager::readColorFront()
+    absl::StatusOr<int> SensorManager::readColorFront()
     {
         LOG4CPLUS_TRACE(_logger, "SensorManager::readColorFront()");
 
-        _colorFrontValue = _colorSensorFront->getValue(0);
+        absl::StatusOr<int> colorFrontValue = _colorSensorFront->getValue(0);
+        if (!colorFrontValue.ok())
+        {
+            LOG4CPLUS_ERROR(_logger, "Error reading front color sensor");
+            return absl::InternalError("Error reading front color sensor");
+        }
+        _colorFrontValue = colorFrontValue.value();
         return _colorFrontValue;
     }
     
@@ -94,9 +145,10 @@ namespace finder::physical
                     break;
                 } 
 
-                if (_gyroSensor->getValue(0) != _gyroValue)
+                absl::StatusOr<int> gyroValue = _gyroSensor->getValue(0);
+                if (gyroValue.ok() && gyroValue.value() != _gyroValue)
                 {
-                    _gyroValue = _gyroSensor->getValue(0);
+                    _gyroValue = gyroValue.value();
                     for (auto const& [port, callback] : _eventListeners)
                     {
                         if (port == DeviceID::GYRO || port == DeviceID::ANY) {
@@ -105,9 +157,10 @@ namespace finder::physical
                     }
                 }
 
-                if (_colorSensorFront->getValue(0) != _colorFrontValue)
+                absl::StatusOr<int> colorLeftValue = _colorSensorLeft->getValue(0);
+                if (colorLeftValue.ok() && colorLeftValue.value() != _colorLeftValue)
                 {
-                    _colorFrontValue = _colorSensorFront->getValue(0);
+                    _colorFrontValue = colorLeftValue.value();
                     for (auto const& [port, callback] : _eventListeners)
                     {
                         if (port == DeviceID::COLOR_LEFT || port == DeviceID::ANY) {
@@ -116,24 +169,26 @@ namespace finder::physical
                     }
                 }
 
-                if (_colorSensorLeft->getValue(0) != _colorFrontValue)
+                absl::StatusOr<int> colorRightValue = _colorSensorRight->getValue(0);
+                if (colorRightValue.ok() && colorRightValue.value() != _colorRightValue)
                 {
-                    _colorLeftValue = _colorSensorLeft->getValue(0);
-                    for (auto const& [port, callback] : _eventListeners)
-                    {
-                        if (port == DeviceID::COLOR_RIGHT || port == DeviceID::ANY) {
-                            callback(DeviceID::COLOR_FRONT, _colorFrontValue);
-                        }
-                    }
-                }
-
-                if (_colorSensorRight->getValue(0) != _colorRightValue)
-                {
-                    _colorRightValue = _colorSensorLeft->getValue(0);
+                    _colorRightValue = colorRightValue.value();
                     for (auto const& [port, callback] : _eventListeners)
                     {
                         if (port == DeviceID::COLOR_RIGHT || port == DeviceID::ANY) {
                             callback(DeviceID::COLOR_RIGHT, _colorRightValue);
+                        }
+                    }
+                }
+
+                absl::StatusOr<int> colorFrontValue = _colorSensorFront->getValue(0);
+                if (colorFrontValue.ok() && colorFrontValue.value() != _colorFrontValue)
+                {
+                    _colorFrontValue = colorFrontValue.value();
+                    for (auto const& [port, callback] : _eventListeners)
+                    {
+                        if (port == DeviceID::COLOR_FRONT || port == DeviceID::ANY) {
+                            callback(DeviceID::COLOR_FRONT, _colorFrontValue);
                         }
                     }
                 }

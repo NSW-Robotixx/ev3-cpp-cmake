@@ -33,4 +33,5 @@ target_link_libraries(EV3_position
         Vector2
         Vector3
         log4cplus::log4cplus
+        abseil::abseil
 )

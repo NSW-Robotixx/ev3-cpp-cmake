@@ -57,18 +57,20 @@ namespace finder::physical
             static void moveBackward(LaunchType launch, int speed, int distance, std::function<void()> stopCallback);
 
             /// @brief Turn the robot left.
+            /// @return absl::Status
             /// @param launch Launch type
             /// @param speed Speed to turn at
             /// @param distance Distance to turn
             /// @param stopCallback Function to call when the turn has finished.
-            static void turnLeft(LaunchType launch, int speed, int distance, std::function<void()> stopCallback);
+            static absl::Status turnLeft(LaunchType launch, int speed, int distance, std::function<void()> stopCallback);
 
             /// @brief Turn the robot right.
+            /// @return absl::Status
             /// @param launch Launch type
             /// @param speed Speed to turn at
             /// @param distance Distance to turn
             /// @param stopCallback Function to call when the turn has finished.
-            static void turnRight(LaunchType launch, int speed, int distance, std::function<void()> stopCallback);
+            static absl::Status turnRight(LaunchType launch, int speed, int distance, std::function<void()> stopCallback);
 
             /// @brief Callback for when the direction changes
             /// @param callback Function to call when the direction changes
@@ -80,7 +82,7 @@ namespace finder::physical
 
         private:
             static void move(LaunchType launch, int speed, int distance, std::function<void()> stopCallback);
-            static void turn(LaunchType launch, int speed, int distance, std::function<void()> stopCallback, TurnDirection direction);
+            static absl::Status turn(LaunchType launch, int speed, int distance, std::function<void()> stopCallback, TurnDirection direction);
 
             static void moveNow(int speed, int distance, std::function<void()> stopCallback);
             // static void moveAsync(int speed, int distance, std::function<void()> stopCallback, DeviceID motor);

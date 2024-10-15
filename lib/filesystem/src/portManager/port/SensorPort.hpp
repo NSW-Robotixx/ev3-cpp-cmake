@@ -24,38 +24,40 @@ namespace finder
                 SensorPort(std::shared_ptr<Port> port);
 
                 /// @brief Set the base path of the port
+                /// @return absl::Status
                 /// @param path The path to set
-                void setBasePath(const path_port_t& path) override;
+                absl::Status setBasePath(const path_port_t& path) override;
 
                 /// @brief Get the value path of the port
                 /// @param index Index of the value
                 /// @return The value path
-                path_value_t getValuePath(int index);
+                absl::StatusOr<path_value_t> getValuePath(int index);
 
                 /// @brief Get the mode path of the port
                 /// @return The mode path
-                path_mode_t getModePath();
+                absl::StatusOr<path_mode_t> getModePath();
 
                 /// @brief Get the modes path of the port
                 /// @return The modes path
-                path_modes_t getModesPath();
+                absl::StatusOr<path_modes_t> getModesPath();
 
                 /// @brief Get the number of values path of the port
                 /// @return The number of values path
-                path_num_values_t getNumValuesPath();
+                absl::StatusOr<path_num_values_t> getNumValuesPath();
 
                 /// @brief Get the poll ms path of the port
                 /// @return The poll ms path
-                path_poll_ms_t getPollMsPath();
+                absl::StatusOr<path_poll_ms_t> getPollMsPath();
 
                 /// @brief Get the value of the port
                 /// @param index Index of the value
                 /// @return The value of the port
-                int getValue(int index);
+                absl::StatusOr<int> getValue(int index);
 
                 /// @brief Set the mode of the sensor
+                /// @return absl::Status
                 /// @param mode Mode to set
-                void setMode(sensor_mode_t mode);
+                absl::Status setMode(sensor_mode_t mode);
 
                 /// @brief Get the available modes of the sensor
                 /// @return Vector of available modes
@@ -63,7 +65,7 @@ namespace finder
 
                 /// @brief Get the number of values of the sensor
                 /// @return Number of values
-                int getNumValues();
+                absl::StatusOr<int> getNumValues();
 
                 /// @brief Get the poll ms of the sensor
                 /// @return Poll ms
@@ -71,7 +73,7 @@ namespace finder
 
                 /// @brief Get the device type of the port
                 /// @return The device type of the port
-                DeviceType getDeviceType() override;
+                absl::StatusOr<DeviceType> getDeviceType() override;
                 
             private:
                 static log4cplus::Logger _logger;
@@ -86,7 +88,7 @@ namespace finder
 
                 bool _is_initialized;
 
-                bool initFiles();
+                absl::Status initFiles();
         };
     } // namespace physical
     

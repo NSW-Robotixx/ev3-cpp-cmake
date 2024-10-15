@@ -27,19 +27,19 @@ namespace finder::physical
 
             /// @brief Read the gyro sensor
             /// @return The value of the gyro sensor
-            static int readGyro();
+            static absl::StatusOr<int> readGyro();
 
             /// @brief Read the left color sensor
             /// @return The value of the left color sensor
-            static int readColorLeft();
+            static absl::StatusOr<int> readColorLeft();
 
             /// @brief Read the right color sensor
             /// @return The value of the right color sensor
-            static int readColorRight();
+            static absl::StatusOr<int> readColorRight();
 
             /// @brief Read the front color sensor
             /// @return The value of the front color sensor
-            static int readColorFront();
+            static absl::StatusOr<int> readColorFront();
 
             /// @brief Read the left motor
             /// @return The value of the left motor

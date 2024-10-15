@@ -28,7 +28,7 @@ if(EV3_TESTS_SRC)
     get_property(EV3_TESTS_LIBS GLOBAL PROPERTY EV3_TESTS_LIBS)
     
     # add the lib to be linked to the test
-    set_property(GLOBAL PROPERTY EV3_TESTS_LIBS ${EV3_TESTS_LIBS} EV3_filesystem log4cplus::log4cplus)
+    set_property(GLOBAL PROPERTY EV3_TESTS_LIBS ${EV3_TESTS_LIBS} EV3_filesystem log4cplus::log4cplus abseil::abseil)
 else()
     message(STATUS "EV3_TESTS_SRC is not defined")
 endif()
@@ -51,6 +51,7 @@ target_link_libraries(EV3_filesystem_test
         GTest::gtest
         EV3_filesystem
         log4cplus::log4cplus
+        abseil::abseil
         # Logger
 )
 

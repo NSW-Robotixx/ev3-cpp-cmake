@@ -25,131 +25,192 @@ namespace finder
                 throw new std::invalid_argument("SensorPort created without port path");
             }
             _is_initialized = false;
-            _is_initialized = initFiles();
+            _path = port_name;
+
+            absl::Status success = initFiles();
+            if (!success.ok())
+            {
+                LOG4CPLUS_ERROR(_logger, "Failed to initialize files");
+                _path = "";
+                throw success;
+            }
+            _is_initialized = success.ok();
         }
 
-        SensorPort::SensorPort(std::shared_ptr<Port> port): Port(port->getBasePath())
+        SensorPort::SensorPort(std::shared_ptr<Port> port): Port(port->getBasePath().value())
         {
             LOG4CPLUS_TRACE(_logger, "SensorPort::SensorPort(std::shared_ptr<Port> port)");
+            absl::StatusOr<std::string> path = port->getBasePath();
 
-            if (port->getBasePath().length() <= 0) {
+            if (path.ok()) {
+                LOG4CPLUS_ERROR(_logger, LOG4CPLUS_TEXT("Unable to get path from port"));
+                throw path;
+            } else if (path.value().length() <= 0) {
                 LOG4CPLUS_ERROR(_logger, LOG4CPLUS_TEXT("SensorPort created without port path"));
                 throw new std::invalid_argument("SensorPort created without port path");
             }
             _is_initialized = false;
-            _is_initialized = initFiles();
+            
+            absl::StatusOr<bool> success = initFiles();
+            if (!success.ok())
+            {
+                LOG4CPLUS_ERROR(_logger, "Failed to initialize files");
+                throw success.status();
+            }
+            _is_initialized = success.value();
         }
 
-        void SensorPort::setBasePath(const path_port_t& path)
+        absl::Status SensorPort::setBasePath(const path_port_t& path)
         {
-            Port::setBasePath(path);
-            initFiles();
+            absl::Status status = Port::setBasePath(path);
+            if (!status.ok())
+            {
+                LOG4CPLUS_ERROR_FMT(_logger, LOG4CPLUS_TEXT("Failed to set path for port: %s"), path.c_str());
+                return absl::InvalidArgumentError("Failed to set path for port: " + path);
+            }
+            absl::StatusOr<bool> success = initFiles();
+            if (!success.ok())
+            {
+                LOG4CPLUS_ERROR(_logger, "Failed to initialize files");
+                return success.status();
+            }
+            return status;
         }
 
-        path_value_t SensorPort::getValuePath(int index)
+        absl::StatusOr<path_value_t> SensorPort::getValuePath(int index)
         {
             LOG4CPLUS_TRACE(_logger, "SensorPort::getValuePath()");
 
-            if (isEnabled())
+            if (isEnabled().value_or(false))
             {
-                return getBasePath() + "/value" + std::to_string(index);
+                absl::StatusOr<std::string> path = getBasePath();
+                if (!path.ok())
+                {
+                    LOG4CPLUS_ERROR(_logger, LOG4CPLUS_TEXT("Failed to get path"));
+                    return path;
+                }
+                return path.value() + "/value" + std::to_string(index);
             }
             else
             {
-                LOG4CPLUS_WARN_FMT(_logger, LOG4CPLUS_TEXT("Port is not enabled for %s"), getBasePath().c_str());
-                return "";
+                LOG4CPLUS_WARN_FMT(_logger, LOG4CPLUS_TEXT("Port is not enabled for %s"), getBasePath().value_or("").c_str());
+                return absl::InvalidArgumentError("Port is not enabled: " + getBasePath().value_or(""));
             }
         }
 
-        path_mode_t SensorPort::getModePath()
+        absl::StatusOr<path_mode_t> SensorPort::getModePath()
         {
             LOG4CPLUS_TRACE(_logger, "SensorPort::getModePath()");
 
-            if (isEnabled())
+            if (isEnabled().value_or(false))
             {
-                return getBasePath() + "/mode";
+                absl::StatusOr<std::string> path = getBasePath();
+                if (!path.ok())
+                {
+                    LOG4CPLUS_ERROR(_logger, LOG4CPLUS_TEXT("Failed to get path"));
+                    return path;
+                }
+                return path.value() + "/mode";
             }
             else
             {
-                LOG4CPLUS_WARN_FMT(_logger, LOG4CPLUS_TEXT("Port is not enabled for %s"), getBasePath().c_str());
-                return "";
+                LOG4CPLUS_WARN_FMT(_logger, LOG4CPLUS_TEXT("Port is not enabled for %s"), getBasePath().value_or("").c_str());
+                return absl::InvalidArgumentError("Port is not enabled: " + getBasePath().value_or(""));
             }
         }
 
-        path_modes_t SensorPort::getModesPath()
+        absl::StatusOr<path_modes_t> SensorPort::getModesPath()
         {
             LOG4CPLUS_TRACE(_logger, "SensorPort::getModesPath()");
         
-            if (isEnabled())
+            if (isEnabled().value_or(false))
             {
-                return getBasePath() + "/modes";
+                absl::StatusOr<std::string> path = getBasePath();
+                if (!path.ok())
+                {
+                    LOG4CPLUS_ERROR(_logger, LOG4CPLUS_TEXT("Failed to get path"));
+                    return path;
+                }
+                return path.value() + "/modes";
             }
             else
             {
-                LOG4CPLUS_WARN_FMT(_logger, LOG4CPLUS_TEXT("Port is not enabled for %s"), getBasePath().c_str());
-                return "";
+                LOG4CPLUS_WARN_FMT(_logger, LOG4CPLUS_TEXT("Port is not enabled for %s"), getBasePath().value_or("").c_str());
+                return absl::InvalidArgumentError("Port is not enabled: " + getBasePath().value_or(""));
             }
         }
 
-        path_num_values_t SensorPort::getNumValuesPath()
+        absl::StatusOr<path_num_values_t> SensorPort::getNumValuesPath()
         {
             LOG4CPLUS_TRACE(_logger, "SensorPort::getNumValuesPath()");
 
-            if (isEnabled())
+            if (isEnabled().value_or(false))
             {
-                return getBasePath() + "/num_values";
+                absl::StatusOr<std::string> path = getBasePath();
+                if (!path.ok())
+                {
+                    LOG4CPLUS_ERROR(_logger, LOG4CPLUS_TEXT("Failed to get path"));
+                    throw path;
+                }
+                return path.value() + "/num_values";
             }
             else
             {
-                LOG4CPLUS_WARN_FMT(_logger, LOG4CPLUS_TEXT("Port is not enabled for %s"), getBasePath().c_str());
-                return "";
+                LOG4CPLUS_WARN_FMT(_logger, LOG4CPLUS_TEXT("Port is not enabled for %s"), getBasePath().value_or("").c_str());
+                return absl::InvalidArgumentError("Port is not enabled: " + getBasePath().value_or(""));
             }
         }
 
-        path_poll_ms_t SensorPort::getPollMsPath()
+        absl::StatusOr<path_poll_ms_t> SensorPort::getPollMsPath()
         {
             LOG4CPLUS_TRACE(_logger, "SensorPort::getPollMsPath()");
 
-            if (isEnabled())
+            if (isEnabled().value_or(false))
             {
-                return getBasePath() + "/poll_ms";
+                absl::StatusOr<std::string> path = getBasePath();
+                if (!path.ok())
+                {
+                    LOG4CPLUS_ERROR(_logger, LOG4CPLUS_TEXT("Failed to get path"));
+                    return "";
+                }
+                return path.value() + "/poll_ms";
             }
             else
             {
-                LOG4CPLUS_WARN_FMT(_logger, LOG4CPLUS_TEXT("Port is not enabled for %s"), getBasePath().c_str());
-                return "";
+                LOG4CPLUS_WARN_FMT(_logger, LOG4CPLUS_TEXT("Port is not enabled for %s"), getBasePath().value_or("").c_str());
+                return absl::InvalidArgumentError("Port is not enabled: " + getBasePath().value_or(""));
             }
         }
 
-        int SensorPort::getValue(int index)
+        absl::StatusOr<int> SensorPort::getValue(int index)
         {
             LOG4CPLUS_TRACE(_logger, "SensorPort::getValue()");
 
-            if (isEnabled())
+            if (isEnabled().value_or(false))
             {
                 if (index < 0 || index >= _file_value_path.size())
                 {
-                    LOG4CPLUS_WARN_FMT(_logger, LOG4CPLUS_TEXT("Index out of range for %s"), getBasePath().c_str());
-                    return -1;
+                    LOG4CPLUS_WARN_FMT(_logger, LOG4CPLUS_TEXT("Index out of range for %s"), getBasePath().value_or("").c_str());
+                    return absl::OutOfRangeError("Index out of range");
                 }
                 
                 if (_file_value_path[index]->is_open())
                 {
                     int value;
                     *_file_value_path[index] >> value;
-                    LOG4CPLUS_INFO_FMT(_logger, LOG4CPLUS_TEXT("VALUE.GET: %s WITH_RESULT: %d"), getBasePath().c_str(), value);
+                    LOG4CPLUS_INFO_FMT(_logger, LOG4CPLUS_TEXT("VALUE.GET: %s WITH_RESULT: %d"), getBasePath().value_or("").c_str(), value);
                     return value;
                 } 
             } 
-            LOG4CPLUS_WARN_FMT(_logger, LOG4CPLUS_TEXT("Port is not enabled for %s"), getBasePath().c_str());
-            throw new std::runtime_error("SensorPort is not enabled");
+            LOG4CPLUS_WARN_FMT(_logger, LOG4CPLUS_TEXT("Port is not enabled for %s"), getBasePath().value_or("").c_str());
+            return absl::InvalidArgumentError("Port is not enabled: " + getBasePath().value_or(""));
         }
 
-        void SensorPort::setMode(sensor_mode_t mode)
+        absl::Status SensorPort::setMode(sensor_mode_t mode)
         {
             LOG4CPLUS_TRACE(_logger, "SensorPort::setMode()");
 
-            if (isEnabled())
+            if (isEnabled().value_or(false))
             {
                 if (_file_mode_path->is_open())
                 {
@@ -157,7 +218,8 @@ namespace finder
                     _file_mode_path->flush();
                 }
             }
-            LOG4CPLUS_WARN_FMT(_logger, LOG4CPLUS_TEXT("Port is not enabled for %s"), getBasePath().c_str());
+            LOG4CPLUS_WARN_FMT(_logger, LOG4CPLUS_TEXT("Port is not enabled for %s"), getBasePath().value_or("").c_str());
+            return absl::InvalidArgumentError("Port is not enabled: " + getBasePath().value_or(""));
         }
 
         std::vector<sensor_mode_t> SensorPort::getModes()
@@ -165,7 +227,7 @@ namespace finder
             LOG4CPLUS_TRACE(_logger, "SensorPort::getModes()");
 
             // read modes from file into vector
-            if (isEnabled())
+            if (isEnabled().value_or(false))
             {
                 if (_file_modes_path->is_open())
                 {
@@ -178,148 +240,184 @@ namespace finder
                     _modes = _modes;
                     for (auto m : _modes)
                     {
-                        LOG4CPLUS_INFO_FMT(_logger, LOG4CPLUS_TEXT("MODES.GET: %s WITH_RESULT: %s"), getBasePath().c_str(), m.c_str());
+                        LOG4CPLUS_INFO_FMT(_logger, LOG4CPLUS_TEXT("MODES.GET: %s WITH_RESULT: %s"), getBasePath().value_or("").c_str(), m.c_str());
                     }
                 }
                 return _modes;
             }
-            LOG4CPLUS_WARN_FMT(_logger, LOG4CPLUS_TEXT("Port is not enabled for %s"), getBasePath().c_str());
+            LOG4CPLUS_WARN_FMT(_logger, LOG4CPLUS_TEXT("Port is not enabled for %s"), getBasePath().value_or("").c_str());
             return std::vector<sensor_mode_t>{};
         }
 
-        int SensorPort::getNumValues()
+        absl::StatusOr<int> SensorPort::getNumValues()
         {
             LOG4CPLUS_TRACE(_logger, "SensorPort::getNumValues()");
 
-            if (isEnabled())
+            if (isEnabled().value_or(false))
             {
                 if (_file_num_values_path->is_open())
                 {
                     int num_values;
                     *_file_num_values_path >> num_values;
-                    LOG4CPLUS_INFO_FMT(_logger, LOG4CPLUS_TEXT("NUM_VALUES.GET: %s WITH_RESULT: %d"), getBasePath().c_str(), num_values);
+                    LOG4CPLUS_INFO_FMT(_logger, LOG4CPLUS_TEXT("NUM_VALUES.GET: %s WITH_RESULT: %d"), getBasePath().value_or("").c_str(), num_values);
                     return num_values;
                 }
             }
-            LOG4CPLUS_WARN_FMT(_logger, LOG4CPLUS_TEXT("Port is not enabled for %s"), getBasePath().c_str());
-            return -1;
+            LOG4CPLUS_WARN_FMT(_logger, LOG4CPLUS_TEXT("Port is not enabled for %s"), getBasePath().value_or("").c_str());
+            return absl::InvalidArgumentError("Port is not enabled: " + getBasePath().value_or(""));
         }
 
         int SensorPort::getPollMs()
         {
             LOG4CPLUS_TRACE(_logger, "SensorPort::getPollMs()");
 
-            if (isEnabled())
+            if (isEnabled().value_or(false))
             {
                 if (_file_poll_ms_path->is_open())
                 {
                     int poll_ms;
                     *_file_poll_ms_path >> poll_ms;
-                    LOG4CPLUS_INFO_FMT(_logger, LOG4CPLUS_TEXT("POLL_MS.GET: %s WITH_RESULT: %d"), getBasePath().c_str(), poll_ms);
+                    LOG4CPLUS_INFO_FMT(_logger, LOG4CPLUS_TEXT("POLL_MS.GET: %s WITH_RESULT: %d"), getBasePath().value_or("").c_str(), poll_ms);
                     return poll_ms;
                 }
             }
-            LOG4CPLUS_WARN_FMT(_logger, LOG4CPLUS_TEXT("Port is not enabled for %s"), getBasePath().c_str());
+            LOG4CPLUS_WARN_FMT(_logger, LOG4CPLUS_TEXT("Port is not enabled for %s"), getBasePath().value_or("").c_str());
             return -1;
         }
 
-        DeviceType SensorPort::getDeviceType()
+        absl::StatusOr<DeviceType> SensorPort::getDeviceType()
         {
             LOG4CPLUS_TRACE(_logger, "SensorPort::getDeviceType()");
 
-            if (Port::getDeviceType() != DeviceType::SENSOR) {
+            absl::StatusOr<DeviceType> device_type = Port::getDeviceType();
+            if (device_type.ok() && device_type.value() != DeviceType::SENSOR) {
                 LOG4CPLUS_ERROR(_logger, "SensorPort::getDeviceType() called on non-sensor port");
-                throw new std::runtime_error(
-                    "SensorPort::getDeviceType() called on non-sensor port"
-                );
+                return absl::InvalidArgumentError("SensorPort::getDeviceType() called on non-sensor port");
+            } else {
+                LOG4CPLUS_DEBUG(_logger, "Device type is SENSOR");
             }
             return DeviceType::SENSOR;
         }
-        bool SensorPort::initFiles()
+        absl::Status SensorPort::initFiles()
         {
             LOG4CPLUS_TRACE(_logger, "SensorPort::initFiles()");
 
-            bool full_success = true;
+            absl::Status full_success;
 
             // open files
             for (int i = 0; i < 10; i++)
             {
-                _file_value_path.push_back(std::make_shared<std::ifstream>(getValuePath(i)));
+                absl::StatusOr<std::string> value_path = getValuePath(i);
+                if (!value_path.ok())
+                {
+                    LOG4CPLUS_ERROR_FMT(_logger, LOG4CPLUS_TEXT("Failed to get value path for %d"), i);
+                    full_success.Update(value_path.status());
+                    continue;
+                }
+                _file_value_path.push_back(std::make_shared<std::ifstream>(value_path.value()));
                 if (!_file_value_path[i]->fail())
                 {
                     if (!_file_value_path[i]->is_open())
                     {
-                        LOG4CPLUS_WARN_FMT(_logger, LOG4CPLUS_TEXT("Failed to open value0 file at: %s"), getValuePath(i).c_str());
+                        LOG4CPLUS_WARN_FMT(_logger, LOG4CPLUS_TEXT("Failed to open value0 file at: %s"), value_path.value().c_str());
                         _file_value_path[i].reset();
-                        full_success = false;
+                        full_success.Update(absl::InvalidArgumentError("Failed to open value0 file: " + value_path.value()));
                     }
                     else
                     {
-                        LOG4CPLUS_DEBUG_FMT(_logger, LOG4CPLUS_TEXT("Opened value0 file at: %s"), getValuePath(i).c_str());
+                        LOG4CPLUS_DEBUG_FMT(_logger, LOG4CPLUS_TEXT("Opened value0 file at: %s"), value_path.value().c_str());
                     }
                 }
                 else
                 {
-                    LOG4CPLUS_ERROR_FMT(_logger, LOG4CPLUS_TEXT("File does not exist at: %s"), getValuePath(i).c_str());
+                    LOG4CPLUS_ERROR_FMT(_logger, LOG4CPLUS_TEXT("File does not exist at: %s"), value_path.value().c_str());
+                    full_success.Update(absl::InvalidArgumentError("File does not exist: " + value_path.value()));
                 }
             }  
 
-            _file_mode_path = std::make_shared<std::ofstream>(getModePath());
-            _file_modes_path = std::make_shared<std::ifstream>(getModesPath());
-            _file_num_values_path = std::make_shared<std::ifstream>(getNumValuesPath());
-            _file_poll_ms_path = std::make_shared<std::ifstream>(getPollMsPath());
-
+            absl::StatusOr<std::string> mode_path = getModePath();
+            if (!mode_path.ok())
+            {
+                LOG4CPLUS_ERROR(_logger, "Failed to get mode path");
+                full_success.Update(mode_path.status());
+            }
+            _file_mode_path = std::make_shared<std::ofstream>(mode_path.value());
+            absl::StatusOr<std::string> modes_path = getModesPath();
+            if (!modes_path.ok())
+            {
+                LOG4CPLUS_ERROR(_logger, "Failed to get modes path");
+                full_success.Update(modes_path.status());
+            }
+            _file_modes_path = std::make_shared<std::ifstream>(modes_path.value());
+            absl::StatusOr<std::string> num_values_path = getNumValuesPath();
+            if (!num_values_path.ok())
+            {
+                LOG4CPLUS_ERROR(_logger, "Failed to get num values path");
+                full_success.Update(num_values_path.status());
+            }
+            _file_num_values_path = std::make_shared<std::ifstream>(num_values_path.value());
+            absl::StatusOr<std::string> poll_ms_path = getPollMsPath();
+            if (!poll_ms_path.ok())
+            {
+                LOG4CPLUS_ERROR(_logger, "Failed to get poll ms path");
+                full_success.Update(poll_ms_path.status());
+            }
+            _file_poll_ms_path = std::make_shared<std::ifstream>(poll_ms_path.value());
 
             // check if mode path is opened
             if (!_file_mode_path->fail()) {
                 if (!_file_mode_path->is_open()) {
-                    LOG4CPLUS_WARN_FMT(_logger, LOG4CPLUS_TEXT("Failed to open value0 file at: %s"), getModePath().c_str());
+                    LOG4CPLUS_WARN_FMT(_logger, LOG4CPLUS_TEXT("Failed to open value0 file at: %s"), mode_path.value().c_str());
                     _file_mode_path.reset();
-                    full_success = false;
+                    full_success.Update(absl::InvalidArgumentError("Failed to open value0 file: " + mode_path.value()));
                 } else {
-                    LOG4CPLUS_DEBUG_FMT(_logger, LOG4CPLUS_TEXT("Opened mode file at: %s"), getModePath().c_str());
+                    LOG4CPLUS_DEBUG_FMT(_logger, LOG4CPLUS_TEXT("Opened mode file at: %s"), mode_path.value().c_str());
                 }
             } else {
-                LOG4CPLUS_ERROR_FMT(_logger, LOG4CPLUS_TEXT("File does not exist at: %s"), getModePath().c_str());
+                LOG4CPLUS_ERROR_FMT(_logger, LOG4CPLUS_TEXT("File does not exist at: %s"), mode_path.value().c_str());
+                full_success.Update(absl::InvalidArgumentError("File does not exist: " + mode_path.value()));
             }
 
             // check if modes path is opened
             if (!_file_modes_path->fail()) {
                 if (!_file_modes_path->is_open()) {
-                    LOG4CPLUS_WARN_FMT(_logger, LOG4CPLUS_TEXT("Failed to open value0 file at: %s"), getModesPath().c_str());
+                    LOG4CPLUS_WARN_FMT(_logger, LOG4CPLUS_TEXT("Failed to open value0 file at: %s"), modes_path.value().c_str());
                     _file_modes_path.reset();
-                    full_success = false;
+                    full_success.Update(absl::InvalidArgumentError("Failed to open value0 file: " + modes_path.value()));
                 } else {
-                    LOG4CPLUS_DEBUG_FMT(_logger, LOG4CPLUS_TEXT("Opened modes file at: %s"), getModesPath().c_str());
+                    LOG4CPLUS_DEBUG_FMT(_logger, LOG4CPLUS_TEXT("Opened modes file at: %s"), modes_path.value().c_str());
                 }
             } else {
-                LOG4CPLUS_ERROR_FMT(_logger, LOG4CPLUS_TEXT("File does not exist at: %s"), getModesPath().c_str());
+                LOG4CPLUS_ERROR_FMT(_logger, LOG4CPLUS_TEXT("File does not exist at: %s"), modes_path.value().c_str());
+                full_success.Update(absl::InvalidArgumentError("File does not exist: " + modes_path.value()));
             }
 
             // check if num_values path is opened
             if (!_file_num_values_path->fail()) {
                 if (!_file_num_values_path->is_open()) {
-                    LOG4CPLUS_WARN_FMT(_logger, LOG4CPLUS_TEXT("Failed to open value0 file at: %s"), getNumValuesPath().c_str());
+                    LOG4CPLUS_WARN_FMT(_logger, LOG4CPLUS_TEXT("Failed to open value0 file at: %s"), num_values_path.value().c_str());
                     _file_num_values_path.reset();
-                    full_success = false;
+                    full_success.Update(absl::InvalidArgumentError("Failed to open value0 file: " + num_values_path.value()));
                 } else {
-                    LOG4CPLUS_DEBUG_FMT(_logger, LOG4CPLUS_TEXT("Opened num_values file at: %s"), getNumValuesPath().c_str());
+                    LOG4CPLUS_DEBUG_FMT(_logger, LOG4CPLUS_TEXT("Opened num_values file at: %s"), num_values_path.value().c_str());
                 }
             } else {
-                LOG4CPLUS_ERROR_FMT(_logger, LOG4CPLUS_TEXT("File does not exist at: %s"), getNumValuesPath().c_str());
+                LOG4CPLUS_ERROR_FMT(_logger, LOG4CPLUS_TEXT("File does not exist at: %s"), num_values_path.value().c_str());
+                full_success.Update(absl::InvalidArgumentError("File does not exist: " + num_values_path.value()));
             }
 
             // check if poll_ms path is opened
             if (!_file_poll_ms_path->fail()) {
                 if (!_file_poll_ms_path->is_open()) {
-                    LOG4CPLUS_WARN_FMT(_logger, LOG4CPLUS_TEXT("Failed to open value0 file at: %s"), getPollMsPath().c_str());
+                    LOG4CPLUS_WARN_FMT(_logger, LOG4CPLUS_TEXT("Failed to open value0 file at: %s"), poll_ms_path.value().c_str());
                     _file_poll_ms_path.reset();
-                    full_success = false;
+                    full_success.Update(absl::InvalidArgumentError("Failed to open value0 file: " + poll_ms_path.value()));
                 } else {
-                    LOG4CPLUS_DEBUG_FMT(_logger, LOG4CPLUS_TEXT("Opened poll_ms file at: %s"), getPollMsPath().c_str());
+                    LOG4CPLUS_DEBUG_FMT(_logger, LOG4CPLUS_TEXT("Opened poll_ms file at: %s"), poll_ms_path.value().c_str());
                 }
             } else {
-                LOG4CPLUS_ERROR_FMT(_logger, LOG4CPLUS_TEXT("File does not exist at: %s"), getPollMsPath().c_str());
+                LOG4CPLUS_ERROR_FMT(_logger, LOG4CPLUS_TEXT("File does not exist at: %s"), poll_ms_path.value().c_str());
+                full_success.Update(absl::InvalidArgumentError("File does not exist: " + poll_ms_path.value()));
             }
 
             return full_success;

@@ -64,43 +64,43 @@ namespace finder
 
                 /// @brief Get the path for reading the speed of the motor using the initialized path.
                 /// @return The Path for reading the speed of the motor.
-                path_speed_t getSpeedPath();
+                absl::StatusOr<path_speed_t> getSpeedPath();
 
                 /// @brief Get the path for setting the speed of the motor using the initialized path.
                 /// @return The Path for setting the speed of the motor.
-                path_speed_sp_t getSpeedSpPath();
+                absl::StatusOr<path_speed_sp_t> getSpeedSpPath();
 
                 /// @brief Get the path for reading the current position of the motor, or setting the target position to move to. Use run-to-rel-pos to move to set position.
                 /// @return Path to read the current position.
-                path_position_t getPositionPath();
+                absl::StatusOr<path_position_t> getPositionPath();
 
                 /// @brief Get the path for setting the current position of the motor, or setting the target position to move to. Use run-to-rel-pos to move to set position.
                 /// @return Path to set the target position.
-                path_position_sp_t getPositionSpPath();
+                absl::StatusOr<path_position_sp_t> getPositionSpPath();
 
                 /// @brief Get the path to set the duty cycle of the motor to turn at. Start the motor using run-direct. Else this value is ignored.
                 /// @return Path to set the duty cycle to turn at.
-                path_duty_cycle_t getDutyCyclePath();
+                absl::StatusOr<path_duty_cycle_t> getDutyCyclePath();
 
                 /// @brief Get the path to read the state of the motor from. Multiple stated possible and seperated by spaces. 
                 /// @return Path to read the state of the motor from. 
-                path_state_t getStatePath();
+                absl::StatusOr<path_state_t> getStatePath();
 
                 /// @brief Path to set the polarity of the motor. This will apply to all motors, therefore should not be used for turning in place.
                 /// @return Path to set the polarity of all motors.
-                path_polarity_t getPolarityPath();
+                absl::StatusOr<path_polarity_t> getPolarityPath();
 
                 /// @brief Path to set the action to use after completing a task. 
                 /// @return Path to set the stop action.
-                path_stop_action_t getStopActionPath();
+                absl::StatusOr<path_stop_action_t> getStopActionPath();
 
                 /// @brief Get the motor pulses per rotation of the motor. Represents the pulses of the rotary encoder. Defaults to 360.
                 /// @return Path to read the encoder pulses from.
-                path_count_per_rotation_t getCountPerRotationPath();
+                absl::StatusOr<path_count_per_rotation_t> getCountPerRotationPath();
 
                 /// @brief Get the maximum speed of the motor. This is the maximum speed the motor can move at.
                 /// @return Path to read the maximum speed of the motor.
-                path_max_speed_t getMaxSpeedPath();
+                absl::StatusOr<path_max_speed_t> getMaxSpeedPath();
                 
                 /// @brief Set the speed the motor should move at, max ca. 800.
                 /// @param speed Speed in pulses per second.
@@ -151,7 +151,7 @@ namespace finder
 
                 /// @brief Get the type of device registered in the constructor, as there are no checks for the correct device beforehand.
                 /// @return Type of device registered by constructor.
-                DeviceType getDeviceType() override;
+                absl::StatusOr<DeviceType> getDeviceType() override;
 
             private:
                 static log4cplus::Logger _logger;
@@ -170,7 +170,7 @@ namespace finder
                 bool _is_initialized;
 
                 /// @brief Inititalize the motor class by checking if files exist and opening file streams.
-                void init();
+                absl::Status init();
         };
     } // namespace physical
 } // namespace finder

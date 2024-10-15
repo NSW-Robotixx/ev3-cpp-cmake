@@ -57,10 +57,14 @@ namespace finder
                         // std::cout << entry->d_name << std::endl;
                         // Port port{device_type_dir + "/" + std::string{entry->d_name}};
 
-                        path_address_t port = Port::getAddressPath(dir_entry.path().string());
-                        LOG4CPLUS_DEBUG_FMT(_logger, LOG4CPLUS_TEXT("Checking port: %s"), port.c_str());
+                        absl::StatusOr<path_address_t> port = Port::getAddressPath(dir_entry.path().string());
+                        if (!port.ok()) {
+                            LOG4CPLUS_ERROR_FMT(_logger, LOG4CPLUS_TEXT("Error getting port address: %s"), port.status().message());
+                            continue;
+                        }
+                        LOG4CPLUS_DEBUG_FMT(_logger, LOG4CPLUS_TEXT("Checking port: %s"), port.value_or("").c_str());
                         //read file
-                        std::ifstream file(port);
+                        std::ifstream file(port.value());
                         std::string line;
                         std::getline(file, line);
                         file.close();

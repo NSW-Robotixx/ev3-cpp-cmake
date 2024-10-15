@@ -30,6 +30,7 @@ find_package(yaml-cpp REQUIRED)
 find_package(ydcpp-tcpcat REQUIRED)
 find_package(freetype REQUIRED)
 find_package(log4cplus REQUIRED)
+find_package(absl REQUIRED)
 
 # new and untested stuff
 set(BUILD_SHARED_LIBS ON)
@@ -47,7 +48,7 @@ add_executable(Main src/main.cpp)
 # set the list of sources for all tests
 set_property(GLOBAL PROPERTY EV3_TESTS_SRC ${CMAKE_SOURCE_DIR}/src/tests.cpp)
 # set the list of libs to link to
-set_property(GLOBAL PROPERTY EV3_TESTS_LIBS gtest_main GTest::gtest_main)
+set_property(GLOBAL PROPERTY EV3_TESTS_LIBS gtest_main GTest::gtest_main abseil::abseil)
 
 add_subdirectory(lib)
 add_subdirectory(src)

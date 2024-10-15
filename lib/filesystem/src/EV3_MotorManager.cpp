@@ -55,15 +55,25 @@ namespace finder::physical
         move(launch, -speed, distance, stopCallback);
     }
 
-    void MotorManager::turnLeft(LaunchType launch, int speed = 200, int distance = 0, std::function<void()> stopCallback = nullptr)
+    absl::Status MotorManager::turnLeft(LaunchType launch, int speed = 200, int distance = 0, std::function<void()> stopCallback = nullptr)
     {
-        turn(launch, speed, distance, stopCallback, TurnDirection::LEFT);
+        absl::Status status = turn(launch, speed, distance, stopCallback, TurnDirection::LEFT);
+        if (!status.ok())
+        {
+            return status;
+        }
+        return absl::OkStatus();
     }
 
 
-    void MotorManager::turnRight(LaunchType launch, int speed = 200, int distance = 0, std::function<void()> stopCallback = nullptr)
+    absl::Status MotorManager::turnRight(LaunchType launch, int speed = 200, int distance = 0, std::function<void()> stopCallback = nullptr)
     {
-        turn(launch, speed, distance, stopCallback, TurnDirection::RIGHT);
+        absl::Status status = turn(launch, speed, distance, stopCallback, TurnDirection::RIGHT);
+        if (!status.ok())
+        {
+            return status;
+        }
+        return absl::OkStatus();
     }
 
     void MotorManager::onDirectionChange(std::function<void(TurnDirection)> callback)
@@ -81,7 +91,7 @@ namespace finder::physical
         moveNow(speed, distance, stopCallback);
     }
 
-    void MotorManager::turn(LaunchType launch, int speed, int distance, std::function<void()> stopCallback, TurnDirection direction)
+    absl::Status MotorManager::turn(LaunchType launch, int speed, int distance, std::function<void()> stopCallback, TurnDirection direction)
     {
         while (!((_motorLeft->getState().front() != MotorState::HOLDING || _motorLeft->getState().front() != MotorState::STOPPED) &&
                (_motorRight->getState().front() != MotorState::HOLDING || _motorRight->getState().front() != MotorState::STOPPED)))
@@ -100,14 +110,35 @@ namespace finder::physical
             _motorRight->setCommand(MotorCommand::RUN_DIRECT);
         }
 
-
-        while (SensorManager::readGyro() < distance - EV3_GYRO_TURN_TOLERANCE || SensorManager::readGyro() > distance + EV3_GYRO_TURN_TOLERANCE)
+        // wait for the turn to finish
+        while (true)
         {
-            // wait
+            absl::StatusOr<int> gyroValue = SensorManager::readGyro();
+            if (!gyroValue.ok())
+            {
+                return gyroValue.status();
+            }
+
+            if (direction == TurnDirection::LEFT)
+            {
+                if (gyroValue.value() < distance - EV3_GYRO_TURN_TOLERANCE)
+                {
+                    break;
+                }
+            }
+            else if (direction == TurnDirection::RIGHT)
+            {
+                if (gyroValue.value() > distance + EV3_GYRO_TURN_TOLERANCE)
+                {
+                    break;
+                }
+            }
         }
 
         _motorLeft->stop();
         _motorRight->stop();
+
+        return absl::OkStatus();
     }
 
     void MotorManager::moveNow(int speed, int distance, std::function<void()> stopCallback)
