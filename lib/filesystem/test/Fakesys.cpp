@@ -86,6 +86,50 @@ namespace finder::physical::test
         _initialized = true;
     }
 
+    absl::StatusOr<std::string> FakeSys::getWorkingDir(DevicePort port)
+    {
+        switch (port)
+        {
+        case EV3_PORT_INPUT_1:
+            return FakeSys::getWorkingDir() + "/lego-sensor/sensor0";
+            break;
+        
+        case EV3_PORT_INPUT_2:
+            return FakeSys::getWorkingDir() + "/lego-sensor/sensor1";
+            break;
+
+        case EV3_PORT_INPUT_3:
+            return FakeSys::getWorkingDir() + "/lego-sensor/sensor2";
+            break;
+
+        case EV3_PORT_INPUT_4:
+            return FakeSys::getWorkingDir() + "/lego-sensor/sensor3";
+            break;
+
+        case EV3_PORT_OUTPUT_A:
+            return FakeSys::getWorkingDir() + "/tacho-motor/motor0";
+            break;
+
+        case EV3_PORT_OUTPUT_B:
+            return FakeSys::getWorkingDir() + "/tacho-motor/motor1";
+            break;
+
+        case EV3_PORT_OUTPUT_C:
+            return FakeSys::getWorkingDir() + "/tacho-motor/motor2";
+            break;
+
+        case EV3_PORT_OUTPUT_D:
+            return FakeSys::getWorkingDir() + "/tacho-motor/motor3";
+            break;
+
+        default:
+            return absl::OutOfRangeError("Requested port is out of range: " + port);
+            break;
+        }
+
+        return absl::InvalidArgumentError("Exited switch without result for port: " + port);
+    }
+
     void FakeSys::disconnectGyroSensor()
     {
         std::filesystem::remove_all(_basePath + _gyroSensorRelPath);

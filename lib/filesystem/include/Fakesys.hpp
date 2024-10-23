@@ -1,14 +1,21 @@
 #ifndef __FAKESYS_HPP__
 #define __FAKESYS_HPP__
 
-
+// finder imports
 #include "../../EV3_conf.hpp"
+
+// std imports
 #include <memory>
 #include <vector>
 #include <string>
 #include <fstream>
 #include <filesystem>
+
+// 3rd parts imports
 #include <gtest/gtest.h>
+#include <absl/status/statusor.h>
+
+// other imports
 #include <sys/inotify.h>
 
 namespace finder::physical::test
@@ -40,6 +47,11 @@ namespace finder::physical::test
             /// @brief get the base dir
             /// @return The base dir
             static std::string getWorkingDir() {return _basePath;}
+
+            /// @brief get the base dir for the specified device
+            /// @param port Port to get the path for
+            /// @return The base dir of the device
+            static absl::StatusOr<std::string> getWorkingDir(DevicePort port);
 
             // set gyro sensor files
 

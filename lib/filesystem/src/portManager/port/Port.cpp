@@ -1,5 +1,7 @@
 #include "Port.hpp"
 
+#include "../../EV3_conf.hpp"
+
 namespace finder
 {
     namespace physical
@@ -12,7 +14,7 @@ namespace finder
             absl::Status status = setBasePath(port);
             if (!status.ok()) {
                 LOG4CPLUS_ERROR_FMT(_logger, LOG4CPLUS_TEXT("Failed to set path for port: %s"), port.c_str());
-                throw status;
+                if constexpr (EV3_THROW_ON_ERROR) { throw new std::invalid_argument(std::string(status.message())); }
             }
         }
 
@@ -204,7 +206,7 @@ namespace finder
                     _file_address_path.reset();
                     return absl::InvalidArgumentError("Failed to open address file: " + address_path);
                 } else {
-                    LOG4CPLUS_DEBUG_FMT(_logger, LOG4CPLUS_TEXT("Opened address file at: %s"), address_path.c_str());
+                     LOG4CPLUS_DEBUG_FMT(_logger, LOG4CPLUS_TEXT("Opened address file at: %s"), address_path.c_str());
                 }
             } else {
                 LOG4CPLUS_ERROR_FMT(_logger, LOG4CPLUS_TEXT("File does not exist at: %s"), address_path.c_str());

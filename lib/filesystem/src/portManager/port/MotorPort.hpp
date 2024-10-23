@@ -51,7 +51,7 @@ namespace finder
         /// @brief Motor port class to control motors
         class MotorPort : public Port {
             public:
-                // MotorPort();
+                MotorPort() = delete;
 
 
                 /// @brief Initialize a motor

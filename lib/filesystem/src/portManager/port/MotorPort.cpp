@@ -6,23 +6,24 @@ namespace finder
     {
         log4cplus::Logger MotorPort::_logger = log4cplus::Logger::getInstance(LOG4CPLUS_TEXT("main.MotorPort"));
 
-        /*
-        MotorPort::MotorPort() : Port()
-        {
-            init();
-        }
-        */
-
         MotorPort::MotorPort(std::string port_name) : Port(port_name)
         {
             LOG4CPLUS_TRACE(_logger, "MotorPort::MotorPort(std::string port_name)");
-            init();
+            absl::Status status = init();
+            if (!status.ok()) {
+                LOG4CPLUS_ERROR_FMT(_logger, LOG4CPLUS_TEXT("MotorPort failed to initialize: %s"), status.message());
+                throw std::runtime_error(std::string("MotorPort failed to initialize: ").append(status.message()));
+            }
         }
 
         MotorPort::MotorPort(std::shared_ptr<Port> port) : Port(port)
         {
             LOG4CPLUS_TRACE(_logger, "MotorPort::MotorPort(std::shared_ptr<Port> port)");
-            init();
+            absl::Status status = init();
+            if (!status.ok()) {
+                LOG4CPLUS_ERROR_FMT(_logger, LOG4CPLUS_TEXT("MotorPort failed to initialize: %s"), status.message());
+                throw std::runtime_error(std::string("MotorPort failed to initialize: ").append(status.message()));
+            }
         }
 
         absl::StatusOr<path_speed_t> MotorPort::getSpeedSpPath()

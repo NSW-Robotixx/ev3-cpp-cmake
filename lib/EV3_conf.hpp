@@ -3,6 +3,9 @@
 
     #include <stdint-gcc.h>
 
+    // general settings
+    constexpr bool EV3_THROW_ON_ERROR = true;
+
     // map the physical ports to the internal ports
     typedef char DevicePort;
     constexpr char EV3_PORT_INPUT_1  = '1';

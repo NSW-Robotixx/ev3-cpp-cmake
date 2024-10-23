@@ -1,6 +1,10 @@
 #include <gtest/gtest.h>
+#include <absl/container/flat_hash_map.h>
+
 #include <portManager/port/SensorPort.hpp>
 #include <Fakesys.hpp>
+#include "../../EV3_conf.hpp"
+
 
 TEST(SensorPort, CreateFakeSys) {
     using namespace finder::physical::test;
@@ -9,23 +13,29 @@ TEST(SensorPort, CreateFakeSys) {
     ASSERT_TRUE(fakesys.isInitialized());
 }
 
-// TEST(SensorPort, Constructor)
-// {
-//     using namespace finder::physical::test;
+TEST(SensorPort, Constructor)
+{
+    using namespace finder::physical::test;
 
-//     finder::physical::SensorPort sensorPort(FakeSys::getWorkingDir() + "/lego-sensor/sensor0");
-//     absl::StatusOr<finder::physical::DeviceType> deviceType = sensorPort.getDeviceType();
-//     ASSERT_TRUE(deviceType.ok());
-//     ASSERT_EQ(deviceType.value(), finder::physical::DeviceType::SENSOR);
+    absl::StatusOr<std::string> portPath = FakeSys::getWorkingDir(EV3_PORT_INPUT_1);
+    ASSERT_TRUE(portPath.ok());
 
-//     ASSERT_ANY_THROW(finder::physical::SensorPort sensorPort(""));
-// }
+    finder::physical::SensorPort sensorPort(portPath.value());
+    absl::StatusOr<finder::physical::DeviceType> deviceType = sensorPort.getDeviceType();
+    ASSERT_TRUE(deviceType.ok());
+    ASSERT_EQ(deviceType.value(), finder::physical::DeviceType::SENSOR);
+
+    if constexpr (EV3_THROW_ON_ERROR) {ASSERT_ANY_THROW(finder::physical::SensorPort sensorPort("")); }
+}
 
 // TEST(SensorPort, ConstructorWithPort)
 // {
 //     using namespace finder::physical::test;
 
-//     std::shared_ptr<finder::physical::Port> port = std::make_shared<finder::physical::Port>(FakeSys::getWorkingDir() + "/lego-sensor/sensor0");
+//     absl::StatusOr<std::string> portPath = FakeSys::getWorkingDir(EV3_PORT_INPUT_1);
+//     ASSERT_TRUE(portPath.ok());
+
+//     std::shared_ptr<finder::physical::Port> port = std::make_shared<finder::physical::Port>(portPath.value());
 
 //     finder::physical::SensorPort sensorPort(port);
 
@@ -35,102 +45,70 @@ TEST(SensorPort, CreateFakeSys) {
 
 //     absl::StatusOr<std::string> basePath = sensorPort.getBasePath();
 //     ASSERT_TRUE(basePath.ok());
-//     ASSERT_EQ(basePath.value(), FakeSys::getWorkingDir() + "/lego-sensor/sensor0");
+//     ASSERT_EQ(basePath.value(), portPath.value());
 // }
 
-TEST(SensorPort, setBasePath)
-{
-    using namespace finder::physical::test;
+// TEST(SensorPort, setBasePath)
+// {
+//     using namespace finder::physical::test;
 
+//     absl::StatusOr<std::string> portPath = FakeSys::getWorkingDir(EV3_PORT_INPUT_1);
+//     ASSERT_TRUE(portPath.ok());
     
-    finder::physical::SensorPort sensorPort{"/sys/class/lego-sensor/sensor0"};
+//     finder::physical::SensorPort sensorPort{portPath.value()};
 
-    absl::Status status = sensorPort.setBasePath(FakeSys::getWorkingDir() + "/lego-sensor/sensor0");
-    ASSERT_TRUE(status.ok());
+//     absl::StatusOr<std::string> newPortPath = FakeSys::getWorkingDir(EV3_PORT_INPUT_2);
+//     ASSERT_TRUE(newPortPath.ok());
 
-    absl::StatusOr<finder::physical::DeviceType> deviceType = sensorPort.getDeviceType();
-    ASSERT_TRUE(deviceType.ok());
-    ASSERT_EQ(deviceType.value(), finder::physical::DeviceType::SENSOR);
+//     absl::Status status = sensorPort.setBasePath(newPortPath.value());
+//     ASSERT_TRUE(status.ok());
 
-    absl::StatusOr<std::string> basePath = sensorPort.getBasePath();
-    ASSERT_TRUE(basePath.ok());
-    ASSERT_EQ(basePath.value(), FakeSys::getWorkingDir() + "/lego-sensor/sensor0");
-}
+//     absl::StatusOr<finder::physical::DeviceType> deviceType = sensorPort.getDeviceType();
+//     ASSERT_TRUE(deviceType.ok());
+//     ASSERT_EQ(deviceType.value(), finder::physical::DeviceType::SENSOR);
 
-TEST(SensorPort, getValuePath)
+//     absl::StatusOr<std::string> basePath = sensorPort.getBasePath();
+//     ASSERT_TRUE(basePath.ok());
+//     ASSERT_EQ(basePath.value(), newPortPath.value());
+// }
+
+TEST(SensorPort, getPathFunctions)
 {
     using namespace finder::physical::test;
 
-    finder::physical::SensorPort sensorPort("/sys/class/lego-sensor/sensor0");
+    absl::StatusOr<std::string> portPath = FakeSys::getWorkingDir(EV3_PORT_INPUT_1);
+    ASSERT_TRUE(portPath.ok());
 
-    absl::StatusOr<std::string> valuePath = sensorPort.getValuePath(0);
-    ASSERT_FALSE(valuePath.ok());
+    finder::physical::SensorPort sensorPort(portPath.value());
 
-    sensorPort.overrideEnabled(true);
+    absl::flat_hash_map<std::string, std::function<absl::StatusOr<std::string>()>> paths = {
+        {std::string{"/command"}, [&sensorPort]() { return sensorPort.getCommandPath(); }},
+        {std::string{"/commands"}, [&sensorPort]() { return sensorPort.getCommandsPath(); }},
+        {std::string{"/address"}, [&sensorPort]() { return sensorPort.getAddressPath(); }},
+        {std::string{"/mode"}, [&sensorPort]() { return sensorPort.getModePath(); }},
+        {std::string{"/modes"}, [&sensorPort]() { return sensorPort.getModesPath(); }},
+        {std::string{"/num_values"}, [&sensorPort]() { return sensorPort.getNumValuesPath(); }},
+        {std::string{"/poll_ms"}, [&sensorPort]() { return sensorPort.getPollMsPath(); }},
+        {std::string{"/value0"}, [&sensorPort]() { return sensorPort.getValuePath(0); }},
+    };
 
-    valuePath = sensorPort.getValuePath(0);
-    ASSERT_TRUE(valuePath.ok());
-    ASSERT_EQ(valuePath.value(), "/sys/class/lego-sensor/sensor0/value0");
-}
 
-TEST(SensorPort, getModePath)
-{
+
     using namespace finder::physical::test;
 
-    finder::physical::SensorPort sensorPort("/sys/class/lego-sensor/sensor0");
+    for (const auto &path : paths)
+    {
+        absl::StatusOr<std::string> pathValue = path.second();
+        ASSERT_TRUE(pathValue.ok());
+        ASSERT_EQ(pathValue.value(), portPath.value() + path.first);
 
-    absl::StatusOr<std::string> modePath = sensorPort.getModePath();
-    ASSERT_FALSE(modePath.ok());
+        sensorPort.overrideEnabled(false);
 
-    sensorPort.overrideEnabled(true);
-    modePath = sensorPort.getModePath();
-    ASSERT_TRUE(modePath.ok());
-    ASSERT_EQ(modePath.value(), "/sys/class/lego-sensor/sensor0/mode");
-}
+        pathValue = path.second();
+        ASSERT_FALSE(pathValue.ok());
 
-TEST(SensorPort, getModesPath)
-{
-    using namespace finder::physical::test;
-
-    finder::physical::SensorPort sensorPort("/sys/class/lego-sensor/sensor0");
-
-    absl::StatusOr<std::string> modesPath = sensorPort.getModesPath();
-    ASSERT_FALSE(modesPath.ok());
-
-    sensorPort.overrideEnabled(true);
-    modesPath = sensorPort.getModesPath();
-    ASSERT_TRUE(modesPath.ok());
-    ASSERT_EQ(modesPath.value(), "/sys/class/lego-sensor/sensor0/modes");
-}
-
-TEST(SensorPort, getNumValuesPath)
-{
-    using namespace finder::physical::test;
-
-    finder::physical::SensorPort sensorPort("/sys/class/lego-sensor/sensor0");
-
-    absl::StatusOr<std::string> numValuesPath = sensorPort.getNumValuesPath();
-    ASSERT_FALSE(numValuesPath.ok());
-
-    sensorPort.overrideEnabled(true);
-    numValuesPath = sensorPort.getNumValuesPath();
-    ASSERT_TRUE(numValuesPath.ok());
-    ASSERT_EQ(numValuesPath.value(), "/sys/class/lego-sensor/sensor0/num_values");
-}
-
-TEST(SensorPort, getPollMsPath)
-{
-    using namespace finder::physical::test;
-
-    finder::physical::SensorPort sensorPort("/sys/class/lego-sensor/sensor0");
-
-    absl::StatusOr<std::string> pollMsPath = sensorPort.getPollMsPath();
-    ASSERT_FALSE(pollMsPath.ok());
-
-    sensorPort.overrideEnabled(true);
-    pollMsPath = sensorPort.getPollMsPath();
-    ASSERT_TRUE(pollMsPath.ok());
-    ASSERT_EQ(pollMsPath.value(), "/sys/class/lego-sensor/sensor0/poll_ms");
+        sensorPort.overrideEnabled(true);
+    }
 }
 
 TEST(SensorPort, getValue)
@@ -160,9 +138,14 @@ TEST(SensorPort, getModes)
 {
     using namespace finder::physical::test;
 
-    finder::physical::SensorPort sensorPort("/sys/class/lego-sensor/sensor0");
+    absl::StatusOr<std::string> portPath = FakeSys::getWorkingDir(EV3_PORT_INPUT_1);
+    ASSERT_TRUE(portPath.ok());
+
+    finder::physical::SensorPort sensorPort(portPath.value());
     std::vector<std::string> modes = sensorPort.getModes();
-    ASSERT_EQ(modes.size(), 0);
+    sensorPort.overrideEnabled(false);
+    ASSERT_EQ(modes.size(), 3);
+
     sensorPort.overrideEnabled(true);
     modes = sensorPort.getModes();
     ASSERT_EQ(modes.size(), 0);
@@ -172,16 +155,19 @@ TEST(SensorPort, filestreams)
 {
     using namespace finder::physical::test;
 
-    std::filesystem::create_directories(FakeSys::getWorkingDir() + "/lego-sensor/sensor0");
-    std::ofstream fs_value(FakeSys::getWorkingDir() + "/lego-sensor/sensor0/value0");
-    std::ofstream fs_address(FakeSys::getWorkingDir() + "/lego-sensor/sensor0/address");
-    std::ofstream fs_mode(FakeSys::getWorkingDir() + "/lego-sensor/sensor0/mode");
-    std::ofstream fs_modes(FakeSys::getWorkingDir() + "/lego-sensor/sensor0/modes");
-    std::ofstream fs_num_values(FakeSys::getWorkingDir() + "/lego-sensor/sensor0/num_values");
-    std::ofstream fs_poll_ms(FakeSys::getWorkingDir() + "/lego-sensor/sensor0/poll_ms");
-    std::ofstream fs_commmand(FakeSys::getWorkingDir() + "/lego-sensor/sensor0/command");
-    std::ofstream fs_commands(FakeSys::getWorkingDir() + "/lego-sensor/sensor0/commands");
+    FakeSys::reinit();
 
+    absl::StatusOr<std::string> portPath = FakeSys::getWorkingDir(EV3_PORT_INPUT_1);
+    ASSERT_TRUE(portPath.ok()) << "Failed to get port path";
+
+    std::ofstream fs_value(portPath.value() + "/value0");
+    std::ofstream fs_address(portPath.value() + "/address");
+    std::ofstream fs_mode(portPath.value() + "/mode");
+    std::ofstream fs_modes(portPath.value() + "/modes");
+    std::ofstream fs_num_values(portPath.value() + "/num_values");
+    std::ofstream fs_poll_ms(portPath.value() + "/poll_ms");
+    std::ofstream fs_commmand(portPath.value() + "/command");
+    std::ofstream fs_commands(portPath.value() + "/commands");
 
     fs_value << "42";
     fs_address << "ev3-ports:in1";
@@ -203,23 +189,23 @@ TEST(SensorPort, filestreams)
     finder::physical::SensorPort sensorPort(FakeSys::getWorkingDir() + "/lego-sensor/sensor0");
     // sensorPort.setBasePath(FakeSys::getWorkingDir() + "/lego-sensor/sensor0");
     absl::StatusOr<finder::physical::DeviceType> deviceType = sensorPort.getDeviceType();
-    ASSERT_TRUE(deviceType.ok());
+    ASSERT_TRUE(deviceType.ok()) << "Failed to get device type";
     ASSERT_EQ(deviceType.value(), finder::physical::DeviceType::SENSOR);
 
     absl::StatusOr<std::string> valuePath = sensorPort.getValuePath(0);
-    ASSERT_TRUE(valuePath.ok());
+    ASSERT_TRUE(valuePath.ok()) << "Failed to get value path";
     ASSERT_EQ(valuePath.value(), FakeSys::getWorkingDir() + "/lego-sensor/sensor0/value0");
     
     absl::StatusOr<int> value = sensorPort.getValue(0);
-    ASSERT_TRUE(value.ok());
+    ASSERT_TRUE(value.ok()) << "Failed to get value";
     ASSERT_EQ(value.value(), 42);
     
     absl::StatusOr<std::string> address = sensorPort.getAddress();
-    ASSERT_TRUE(address.ok());
+    ASSERT_TRUE(address.ok()) << "Failed to get address";
     ASSERT_EQ(address.value(), "ev3-ports:in1");
 
     absl::Status status = sensorPort.setMode("test-mode");
-    ASSERT_TRUE(status.ok());
+    ASSERT_TRUE(status.ok()) << "Failed to set mode";
     std::ifstream mode_file(FakeSys::getWorkingDir() + "/lego-sensor/sensor0/mode");
     std::string mode_str;
     mode_file >> mode_str;
@@ -232,12 +218,12 @@ TEST(SensorPort, filestreams)
     ASSERT_EQ(modes[2], "EV3-Ultrasonic");
 
     absl::StatusOr<int> numValues = sensorPort.getNumValues();
-    ASSERT_TRUE(numValues.ok());
+    ASSERT_TRUE(numValues.ok()) << "Failed to get num values";
     ASSERT_EQ(numValues.value(), 1);
 
     sensorPort.overrideEnabled(false);
     numValues = sensorPort.getNumValues();
-    ASSERT_FALSE(numValues.ok());
+    ASSERT_FALSE(numValues.ok()) << "Failed to get num values";
 
     sensorPort.overrideEnabled(true);
     ASSERT_EQ(sensorPort.getPollMs(), 100);

@@ -32,21 +32,21 @@ namespace finder
             {
                 LOG4CPLUS_ERROR(_logger, "Failed to initialize files");
                 _path = "";
-                throw success;
+                throw new std::invalid_argument(std::string(success.message()));
             }
             _is_initialized = success.ok();
         }
 
-        SensorPort::SensorPort(std::shared_ptr<Port> port): Port(port->getBasePath().value())
+        SensorPort::SensorPort(std::shared_ptr<Port> port): Port(port)
         {
             LOG4CPLUS_TRACE(_logger, "SensorPort::SensorPort(std::shared_ptr<Port> port)");
             absl::StatusOr<std::string> path = port->getBasePath();
 
             if (path.ok()) {
-                LOG4CPLUS_ERROR(_logger, LOG4CPLUS_TEXT("Unable to get path from port"));
-                throw path;
+                LOG4CPLUS_ERROR_FMT(_logger, LOG4CPLUS_TEXT("Unable to get path from port: %s"), std::string(path.status().message()).c_str());
+                throw new std::invalid_argument(std::string(path.status().message()));
             } else if (path.value().length() <= 0) {
-                LOG4CPLUS_ERROR(_logger, LOG4CPLUS_TEXT("SensorPort created without port path"));
+                LOG4CPLUS_ERROR_FMT(_logger, LOG4CPLUS_TEXT("SensorPort created without port path : %s"), std::string(path.status().message()).c_str());
                 throw new std::invalid_argument("SensorPort created without port path");
             }
             _is_initialized = false;
@@ -55,7 +55,7 @@ namespace finder
             if (!success.ok())
             {
                 LOG4CPLUS_ERROR(_logger, "Failed to initialize files");
-                throw success.status();
+                throw new std::invalid_argument(std::string(success.status().message()));
             }
             _is_initialized = success.value();
         }
@@ -150,7 +150,7 @@ namespace finder
                 if (!path.ok())
                 {
                     LOG4CPLUS_ERROR(_logger, LOG4CPLUS_TEXT("Failed to get path"));
-                    throw path;
+                    return path.status();
                 }
                 return path.value() + "/num_values";
             }
@@ -217,6 +217,8 @@ namespace finder
                     *_file_mode_path << mode;
                     _file_mode_path->flush();
                 }
+                LOG4CPLUS_INFO_FMT(_logger, LOG4CPLUS_TEXT("MODE.SET: %s WITH_VALUE: %s"), getBasePath().value_or("").c_str(), mode.c_str());
+                return absl::OkStatus();
             }
             LOG4CPLUS_WARN_FMT(_logger, LOG4CPLUS_TEXT("Port is not enabled for %s"), getBasePath().value_or("").c_str());
             return absl::InvalidArgumentError("Port is not enabled: " + getBasePath().value_or(""));

@@ -4,6 +4,9 @@
 
 #include <Fakesys.hpp>
 
+#include <absl/container/flat_hash_map.h>
+#include <functional>
+
 TEST(MotorPort, CreateFakeSys) {
     using namespace finder::physical::test;
     FakeSys fakesys;
@@ -13,7 +16,7 @@ TEST(MotorPort, CreateFakeSys) {
 }
 
 TEST(MotorPort, Constructor)
-{
+ {
     using namespace finder::physical::test;
 
     finder::physical::MotorPort motorPort(FakeSys::getWorkingDir() + "/tacho-motor/motor0");
@@ -27,7 +30,10 @@ TEST(MotorPort, ConstructorWithPort)
 {
     using namespace finder::physical::test;
 
-    std::shared_ptr<finder::physical::Port> port = std::make_shared<finder::physical::Port>(FakeSys::getWorkingDir() + "/tacho-motor/motor0");
+    absl::StatusOr<std::string> portPath = FakeSys::getWorkingDir(EV3_PORT_OUTPUT_A);
+    ASSERT_TRUE(portPath.ok());
+
+    std::shared_ptr<finder::physical::Port> port = std::make_shared<finder::physical::Port>(portPath.value());
     finder::physical::MotorPort motorPort(port);
 
     absl::StatusOr<finder::physical::DeviceType> deviceType = motorPort.getDeviceType();
@@ -35,120 +41,45 @@ TEST(MotorPort, ConstructorWithPort)
     ASSERT_EQ(deviceType.value(), finder::physical::DeviceType::MOTOR);
 }
 
-TEST(MotorPort, getCommandPath)
-{
-    finder::physical::MotorPort motorPort("/sys/class/tacho-motor/motor0");
+TEST(MotorPort, getPathFunctions)
+{   
+    using namespace finder::physical::test;
 
-    absl::StatusOr<std::string> commandPath = motorPort.getCommandPath();
-    ASSERT_FALSE(commandPath.ok());
+    absl::StatusOr<std::string> portPath = FakeSys::getWorkingDir(EV3_PORT_OUTPUT_A);
+    ASSERT_TRUE(portPath.ok());
 
-    motorPort.overrideEnabled(true);
-    commandPath = motorPort.getCommandPath();
-    ASSERT_TRUE(commandPath.ok());
-    ASSERT_EQ(commandPath.value(), "/sys/class/tacho-motor/motor0/command");
-}
+    finder::physical::MotorPort motorPort(portPath.value());
 
-TEST(MotorPort, getDutyCyclePath)
-{
-    finder::physical::MotorPort motorPort("/sys/class/tacho-motor/motor0");
+    absl::flat_hash_map<std::string, std::function<absl::StatusOr<std::string>()>> paths = {
+        {std::string{"/command"}, [&motorPort]() { return motorPort.getCommandPath(); }},
+        {std::string{"/commands"}, [&motorPort]() { return motorPort.getCommandsPath(); }},
+        {std::string{"/duty_cycle"}, [&motorPort]() { return motorPort.getDutyCyclePath(); }},
+        {std::string{"/position"}, [&motorPort]() { return motorPort.getPositionPath(); }},
+        {std::string{"/position_sp"}, [&motorPort]() { return motorPort.getPositionSpPath(); }},
+        {std::string{"/speed"}, [&motorPort]() { return motorPort.getSpeedPath(); }},
+        {std::string{"/speed_sp"}, [&motorPort]() { return motorPort.getSpeedSpPath(); }},
+        {std::string{"/state"}, [&motorPort]() { return motorPort.getStatePath(); }},
+        {std::string{"/stop_action"}, [&motorPort]() { return motorPort.getStopActionPath(); }},
+        {std::string{"/count_per_rot"}, [&motorPort]() { return motorPort.getCountPerRotationPath(); }},
+    };
 
-    absl::StatusOr<std::string> dutyCyclePath = motorPort.getDutyCyclePath();
-    ASSERT_FALSE(dutyCyclePath.ok());
 
-    motorPort.overrideEnabled(true);
-    dutyCyclePath = motorPort.getDutyCyclePath();
-    ASSERT_TRUE(dutyCyclePath.ok());
-    ASSERT_EQ(dutyCyclePath.value(), "/sys/class/tacho-motor/motor0/duty_cycle_sp");
-}
 
-TEST(MotorPort, getPositionPath) 
-{
-    finder::physical::MotorPort motorPort("/sys/class/tacho-motor/motor0");
-    
-    absl::StatusOr<std::string> positionPath = motorPort.getPositionPath();
-    ASSERT_FALSE(positionPath.ok());
+    using namespace finder::physical::test;
 
-    motorPort.overrideEnabled(true);
-    positionPath = motorPort.getPositionPath();
-    ASSERT_TRUE(positionPath.ok());
-    ASSERT_EQ(positionPath.value(), "/sys/class/tacho-motor/motor0/position");
-}
+    for (const auto &path : paths)
+    {
+        absl::StatusOr<std::string> pathValue = path.second();
+        ASSERT_TRUE(pathValue.ok());
+        ASSERT_EQ(pathValue.value(), portPath.value() + path.first);
 
-TEST(MotorPort, getPositionSpPath)
-{
-    finder::physical::MotorPort motorPort("/sys/class/tacho-motor/motor0");
-    
-    absl::StatusOr<std::string> positionSpPath = motorPort.getPositionSpPath();
-    ASSERT_FALSE(positionSpPath.ok());
+        motorPort.overrideEnabled(false);
 
-    motorPort.overrideEnabled(true);
-    positionSpPath = motorPort.getPositionSpPath();
-    ASSERT_TRUE(positionSpPath.ok());
-    ASSERT_EQ(positionSpPath.value(), "/sys/class/tacho-motor/motor0/position_sp");
-}
+        pathValue = path.second();
+        ASSERT_FALSE(pathValue.ok());
 
-TEST(MotorPort, getSpeedPath) 
-{
-    finder::physical::MotorPort motorPort("/sys/class/tacho-motor/motor0");
-    
-    absl::StatusOr<std::string> speedPath = motorPort.getSpeedPath();
-    ASSERT_FALSE(speedPath.ok());
-
-    motorPort.overrideEnabled(true);
-    speedPath = motorPort.getSpeedPath();
-    ASSERT_TRUE(speedPath.ok());
-    ASSERT_EQ(speedPath.value(), "/sys/class/tacho-motor/motor0/speed");
-}
-
-TEST(MotorPort, getSpeedSpPath)
-{
-    finder::physical::MotorPort motorPort("/sys/class/tacho-motor/motor0");
-    
-    absl::StatusOr<std::string> speedSpPath = motorPort.getSpeedSpPath();
-    ASSERT_FALSE(speedSpPath.ok());
-    
-    motorPort.overrideEnabled(true);
-    speedSpPath = motorPort.getSpeedSpPath();
-    ASSERT_TRUE(speedSpPath.ok());
-    ASSERT_EQ(speedSpPath.value(), "/sys/class/tacho-motor/motor0/speed_sp");
-}
-TEST(MotorPort, getStatePath)
-{
-    finder::physical::MotorPort motorPort("/sys/class/tacho-motor/motor0");
-    
-    absl::StatusOr<std::string> statePath = motorPort.getStatePath();
-    ASSERT_FALSE(statePath.ok());
-
-    motorPort.overrideEnabled(true);
-    statePath = motorPort.getStatePath();
-    ASSERT_TRUE(statePath.ok());
-    ASSERT_EQ(statePath.value(), "/sys/class/tacho-motor/motor0/state");
-}
-
-TEST(MotorPort, getStopActionPath)
-{
-    finder::physical::MotorPort motorPort("/sys/class/tacho-motor/motor0");
-    
-    absl::StatusOr<std::string> stopActionPath = motorPort.getStopActionPath();
-    ASSERT_FALSE(stopActionPath.ok());
-
-    motorPort.overrideEnabled(true);
-    stopActionPath = motorPort.getStopActionPath();
-    ASSERT_TRUE(stopActionPath.ok());
-    ASSERT_EQ(stopActionPath.value(), "/sys/class/tacho-motor/motor0/stop_action");
-}
-
-TEST(MotorPort, getCountPerRotationPath)
-{
-    finder::physical::MotorPort motorPort("/sys/class/tacho-motor/motor0");
-    
-    absl::StatusOr<std::string> countPerRotationPath = motorPort.getCountPerRotationPath();
-    ASSERT_FALSE(countPerRotationPath.ok());
-
-    motorPort.overrideEnabled(true);
-    countPerRotationPath = motorPort.getCountPerRotationPath();
-    ASSERT_TRUE(countPerRotationPath.ok());
-    ASSERT_EQ(countPerRotationPath.value(), "/sys/class/tacho-motor/motor0/count_per_rot");
+        motorPort.overrideEnabled(true);
+    }
 }
 
 TEST(MotorPort, filestreams)
