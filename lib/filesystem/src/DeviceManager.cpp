@@ -29,6 +29,11 @@ namespace finder
         {
         }
 
+        bool DeviceManager::isInitialized()
+        {
+            return _initialized;
+        }
+
         void DeviceManager::init(std::string portBasePath)
         {
             _portManager = std::make_shared<PortManager>(portBasePath);

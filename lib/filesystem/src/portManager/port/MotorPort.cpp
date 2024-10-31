@@ -207,22 +207,29 @@ namespace finder
             }
         }
 
-        void MotorPort::setPositionSp(int position_sp)
+        absl::Status MotorPort::setPositionSp(int position_sp)
         {
             LOG4CPLUS_TRACE(_logger, "MotorPort::setPositionSp()");
 
             if (isEnabled().value_or(false)) {
-                if (_file_position_sp_path->is_open()) {
-                    *_file_position_sp_path << position_sp;
-                    _file_position_sp_path->flush();
+                if (!_file_position_sp_path->bad()) {
+                    if (_file_position_sp_path->is_open()) {
+                        *_file_position_sp_path << position_sp;
+                        _file_position_sp_path->flush();
+                    } else {
+                        LOG4CPLUS_ERROR_FMT(_logger, LOG4CPLUS_TEXT("failed to write to position_sp file for %s"), getBasePath().value_or("").c_str());
+                        return absl::InternalError("failed to write to position_sp file for: " + _path);
+                    }
                 } else {
-                    LOG4CPLUS_ERROR_FMT(_logger, LOG4CPLUS_TEXT("failed to write to position_sp file for %s"), getBasePath().value_or("").c_str());
+                    return absl::InternalError("position_sp file is bad for: " + _path);
                 }
             } else {
                 LOG4CPLUS_ERROR_FMT(_logger, LOG4CPLUS_TEXT("Port is not enabled for %s"), getBasePath().value_or("").c_str());
+                return absl::InvalidArgumentError("Port is not enabled for: " + _path);
                 // _init_future.wait();
                 // setPositionSp(position_sp);
             }
+            return absl::OkStatus();
         }
 
         void MotorPort::setDutyCycle(int duty_cycle)
@@ -295,27 +302,36 @@ namespace finder
             }
         }
 
-        void MotorPort::setCommand(MotorCommand command)
+        absl::Status MotorPort::setCommand(MotorCommand command)
         {
             LOG4CPLUS_TRACE(_logger, "MotorPort::setCommand()");
             if (command == MotorCommand::STOP) {
                 LOG4CPLUS_DEBUG_FMT(_logger, LOG4CPLUS_TEXT("Setting command to stop for %s"), getBasePath().value_or("").c_str());
+                *this->_file_command_path << "stop";
             } else if (command == MotorCommand::RUN_DIRECT) {
                 LOG4CPLUS_DEBUG_FMT(_logger, LOG4CPLUS_TEXT("Setting command to run-direct for %s"), getBasePath().value_or("").c_str());
+                *this->_file_command_path << "run-direct";
             } else if (command == MotorCommand::RUN_FOREVER) {
                 LOG4CPLUS_DEBUG_FMT(_logger, LOG4CPLUS_TEXT("Setting command to run-forever for %s"), getBasePath().value_or("").c_str());
+                *this->_file_command_path << "run-forever";
             } else if (command == MotorCommand::RUN_TO_ABS_POS) {
                 LOG4CPLUS_DEBUG_FMT(_logger, LOG4CPLUS_TEXT("Setting command to run-to-abs-pos for %s"), getBasePath().value_or("").c_str());
+                *this->_file_command_path << "run-to-abs-pos";
             } else if (command == MotorCommand::RUN_TO_REL_POS) {
                 LOG4CPLUS_DEBUG_FMT(_logger, LOG4CPLUS_TEXT("Setting command to run-to-rel-pos for %s"), getBasePath().value_or("").c_str());
+                *this->_file_command_path << "run-to-rel-pos";
             } else if (command == MotorCommand::RUN_TIMED) {
                 LOG4CPLUS_DEBUG_FMT(_logger, LOG4CPLUS_TEXT("Setting command to run-timed for %s"), getBasePath().value_or("").c_str());
+                *this->_file_command_path << "run-timed";
             } else if (command == MotorCommand::RESET) {
                 LOG4CPLUS_DEBUG_FMT(_logger, LOG4CPLUS_TEXT("Setting command to reset for %s"), getBasePath().value_or("").c_str());
+                *this->_file_command_path << "reset";
             } else {
                 LOG4CPLUS_ERROR_FMT(_logger, LOG4CPLUS_TEXT("MotorPort failed to set command for %s"), getBasePath().value_or("").c_str());
-                throw std::runtime_error("MotorPort failed to set command");
+                return absl::InvalidArgumentError("MotorPort failed to set command: " + _path);
             }
+            this->_file_command_path->flush();
+            return absl::OkStatus();
         }
 
         void MotorPort::stop()
@@ -464,8 +480,6 @@ namespace finder
                         }
                     } else {
                         LOG4CPLUS_ERROR_FMT(_logger, LOG4CPLUS_TEXT("Port is not enabled for %s"), getBasePath().value_or("").c_str());
-                        // _init_future.wait();
-                        // return getMaxSpeed().get();
                     }
                     return -1;
                 // });
@@ -483,10 +497,35 @@ namespace finder
             return DeviceType::MOTOR;
         }
 
+        absl::Status MotorPort::moveToPosition(int abs_position_sp)
+        {
+            LOG4CPLUS_TRACE(_logger, "MotorPort::moveToPosition()");
+
+            if (isEnabled().value_or(false)) {
+                absl::Status status = setPositionSp(abs_position_sp);
+                if (!status.ok()) {
+                    LOG4CPLUS_ERROR_FMT(_logger, LOG4CPLUS_TEXT("MotorPort failed to move to position for %s"), getBasePath().value_or("").c_str());
+                    return status;
+                }
+
+                status = setCommand(MotorCommand::RUN_TO_ABS_POS);
+                if (!status.ok()) {
+                    LOG4CPLUS_ERROR_FMT(_logger, LOG4CPLUS_TEXT("MotorPort failed to move to position for %s"), getBasePath().value_or("").c_str());
+                    return status;
+                }
+            } else {
+                LOG4CPLUS_ERROR_FMT(_logger, LOG4CPLUS_TEXT("Port is not enabled for %s"), getBasePath().value_or("").c_str());
+                return absl::InvalidArgumentError("Port is not enabled for: " + _path);
+            }
+            return absl::OkStatus();
+        }
+
         absl::Status MotorPort::init()
         {
-            // _init_future = std::async(std::launch::async, [this]() {
+            _init_future = std::async(std::launch::async, [this]() {
                 LOG4CPLUS_TRACE(_logger, "MotorPort::init()");
+
+                absl::call_once(_init_flag, &MotorPort::init(), this);
 
                 absl::StatusOr<bool> enabled = isEnabled();
                 absl::StatusOr<path_port_t> base_path = getBasePath();
@@ -656,8 +695,8 @@ namespace finder
                     return absl::InternalError("MotorPort failed to initialize, count_per_rotation file is not open");
                 }
 
-            // });
-            return absl::OkStatus();
+                return absl::OkStatus();
+            });
         }
     }
 }

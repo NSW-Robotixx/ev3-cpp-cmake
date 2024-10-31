@@ -4,6 +4,8 @@
 #include <portManager/port/Port.hpp>
 #include <filesystem>
 #include <vector>
+#include <future>
+#include <absl/synchronization/mutex.h>
 
 namespace finder
 {
@@ -108,7 +110,7 @@ namespace finder
 
                 /// @brief Set the destination position for the run-to-rel-pos and run-to-abs-pos motor commands. 
                 /// @param position_sp Pulses for the motor to move.
-                void setPositionSp(int position_sp);
+                absl::Status setPositionSp(int position_sp);
 
                 /// @brief Set the duty cycle (speed) to move at when using run-direct command. 
                 /// @param duty_cycle Speed in % for the motor to move at. 
@@ -124,7 +126,7 @@ namespace finder
 
                 /// @brief Send a specific movement command to the motor. Some params might have to be set first for some command. See the official documentation for more.
                 /// @param command Command to send to the motor.
-                void setCommand(MotorCommand command);
+                absl::Status setCommand(MotorCommand command);
 
                 /// @brief shorthand for setting the command to "stop".
                 void stop();
@@ -153,6 +155,10 @@ namespace finder
                 /// @return Type of device registered by constructor.
                 absl::StatusOr<DeviceType> getDeviceType() override;
 
+                /// @brief Move the motor to a specific absolute position. This will block the program until the motor has reached the position
+                /// @param abs_position_sp Position to move to in pulses.
+                absl::Status moveToPosition(int abs_position_sp);
+
             private:
                 static log4cplus::Logger _logger;
                 
@@ -168,6 +174,10 @@ namespace finder
                 std::shared_ptr<std::ifstream> _file_max_speed_path;
                 
                 bool _is_initialized;
+
+                absl::once_flag _init_flag;
+
+                std::future<absl::Status> _init_future;
 
                 /// @brief Inititalize the motor class by checking if files exist and opening file streams.
                 absl::Status init();

@@ -25,6 +25,9 @@ target_include_directories(EV3_gearbox PUBLIC ${EV3_GEARBOX_INCLUDE_DIR})
 target_link_libraries(EV3_gearbox
     PUBLIC
         Logger
+        EV3_filesystem
+        log4cplus::log4cplus
+        abseil::abseil
 )
 
 set(ENABLE_LOGGING ON CACHE BOOL "Enable logging")

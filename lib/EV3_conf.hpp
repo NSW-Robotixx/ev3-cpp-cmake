@@ -17,6 +17,16 @@
     constexpr char EV3_PORT_OUTPUT_C = 'C';
     constexpr char EV3_PORT_OUTPUT_D = 'D';
 
+    constexpr char EV3_MOTOR_COUNT = 4;
+    constexpr char EV3_SENSOR_COUNT = 4;
+
+    constexpr char EV3_PORT_GEARBOX_SHIFT = EV3_PORT_OUTPUT_D;
+    
+    constexpr uint_fast16_t EV3_GEARBOX_GEAR_POS_1  = 0;
+    constexpr uint_fast16_t EV3_GEARBOX_GEAR_POS_2  = 90;
+    constexpr uint_fast16_t EV3_GEARBOX_GEAR_POS_3  = 180;
+    constexpr uint_fast16_t EV3_GEARBOX_GEAR_POS_4  = 270;
+
     // define the tolerance for the gyro sensor
     constexpr uint_fast8_t EV3_GYRO_TURN_TOLERANCE = 3;
 

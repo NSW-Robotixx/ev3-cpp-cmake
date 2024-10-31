@@ -19,6 +19,8 @@ namespace finder
                 ~DeviceManager();
 
             protected:
+                DeviceManager();
+
                 /// @brief Port manager to manage the ports
                 static std::shared_ptr<PortManager> _portManager;
 
@@ -45,11 +47,17 @@ namespace finder
 
                 /// @brief Motor tool port
                 static std::shared_ptr<MotorPort> _motorTool;
+                
+                /// @brief Chech if Devicemanager was initialized successfully
+                /// @return Initialized?
+                bool isInitialized();
 
+                /// @brief Initialize the Ports in the DeviceManager
+                /// @param portBasePath Base path of the ports
+                static void init(std::string portBasePath);
             private:
                 static bool _initialized;
 
-                static void init(std::string portBasePath);
         };
     } // namespace physical
 } // namespace finder
