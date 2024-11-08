@@ -47,7 +47,7 @@ namespace finder
 
                 /// @brief Motor tool port
                 static std::shared_ptr<MotorPort> _motorTool;
-                
+
                 /// @brief Chech if Devicemanager was initialized successfully
                 /// @return Initialized?
                 bool isInitialized();
@@ -57,6 +57,7 @@ namespace finder
                 static void init(std::string portBasePath);
             private:
                 static bool _initialized;
+                static absl::once_flag _init_once_flag;
 
         };
     } // namespace physical

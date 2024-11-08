@@ -2,10 +2,12 @@ find_package(ydcpp-tcpcat REQUIRED)
 
 set(EV3_GEARBOX_SRC
     ${EV3_GEARBOX_SRC_DIR}/EV3_Gearbox.cpp
+    ${EV3_GEARBOX_SRC_DIR}/EV3_ToolControl.cpp
 )
 
 set(EV3_GEARBOX_HDR
     ${EV3_GEARBOX_INCLUDE_DIR}/EV3_Gearbox.hpp
+    ${EV3_GEARBOX_INCLUDE_DIR}/EV3_ToolControl.hpp
 )
 
 add_library(EV3_gearbox ${EV3_GEARBOX_SRC})
@@ -28,6 +30,7 @@ target_link_libraries(EV3_gearbox
         EV3_filesystem
         log4cplus::log4cplus
         abseil::abseil
+        Eigen3::Eigen
 )
 
 set(ENABLE_LOGGING ON CACHE BOOL "Enable logging")

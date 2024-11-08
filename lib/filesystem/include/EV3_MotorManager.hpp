@@ -4,6 +4,7 @@
 #include <DeviceManager.hpp>
 #include <EV3_SensorManager.hpp>
 #include "../../EV3_conf.hpp"
+#include "../../EV3_macros.hpp"
 #include <queue>
 #include <mutex>
 #include <functional>
@@ -47,14 +48,16 @@ namespace finder::physical
             /// @param speed Max speed to move the motor at
             /// @param distance Distance to move.
             /// @param stopCallback Function to call when the movement has finished.
-            static void moveForward(LaunchType launch, int speed, int distance, std::function<void()> stopCallback);
+            /// @return absl::Status
+            absl::Status moveForward(LaunchType launch, int speed, int distance, std::function<void()> stopCallback);
 
             /// @brief Move the robot backward.
             /// @param launch Async or not.
             /// @param speed Max speed to move at
             /// @param distance 
             /// @param stopCallback 
-            static void moveBackward(LaunchType launch, int speed, int distance, std::function<void()> stopCallback);
+            /// @return absl::Status
+            absl::Status moveBackward(LaunchType launch, int speed, int distance, std::function<void()> stopCallback);
 
             /// @brief Turn the robot left.
             /// @return absl::Status
@@ -62,6 +65,7 @@ namespace finder::physical
             /// @param speed Speed to turn at
             /// @param distance Distance to turn
             /// @param stopCallback Function to call when the turn has finished.
+            /// @return absl::Status
             static absl::Status turnLeft(LaunchType launch, int speed, int distance, std::function<void()> stopCallback);
 
             /// @brief Turn the robot right.
@@ -70,6 +74,7 @@ namespace finder::physical
             /// @param speed Speed to turn at
             /// @param distance Distance to turn
             /// @param stopCallback Function to call when the turn has finished.
+            /// @return absl::Status
             static absl::Status turnRight(LaunchType launch, int speed, int distance, std::function<void()> stopCallback);
 
             /// @brief Callback for when the direction changes
@@ -81,15 +86,17 @@ namespace finder::physical
             static int getMaxSpeed();
 
         private:
-            static void move(LaunchType launch, int speed, int distance, std::function<void()> stopCallback);
+            static absl::Status move(LaunchType launch, int speed, int distance, std::function<void()> stopCallback);
             static absl::Status turn(LaunchType launch, int speed, int distance, std::function<void()> stopCallback, TurnDirection direction);
 
-            static void moveNow(int speed, int distance, std::function<void()> stopCallback);
+            static absl::Status moveNow(int speed, int distance, std::function<void()> stopCallback);
             // static void moveAsync(int speed, int distance, std::function<void()> stopCallback, DeviceID motor);
 
             static TurnDirection _prevTurnDirection;
 
             static std::vector<std::function<void(TurnDirection)>> _directionChangeListeners;
+
+            static log4cplus::Logger _logger;
     };
 }
 

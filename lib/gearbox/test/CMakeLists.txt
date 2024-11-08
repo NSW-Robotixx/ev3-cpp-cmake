@@ -42,6 +42,7 @@ target_link_libraries(EV3_gearbox_test
         EV3_filesystem
         log4cplus::log4cplus
         abseil::abseil
+        Eigen3::Eigen
         # Logger
 )
 

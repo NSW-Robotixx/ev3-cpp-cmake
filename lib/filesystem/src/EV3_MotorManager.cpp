@@ -4,6 +4,8 @@ namespace finder::physical
 {
     TurnDirection MotorManager::_prevTurnDirection = TurnDirection::FORWARD;
     std::vector<std::function<void(TurnDirection)>> MotorManager::_directionChangeListeners;
+
+    log4cplus::Logger MotorManager::_logger = log4cplus::Logger::getInstance(LOG4CPLUS_TEXT("MotorManager"));
     
     /// @brief Constructor for MotorManager
     /// @param portBasePath Path to the base path of the motors
@@ -17,8 +19,19 @@ namespace finder::physical
 
     MotorManager::~MotorManager()
     {
-        _motorLeft->stop();
-        _motorRight->stop();
+        absl::Status status = _motorLeft->stop();
+        status.Update(_motorRight->stop());
+
+        if (!status.ok())
+        {
+            status = _motorLeft->setCommand(MotorCommand::STOP);
+            status.Update(_motorRight->setCommand(MotorCommand::STOP));
+
+            if (!status.ok())
+            {
+                LOG4CPLUS_FATAL_FMT(_logger, LOG4CPLUS_TEXT("Failed to stop motors: %s"), status.message());
+            }
+        }
     }
 
     void MotorManager::setMotorSpeed(DeviceID motor, int speed)
@@ -45,14 +58,14 @@ namespace finder::physical
             // throw error
         }
     }
-    void MotorManager::moveForward(LaunchType launch, int speed = 200, int distance = 0, std::function<void()> stopCallback = nullptr)
+    absl::Status MotorManager::moveForward(LaunchType launch, int speed = 200, int distance = 0, std::function<void()> stopCallback = nullptr)
     {
-        move(launch, speed, distance, stopCallback);
+        return move(launch, speed, distance, stopCallback);
     }
 
-    void MotorManager::moveBackward(LaunchType launch, int speed = 200, int distance = 0, std::function<void()> stopCallback = nullptr)
+    absl::Status MotorManager::moveBackward(LaunchType launch, int speed = 200, int distance = 0, std::function<void()> stopCallback = nullptr)
     {
-        move(launch, -speed, distance, stopCallback);
+        return move(launch, -speed, distance, stopCallback);
     }
 
     absl::Status MotorManager::turnLeft(LaunchType launch, int speed = 200, int distance = 0, std::function<void()> stopCallback = nullptr)
@@ -86,9 +99,9 @@ namespace finder::physical
         return _motorLeft->getMaxSpeed();
     }
 
-    void MotorManager::move(LaunchType launch, int speed, int distance, std::function<void()> stopCallback)
+    absl::Status MotorManager::move(LaunchType launch, int speed, int distance, std::function<void()> stopCallback)
     {
-        moveNow(speed, distance, stopCallback);
+        return moveNow(speed, distance, stopCallback);
     }
 
     absl::Status MotorManager::turn(LaunchType launch, int speed, int distance, std::function<void()> stopCallback, TurnDirection direction)
@@ -102,12 +115,12 @@ namespace finder::physical
         if (direction == TurnDirection::LEFT)
         {
             _motorLeft->setDutyCycle(speed);
-            _motorLeft->setCommand(MotorCommand::RUN_DIRECT);
+            ABSL_RETURN_IF_ERROR(_motorLeft->setCommand(MotorCommand::RUN_DIRECT));
         }
         else if (direction == TurnDirection::RIGHT)
         {
             _motorRight->setDutyCycle(speed);
-            _motorRight->setCommand(MotorCommand::RUN_DIRECT);
+            ABSL_RETURN_IF_ERROR(_motorRight->setCommand(MotorCommand::RUN_DIRECT));
         }
 
         // wait for the turn to finish
@@ -134,14 +147,14 @@ namespace finder::physical
                 }
             }
         }
+        
+        absl::Status status = _motorLeft->stop();
+        status.Update(_motorRight->stop());
 
-        _motorLeft->stop();
-        _motorRight->stop();
-
-        return absl::OkStatus();
+        return status;
     }
 
-    void MotorManager::moveNow(int speed, int distance, std::function<void()> stopCallback)
+    absl::Status MotorManager::moveNow(int speed, int distance, std::function<void()> stopCallback)
     {
         // call the direction change listeners
         if (speed < 0)
@@ -175,14 +188,40 @@ namespace finder::physical
 
         if (distance != 0)
         {
-            _motorLeft->stop();
-            _motorRight->stop();
+            absl::Status statusLeft;
+            absl::Status statusRight;
 
-            _motorLeft->setPositionSp(distance);
-            _motorRight->setPositionSp(distance);
+            int absDestinationLeft = _motorLeft->getPosition() + distance;
+            int absDestinationRight = _motorRight->getPosition() + distance;
 
-            _motorLeft->setCommand(MotorCommand::RUN_TO_REL_POS);
-            _motorRight->setCommand(MotorCommand::RUN_TO_REL_POS);
+            do {
+                statusLeft.Update(_motorLeft->stop());
+                statusRight.Update(_motorRight->stop());
+
+                statusLeft.Update(_motorLeft->setPositionSp(absDestinationLeft));
+                statusRight.Update(_motorRight->setPositionSp(absDestinationRight));
+
+                statusLeft.Update(_motorLeft->setCommand(MotorCommand::RUN_TO_ABS_POS));
+                statusRight.Update(_motorRight->setCommand(MotorCommand::RUN_TO_ABS_POS));
+
+                if (!statusLeft.ok()) {
+                    LOG4CPLUS_FATAL_FMT(_logger, LOG4CPLUS_TEXT("Failed to move left motor: %s"), statusLeft.message());
+                    absl::Status resetStatus = _motorLeft->reset();
+                    if (!resetStatus.ok()) {
+                        LOG4CPLUS_FATAL_FMT(_logger, LOG4CPLUS_TEXT("Failed to reset left motor: %s"), resetStatus.message());
+                        return resetStatus;
+                    }
+                }
+
+                if (!statusRight.ok()) {
+                    LOG4CPLUS_FATAL_FMT(_logger, LOG4CPLUS_TEXT("Failed to move right motor: %s"), statusRight.message());
+                    absl::Status resetStatus = _motorRight->reset();
+                    if (!resetStatus.ok()) {
+                        LOG4CPLUS_FATAL_FMT(_logger, LOG4CPLUS_TEXT("Failed to reset right motor: %s"), resetStatus.message());
+                        return resetStatus;
+                    }
+                }
+            } while (!statusLeft.ok() || !statusRight.ok());
 
 
             if (stopCallback != nullptr)
@@ -190,6 +229,6 @@ namespace finder::physical
                 stopCallback();
             }
         }
-
+        return absl::OkStatus();
     }
 }

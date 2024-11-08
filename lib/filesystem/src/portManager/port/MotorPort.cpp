@@ -1,5 +1,6 @@
 #include "MotorPort.hpp"
 
+
 namespace finder
 {
     namespace physical
@@ -334,16 +335,15 @@ namespace finder
             return absl::OkStatus();
         }
 
-        void MotorPort::stop()
+        absl::Status MotorPort::stop()
         {
             LOG4CPLUS_TRACE(_logger, "MotorPort::stop()");
             if (isEnabled().value_or(false)) {
-                setCommand(MotorCommand::STOP);
+                ABSL_RETURN_IF_ERROR(setCommand(MotorCommand::STOP));
             } else {
                 LOG4CPLUS_ERROR_FMT(_logger, LOG4CPLUS_TEXT("Port is not enabled for %s"), getBasePath().value_or("").c_str());
-                // _init_future.wait();
-                // stop();
             }
+            return absl::OkStatus();
         }
 
         int MotorPort::getSpeed() 
@@ -497,7 +497,7 @@ namespace finder
             return DeviceType::MOTOR;
         }
 
-        absl::Status MotorPort::moveToPosition(int abs_position_sp)
+        absl::Status MotorPort::moveToAbsPosition(int abs_position_sp)
         {
             LOG4CPLUS_TRACE(_logger, "MotorPort::moveToPosition()");
 
@@ -520,12 +520,50 @@ namespace finder
             return absl::OkStatus();
         }
 
+        absl::Status MotorPort::reset()
+        {
+            LOG4CPLUS_TRACE(_logger, "MotorPort::reset()");
+
+            absl::Status stopStatus = stop();
+            if (!stopStatus.ok()) {
+                LOG4CPLUS_ERROR_FMT(_logger, LOG4CPLUS_TEXT("MotorPort failed to reset for %s"), getBasePath().value_or("").c_str());
+            }
+
+            absl::Status resetStatus = setCommand(MotorCommand::RESET);
+            if (!resetStatus.ok()) {
+                LOG4CPLUS_ERROR_FMT(_logger, LOG4CPLUS_TEXT("MotorPort failed to reset for %s"), getBasePath().value_or("").c_str());
+            } else {
+                LOG4CPLUS_DEBUG_FMT(_logger, LOG4CPLUS_TEXT("MotorPort reset for %s"), getBasePath().value_or("").c_str());
+            }
+
+            // exit all files
+            _file_speed_sp_path->close();
+            _file_position_sp_path->close();
+            _file_duty_cycle_path->close();
+            _file_state_path->close();
+            _file_polarity_path->close();
+            _file_stop_action_path->close();
+            _file_count_per_rotation_path->close();
+            _file_max_speed_path->close();
+
+            if (std::filesystem::exists(_path)) {
+                absl::Status initStatus = init();
+                if (!initStatus.ok()) {
+                    LOG4CPLUS_ERROR_FMT(_logger, LOG4CPLUS_TEXT("MotorPort failed to reset for %s"), getBasePath().value_or("").c_str());
+                    return initStatus;
+                }
+                return absl::OkStatus();
+            } else {
+                return absl::InternalError("MotorPort failed to reset, path does not exist");
+            }
+        }
+
         absl::Status MotorPort::init()
         {
-            _init_future = std::async(std::launch::async, [this]() {
+            // return std::async(std::launch::async, [this]() {
                 LOG4CPLUS_TRACE(_logger, "MotorPort::init()");
 
-                absl::call_once(_init_flag, &MotorPort::init(), this);
+                absl::call_once(_init_flag, &MotorPort::init, this);
 
                 absl::StatusOr<bool> enabled = isEnabled();
                 absl::StatusOr<path_port_t> base_path = getBasePath();
@@ -696,7 +734,7 @@ namespace finder
                 }
 
                 return absl::OkStatus();
-            });
+            // }).get();
         }
     }
 }

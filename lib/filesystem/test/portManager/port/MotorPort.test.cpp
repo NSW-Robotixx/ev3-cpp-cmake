@@ -88,8 +88,10 @@ TEST(MotorPort, filestreams)
 
     finder::physical::MotorPort motorPort(FakeSys::getWorkingDir() + "/tacho-motor/motor0");
 
+    absl::Status status;
+
     motorPort.setSpeed(0);
-    motorPort.setPositionSp(0);
+    status.Update(motorPort.setPositionSp(0));
     motorPort.setDutyCycle(0);
     motorPort.setPolarity(finder::physical::MotorPolarity::INVERSED);
     motorPort.setStopAction(finder::physical::MotorStopAction::HOLD);
@@ -129,4 +131,6 @@ TEST(MotorPort, filestreams)
     ASSERT_EQ(polarity, "inversed");
     ASSERT_EQ(stop_action, "hold");
     ASSERT_EQ(motorPort.getCountPerRotation(), 360);
+
+    ASSERT_TRUE(status.ok());
 }

@@ -1,5 +1,6 @@
 find_package(GTest REQUIRED)
 find_package(log4cplus REQUIRED)
+find_package(Eigen3 REQUIRED)
 
 set(EV3_FILESYSTEM_TEST_SRC
     ${EV3_FILESYSTEM_TEST_DIR}/Fakesys.cpp
@@ -28,7 +29,7 @@ if(EV3_TESTS_SRC)
     get_property(EV3_TESTS_LIBS GLOBAL PROPERTY EV3_TESTS_LIBS)
     
     # add the lib to be linked to the test
-    set_property(GLOBAL PROPERTY EV3_TESTS_LIBS ${EV3_TESTS_LIBS} EV3_filesystem log4cplus::log4cplus abseil::abseil)
+        set_property(GLOBAL PROPERTY EV3_TESTS_LIBS ${EV3_TESTS_LIBS} EV3_filesystem log4cplus::log4cplus abseil::abseil Eigen3::Eigen)
 else()
     message(STATUS "EV3_TESTS_SRC is not defined")
 endif()
@@ -52,6 +53,7 @@ target_link_libraries(EV3_filesystem_test
         EV3_filesystem
         log4cplus::log4cplus
         abseil::abseil
+        Eigen3::Eigen
         # Logger
 )
 

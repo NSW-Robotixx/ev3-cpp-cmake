@@ -2,10 +2,12 @@
 #define __MOTOR_PORT_HPP__
 
 #include <portManager/port/Port.hpp>
+#include "../../EV3_macros.hpp"
 #include <filesystem>
 #include <vector>
 #include <future>
 #include <absl/synchronization/mutex.h>
+#include <Eigen/Dense>
 
 namespace finder
 {
@@ -110,6 +112,7 @@ namespace finder
 
                 /// @brief Set the destination position for the run-to-rel-pos and run-to-abs-pos motor commands. 
                 /// @param position_sp Pulses for the motor to move.
+                /// @return absl::Status
                 absl::Status setPositionSp(int position_sp);
 
                 /// @brief Set the duty cycle (speed) to move at when using run-direct command. 
@@ -126,10 +129,12 @@ namespace finder
 
                 /// @brief Send a specific movement command to the motor. Some params might have to be set first for some command. See the official documentation for more.
                 /// @param command Command to send to the motor.
+                /// @return absl::Status
                 absl::Status setCommand(MotorCommand command);
 
                 /// @brief shorthand for setting the command to "stop".
-                void stop();
+                /// @return absl::Status
+                absl::Status stop();
 
                 /// @brief Get the current speed of the motor.
                 /// @return Current speed of the motor.
@@ -157,7 +162,13 @@ namespace finder
 
                 /// @brief Move the motor to a specific absolute position. This will block the program until the motor has reached the position
                 /// @param abs_position_sp Position to move to in pulses.
-                absl::Status moveToPosition(int abs_position_sp);
+                /// @return absl::Status
+                absl::Status moveToAbsPosition(int abs_position_sp);
+
+                /// @brief Reset the motor to its default state. This will stop the motor. Reinit file streams.
+                /// @return absl::Status
+                absl::Status reset();
+            protected:
 
             private:
                 static log4cplus::Logger _logger;
@@ -178,6 +189,8 @@ namespace finder
                 absl::once_flag _init_flag;
 
                 std::future<absl::Status> _init_future;
+
+                Eigen::Vector3d _position;
 
                 /// @brief Inititalize the motor class by checking if files exist and opening file streams.
                 absl::Status init();

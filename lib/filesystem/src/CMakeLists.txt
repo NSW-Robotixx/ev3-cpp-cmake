@@ -38,7 +38,8 @@ target_link_libraries(EV3_filesystem
     PRIVATE
         log4cplus::log4cplus 
         abseil::abseil
-        Logger       
+        Eigen3::Eigen
+        Logger      
 )
 
 # set(ENABLE_LOGGING ON CACHE BOOL "Enable logging")

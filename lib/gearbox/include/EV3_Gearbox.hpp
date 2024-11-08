@@ -25,7 +25,13 @@ namespace finder::physical
             /// @return absl::Status
             /// @param gear Which gear to set the gearbox to
             absl::Status setGear(GearboxGears gear);
+
+            /// @brief get the current gear of the gearbox
+            /// @return absl::StatusOr<GearboxGears>
+            absl::StatusOr<GearboxGears> getGear();
+
     
         private:
+            GearboxGears _currentGear;
     };
 }
