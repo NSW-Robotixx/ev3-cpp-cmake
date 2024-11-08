@@ -15,6 +15,8 @@ namespace finder
         std::shared_ptr<MotorPort> DeviceManager::_motorTool;
         bool DeviceManager::_initialized = false;
 
+        log4cplus::Logger DeviceManager::_logger = log4cplus::Logger::getInstance(LOG4CPLUS_TEXT("main.DeviceManager"));
+
 
 
         DeviceManager::DeviceManager(std::string portBasePath)
@@ -36,6 +38,7 @@ namespace finder
 
         void DeviceManager::init(std::string portBasePath)
         {
+            LOG4CPLUS_TRACE(_logger, "DeviceManager::init(std::string portBasePath)");
             _portManager = std::make_shared<PortManager>(portBasePath);
             _portManager->readPorts();
 

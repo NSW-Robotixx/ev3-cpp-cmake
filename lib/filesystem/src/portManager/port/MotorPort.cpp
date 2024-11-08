@@ -563,7 +563,7 @@ namespace finder
             // return std::async(std::launch::async, [this]() {
                 LOG4CPLUS_TRACE(_logger, "MotorPort::init()");
 
-                absl::call_once(_init_flag, &MotorPort::init, this);
+                // absl::call_once(_init_flag, &MotorPort::init, this);
 
                 absl::StatusOr<bool> enabled = isEnabled();
                 absl::StatusOr<path_port_t> base_path = getBasePath();
@@ -578,6 +578,8 @@ namespace finder
                 absl::StatusOr<path_polarity_t> polarity_path = getPolarityPath();
                 absl::StatusOr<path_stop_action_t> stop_action_path = getStopActionPath();
                 absl::StatusOr<path_count_per_rotation_t> count_per_rotation_path = getCountPerRotationPath();
+
+                LOG4CPLUS_DEBUG_FMT(_logger, LOG4CPLUS_TEXT("MotorPort::init() for %s"), getBasePath().value_or("").c_str());
                 
                 if (!enabled.ok()) { 
                     LOG4CPLUS_ERROR(_logger, "MotorPort failed to initialize, port is not enabled");
@@ -632,6 +634,8 @@ namespace finder
                     return count_per_rotation_path.status();
                 }
 
+                LOG4CPLUS_DEBUG(_logger, "MotorPort::init() paths are valid");
+
                 if (!std::filesystem::exists(base_path.value())) {
                     LOG4CPLUS_ERROR(_logger, "MotorPort failed to initialize, base path does not exist");
                     return absl::InternalError("MotorPort failed to initialize, base path does not exist");
@@ -681,6 +685,8 @@ namespace finder
                     return absl::InternalError("MotorPort failed to initialize, count_per_rotation path does not exist");
                 }
 
+                LOG4CPLUS_DEBUG(_logger, "MotorPort::init() paths exist");
+
                 _file_command_path = std::make_shared<std::ofstream>(command_path.value());
                 _file_speed_path = std::make_shared<std::ifstream>(speed_path.value());
                 _file_speed_sp_path = std::make_shared<std::ofstream>(speed_sp_path.value());
@@ -691,6 +697,8 @@ namespace finder
                 _file_polarity_path = std::make_shared<std::ofstream>(polarity_path.value());
                 _file_stop_action_path = std::make_shared<std::ofstream>(stop_action_path.value());
                 _file_count_per_rotation_path = std::make_shared<std::ifstream>(count_per_rotation_path.value());
+
+                LOG4CPLUS_DEBUG(_logger, "MotorPort::init() file readers created");
 
                 if (!_file_command_path->is_open() || _file_command_path->bad()) {
                     LOG4CPLUS_ERROR(_logger, "MotorPort failed to initialize, command file is not open");
@@ -732,6 +740,8 @@ namespace finder
                     LOG4CPLUS_ERROR(_logger, "MotorPort failed to initialize, count_per_rotation file is not open");
                     return absl::InternalError("MotorPort failed to initialize, count_per_rotation file is not open");
                 }
+
+                LOG4CPLUS_DEBUG(_logger, "MotorPort::init() file readers opened");
 
                 return absl::OkStatus();
             // }).get();

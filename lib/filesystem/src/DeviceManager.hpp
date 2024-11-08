@@ -59,6 +59,8 @@ namespace finder
                 static bool _initialized;
                 static absl::once_flag _init_once_flag;
 
+                static log4cplus::Logger _logger;
+
         };
     } // namespace physical
 } // namespace finder
