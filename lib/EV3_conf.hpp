@@ -29,6 +29,8 @@
 
     constexpr uint_fast8_t EV3_GEARBOX_GEAR_POS_TOLERANCE = 5;
 
+    constexpr uint_fast16_t EV3_GEAR_BLOCKED_TIMEOUT_MS = 1000;
+
     // define the tolerance for the gyro sensor
     constexpr uint_fast8_t EV3_GYRO_TURN_TOLERANCE = 3;
 

@@ -7,9 +7,11 @@
 
 
 #include <EV3_System.hpp>
+#include <EV3_Gearbox.hpp>
 
 finder::log::Logger logger = finder::log::Logger();
 finder::system::System ev3_system = finder::system::System();
+finder::physical::GearboxManager gearbox_manager = finder::physical::GearboxManager();
 
 constexpr auto& ascii_art_literal = R"(
   _____ _           _ _____      
@@ -29,7 +31,7 @@ int main(int argc, char const *argv[])
 
     logger.info("Starting application...");
 
-    ev3_system.start();
+    // ev3_system.start();
 
 //    finder::engines::movement::MovementEngine movementEngine = finder::engines::movement::MovementEngine();
 //
@@ -38,6 +40,8 @@ int main(int argc, char const *argv[])
 //    movementEngine.move(finder::math::Vector2{100, 100});
 //    movementEngine.move(finder::math::Vector2{100, 100});
 
+
+    gearbox_manager.calibrate();
     
 
     while (true)

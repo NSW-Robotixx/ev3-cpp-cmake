@@ -1,5 +1,6 @@
 #include <iostream>
 #include <string>
+#include <log4cplus/log4cplus.h>
 
 #ifndef __LOGGER_HPP__
 #define __LOGGER_HPP__
@@ -22,7 +23,7 @@ namespace finder
             public:
 
 
-                Logger() = default;
+                Logger();
 
                 /// @brief Construct a new Logger object
                 /// @param minLogLevel The minimum log level to display

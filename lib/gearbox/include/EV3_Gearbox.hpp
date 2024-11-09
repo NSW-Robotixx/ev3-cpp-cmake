@@ -1,5 +1,8 @@
 #include <EV3_MotorManager.hpp>
+#include <EV3_ToolControl.hpp>
 #include "../../EV3_conf.hpp"
+
+#include <array>
 
 namespace finder::physical
 {
@@ -30,8 +33,15 @@ namespace finder::physical
             /// @return absl::StatusOr<GearboxGears>
             absl::StatusOr<GearboxGears> getGear();
 
+
+            /// @brief calibrate the gearbox
+            /// @return absl::Status
+            absl::Status calibrate();
+
     
         private:
             GearboxGears _currentGear;
+
+            static int _gearStartOffset;
     };
 }

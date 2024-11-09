@@ -50,14 +50,17 @@ namespace finder
 
                 /// @brief Chech if Devicemanager was initialized successfully
                 /// @return Initialized?
-                bool isInitialized();
 
                 /// @brief Initialize the Ports in the DeviceManager
                 /// @param portBasePath Base path of the ports
                 static void init(std::string portBasePath);
+                bool isInitialized();
+
+                /// @brief Once flag for the DeviceManager
+                static absl::once_flag _device_manager_init_once_flag;
+                
             private:
                 static bool _initialized;
-                static absl::once_flag _init_once_flag;
 
                 static log4cplus::Logger _logger;
 

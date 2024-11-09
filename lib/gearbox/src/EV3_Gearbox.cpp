@@ -3,6 +3,8 @@
 
 namespace finder::physical
 {
+    int GearboxManager::_gearStartOffset = 0;
+
     GearboxManager::GearboxManager()
     {
         
@@ -61,6 +63,44 @@ namespace finder::physical
         }
 
         return absl::OutOfRangeError("Position not within gear range");
+    }
+
+    absl::Status GearboxManager::calibrate()
+    {
+        if (!isInitialized())
+        {
+            return absl::FailedPreconditionError("GearboxManager not initialized");
+        }
+
+        ToolControl toolControl = ToolControl{};
+
+        std::array<GearboxGears, 4> gears = {GearboxGears::EV3_GEARBOX_GEAR_1,
+                                             GearboxGears::EV3_GEARBOX_GEAR_2,
+                                             GearboxGears::EV3_GEARBOX_GEAR_3,
+                                             GearboxGears::EV3_GEARBOX_GEAR_4};
+
+        for (GearboxGears gear : gears)
+        {
+            absl::Status status = setGear(gear);
+            if (!status.ok())
+            {
+                return status;
+            }
+
+            absl::StatusOr<bool> statusBlocked = toolControl.isToolBlocked();
+
+            if (!status.ok())
+            {
+                return statusBlocked.status();
+            }
+
+            if (statusBlocked.value())
+            {
+                _gearStartOffset = gear;
+            }   
+        }
+
+        return absl::NotFoundError("Not implemented");
     }
 
 } // namespace finder::physical

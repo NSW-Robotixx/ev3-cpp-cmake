@@ -87,6 +87,9 @@ target_include_directories(Main PUBLIC ${CMAKE_SOURCE_DIR}/deps)
 target_link_libraries(Main 
   Logger
   EV3_system
+  EV3_gearbox
+  abseil::abseil
+  EV3_filesystem
 )    
   
 

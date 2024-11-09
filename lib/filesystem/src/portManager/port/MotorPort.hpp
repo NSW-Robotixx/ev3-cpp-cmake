@@ -7,7 +7,6 @@
 #include <vector>
 #include <future>
 #include <absl/synchronization/mutex.h>
-#include <Eigen/Dense>
 
 namespace finder
 {
@@ -190,7 +189,7 @@ namespace finder
 
                 std::future<absl::Status> _init_future;
 
-                Eigen::Vector3d _position;
+                int _position;
 
                 /// @brief Inititalize the motor class by checking if files exist and opening file streams.
                 absl::Status init();

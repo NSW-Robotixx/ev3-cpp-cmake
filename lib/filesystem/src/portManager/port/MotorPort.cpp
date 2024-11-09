@@ -552,6 +552,8 @@ namespace finder
                     LOG4CPLUS_ERROR_FMT(_logger, LOG4CPLUS_TEXT("MotorPort failed to reset for %s"), getBasePath().value_or("").c_str());
                     return initStatus;
                 }
+
+                _position = getPosition();
                 return absl::OkStatus();
             } else {
                 return absl::InternalError("MotorPort failed to reset, path does not exist");
@@ -742,6 +744,8 @@ namespace finder
                 }
 
                 LOG4CPLUS_DEBUG(_logger, "MotorPort::init() file readers opened");
+
+                _position = getPosition();
 
                 return absl::OkStatus();
             // }).get();

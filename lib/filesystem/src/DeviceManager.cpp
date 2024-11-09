@@ -15,20 +15,24 @@ namespace finder
         std::shared_ptr<MotorPort> DeviceManager::_motorTool;
         bool DeviceManager::_initialized = false;
 
+        absl::once_flag DeviceManager::_device_manager_init_once_flag;
+
         log4cplus::Logger DeviceManager::_logger = log4cplus::Logger::getInstance(LOG4CPLUS_TEXT("main.DeviceManager"));
 
 
 
         DeviceManager::DeviceManager(std::string portBasePath)
         {
-            if (!_initialized)
-            {
-                init(portBasePath);
-            }
+            absl::call_once(_device_manager_init_once_flag, &DeviceManager::init, portBasePath);
         }
 
         DeviceManager::~DeviceManager()
         {
+        }
+
+        DeviceManager::DeviceManager()
+        {
+            LOG4CPLUS_TRACE(_logger, "protected DeviceManager::DeviceManager()");
         }
 
         bool DeviceManager::isInitialized()
