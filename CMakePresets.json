@@ -47,6 +47,18 @@
                 "CMAKE_BUILD_TYPE": "Release",
                 "CMAKE_INSTALL_PREFIX": "${sourceDir}/out/install/${presetName}"
             }
+        },
+        {
+            "name": "ev3",
+            "displayName": "GCC 11.4.0 arm-linux-gnueabi",
+            "description": "Using compilers: C = /usr/bin/arm-linux-gnueabi-gcc, CXX = /usr/bin/arm-linux-gnueabi-g++",
+            "binaryDir": "${sourceDir}/out/build/${presetName}",
+            "cacheVariables": {
+                "CMAKE_INSTALL_PREFIX": "${sourceDir}/out/install/${presetName}",
+                "CMAKE_C_COMPILER": "/usr/bin/arm-linux-gnueabi-gcc",
+                "CMAKE_CXX_COMPILER": "/usr/bin/arm-linux-gnueabi-g++",
+                "CMAKE_BUILD_TYPE": "Debug"
+            }
         }
     ]
 }

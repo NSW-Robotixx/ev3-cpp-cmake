@@ -1,6 +1,6 @@
 add_subdirectory(bitmaps)
 
-find_package(freetype REQUIRED)
+# find_package(freetype REQUIRED)
 
 #screen
 add_library(Screen Screen.cpp)
@@ -62,7 +62,7 @@ target_link_libraries(Window
     PUBLIC
         Logger
         Bitmaps
-        Freetype::Freetype
+        # Freetype::Freetype
 )
 
 

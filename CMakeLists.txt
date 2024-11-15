@@ -1,4 +1,6 @@
-cmake_minimum_required(VERSION 3.24)
+cmake_minimum_required(VERSION 3.24...3.24)
+
+set(CONAN_HOST_PROFILE "ev3" CACHE STRING "Conan profile to use for host")
 
 if(NOT EXISTS "${CMAKE_BINARY_DIR}/conan.cmake")
 message(STATUS "Downloading conan.cmake from https://github.com/conan-io/cmake-conan")
@@ -25,15 +27,15 @@ option(BUILD_INTERNAL_TCP_SERVER "Build internal tcp server" ON)
 # find dependencies
 find_package(GTest REQUIRED)
 find_package(Doxygen)
+# find_package(freetype)
 find_package(Eigen3 REQUIRED)
 find_package(yaml-cpp REQUIRED)
 find_package(ydcpp-tcpcat REQUIRED)
-find_package(freetype REQUIRED)
 find_package(log4cplus REQUIRED)
 find_package(absl REQUIRED)
 
 # new and untested stuff
-set(BUILD_SHARED_LIBS ON)
+set(BUILD_SHARED_LIBS OFF)
 # set(CMAKE_EXE_LINKER_FLAGS "-static-libgcc -static-libstdc++ -Wall -Werror -Wextra")
 # end of new and untested stuff
 

@@ -1,3 +1,5 @@
+find_package(log4cplus REQUIRED)
+
 add_library(Logger  
     ${CMAKE_CURRENT_LIST_DIR}/src/Logger.cpp
     ${CMAKE_CURRENT_LIST_DIR}/src/FileLogger.cpp

@@ -19,7 +19,10 @@ namespace finder::physical::display
     Window::~Window()
     {
         _logger.debug("Window destroyed: " + this->name);
+
+#if EV3_DISPLAY_USE_FREETYPE
         FT_Done_FreeType(ft);
+#endif
     }
 
     int Window::getWidth()
@@ -300,7 +303,7 @@ namespace finder::physical::display
         return 0;
     }
 
-#if EV3_DISPLAY_USE_BITMAPS
+#ifndef EV3_DISPLAY_USE_BITMAPS
 
     int Window::drawBitmap(int x, int y, std::shared_ptr<bitmaps::ImageFormat> bitmap)
     {

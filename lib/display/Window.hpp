@@ -152,7 +152,7 @@ namespace finder::physical::display
             /// @return 0 if successful, -1 if not
             int drawText(int x, int y, std::string text, DisplayColors color);
 
-#if EV3_DISPLAY_USE_BITMAPS
+#ifndef EV3_DISPLAY_USE_BITMAPS
             /// @brief Draw Bitmap on the window
             /// @param x Offset X Coordinate
             /// @param y Offset Y Coordinate

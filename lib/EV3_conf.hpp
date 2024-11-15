@@ -105,12 +105,15 @@
         #define EV3_DISPLAY_COLOR 1
 
         // draw text with freetype
-        #define EV3_DISPLAY_USE_FREETYPE 1
+        #define EV3_DISPLAY_USE_FREETYPE 0
         #if     EV3_DISPLAY_USE_FREETYPE
+            #define EV3_ENABLE_USE_BITMAPS 0
+
             // define the path to the font file
             constexpr const char* EV3_DISPLAY_FONT_PATH = "/usr/share/fonts/truetype/ubuntu/UbuntuMono-R.ttf";
+        #else
+            #define EV3_ENABLE_USE_BITMAPS 1
         #endif
-        
     #endif
 
     // define the webserver settings

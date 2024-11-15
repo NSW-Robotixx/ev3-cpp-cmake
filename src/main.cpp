@@ -41,8 +41,9 @@ int main(int argc, char const *argv[])
 //    movementEngine.move(finder::math::Vector2{100, 100});
 
 
-    gearbox_manager.calibrate();
+    absl::Status status = gearbox_manager.calibrate();
     
+    status.IgnoreError();
 
     while (true)
     {

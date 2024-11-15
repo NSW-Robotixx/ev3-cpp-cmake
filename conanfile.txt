@@ -2,7 +2,7 @@
 eigen/3.4.0
 yaml-cpp/0.8.0
 ydcpp-tcpcat/1.0.4
-freetype/2.13.2
+# freetype/2.13.2
 gtest/1.15.0
 log4cplus/2.1.1
 abseil/20240722.0
