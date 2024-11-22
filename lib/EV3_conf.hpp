@@ -1,7 +1,7 @@
 #ifndef __EV3_CONF_HPP__
 #define __EV3_CONF_HPP__
 
-    #include <stdint-gcc.h>
+    #include <stdint.h>
 
     // general settings
     constexpr bool EV3_THROW_ON_ERROR = true;
