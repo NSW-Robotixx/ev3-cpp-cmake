@@ -61,9 +61,6 @@ namespace finder
                 
             private:
                 static bool _initialized;
-
-                static log4cplus::Logger _logger;
-
         };
     } // namespace physical
 } // namespace finder

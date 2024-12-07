@@ -9,7 +9,7 @@ TEST(SmoothPath, smoothPath) {
     using namespace finder::math;
     SmoothPath smooth_path;
 
-    std::vector<Vector2> result = smooth_path.smoothPath(std::vector<Vector2>{
+    boost::leaf::result<std::vector<Vector2>> result = smooth_path.smoothPath(std::vector<Vector2>{
         Vector2{12, 15},
         Vector2{12, 14},
         Vector2{12, 13},
@@ -26,14 +26,16 @@ TEST(SmoothPath, smoothPath) {
         Vector2{1, 2}
     });
 
+    ASSERT_TRUE(result);
+
     std::vector<Vector2> expected_result = {
         Vector2{12, 15},
         Vector2{1, 2}
     };
 
-    ASSERT_EQ(result.size(), expected_result.size());
-    for (size_t i = 0; i < result.size(); ++i)
+    EXPECT_EQ(result.value().size(), expected_result.size());
+    for (size_t i = 0; i < result.value().size(); ++i)
     {
-        EXPECT_EQ(result[i], expected_result[i]);
+        EXPECT_EQ(result.value()[i], expected_result[i]);
     }
 }

@@ -95,8 +95,6 @@ namespace finder::physical
             static TurnDirection _prevTurnDirection;
 
             static std::vector<std::function<void(TurnDirection)>> _directionChangeListeners;
-
-            static log4cplus::Logger _logger;
     };
 }
 

@@ -2,6 +2,7 @@
 #define __SMOOTH_PATH_HPP__
 
 #include <vector>
+#include <boost/leaf.hpp>
 
 #include <Vector2.hpp>
 #include <Line.hpp>
@@ -26,11 +27,11 @@ namespace finder::pathfind
         /// @brief Smooth the path using the by removing unnecessary points, if set in Contructor, this will be called automatically
         /// @param path Path to smooth
         /// @return Smoothed path as a vector of Vector2. Prone to change to Eigen3 library
-        static std::vector<math::Vector2> smoothPath(const std::vector<math::Vector2>& path);
+        static boost::leaf::result<std::vector<math::Vector2>> smoothPath(const std::vector<math::Vector2>& path);
 
         /// @brief Get the path that has been smoothed
         /// @return Smoothed path as a vector of Vector2
-        std::vector<math::Vector2> getPath() const;
+        boost::leaf::result<std::vector<math::Vector2>> getPath() const;
 
     private:
         std::vector<math::Vector2> m_path;

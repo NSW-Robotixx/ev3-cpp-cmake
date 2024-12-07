@@ -2,11 +2,11 @@
 eigen/3.4.0
 yaml-cpp/0.8.0
 ydcpp-tcpcat/1.0.4
-# freetype/2.13.2
 gtest/1.15.0
-log4cplus/2.1.1
-abseil/20240722.0
+spdlog/1.10.0
 # doxygen/1.9.4
+boost/1.86.0
+boost-leaf/1.83.0
 
 [tool_requires]
 kcov/42

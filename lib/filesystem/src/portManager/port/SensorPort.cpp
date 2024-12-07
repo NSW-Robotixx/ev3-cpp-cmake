@@ -5,8 +5,6 @@ namespace finder
 {
     namespace physical
     {
-        log4cplus::Logger SensorPort::_logger = log4cplus::Logger::getInstance(LOG4CPLUS_TEXT("main.SensorPort"));
-        
         std::vector<sensor_mode_t> SensorPort::_modes{};
 
         /*
@@ -18,218 +16,221 @@ namespace finder
 
         SensorPort::SensorPort(std::string port_name): Port(port_name)
         {
-            LOG4CPLUS_TRACE(_logger, "SensorPort::SensorPort(std::string port_name)");
+            spdlog::trace("SensorPort::SensorPort(std::string port_name)");
 
             if (port_name.length() <= 0) {
-                LOG4CPLUS_ERROR(_logger, LOG4CPLUS_TEXT("SensorPort created without port path"));
+                spdlog::error("SensorPort created without port path");
                 throw new std::invalid_argument("SensorPort created without port path");
             }
             _is_initialized = false;
             _path = port_name;
 
-            absl::Status success = initFiles();
-            if (!success.ok())
+            boost::leaf::result<void> success = initFiles();
+            if (!success)
             {
-                LOG4CPLUS_ERROR(_logger, "Failed to initialize files");
+                spdlog::error("Failed to initialize files");
                 _path = "";
                 throw new std::invalid_argument(std::string(success.message()));
             }
-            _is_initialized = success.ok();
+            _is_initialized = success;
         }
 
         SensorPort::SensorPort(std::shared_ptr<Port> port): Port(port)
         {
-            LOG4CPLUS_TRACE(_logger, "SensorPort::SensorPort(std::shared_ptr<Port> port)");
-            absl::StatusOr<std::string> path = port->getBasePath();
+            spdlog::trace("SensorPort::SensorPort(std::shared_ptr<Port> port)");
+            boost::leaf::result<std::string> path = port->getBasePath();
 
-            if (path.ok()) {
-                LOG4CPLUS_ERROR_FMT(_logger, LOG4CPLUS_TEXT("Unable to get path from port: %s"), std::string(path.status().message()).c_str());
-                throw new std::invalid_argument(std::string(path.status().message()));
+            if (path) {
+                spdlog::error("Unable to get path from port");
+                throw path.error();
             } else if (path.value().length() <= 0) {
-                LOG4CPLUS_ERROR_FMT(_logger, LOG4CPLUS_TEXT("SensorPort created without port path : %s"), std::string(path.status().message()).c_str());
+                spdlog::error("SensorPort created without port path");
                 throw new std::invalid_argument("SensorPort created without port path");
             }
             _is_initialized = false;
             
-            absl::StatusOr<bool> success = initFiles();
-            if (!success.ok())
+            boost::leaf::result<void> success = initFiles();
+            if (!success)
             {
-                LOG4CPLUS_ERROR(_logger, "Failed to initialize files");
-                throw new std::invalid_argument(std::string(success.status().message()));
+                spdlog::error("Failed to initialize files");
+                throw success.error();
+            } else {
+                _is_initialized = true;
             }
-            _is_initialized = success.value();
         }
 
-        absl::Status SensorPort::setBasePath(const path_port_t& path)
+        boost::leaf::result<void> SensorPort::setBasePath(const path_port_t& path)
         {
-            absl::Status status = Port::setBasePath(path);
-            if (!status.ok())
+            boost::leaf::result<void> status = Port::setBasePath(path);
+            if (!status)
             {
-                LOG4CPLUS_ERROR_FMT(_logger, LOG4CPLUS_TEXT("Failed to set path for port: %s"), path.c_str());
-                return absl::InvalidArgumentError("Failed to set path for port: " + path);
+                spdlog::error("Failed to set path for port: %s", path.c_str());
+                return boost::leaf::new_error(std::invalid_argument("Failed to set path for port: " + path));
             }
-            absl::StatusOr<bool> success = initFiles();
-            if (!success.ok())
+            boost::leaf::result<bool> success = initFiles();
+            if (!success)
             {
-                LOG4CPLUS_ERROR(_logger, "Failed to initialize files");
-                return success.status();
+                spdlog::error("Failed to initialize files");
+                return success.error();
             }
             return status;
         }
 
-        absl::StatusOr<path_value_t> SensorPort::getValuePath(int index)
+        boost::leaf::result<path_value_t> SensorPort::getValuePath(int index)
         {
-            LOG4CPLUS_TRACE(_logger, "SensorPort::getValuePath()");
+            spdlog::trace("SensorPort::getValuePath()");
 
-            if (isEnabled().value_or(false))
+            if (isEnabled() && isEnabled().value())
             {
-                absl::StatusOr<std::string> path = getBasePath();
-                if (!path.ok())
+                boost::leaf::result<std::string> path = getBasePath();
+                if (!path)
                 {
-                    LOG4CPLUS_ERROR(_logger, LOG4CPLUS_TEXT("Failed to get path"));
+                    spdlog::error("Failed to get path");
                     return path;
                 }
                 return path.value() + "/value" + std::to_string(index);
             }
             else
             {
-                LOG4CPLUS_WARN_FMT(_logger, LOG4CPLUS_TEXT("Port is not enabled for %s"), getBasePath().value_or("").c_str());
-                return absl::InvalidArgumentError("Port is not enabled: " + getBasePath().value_or(""));
+                spdlog::warn(("Port is not enabled for %s"), getBasePath().value().c_str());
+                return boost::leaf::new_error(std::invalid_argument("Port is not enabled: " + getBasePath().value()));
             }
         }
 
-        absl::StatusOr<path_mode_t> SensorPort::getModePath()
+        boost::leaf::result<path_mode_t> SensorPort::getModePath()
         {
-            LOG4CPLUS_TRACE(_logger, "SensorPort::getModePath()");
+            spdlog::trace("SensorPort::getModePath()");
 
-            if (isEnabled().value_or(false))
+            if (isEnabled() && isEnabled().value())
             {
-                absl::StatusOr<std::string> path = getBasePath();
-                if (!path.ok())
+                boost::leaf::result<std::string> path = getBasePath();
+                if (!path)
                 {
-                    LOG4CPLUS_ERROR(_logger, LOG4CPLUS_TEXT("Failed to get path"));
+                    spdlog::error("Failed to get path");
                     return path;
                 }
                 return path.value() + "/mode";
             }
             else
             {
-                LOG4CPLUS_WARN_FMT(_logger, LOG4CPLUS_TEXT("Port is not enabled for %s"), getBasePath().value_or("").c_str());
-                return absl::InvalidArgumentError("Port is not enabled: " + getBasePath().value_or(""));
+                spdlog::warn(("Port is not enabled for %s"), getBasePath().value().c_str());
+                return boost::leaf::new_error(std::invalid_argument("Port is not enabled: " + getBasePath().value()));
             }
         }
 
-        absl::StatusOr<path_modes_t> SensorPort::getModesPath()
+        boost::leaf::result<path_modes_t> SensorPort::getModesPath()
         {
-            LOG4CPLUS_TRACE(_logger, "SensorPort::getModesPath()");
+            spdlog::trace("SensorPort::getModesPath()");
         
-            if (isEnabled().value_or(false))
+            if (isEnabled() && isEnabled().value())
             {
-                absl::StatusOr<std::string> path = getBasePath();
-                if (!path.ok())
+                boost::leaf::result<std::string> path = getBasePath();
+                if (!path)
                 {
-                    LOG4CPLUS_ERROR(_logger, LOG4CPLUS_TEXT("Failed to get path"));
+                    spdlog::error("Failed to get path");
                     return path;
                 }
                 return path.value() + "/modes";
             }
             else
             {
-                LOG4CPLUS_WARN_FMT(_logger, LOG4CPLUS_TEXT("Port is not enabled for %s"), getBasePath().value_or("").c_str());
-                return absl::InvalidArgumentError("Port is not enabled: " + getBasePath().value_or(""));
+                spdlog::warn(("Port is not enabled for %s"), getBasePath().value().c_str());
+                boost::leaf::new_error(std::invalid_argument("Port is not enabled: " + getBasePath().value()));
             }
+
+            return boost::leaf::new_error(std::invalid_argument("Port is not enabled: " + getBasePath().value()));
         }
 
-        absl::StatusOr<path_num_values_t> SensorPort::getNumValuesPath()
+        boost::leaf::result<path_num_values_t> SensorPort::getNumValuesPath()
         {
-            LOG4CPLUS_TRACE(_logger, "SensorPort::getNumValuesPath()");
+            spdlog::trace("SensorPort::getNumValuesPath()");
 
-            if (isEnabled().value_or(false))
+            if (isEnabled() && isEnabled().value())
             {
-                absl::StatusOr<std::string> path = getBasePath();
-                if (!path.ok())
+                boost::leaf::result<std::string> path = getBasePath();
+                if (!path)
                 {
-                    LOG4CPLUS_ERROR(_logger, LOG4CPLUS_TEXT("Failed to get path"));
-                    return path.status();
+                    spdlog::error("Failed to get path");
+                    return path.error();
                 }
                 return path.value() + "/num_values";
             }
             else
             {
-                LOG4CPLUS_WARN_FMT(_logger, LOG4CPLUS_TEXT("Port is not enabled for %s"), getBasePath().value_or("").c_str());
-                return absl::InvalidArgumentError("Port is not enabled: " + getBasePath().value_or(""));
+                spdlog::warn(("Port is not enabled for %s"), getBasePath().value().c_str());
+                return boost::leaf::new_error(std::invalid_argument("Port is not enabled: " + getBasePath().value()));
             }
         }
 
-        absl::StatusOr<path_poll_ms_t> SensorPort::getPollMsPath()
+        boost::leaf::result<path_poll_ms_t> SensorPort::getPollMsPath()
         {
-            LOG4CPLUS_TRACE(_logger, "SensorPort::getPollMsPath()");
+            spdlog::trace("SensorPort::getPollMsPath()");
 
-            if (isEnabled().value_or(false))
+            if (isEnabled() && isEnabled().value())
             {
-                absl::StatusOr<std::string> path = getBasePath();
-                if (!path.ok())
+                boost::leaf::result<std::string> path = getBasePath();
+                if (!path)
                 {
-                    LOG4CPLUS_ERROR(_logger, LOG4CPLUS_TEXT("Failed to get path"));
+                    spdlog::error("Failed to get path");
                     return "";
                 }
                 return path.value() + "/poll_ms";
             }
             else
             {
-                LOG4CPLUS_WARN_FMT(_logger, LOG4CPLUS_TEXT("Port is not enabled for %s"), getBasePath().value_or("").c_str());
-                return absl::InvalidArgumentError("Port is not enabled: " + getBasePath().value_or(""));
+                spdlog::warn(("Port is not enabled for %s"), getBasePath().value().c_str());
+                return boost::leaf::new_error(std::invalid_argument("Port is not enabled: " + getBasePath().value()));
             }
         }
 
-        absl::StatusOr<int> SensorPort::getValue(int index)
+        boost::leaf::result<int> SensorPort::getValue(int index)
         {
-            LOG4CPLUS_TRACE(_logger, "SensorPort::getValue()");
+            spdlog::trace("SensorPort::getValue()");
 
-            if (isEnabled().value_or(false))
+            if (isEnabled())
             {
                 if (index < 0 || index >= _file_value_path.size())
                 {
-                    LOG4CPLUS_WARN_FMT(_logger, LOG4CPLUS_TEXT("Index out of range for %s"), getBasePath().value_or("").c_str());
-                    return absl::OutOfRangeError("Index out of range");
+                    spdlog::warn(("Index out of range for %s"), getBasePath().value().c_str());
+                    return boost::leaf::new_error(std::invalid_argument("Index out of range"));
                 }
                 
                 if (_file_value_path[index]->is_open())
                 {
                     int value;
                     *_file_value_path[index] >> value;
-                    LOG4CPLUS_INFO_FMT(_logger, LOG4CPLUS_TEXT("VALUE.GET: %s WITH_RESULT: %d"), getBasePath().value_or("").c_str(), value);
+                    spdlog::info(("VALUE.GET: %s WITH_RESULT: %d"), getBasePath().value().c_str(), value);
                     return value;
                 } 
             } 
-            LOG4CPLUS_WARN_FMT(_logger, LOG4CPLUS_TEXT("Port is not enabled for %s"), getBasePath().value_or("").c_str());
-            return absl::InvalidArgumentError("Port is not enabled: " + getBasePath().value_or(""));
+            spdlog::warn(("Port is not enabled for %s"), getBasePath().value().c_str());
+            return boost::leaf::new_error(std::invalid_argument("Port is not enabled: " + getBasePath().value()));
         }
 
-        absl::Status SensorPort::setMode(sensor_mode_t mode)
+        boost::leaf::result<void> SensorPort::setMode(sensor_mode_t mode)
         {
-            LOG4CPLUS_TRACE(_logger, "SensorPort::setMode()");
+            spdlog::trace("SensorPort::setMode()");
 
-            if (isEnabled().value_or(false))
+            if (isEnabled() && isEnabled().value())
             {
                 if (_file_mode_path->is_open())
                 {
                     *_file_mode_path << mode;
                     _file_mode_path->flush();
                 }
-                LOG4CPLUS_INFO_FMT(_logger, LOG4CPLUS_TEXT("MODE.SET: %s WITH_VALUE: %s"), getBasePath().value_or("").c_str(), mode.c_str());
-                return absl::OkStatus();
+                spdlog::info(("MODE.SET: %s WITH_VALUE: %s"), getBasePath().value().c_str(), mode.c_str());
+                return boost::leaf::result<void>();
             }
-            LOG4CPLUS_WARN_FMT(_logger, LOG4CPLUS_TEXT("Port is not enabled for %s"), getBasePath().value_or("").c_str());
-            return absl::InvalidArgumentError("Port is not enabled: " + getBasePath().value_or(""));
+            spdlog::warn(("Port is not enabled for %s"), getBasePath().value().c_str());
+            return boost::leaf::new_error(std::invalid_argument("Port is not enabled: " + getBasePath().value()));
         }
 
         std::vector<sensor_mode_t> SensorPort::getModes()
         {
-            LOG4CPLUS_TRACE(_logger, "SensorPort::getModes()");
+            spdlog::trace("SensorPort::getModes()");
 
             // read modes from file into vector
-            if (isEnabled().value_or(false))
+            if (isEnabled())
             {
                 if (_file_modes_path->is_open())
                 {
@@ -242,78 +243,76 @@ namespace finder
                     _modes = _modes;
                     for (auto m : _modes)
                     {
-                        LOG4CPLUS_INFO_FMT(_logger, LOG4CPLUS_TEXT("MODES.GET: %s WITH_RESULT: %s"), getBasePath().value_or("").c_str(), m.c_str());
+                        spdlog::info(("MODES.GET: %s WITH_RESULT: %s"), getBasePath().value().c_str(), m.c_str());
                     }
                 }
                 return _modes;
             }
-            LOG4CPLUS_WARN_FMT(_logger, LOG4CPLUS_TEXT("Port is not enabled for %s"), getBasePath().value_or("").c_str());
+            spdlog::warn(("Port is not enabled for %s"), getBasePath().value().c_str());
             return std::vector<sensor_mode_t>{};
         }
 
-        absl::StatusOr<int> SensorPort::getNumValues()
+        boost::leaf::result<int> SensorPort::getNumValues()
         {
-            LOG4CPLUS_TRACE(_logger, "SensorPort::getNumValues()");
+            spdlog::trace("SensorPort::getNumValues()");
 
-            if (isEnabled().value_or(false))
+            if (isEnabled() && isEnabled().value())
             {
                 if (_file_num_values_path->is_open())
                 {
                     int num_values;
                     *_file_num_values_path >> num_values;
-                    LOG4CPLUS_INFO_FMT(_logger, LOG4CPLUS_TEXT("NUM_VALUES.GET: %s WITH_RESULT: %d"), getBasePath().value_or("").c_str(), num_values);
+                    spdlog::info("NUM_VALUES.GET: %s WITH_RESULT: %d", getBasePath().value().c_str(), num_values);
                     return num_values;
                 }
             }
-            LOG4CPLUS_WARN_FMT(_logger, LOG4CPLUS_TEXT("Port is not enabled for %s"), getBasePath().value_or("").c_str());
-            return absl::InvalidArgumentError("Port is not enabled: " + getBasePath().value_or(""));
+            spdlog::warn("Port is not enabled for {}", getBasePath().value().c_str());
+            return boost::leaf::new_error(std::invalid_argument("Port is not enabled: " + getBasePath().value()));
         }
 
         int SensorPort::getPollMs()
         {
-            LOG4CPLUS_TRACE(_logger, "SensorPort::getPollMs()");
+            spdlog::trace("SensorPort::getPollMs()");
 
-            if (isEnabled().value_or(false))
+            if (isEnabled() && isEnabled().value())
             {
                 if (_file_poll_ms_path->is_open())
                 {
                     int poll_ms;
                     *_file_poll_ms_path >> poll_ms;
-                    LOG4CPLUS_INFO_FMT(_logger, LOG4CPLUS_TEXT("POLL_MS.GET: %s WITH_RESULT: %d"), getBasePath().value_or("").c_str(), poll_ms);
+                    spdlog::info(("POLL_MS.GET: %s WITH_RESULT: %d"), getBasePath().value().c_str(), poll_ms);
                     return poll_ms;
                 }
             }
-            LOG4CPLUS_WARN_FMT(_logger, LOG4CPLUS_TEXT("Port is not enabled for %s"), getBasePath().value_or("").c_str());
+            spdlog::warn(("Port is not enabled for %s"), getBasePath().value().c_str());
             return -1;
         }
 
-        absl::StatusOr<DeviceType> SensorPort::getDeviceType()
+        boost::leaf::result<DeviceType> SensorPort::getDeviceType()
         {
-            LOG4CPLUS_TRACE(_logger, "SensorPort::getDeviceType()");
+            spdlog::trace("SensorPort::getDeviceType()");
 
-            absl::StatusOr<DeviceType> device_type = Port::getDeviceType();
-            if (device_type.ok() && device_type.value() != DeviceType::SENSOR) {
-                LOG4CPLUS_ERROR(_logger, "SensorPort::getDeviceType() called on non-sensor port");
-                return absl::InvalidArgumentError("SensorPort::getDeviceType() called on non-sensor port");
+            boost::leaf::result<DeviceType> device_type = Port::getDeviceType();
+            if (device_type && device_type.value() != DeviceType::SENSOR) {
+                spdlog::error("SensorPort::getDeviceType() called on non-sensor port");
+                return boost::leaf::new_error(std::invalid_argument("SensorPort::getDeviceType() called on non-sensor port"));
             } else {
-                LOG4CPLUS_DEBUG(_logger, "Device type is SENSOR");
+                spdlog::debug("Device type is SENSOR");
             }
             return DeviceType::SENSOR;
         }
-        absl::Status SensorPort::initFiles()
+        boost::leaf::result<void> SensorPort::initFiles()
         {
-            LOG4CPLUS_TRACE(_logger, "SensorPort::initFiles()");
-
-            absl::Status full_success;
+            spdlog::trace("SensorPort::initFiles()");
 
             // open files
             for (int i = 0; i < 10; i++)
             {
-                absl::StatusOr<std::string> value_path = getValuePath(i);
-                if (!value_path.ok())
+                boost::leaf::result<std::string> value_path = getValuePath(i);
+                if (!value_path)
                 {
-                    LOG4CPLUS_ERROR_FMT(_logger, LOG4CPLUS_TEXT("Failed to get value path for %d"), i);
-                    full_success.Update(value_path.status());
+                    spdlog::error("Failed to get value path for %d", i);
+                    return value_path.error();
                     continue;
                 }
                 _file_value_path.push_back(std::make_shared<std::ifstream>(value_path.value()));
@@ -321,110 +320,109 @@ namespace finder
                 {
                     if (!_file_value_path[i]->is_open())
                     {
-                        LOG4CPLUS_WARN_FMT(_logger, LOG4CPLUS_TEXT("Failed to open value0 file at: %s"), value_path.value().c_str());
+                        spdlog::error(("Failed to open value0 file at: %s"), value_path.value().c_str());
                         _file_value_path[i].reset();
-                        full_success.Update(absl::InvalidArgumentError("Failed to open value0 file: " + value_path.value()));
+                        return boost::leaf::new_error(std::invalid_argument("Failed to open value0 file: " + value_path.value()));
                     }
                     else
                     {
-                        LOG4CPLUS_DEBUG_FMT(_logger, LOG4CPLUS_TEXT("Opened value0 file at: %s"), value_path.value().c_str());
+                        spdlog::info(("Opened value0 file at: %s"), value_path.value().c_str());
                     }
                 }
                 else
                 {
-                    LOG4CPLUS_ERROR_FMT(_logger, LOG4CPLUS_TEXT("File does not exist at: %s"), value_path.value().c_str());
-                    full_success.Update(absl::InvalidArgumentError("File does not exist: " + value_path.value()));
+                    spdlog::error(("File does not exist at: %s"), value_path.value().c_str());
+                    return boost::leaf::new_error(std::invalid_argument("File does not exist: " + value_path.value()));
                 }
             }  
 
-            absl::StatusOr<std::string> mode_path = getModePath();
-            if (!mode_path.ok())
+            boost::leaf::result<std::string> mode_path = getModePath();
+            if (!mode_path)
             {
-                LOG4CPLUS_ERROR(_logger, "Failed to get mode path");
-                full_success.Update(mode_path.status());
+                spdlog::error("Failed to get mode path");
+                return mode_path.error();
             }
             _file_mode_path = std::make_shared<std::ofstream>(mode_path.value());
-            absl::StatusOr<std::string> modes_path = getModesPath();
-            if (!modes_path.ok())
+            boost::leaf::result<std::string> modes_path = getModesPath();
+            if (!modes_path)
             {
-                LOG4CPLUS_ERROR(_logger, "Failed to get modes path");
-                full_success.Update(modes_path.status());
+                spdlog::error("Failed to get modes path");
+                return modes_path.error();
             }
             _file_modes_path = std::make_shared<std::ifstream>(modes_path.value());
-            absl::StatusOr<std::string> num_values_path = getNumValuesPath();
-            if (!num_values_path.ok())
+            boost::leaf::result<std::string> num_values_path = getNumValuesPath();
+            if (!num_values_path)
             {
-                LOG4CPLUS_ERROR(_logger, "Failed to get num values path");
-                full_success.Update(num_values_path.status());
+                spdlog::error("Failed to get num values path");
+                return num_values_path.error();
             }
             _file_num_values_path = std::make_shared<std::ifstream>(num_values_path.value());
-            absl::StatusOr<std::string> poll_ms_path = getPollMsPath();
-            if (!poll_ms_path.ok())
+            boost::leaf::result<std::string> poll_ms_path = getPollMsPath();
+            if (!poll_ms_path)
             {
-                LOG4CPLUS_ERROR(_logger, "Failed to get poll ms path");
-                full_success.Update(poll_ms_path.status());
+                spdlog::error("Failed to get poll ms path");
+                return poll_ms_path.error();
             }
             _file_poll_ms_path = std::make_shared<std::ifstream>(poll_ms_path.value());
 
             // check if mode path is opened
             if (!_file_mode_path->fail()) {
                 if (!_file_mode_path->is_open()) {
-                    LOG4CPLUS_WARN_FMT(_logger, LOG4CPLUS_TEXT("Failed to open value0 file at: %s"), mode_path.value().c_str());
+                    spdlog::warn(("Failed to open value0 file at: %s"), mode_path.value().c_str());
                     _file_mode_path.reset();
-                    full_success.Update(absl::InvalidArgumentError("Failed to open value0 file: " + mode_path.value()));
+                    return boost::leaf::new_error(std::invalid_argument("Failed to open value0 file: " + mode_path.value()));
                 } else {
-                    LOG4CPLUS_DEBUG_FMT(_logger, LOG4CPLUS_TEXT("Opened mode file at: %s"), mode_path.value().c_str());
+                    spdlog::debug(("Opened mode file at: %s"), mode_path.value().c_str());
                 }
             } else {
-                LOG4CPLUS_ERROR_FMT(_logger, LOG4CPLUS_TEXT("File does not exist at: %s"), mode_path.value().c_str());
-                full_success.Update(absl::InvalidArgumentError("File does not exist: " + mode_path.value()));
+                spdlog::error(("File does not exist at: %s"), mode_path.value().c_str());
+                return boost::leaf::new_error(std::invalid_argument("File does not exist: " + mode_path.value()));
             }
 
             // check if modes path is opened
             if (!_file_modes_path->fail()) {
                 if (!_file_modes_path->is_open()) {
-                    LOG4CPLUS_WARN_FMT(_logger, LOG4CPLUS_TEXT("Failed to open value0 file at: %s"), modes_path.value().c_str());
+                    spdlog::warn(("Failed to open value0 file at: %s"), modes_path.value().c_str());
                     _file_modes_path.reset();
-                    full_success.Update(absl::InvalidArgumentError("Failed to open value0 file: " + modes_path.value()));
+                    return boost::leaf::new_error(std::invalid_argument("Failed to open value0 file: " + modes_path.value()));
                 } else {
-                    LOG4CPLUS_DEBUG_FMT(_logger, LOG4CPLUS_TEXT("Opened modes file at: %s"), modes_path.value().c_str());
+                    spdlog::debug(("Opened modes file at: %s"), modes_path.value().c_str());
                 }
             } else {
-                LOG4CPLUS_ERROR_FMT(_logger, LOG4CPLUS_TEXT("File does not exist at: %s"), modes_path.value().c_str());
-                full_success.Update(absl::InvalidArgumentError("File does not exist: " + modes_path.value()));
+                spdlog::error(("File does not exist at: %s"), modes_path.value().c_str());
+                return boost::leaf::new_error(std::invalid_argument("File does not exist: " + modes_path.value()));                
             }
 
             // check if num_values path is opened
             if (!_file_num_values_path->fail()) {
                 if (!_file_num_values_path->is_open()) {
-                    LOG4CPLUS_WARN_FMT(_logger, LOG4CPLUS_TEXT("Failed to open value0 file at: %s"), num_values_path.value().c_str());
+                    spdlog::warn(("Failed to open value0 file at: %s"), num_values_path.value().c_str());
                     _file_num_values_path.reset();
-                    full_success.Update(absl::InvalidArgumentError("Failed to open value0 file: " + num_values_path.value()));
+                    return boost::leaf::new_error(std::invalid_argument("Failed to open value0 file: " + num_values_path.value()));
                 } else {
-                    LOG4CPLUS_DEBUG_FMT(_logger, LOG4CPLUS_TEXT("Opened num_values file at: %s"), num_values_path.value().c_str());
+                    spdlog::debug(("Opened num_values file at: %s"), num_values_path.value().c_str());
                 }
             } else {
-                LOG4CPLUS_ERROR_FMT(_logger, LOG4CPLUS_TEXT("File does not exist at: %s"), num_values_path.value().c_str());
-                full_success.Update(absl::InvalidArgumentError("File does not exist: " + num_values_path.value()));
+                spdlog::error(("File does not exist at: %s"), num_values_path.value().c_str());
+                return boost::leaf::new_error(std::invalid_argument("File does not exist: " + num_values_path.value()));
             }
 
             // check if poll_ms path is opened
             if (!_file_poll_ms_path->fail()) {
                 if (!_file_poll_ms_path->is_open()) {
-                    LOG4CPLUS_WARN_FMT(_logger, LOG4CPLUS_TEXT("Failed to open value0 file at: %s"), poll_ms_path.value().c_str());
+                    spdlog::warn(("Failed to open value0 file at: %s"), poll_ms_path.value().c_str());
                     _file_poll_ms_path.reset();
-                    full_success.Update(absl::InvalidArgumentError("Failed to open value0 file: " + poll_ms_path.value()));
+                    return boost::leaf::new_error(std::invalid_argument("Failed to open value0 file: " + poll_ms_path.value()));
                 } else {
-                    LOG4CPLUS_DEBUG_FMT(_logger, LOG4CPLUS_TEXT("Opened poll_ms file at: %s"), poll_ms_path.value().c_str());
+                    spdlog::info(("Opened poll_ms file at: %s"), poll_ms_path.value().c_str());
                 }
             } else {
-                LOG4CPLUS_ERROR_FMT(_logger, LOG4CPLUS_TEXT("File does not exist at: %s"), poll_ms_path.value().c_str());
-                full_success.Update(absl::InvalidArgumentError("File does not exist: " + poll_ms_path.value()));
+                spdlog::error(("File does not exist at: %s"), poll_ms_path.value().c_str());
+                return boost::leaf::new_error(std::invalid_argument("File does not exist: " + poll_ms_path.value()));
             }
 
-            return full_success;
+            return boost::leaf::result<void>();
         }
-
     } // namespace physical
     
 } // namespace finder

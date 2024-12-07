@@ -1,8 +1,6 @@
 #ifndef __EV3_CONF_HPP__
 #define __EV3_CONF_HPP__
 
-    #include <stdint.h>
-
     // general settings
     constexpr bool EV3_THROW_ON_ERROR = true;
 
@@ -22,45 +20,45 @@
 
     constexpr char EV3_PORT_GEARBOX_SHIFT = EV3_PORT_OUTPUT_D;
     
-    constexpr uint_fast16_t EV3_GEARBOX_GEAR_POS_1  = 0;
-    constexpr uint_fast16_t EV3_GEARBOX_GEAR_POS_2  = 90;
-    constexpr uint_fast16_t EV3_GEARBOX_GEAR_POS_3  = 180;
-    constexpr uint_fast16_t EV3_GEARBOX_GEAR_POS_4  = 270;
+    constexpr unsigned int EV3_GEARBOX_GEAR_POS_1  = 0;
+    constexpr unsigned int EV3_GEARBOX_GEAR_POS_2  = 90;
+    constexpr unsigned int EV3_GEARBOX_GEAR_POS_3  = 180;
+    constexpr unsigned int EV3_GEARBOX_GEAR_POS_4  = 270;
 
-    constexpr uint_fast8_t EV3_GEARBOX_GEAR_POS_TOLERANCE = 5;
+    constexpr unsigned int EV3_GEARBOX_GEAR_POS_TOLERANCE = 5;
 
-    constexpr uint_fast16_t EV3_GEAR_BLOCKED_TIMEOUT_MS = 1000;
+    constexpr unsigned int EV3_GEAR_BLOCKED_TIMEOUT_MS = 1000;
 
     // define the tolerance for the gyro sensor
-    constexpr uint_fast8_t EV3_GYRO_TURN_TOLERANCE = 3;
+    constexpr unsigned int EV3_GYRO_TURN_TOLERANCE = 3;
 
     // define the offsets of the sensors on the robot
-    constexpr uint_fast8_t EV3_SENSOR_COLOR_RIGHT_OFFSET_X = 0;                  // to be implemented
-    constexpr uint_fast8_t EV3_SENSOR_COLOR_RIGHT_OFFSET_Y = 0;         // to be implemented
+    constexpr unsigned int EV3_SENSOR_COLOR_RIGHT_OFFSET_X = 0;                  // to be implemented
+    constexpr unsigned int EV3_SENSOR_COLOR_RIGHT_OFFSET_Y = 0;         // to be implemented
 
-    constexpr uint_fast8_t EV3_SENSOR_COLOR_LEFT_OFFSET_X = 0;          // to be implemented
-    constexpr uint_fast8_t EV3_SENSOR_COLOR_LEFT_OFFSET_Y = 0;          // to be implemented
+    constexpr unsigned int EV3_SENSOR_COLOR_LEFT_OFFSET_X = 0;          // to be implemented
+    constexpr unsigned int EV3_SENSOR_COLOR_LEFT_OFFSET_Y = 0;          // to be implemented
 
-    constexpr uint_fast8_t EV3_SENSOR_COLOR_FRONT_OFFSET_X = 0;         // to be implemented
-    constexpr uint_fast8_t EV3_SENSOR_COLOR_FRONT_OFFSET_Y = 0;         // to be implemented
+    constexpr unsigned int EV3_SENSOR_COLOR_FRONT_OFFSET_X = 0;         // to be implemented
+    constexpr unsigned int EV3_SENSOR_COLOR_FRONT_OFFSET_Y = 0;         // to be implemented
 
     // define the trigger values for the color sensors
-    constexpr uint_fast8_t EV3_COLOR_SENSOR_TRIGGER = 42;
+    constexpr unsigned int EV3_COLOR_SENSOR_TRIGGER = 42;
 
     // use the rgb mode for the color sensors
-    constexpr uint_fast8_t EV3_COLOR_SENSOR_USE_RGB_MODE = 0;           // to be implemented
+    constexpr unsigned int EV3_COLOR_SENSOR_USE_RGB_MODE = 0;           // to be implemented
 
     // define the trigger values for the color sensors with rgb mode
-    constexpr uint_fast8_t EV3_COLOR_SENSOR_TRIGGER_RED = 42;           // to be implemented
-    constexpr uint_fast8_t EV3_COLOR_SENSOR_TRIGGER_GREEN = 42;         // to be implemented
-    constexpr uint_fast8_t EV3_COLOR_SENSOR_TRIGGER_BLUE = 42;          // to be implemented
+    constexpr unsigned int EV3_COLOR_SENSOR_TRIGGER_RED = 42;           // to be implemented
+    constexpr unsigned int EV3_COLOR_SENSOR_TRIGGER_GREEN = 42;         // to be implemented
+    constexpr unsigned int EV3_COLOR_SENSOR_TRIGGER_BLUE = 42;          // to be implemented
 
     // define the offsets of the motors on the robot
-    constexpr uint_fast8_t EV3_MOTOR_WHEELBASE = 0;                     // to be implemented
+    constexpr unsigned int EV3_MOTOR_WHEELBASE = 0;                     // to be implemented
 
     // define the field parameters
-    constexpr uint_fast16_t EV3_FIELD_WIDTH = 2000;
-    constexpr uint_fast16_t EV3_FIELD_HEIGHT = 1000;
+    constexpr unsigned int EV3_FIELD_WIDTH = 2000;
+    constexpr unsigned int EV3_FIELD_HEIGHT = 1000;
 
     // set the file format of the destinations file
     #define EV3_DESTINATIONS_FILE_FORMAT_YAML 0
@@ -86,7 +84,7 @@
     #else
         #define EV3_COMPUTE_MODULE_TCP_ENABLED 1
             // define the port for the tcp communication of the compute module
-            constexpr uint_fast16_t EV3_COMPUTE_PORT = 34001;
+            constexpr unsigned int EV3_COMPUTE_PORT = 34001;
         // local or external compute module
         #define EV3_COMPUTE_LOCAL 1
         #if     EV3_COMPUTE_LOCAL
@@ -120,7 +118,7 @@
     #define EV3_WEBSERVER_ENABLED 1
     #if     EV3_WEBSERVER_ENABLED
         // define the port for the webserver
-        constexpr uint_fast16_t EV3_WEBSERVER_PORT = 8080;
+        constexpr unsigned int EV3_WEBSERVER_PORT = 8080;
         constexpr const char* EV3_WEBSERVER_HOST = "localhost";
     #endif 
 #endif

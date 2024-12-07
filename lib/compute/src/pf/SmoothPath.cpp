@@ -5,10 +5,10 @@ namespace finder::pathfind
 {
     SmoothPath::SmoothPath(const std::vector<math::Vector2>& path)
     {
-        m_path = smoothPath(m_path);
+        m_path = path;
     }
 
-    std::vector<math::Vector2> SmoothPath::smoothPath(const std::vector<math::Vector2>& path)
+    boost::leaf::result<std::vector<math::Vector2>> SmoothPath::smoothPath(const std::vector<math::Vector2>& path)
     {
         std::vector<math::Vector2> smoothedPath;
         smoothedPath.push_back(path[0]);
@@ -30,8 +30,8 @@ namespace finder::pathfind
         return smoothedPath;
     }
 
-    std::vector<math::Vector2> SmoothPath::getPath() const
+    boost::leaf::result<std::vector<math::Vector2>> SmoothPath::getPath() const
     {
-        return m_path;
+        return smoothPath(m_path);
     }    
 } // namespace finder::pf

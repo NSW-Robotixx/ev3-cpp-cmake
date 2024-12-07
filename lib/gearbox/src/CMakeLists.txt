@@ -28,8 +28,8 @@ target_link_libraries(EV3_gearbox
     PUBLIC
         Logger
         EV3_filesystem
-        log4cplus::log4cplus
-        abseil::abseil
+        spdlog::spdlog
+        absl::status
         Eigen3::Eigen
 )
 

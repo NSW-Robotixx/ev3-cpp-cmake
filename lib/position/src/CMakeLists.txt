@@ -32,6 +32,6 @@ target_link_libraries(EV3_position
         EV3_filesystem
         Vector2
         Vector3
-        log4cplus::log4cplus
-        abseil::abseil
+        absl::status
+        spdlog::spdlog
 )

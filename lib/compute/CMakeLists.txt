@@ -9,6 +9,11 @@ set(CMAKE_CXX_STANDARD 20)
 # set the C++ standard to required
 set(CMAKE_CXX_STANDARD_REQUIRED True)
 
+find_package(GTest REQUIRED)
+find_package(spdlog REQUIRED)
+find_package(ydcpp-tcpcat REQUIRED)
+find_package(Boost-leaf REQUIRED)
+
 # set variables to paths of source files
 set(EV3_COMPUTE_INCLUDE_DIR PUBLIC   ${CMAKE_CURRENT_SOURCE_DIR}/include CACHE INTERNAL "")
 set(EV3_COMPUTE_SRC_DIR              ${CMAKE_CURRENT_SOURCE_DIR}/src     CACHE INTERNAL "")

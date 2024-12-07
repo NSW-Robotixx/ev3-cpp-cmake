@@ -9,7 +9,7 @@
 #include <thread>
 #include <atomic>
 #include <map>
-#include <log4cplus/loggingmacros.h>
+#include <spdlog/spdlog.h>
 
 namespace finder::physical
 {
@@ -79,8 +79,6 @@ namespace finder::physical
 
             static std::atomic<bool> _stopDispatcher;
             static std::thread _dispatcherFuture;
-
-            static log4cplus::Logger _logger; 
     };
 } // namespace finder::physical
 

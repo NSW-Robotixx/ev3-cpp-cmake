@@ -1,4 +1,4 @@
-find_package(log4cplus REQUIRED)
+find_package(spdlog REQUIRED)
 
 add_library(Logger  
     ${CMAKE_CURRENT_LIST_DIR}/src/Logger.cpp
@@ -22,7 +22,7 @@ target_include_directories(Logger
 
 target_link_libraries(Logger
     PUBLIC
-        log4cplus::log4cplus
+        spdlog::spdlog
 )
 
 add_subdirectory(test)

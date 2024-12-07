@@ -16,18 +16,16 @@ namespace finder::physical
     std::atomic<bool> SensorManager::_stopDispatcher = false;
     std::thread SensorManager::_dispatcherFuture;
 
-    log4cplus::Logger SensorManager::_logger = log4cplus::Logger::getInstance(LOG4CPLUS_TEXT("main.SensorManager"));
-
     SensorManager::SensorManager(std::string portBasePath) : DeviceManager(portBasePath)
     {
-        LOG4CPLUS_TRACE(_logger, "SensorManager::SensorManager(std::string portBasePath)");
+        spdlog::trace("SensorManager::SensorManager(std::string portBasePath)");
 
         _dispatcherFuture = std::thread(Dispatcher);
     }
 
     SensorManager::~SensorManager()
     {
-        LOG4CPLUS_TRACE(_logger, "SensorManager::~SensorManager()");
+        spdlog::trace("SensorManager::~SensorManager()");
 
         _stopDispatcher = true;
         _dispatcherFuture.join();
@@ -35,14 +33,14 @@ namespace finder::physical
 
     void SensorManager::readAllSensors()
     {
-        LOG4CPLUS_TRACE(_logger, "SensorManager::readAllSensors()");
+        spdlog::trace("SensorManager::readAllSensors()");
 
         absl::StatusOr<int> gyroValue = _gyroSensor->getValue(0);
         if (gyroValue.ok())
         {
             _gyroValue = gyroValue.value();
         } else {
-            LOG4CPLUS_ERROR(_logger, "Error reading gyro sensor");
+            spdlog::error("Error reading gyro sensor");
         }
 
         absl::StatusOr<int> colorLeftValue = _colorSensorLeft->getValue(0);
@@ -50,7 +48,7 @@ namespace finder::physical
         {
             _colorLeftValue = colorLeftValue.value();
         } else {
-            LOG4CPLUS_ERROR(_logger, "Error reading left color sensor");
+            spdlog::error("Error reading left color sensor");
         }
 
         absl::StatusOr<int> colorRightValue = _colorSensorRight->getValue(0);
@@ -58,7 +56,7 @@ namespace finder::physical
         {
             _colorRightValue = colorRightValue.value();
         } else {
-            LOG4CPLUS_ERROR(_logger, "Error reading right color sensor");
+            spdlog::error("Error reading right color sensor");
         }
 
         absl::StatusOr<int> colorFrontValue = _colorSensorFront->getValue(0);
@@ -66,18 +64,18 @@ namespace finder::physical
         {
             _colorFrontValue = colorFrontValue.value();
         } else {
-            LOG4CPLUS_ERROR(_logger, "Error reading front color sensor");
+            spdlog::error("Error reading front color sensor");
         }
     }
 
     absl::StatusOr<int> SensorManager::readGyro()
     {
-        LOG4CPLUS_TRACE(_logger, "SensorManager::readGyro()");
+        spdlog::trace("SensorManager::readGyro()");
         
         absl::StatusOr<int> gyroValue = _gyroSensor->getValue(0);
         if (!gyroValue.ok())
         {
-            LOG4CPLUS_ERROR(_logger, "Error reading gyro sensor");
+            spdlog::error("Error reading gyro sensor");
             return absl::InternalError("Error reading gyro sensor");
         }
         _gyroValue = gyroValue.value();
@@ -86,12 +84,12 @@ namespace finder::physical
 
     absl::StatusOr<int> SensorManager::readColorLeft()
     {
-        LOG4CPLUS_TRACE(_logger, "SensorManager::readColorLeft()");
+        spdlog::trace("SensorManager::readColorLeft()");
 
         absl::StatusOr<int> colorLeftValue = _colorSensorLeft->getValue(0);
         if (!colorLeftValue.ok())
         {
-            LOG4CPLUS_ERROR(_logger, "Error reading left color sensor");
+            spdlog::error("Error reading left color sensor");
             return absl::InternalError("Error reading left color sensor");
         }
         _colorLeftValue = colorLeftValue.value();
@@ -100,12 +98,12 @@ namespace finder::physical
 
     absl::StatusOr<int> SensorManager::readColorRight()
     {
-        LOG4CPLUS_TRACE(_logger, "SensorManager::readColorRight()");
+        spdlog::trace("SensorManager::readColorRight()");
         
         absl::StatusOr<int> colorRightValue = _colorSensorRight->getValue(0);
         if (!colorRightValue.ok())
         {
-            LOG4CPLUS_ERROR(_logger, "Error reading right color sensor");
+            spdlog::error("Error reading right color sensor");
             return absl::InternalError("Error reading right color sensor");
         }
         _colorRightValue = colorRightValue.value();
@@ -114,12 +112,12 @@ namespace finder::physical
 
     absl::StatusOr<int> SensorManager::readColorFront()
     {
-        LOG4CPLUS_TRACE(_logger, "SensorManager::readColorFront()");
+        spdlog::trace("SensorManager::readColorFront()");
 
         absl::StatusOr<int> colorFrontValue = _colorSensorFront->getValue(0);
         if (!colorFrontValue.ok())
         {
-            LOG4CPLUS_ERROR(_logger, "Error reading front color sensor");
+            spdlog::error("Error reading front color sensor");
             return absl::InternalError("Error reading front color sensor");
         }
         _colorFrontValue = colorFrontValue.value();
@@ -128,14 +126,14 @@ namespace finder::physical
     
     void SensorManager::addEventListeners(DeviceID port, std::function<void(DeviceID, int)> callback)
     {
-        LOG4CPLUS_TRACE(_logger, "SensorManager::addEventListeners())");
+        spdlog::trace("SensorManager::addEventListeners())");
 
         _eventListeners[port] = callback;
     }
 
     void SensorManager::Dispatcher()
     {
-        LOG4CPLUS_TRACE(_logger, "SensorManager::Dispatcher()");
+        spdlog::trace("SensorManager::Dispatcher()");
 
         while (true)
         {

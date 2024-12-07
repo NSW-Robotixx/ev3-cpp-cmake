@@ -8,10 +8,10 @@
 #include <fstream>
 #include <filesystem>
 #include <vector>
-#include <log4cplus/logger.h>
-#include <log4cplus/loggingmacros.h>
-#include <absl/status/status.h>
-#include <absl/status/statusor.h>
+#include <spdlog/spdlog.h>
+#include <spdlog/fmt/ostr.h>
+#include <boost/leaf/result.hpp>
+#include <boost/leaf/error.hpp>
 
 namespace finder
 {
@@ -67,47 +67,47 @@ namespace finder
                 ~Port();
 
                 /// @brief Set the base path of the port
-                /// @return absl::Status
+                /// @return boost::leaf::result<void>
                 /// @param path The path to set
-                virtual absl::Status setBasePath(const path_port_t& path);
+                virtual boost::leaf::result<void> setBasePath(const path_port_t& path);
                 
                 /// @brief Get the key of the port
                 /// @details The key is the last character of the port path.
                 /// @return The key of the port
-                inline absl::StatusOr<char> getPortKey() {
-                    if (isEnabled().value_or(false)) {
+                inline boost::leaf::result<char> getPortKey() {
+                    if (!isEnabled().has_error() && isEnabled().value()) {
                         return _path.back();
                     }
-                    return absl::InvalidArgumentError("Port is not enabled: " + _path);
+                    return boost::leaf::new_error("Port is not enabled");
                 };
 
                 /// @brief Get the path of the port
                 /// @return The path of the port
-                absl::StatusOr<path_port_t> getBasePath();
+                boost::leaf::result<path_port_t> getBasePath();
 
                 /// @brief Get the address of the port
                 /// @return The address of the port
-                absl::StatusOr<path_address_t> getAddressPath();
+                boost::leaf::result<path_address_t> getAddressPath();
 
                 /// @brief Get the address of the port
                 /// @param path The path to get the address from
                 /// @return The address of the port
-                static absl::StatusOr<path_address_t> getAddressPath(const path_port_t& path);
+                static boost::leaf::result<path_address_t> getAddressPath(const path_port_t& path);
 
                 /// @brief Get the command path of the port
                 /// @return The command path of the port
-                absl::StatusOr<path_command_t> getCommandPath();
+                boost::leaf::result<path_command_t> getCommandPath();
 
                 /// @brief Get the commands path of the port
                 /// @return The commands path of the port
-                absl::StatusOr<path_commands_t> getCommandsPath();
+                boost::leaf::result<path_commands_t> getCommandsPath();
 
                 /**
                  * @brief Get the address of the port.
                  * 
                  * @return The address of the port as a string.
                  */
-                absl::StatusOr<std::string> getAddress();
+                boost::leaf::result<std::string> getAddress();
                 
                 /**
                  * Sets the command for the port.
@@ -115,20 +115,20 @@ namespace finder
                  * @param command The command to set.
                  * @return True if the command was set successfully, false otherwise.
                  */
-                absl::Status setCommand(std::string command);
+                boost::leaf::result<void> setCommand(std::string command);
 
                 /// @brief get the commands that the port can execute from file 
                 /// @return vector of strings of the commands that the port can execute
-                absl::StatusOr<std::vector<std::string>> getCommands();
+                boost::leaf::result<std::vector<std::string>> getCommands();
 
                 /// @brief gets the device type of the port
                 /// @return the device type of the port, SENSOR, MOTOR, UNKNOWN, or DISABLED
-                virtual absl::StatusOr<DeviceType> getDeviceType();
+                virtual boost::leaf::result<DeviceType> getDeviceType();
 
             
                 /// @brief return the enabled status of the port
                 /// @return true if the port is enabled, false otherwise
-                absl::StatusOr<bool> isEnabled();
+                boost::leaf::result<bool> isEnabled();
 
                 /// @brief This is a testing function to override the enabled status of the port
                 /// @warning NOT TO BE USED IN PRODUCTION! ONLY FOR TESTING PURPOSES!
@@ -138,7 +138,7 @@ namespace finder
             protected:  
                 /// @brief Initializes the files for the port.
                 /// @return true if the files were successfully initialized, false otherwise.
-                absl::Status initFiles();
+                boost::leaf::result<void> initFiles();
 
                 /// @brief File stream for the address file
                 std::shared_ptr<std::ifstream> _file_address_path;
@@ -153,9 +153,6 @@ namespace finder
                 path_port_t _path;
             private:
                 bool _f_enabled;
-                // bool _enabled;
-                /// @brief Logger for the port
-                static ::log4cplus::Logger _logger;
         };
 
     } // namespace physical

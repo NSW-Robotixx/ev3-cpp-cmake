@@ -5,8 +5,6 @@ namespace finder::physical
     TurnDirection MotorManager::_prevTurnDirection = TurnDirection::FORWARD;
     std::vector<std::function<void(TurnDirection)>> MotorManager::_directionChangeListeners;
 
-    log4cplus::Logger MotorManager::_logger = log4cplus::Logger::getInstance(LOG4CPLUS_TEXT("MotorManager"));
-    
     /// @brief Constructor for MotorManager
     /// @param portBasePath Path to the base path of the motors
     MotorManager::MotorManager(std::string portBasePath) : DeviceManager(portBasePath)
@@ -29,7 +27,7 @@ namespace finder::physical
 
             if (!status.ok())
             {
-                LOG4CPLUS_FATAL_FMT(_logger, LOG4CPLUS_TEXT("Failed to stop motors: %s"), status.message());
+                spdlog::error("Failed to stop motors: %s", status.message());
             }
         }
     }
@@ -205,19 +203,19 @@ namespace finder::physical
                 statusRight.Update(_motorRight->setCommand(MotorCommand::RUN_TO_ABS_POS));
 
                 if (!statusLeft.ok()) {
-                    LOG4CPLUS_FATAL_FMT(_logger, LOG4CPLUS_TEXT("Failed to move left motor: %s"), statusLeft.message());
+                    spdlog::error("Failed to move left motor: %s", statusLeft.message());
                     absl::Status resetStatus = _motorLeft->reset();
                     if (!resetStatus.ok()) {
-                        LOG4CPLUS_FATAL_FMT(_logger, LOG4CPLUS_TEXT("Failed to reset left motor: %s"), resetStatus.message());
+                        spdlog::error("Failed to reset left motor: %s", resetStatus.message());
                         return resetStatus;
                     }
                 }
 
                 if (!statusRight.ok()) {
-                    LOG4CPLUS_FATAL_FMT(_logger, LOG4CPLUS_TEXT("Failed to move right motor: %s"), statusRight.message());
+                    spdlog::error("Failed to move right motor: %s", statusRight.message());
                     absl::Status resetStatus = _motorRight->reset();
                     if (!resetStatus.ok()) {
-                        LOG4CPLUS_FATAL_FMT(_logger, LOG4CPLUS_TEXT("Failed to reset right motor: %s"), resetStatus.message());
+                        spdlog::error("Failed to reset right motor: %s", resetStatus.message());
                         return resetStatus;
                     }
                 }

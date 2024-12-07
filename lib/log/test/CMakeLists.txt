@@ -1,6 +1,6 @@
 # file(GLOB_RECURSE EV3_FILESYSTEM_TEST_HDR CONFIGURE_DEPENDS "*.hpp")
 
-find_package(log4cplus REQUIRED)
+find_package(spdlog REQUIRED)
 
 set(EV3_LOGGER_TEST_SRC
     ${CMAKE_CURRENT_SOURCE_DIR}/Logger.test.cpp
@@ -18,7 +18,7 @@ if(EV3_TESTS_SRC)
     get_property(EV3_TESTS_LIBS GLOBAL PROPERTY EV3_TESTS_LIBS)
     
     # add the lib to be linked to the test
-    set_property(GLOBAL PROPERTY EV3_TESTS_LIBS ${EV3_TESTS_LIBS} Logger log4cplus::log4cplus)
+    set_property(GLOBAL PROPERTY EV3_TESTS_LIBS ${EV3_TESTS_LIBS} Logger spdlog::spdlog)
 else()
     message(STATUS "EV3_TESTS_SRC is not defined")
 endif()

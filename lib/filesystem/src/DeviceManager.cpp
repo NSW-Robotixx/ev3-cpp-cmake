@@ -17,10 +17,6 @@ namespace finder
 
         absl::once_flag DeviceManager::_device_manager_init_once_flag;
 
-        log4cplus::Logger DeviceManager::_logger = log4cplus::Logger::getInstance(LOG4CPLUS_TEXT("main.DeviceManager"));
-
-
-
         DeviceManager::DeviceManager(std::string portBasePath)
         {
             absl::call_once(_device_manager_init_once_flag, &DeviceManager::init, portBasePath);
@@ -32,7 +28,7 @@ namespace finder
 
         DeviceManager::DeviceManager()
         {
-            LOG4CPLUS_TRACE(_logger, "protected DeviceManager::DeviceManager()");
+            spdlog::trace("protected DeviceManager::DeviceManager()");
         }
 
         bool DeviceManager::isInitialized()
@@ -42,7 +38,7 @@ namespace finder
 
         void DeviceManager::init(std::string portBasePath)
         {
-            LOG4CPLUS_TRACE(_logger, "DeviceManager::init(std::string portBasePath)");
+            spdlog::trace("DeviceManager::init(std::string portBasePath)");
             _portManager = std::make_shared<PortManager>(portBasePath);
             _portManager->readPorts();
 

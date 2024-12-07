@@ -9,27 +9,7 @@ namespace finder
 
         Logger::Logger()
         {
-                // Initialization and deinitialization.
-            log4cplus::Initializer initializer;
-
-            log4cplus::PropertyConfigurator config{LOG4CPLUS_TEXT("")};
-            config.configure();
-
-            log4cplus::Logger logger = log4cplus::Logger::getInstance(
-                LOG4CPLUS_TEXT("main"));
-
-            log4cplus::SharedAppenderPtr _appender(new log4cplus::FileAppender(LOG4CPLUS_TEXT("test.log")));
-            _appender->setName(LOG4CPLUS_TEXT("file"));
-
-            log4cplus::SharedAppenderPtr _consoleAppender(new log4cplus::ConsoleAppender());
-            _consoleAppender->setName(LOG4CPLUS_TEXT("console"));
-
-            log4cplus::Logger::getRoot().setLogLevel(log4cplus::ALL_LOG_LEVEL);
-            
-            log4cplus::Logger::getRoot().addAppender(_appender);
-            log4cplus::Logger::getRoot().addAppender(_consoleAppender);
-
-            logger.setLogLevel(log4cplus::ALL_LOG_LEVEL);
+                
         }
 
 LogLevel Logger::getActiveLogLevel()

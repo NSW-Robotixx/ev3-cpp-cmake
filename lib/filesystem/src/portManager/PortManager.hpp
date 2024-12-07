@@ -98,8 +98,6 @@ namespace finder
                 static std::array<std::shared_ptr<MotorPort>, MAX_MOTORS> _motor_ports;
 
                 static void init();
-
-                static log4cplus::Logger _logger;
         };
 
     } // namespace physical

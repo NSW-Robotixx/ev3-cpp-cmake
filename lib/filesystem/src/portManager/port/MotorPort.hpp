@@ -6,7 +6,6 @@
 #include <filesystem>
 #include <vector>
 #include <future>
-#include <absl/synchronization/mutex.h>
 
 namespace finder
 {
@@ -67,43 +66,43 @@ namespace finder
 
                 /// @brief Get the path for reading the speed of the motor using the initialized path.
                 /// @return The Path for reading the speed of the motor.
-                absl::StatusOr<path_speed_t> getSpeedPath();
+                boost::leaf::result<path_speed_t> getSpeedPath();
 
                 /// @brief Get the path for setting the speed of the motor using the initialized path.
                 /// @return The Path for setting the speed of the motor.
-                absl::StatusOr<path_speed_sp_t> getSpeedSpPath();
+                boost::leaf::result<path_speed_sp_t> getSpeedSpPath();
 
                 /// @brief Get the path for reading the current position of the motor, or setting the target position to move to. Use run-to-rel-pos to move to set position.
                 /// @return Path to read the current position.
-                absl::StatusOr<path_position_t> getPositionPath();
+                boost::leaf::result<path_position_t> getPositionPath();
 
                 /// @brief Get the path for setting the current position of the motor, or setting the target position to move to. Use run-to-rel-pos to move to set position.
                 /// @return Path to set the target position.
-                absl::StatusOr<path_position_sp_t> getPositionSpPath();
+                boost::leaf::result<path_position_sp_t> getPositionSpPath();
 
                 /// @brief Get the path to set the duty cycle of the motor to turn at. Start the motor using run-direct. Else this value is ignored.
                 /// @return Path to set the duty cycle to turn at.
-                absl::StatusOr<path_duty_cycle_t> getDutyCyclePath();
+                boost::leaf::result<path_duty_cycle_t> getDutyCyclePath();
 
                 /// @brief Get the path to read the state of the motor from. Multiple stated possible and seperated by spaces. 
                 /// @return Path to read the state of the motor from. 
-                absl::StatusOr<path_state_t> getStatePath();
+                boost::leaf::result<path_state_t> getStatePath();
 
                 /// @brief Path to set the polarity of the motor. This will apply to all motors, therefore should not be used for turning in place.
                 /// @return Path to set the polarity of all motors.
-                absl::StatusOr<path_polarity_t> getPolarityPath();
+                boost::leaf::result<path_polarity_t> getPolarityPath();
 
                 /// @brief Path to set the action to use after completing a task. 
                 /// @return Path to set the stop action.
-                absl::StatusOr<path_stop_action_t> getStopActionPath();
+                boost::leaf::result<path_stop_action_t> getStopActionPath();
 
                 /// @brief Get the motor pulses per rotation of the motor. Represents the pulses of the rotary encoder. Defaults to 360.
                 /// @return Path to read the encoder pulses from.
-                absl::StatusOr<path_count_per_rotation_t> getCountPerRotationPath();
+                boost::leaf::result<path_count_per_rotation_t> getCountPerRotationPath();
 
                 /// @brief Get the maximum speed of the motor. This is the maximum speed the motor can move at.
                 /// @return Path to read the maximum speed of the motor.
-                absl::StatusOr<path_max_speed_t> getMaxSpeedPath();
+                boost::leaf::result<path_max_speed_t> getMaxSpeedPath();
                 
                 /// @brief Set the speed the motor should move at, max ca. 800.
                 /// @param speed Speed in pulses per second.
@@ -111,8 +110,8 @@ namespace finder
 
                 /// @brief Set the destination position for the run-to-rel-pos and run-to-abs-pos motor commands. 
                 /// @param position_sp Pulses for the motor to move.
-                /// @return absl::Status
-                absl::Status setPositionSp(int position_sp);
+                /// @return boost::leaf::result<void>
+                boost::leaf::result<void> setPositionSp(int position_sp);
 
                 /// @brief Set the duty cycle (speed) to move at when using run-direct command. 
                 /// @param duty_cycle Speed in % for the motor to move at. 
@@ -128,12 +127,12 @@ namespace finder
 
                 /// @brief Send a specific movement command to the motor. Some params might have to be set first for some command. See the official documentation for more.
                 /// @param command Command to send to the motor.
-                /// @return absl::Status
-                absl::Status setCommand(MotorCommand command);
+                /// @return boost::leaf::result<void>
+                boost::leaf::result<void> setCommand(MotorCommand command);
 
                 /// @brief shorthand for setting the command to "stop".
-                /// @return absl::Status
-                absl::Status stop();
+                /// @return boost::leaf::result<void>
+                boost::leaf::result<void> stop();
 
                 /// @brief Get the current speed of the motor.
                 /// @return Current speed of the motor.
@@ -157,21 +156,19 @@ namespace finder
 
                 /// @brief Get the type of device registered in the constructor, as there are no checks for the correct device beforehand.
                 /// @return Type of device registered by constructor.
-                absl::StatusOr<DeviceType> getDeviceType() override;
+                boost::leaf::result<DeviceType> getDeviceType() override;
 
                 /// @brief Move the motor to a specific absolute position. This will block the program until the motor has reached the position
                 /// @param abs_position_sp Position to move to in pulses.
-                /// @return absl::Status
-                absl::Status moveToAbsPosition(int abs_position_sp);
+                /// @return boost::leaf::result<void>
+                boost::leaf::result<void> moveToAbsPosition(int abs_position_sp);
 
                 /// @brief Reset the motor to its default state. This will stop the motor. Reinit file streams.
-                /// @return absl::Status
-                absl::Status reset();
+                /// @return boost::leaf::result<void>
+                boost::leaf::result<void> reset();
             protected:
 
             private:
-                static log4cplus::Logger _logger;
-                
                 std::shared_ptr<std::ifstream> _file_speed_path;
                 std::shared_ptr<std::ofstream> _file_speed_sp_path;
                 std::shared_ptr<std::ifstream> _file_position_path;
@@ -185,14 +182,12 @@ namespace finder
                 
                 bool _is_initialized;
 
-                absl::once_flag _init_flag;
-
-                std::future<absl::Status> _init_future;
+                std::future<boost::leaf::result<void>> _init_future;
 
                 int _position;
 
                 /// @brief Inititalize the motor class by checking if files exist and opening file streams.
-                absl::Status init();
+                boost::leaf::result<void> init();
         };
     } // namespace physical
 } // namespace finder

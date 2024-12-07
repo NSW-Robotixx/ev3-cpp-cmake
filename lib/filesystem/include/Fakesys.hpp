@@ -11,7 +11,7 @@
 #include <fstream>
 #include <filesystem>
 
-// 3rd parts imports
+// 3rd party imports
 #include <gtest/gtest.h>
 #include <absl/status/statusor.h>
 

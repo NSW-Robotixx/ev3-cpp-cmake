@@ -1,5 +1,3 @@
-find_package(ydcpp-tcpcat REQUIRED)
-
 set(EV3_COMPUTE_SRC
     ${CMAKE_CURRENT_SOURCE_DIR}/EV3_compute_tcp.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/EV3_compute_local.cpp
@@ -37,6 +35,7 @@ target_link_libraries(EV3_compute
         Vector2
         Line
         ydcpp-tcpcat
+        boost::leaf
 )
 
 set(ENABLE_LOGGING ON CACHE BOOL "Enable logging")
