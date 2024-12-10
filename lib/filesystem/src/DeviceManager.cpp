@@ -15,11 +15,11 @@ namespace finder
         std::shared_ptr<MotorPort> DeviceManager::_motorTool;
         bool DeviceManager::_initialized = false;
 
-        absl::once_flag DeviceManager::_device_manager_init_once_flag;
+        boost::once_flag DeviceManager::_device_manager_init_once_flag;
 
         DeviceManager::DeviceManager(std::string portBasePath)
         {
-            absl::call_once(_device_manager_init_once_flag, &DeviceManager::init, portBasePath);
+            boost::call_once(_device_manager_init_once_flag, &DeviceManager::init, portBasePath);
         }
 
         DeviceManager::~DeviceManager()

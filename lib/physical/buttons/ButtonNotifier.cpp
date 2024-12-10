@@ -39,7 +39,7 @@ namespace finder::physical::buttons
         while (!_exit_thread) {
             _ifstream.read((char*)&ie, sizeof(ie));
             std::cout << "code: " << ie.code << std::endl;
-            std::cout << "time: " << ie.time.tv_sec << std::endl;
+            // std::cout << "time: " << ie std::endl;
             std::cout << "type: " << ie.type << std::endl;
             std::cout << "value: " << ie.value << std::endl;
 

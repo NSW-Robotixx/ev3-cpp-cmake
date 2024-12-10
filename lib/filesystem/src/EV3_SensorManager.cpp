@@ -35,32 +35,32 @@ namespace finder::physical
     {
         spdlog::trace("SensorManager::readAllSensors()");
 
-        absl::StatusOr<int> gyroValue = _gyroSensor->getValue(0);
-        if (gyroValue.ok())
+        boost::leaf::result<int> gyroValue = _gyroSensor->getValue(0);
+        if (gyroValue)
         {
             _gyroValue = gyroValue.value();
         } else {
             spdlog::error("Error reading gyro sensor");
         }
 
-        absl::StatusOr<int> colorLeftValue = _colorSensorLeft->getValue(0);
-        if (colorLeftValue.ok())
+        boost::leaf::result<int> colorLeftValue = _colorSensorLeft->getValue(0);
+        if (colorLeftValue)
         {
             _colorLeftValue = colorLeftValue.value();
         } else {
             spdlog::error("Error reading left color sensor");
         }
 
-        absl::StatusOr<int> colorRightValue = _colorSensorRight->getValue(0);
-        if (colorRightValue.ok())
+        boost::leaf::result<int> colorRightValue = _colorSensorRight->getValue(0);
+        if (colorRightValue)
         {
             _colorRightValue = colorRightValue.value();
         } else {
             spdlog::error("Error reading right color sensor");
         }
 
-        absl::StatusOr<int> colorFrontValue = _colorSensorFront->getValue(0);
-        if (colorFrontValue.ok())
+        boost::leaf::result<int> colorFrontValue = _colorSensorFront->getValue(0);
+        if (colorFrontValue)
         {
             _colorFrontValue = colorFrontValue.value();
         } else {
@@ -68,57 +68,57 @@ namespace finder::physical
         }
     }
 
-    absl::StatusOr<int> SensorManager::readGyro()
+    boost::leaf::result<int> SensorManager::readGyro()
     {
         spdlog::trace("SensorManager::readGyro()");
         
-        absl::StatusOr<int> gyroValue = _gyroSensor->getValue(0);
-        if (!gyroValue.ok())
+        boost::leaf::result<int> gyroValue = _gyroSensor->getValue(0);
+        if (!gyroValue)
         {
             spdlog::error("Error reading gyro sensor");
-            return absl::InternalError("Error reading gyro sensor");
+            return boost::leaf::new_error(std::runtime_error("Failed to read gyro sensor value"));
         }
         _gyroValue = gyroValue.value();
         return _gyroValue;
     }
 
-    absl::StatusOr<int> SensorManager::readColorLeft()
+    boost::leaf::result<int> SensorManager::readColorLeft()
     {
         spdlog::trace("SensorManager::readColorLeft()");
 
-        absl::StatusOr<int> colorLeftValue = _colorSensorLeft->getValue(0);
-        if (!colorLeftValue.ok())
+        boost::leaf::result<int> colorLeftValue = _colorSensorLeft->getValue(0);
+        if (!colorLeftValue)
         {
             spdlog::error("Error reading left color sensor");
-            return absl::InternalError("Error reading left color sensor");
+            return boost::leaf::new_error(std::runtime_error("Failed to read color sensor left value"));
         }
         _colorLeftValue = colorLeftValue.value();
         return _colorLeftValue;
     }
 
-    absl::StatusOr<int> SensorManager::readColorRight()
+    boost::leaf::result<int> SensorManager::readColorRight()
     {
         spdlog::trace("SensorManager::readColorRight()");
         
-        absl::StatusOr<int> colorRightValue = _colorSensorRight->getValue(0);
-        if (!colorRightValue.ok())
+        boost::leaf::result<int> colorRightValue = _colorSensorRight->getValue(0);
+        if (!colorRightValue)
         {
             spdlog::error("Error reading right color sensor");
-            return absl::InternalError("Error reading right color sensor");
+            return boost::leaf::new_error(std::runtime_error("Failed to read color sensor right value"));
         }
         _colorRightValue = colorRightValue.value();
         return _colorRightValue;
     }
 
-    absl::StatusOr<int> SensorManager::readColorFront()
+    boost::leaf::result<int> SensorManager::readColorFront()
     {
         spdlog::trace("SensorManager::readColorFront()");
 
-        absl::StatusOr<int> colorFrontValue = _colorSensorFront->getValue(0);
-        if (!colorFrontValue.ok())
+        boost::leaf::result<int> colorFrontValue = _colorSensorFront->getValue(0);
+        if (!colorFrontValue)
         {
             spdlog::error("Error reading front color sensor");
-            return absl::InternalError("Error reading front color sensor");
+            return boost::leaf::new_error(std::runtime_error("Failed to read color sensor front value"));
         }
         _colorFrontValue = colorFrontValue.value();
         return _colorFrontValue;
@@ -143,8 +143,8 @@ namespace finder::physical
                     break;
                 } 
 
-                absl::StatusOr<int> gyroValue = _gyroSensor->getValue(0);
-                if (gyroValue.ok() && gyroValue.value() != _gyroValue)
+                boost::leaf::result<int> gyroValue = _gyroSensor->getValue(0);
+                if (gyroValue && gyroValue.value() != _gyroValue)
                 {
                     _gyroValue = gyroValue.value();
                     for (auto const& [port, callback] : _eventListeners)
@@ -155,8 +155,8 @@ namespace finder::physical
                     }
                 }
 
-                absl::StatusOr<int> colorLeftValue = _colorSensorLeft->getValue(0);
-                if (colorLeftValue.ok() && colorLeftValue.value() != _colorLeftValue)
+                boost::leaf::result<int> colorLeftValue = _colorSensorLeft->getValue(0);
+                if (colorLeftValue && colorLeftValue.value() != _colorLeftValue)
                 {
                     _colorFrontValue = colorLeftValue.value();
                     for (auto const& [port, callback] : _eventListeners)
@@ -167,8 +167,8 @@ namespace finder::physical
                     }
                 }
 
-                absl::StatusOr<int> colorRightValue = _colorSensorRight->getValue(0);
-                if (colorRightValue.ok() && colorRightValue.value() != _colorRightValue)
+                boost::leaf::result<int> colorRightValue = _colorSensorRight->getValue(0);
+                if (colorRightValue && colorRightValue.value() != _colorRightValue)
                 {
                     _colorRightValue = colorRightValue.value();
                     for (auto const& [port, callback] : _eventListeners)
@@ -179,8 +179,8 @@ namespace finder::physical
                     }
                 }
 
-                absl::StatusOr<int> colorFrontValue = _colorSensorFront->getValue(0);
-                if (colorFrontValue.ok() && colorFrontValue.value() != _colorFrontValue)
+                boost::leaf::result<int> colorFrontValue = _colorSensorFront->getValue(0);
+                if (colorFrontValue && colorFrontValue.value() != _colorFrontValue)
                 {
                     _colorFrontValue = colorFrontValue.value();
                     for (auto const& [port, callback] : _eventListeners)

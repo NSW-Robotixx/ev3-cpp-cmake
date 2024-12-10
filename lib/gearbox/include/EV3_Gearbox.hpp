@@ -25,18 +25,18 @@ namespace finder::physical
             ~GearboxManager();
             
             /// @brief set the gear of the gearbox
-            /// @return absl::Status
+            /// @return boost::leaf::result<void>
             /// @param gear Which gear to set the gearbox to
-            absl::Status setGear(GearboxGears gear);
+            boost::leaf::result<void> setGear(GearboxGears gear);
 
             /// @brief get the current gear of the gearbox
-            /// @return absl::StatusOr<GearboxGears>
-            absl::StatusOr<GearboxGears> getGear();
+            /// @return boost::leaf::result<GearboxGears>
+            boost::leaf::result<GearboxGears> getGear();
 
 
             /// @brief calibrate the gearbox
-            /// @return absl::Status
-            absl::Status calibrate();
+            /// @return boost::leaf::result<void>
+            boost::leaf::result<void> calibrate();
 
     
         private:

@@ -1,4 +1,5 @@
 find_package(yaml-cpp REQUIRED)
+find_package(Boost REQUIRED)
 
 set(EV3_SYSTEM_SRC
     ${EV3_SYSTEM_SRC_DIR}/EV3_System.cpp
@@ -33,4 +34,5 @@ target_link_libraries(EV3_system
         Vector3
         EV3_compute
         yaml-cpp::yaml-cpp
+        boost::boost
 )

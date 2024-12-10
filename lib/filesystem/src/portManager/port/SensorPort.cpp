@@ -30,9 +30,11 @@ namespace finder
             {
                 spdlog::error("Failed to initialize files");
                 _path = "";
-                throw new std::invalid_argument(std::string(success.message()));
+                throw success.error();
+            } else
+            {
+                _is_initialized = true;
             }
-            _is_initialized = success;
         }
 
         SensorPort::SensorPort(std::shared_ptr<Port> port): Port(port)
@@ -67,7 +69,7 @@ namespace finder
                 spdlog::error("Failed to set path for port: %s", path.c_str());
                 return boost::leaf::new_error(std::invalid_argument("Failed to set path for port: " + path));
             }
-            boost::leaf::result<bool> success = initFiles();
+            boost::leaf::result<void> success = initFiles();
             if (!success)
             {
                 spdlog::error("Failed to initialize files");

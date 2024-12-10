@@ -12,6 +12,7 @@ set(CMAKE_CXX_STANDARD_REQUIRED True)
 find_package(GTest REQUIRED)
 find_package(spdlog REQUIRED)
 find_package(boost-leaf REQUIRED)
+find_package(Boost REQUIRED)
 
 # set variables to paths of source files
 set(EV3_FILESYSTEM_INCLUDE_DIR          ${CMAKE_CURRENT_SOURCE_DIR}/include CACHE INTERNAL "")

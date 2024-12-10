@@ -17,17 +17,17 @@ namespace finder::physical
 
     MotorManager::~MotorManager()
     {
-        absl::Status status = _motorLeft->stop();
-        status.Update(_motorRight->stop());
+        boost::leaf::result<void> status = _motorLeft->stop();
+        status = (_motorRight->stop());
 
-        if (!status.ok())
+        if (!status)
         {
             status = _motorLeft->setCommand(MotorCommand::STOP);
-            status.Update(_motorRight->setCommand(MotorCommand::STOP));
+            status = (_motorRight->setCommand(MotorCommand::STOP));
 
-            if (!status.ok())
+            if (!status)
             {
-                spdlog::error("Failed to stop motors: %s", status.message());
+                spdlog::error("Failed to stop motors: %s", boost::diagnostic_information(status.error()));
             }
         }
     }
@@ -56,35 +56,35 @@ namespace finder::physical
             // throw error
         }
     }
-    absl::Status MotorManager::moveForward(LaunchType launch, int speed = 200, int distance = 0, std::function<void()> stopCallback = nullptr)
+    boost::leaf::result<void> MotorManager::moveForward(LaunchType launch, int speed = 200, int distance = 0, std::function<void()> stopCallback = nullptr)
     {
         return move(launch, speed, distance, stopCallback);
     }
 
-    absl::Status MotorManager::moveBackward(LaunchType launch, int speed = 200, int distance = 0, std::function<void()> stopCallback = nullptr)
+    boost::leaf::result<void> MotorManager::moveBackward(LaunchType launch, int speed = 200, int distance = 0, std::function<void()> stopCallback = nullptr)
     {
         return move(launch, -speed, distance, stopCallback);
     }
 
-    absl::Status MotorManager::turnLeft(LaunchType launch, int speed = 200, int distance = 0, std::function<void()> stopCallback = nullptr)
+    boost::leaf::result<void> MotorManager::turnLeft(LaunchType launch, int speed = 200, int distance = 0, std::function<void()> stopCallback = nullptr)
     {
-        absl::Status status = turn(launch, speed, distance, stopCallback, TurnDirection::LEFT);
-        if (!status.ok())
+        boost::leaf::result<void> status = turn(launch, speed, distance, stopCallback, TurnDirection::LEFT);
+        if (!status)
         {
             return status;
         }
-        return absl::OkStatus();
+        return boost::leaf::result<void>();
     }
 
 
-    absl::Status MotorManager::turnRight(LaunchType launch, int speed = 200, int distance = 0, std::function<void()> stopCallback = nullptr)
+    boost::leaf::result<void> MotorManager::turnRight(LaunchType launch, int speed = 200, int distance = 0, std::function<void()> stopCallback = nullptr)
     {
-        absl::Status status = turn(launch, speed, distance, stopCallback, TurnDirection::RIGHT);
-        if (!status.ok())
+        boost::leaf::result<void> status = turn(launch, speed, distance, stopCallback, TurnDirection::RIGHT);
+        if (!status)
         {
             return status;
         }
-        return absl::OkStatus();
+        return boost::leaf::result<void>();
     }
 
     void MotorManager::onDirectionChange(std::function<void(TurnDirection)> callback)
@@ -97,12 +97,12 @@ namespace finder::physical
         return _motorLeft->getMaxSpeed();
     }
 
-    absl::Status MotorManager::move(LaunchType launch, int speed, int distance, std::function<void()> stopCallback)
+    boost::leaf::result<void> MotorManager::move(LaunchType launch, int speed, int distance, std::function<void()> stopCallback)
     {
         return moveNow(speed, distance, stopCallback);
     }
 
-    absl::Status MotorManager::turn(LaunchType launch, int speed, int distance, std::function<void()> stopCallback, TurnDirection direction)
+    boost::leaf::result<void> MotorManager::turn(LaunchType launch, int speed, int distance, std::function<void()> stopCallback, TurnDirection direction)
     {
         while (!((_motorLeft->getState().front() != MotorState::HOLDING || _motorLeft->getState().front() != MotorState::STOPPED) &&
                (_motorRight->getState().front() != MotorState::HOLDING || _motorRight->getState().front() != MotorState::STOPPED)))
@@ -124,10 +124,10 @@ namespace finder::physical
         // wait for the turn to finish
         while (true)
         {
-            absl::StatusOr<int> gyroValue = SensorManager::readGyro();
-            if (!gyroValue.ok())
+            boost::leaf::result<int> gyroValue = SensorManager::readGyro();
+            if (!gyroValue)
             {
-                return gyroValue.status();
+                return gyroValue.error();
             }
 
             if (direction == TurnDirection::LEFT)
@@ -146,13 +146,24 @@ namespace finder::physical
             }
         }
         
-        absl::Status status = _motorLeft->stop();
-        status.Update(_motorRight->stop());
+        boost::leaf::result<void> _motorLeftResult = _motorLeft->stop();
 
-        return status;
+        if (!_motorLeftResult) 
+        {
+            return _motorLeftResult.error();
+        }
+
+        boost::leaf::result<void> _motorRightResult = _motorRight->stop();
+
+        if (!_motorRightResult) 
+        {
+            return _motorRightResult.error();
+        }
+
+        return boost::leaf::result<void>();
     }
 
-    absl::Status MotorManager::moveNow(int speed, int distance, std::function<void()> stopCallback)
+    boost::leaf::result<void> MotorManager::moveNow(int speed, int distance, std::function<void()> stopCallback)
     {
         // call the direction change listeners
         if (speed < 0)
@@ -186,40 +197,49 @@ namespace finder::physical
 
         if (distance != 0)
         {
-            absl::Status statusLeft;
-            absl::Status statusRight;
+            boost::leaf::result<void> statusLeft;
+            boost::leaf::result<void> statusRight;
 
             int absDestinationLeft = _motorLeft->getPosition() + distance;
             int absDestinationRight = _motorRight->getPosition() + distance;
 
             do {
-                statusLeft.Update(_motorLeft->stop());
-                statusRight.Update(_motorRight->stop());
+                statusLeft = _motorLeft->stop();
+                if (statusLeft) { return statusLeft.error(); }
 
-                statusLeft.Update(_motorLeft->setPositionSp(absDestinationLeft));
-                statusRight.Update(_motorRight->setPositionSp(absDestinationRight));
+                statusRight = (_motorRight->stop());
+                if (statusRight) { return statusRight.error(); }
 
-                statusLeft.Update(_motorLeft->setCommand(MotorCommand::RUN_TO_ABS_POS));
-                statusRight.Update(_motorRight->setCommand(MotorCommand::RUN_TO_ABS_POS));
+                statusLeft = (_motorLeft->setPositionSp(absDestinationLeft));
+                if (statusLeft) { return statusRight.error(); }
 
-                if (!statusLeft.ok()) {
-                    spdlog::error("Failed to move left motor: %s", statusLeft.message());
-                    absl::Status resetStatus = _motorLeft->reset();
-                    if (!resetStatus.ok()) {
-                        spdlog::error("Failed to reset left motor: %s", resetStatus.message());
+                statusRight = (_motorRight->setPositionSp(absDestinationRight));
+                if (statusRight) { return statusRight.error(); }
+
+                statusLeft = (_motorLeft->setCommand(MotorCommand::RUN_TO_ABS_POS));
+                if (statusLeft) { return statusRight.error(); }
+
+                statusRight = (_motorRight->setCommand(MotorCommand::RUN_TO_ABS_POS));
+                if (statusRight) { return statusRight.error(); }
+
+                if (!statusLeft) {
+                    spdlog::error("Failed to move left motor");
+                    boost::leaf::result<void> resetStatus = _motorLeft->reset();
+                    if (!resetStatus) {
+                        spdlog::error("Failed to reset left motor");
                         return resetStatus;
                     }
                 }
 
-                if (!statusRight.ok()) {
-                    spdlog::error("Failed to move right motor: %s", statusRight.message());
-                    absl::Status resetStatus = _motorRight->reset();
-                    if (!resetStatus.ok()) {
-                        spdlog::error("Failed to reset right motor: %s", resetStatus.message());
+                if (!statusRight) {
+                    spdlog::error("Failed to move right motor");
+                    boost::leaf::result<void> resetStatus = _motorRight->reset();
+                    if (!resetStatus) {
+                        spdlog::error("Failed to reset right motor");
                         return resetStatus;
                     }
                 }
-            } while (!statusLeft.ok() || !statusRight.ok());
+            } while (!statusLeft || !statusRight);
 
 
             if (stopCallback != nullptr)
@@ -227,6 +247,6 @@ namespace finder::physical
                 stopCallback();
             }
         }
-        return absl::OkStatus();
+        return boost::leaf::result<void>();
     }
 }

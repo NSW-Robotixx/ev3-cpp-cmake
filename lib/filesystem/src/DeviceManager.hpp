@@ -4,6 +4,7 @@
 #include <portManager/PortManager.hpp>
 #include <portManager/port/MotorPort.hpp>
 #include <portManager/port/SensorPort.hpp>
+#include <boost/thread/once.hpp>
 
 namespace finder
 {
@@ -57,7 +58,7 @@ namespace finder
                 bool isInitialized();
 
                 /// @brief Once flag for the DeviceManager
-                static absl::once_flag _device_manager_init_once_flag;
+                static boost::once_flag _device_manager_init_once_flag;
                 
             private:
                 static bool _initialized;

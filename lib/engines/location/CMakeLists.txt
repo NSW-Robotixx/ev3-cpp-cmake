@@ -12,4 +12,5 @@ target_link_libraries(LocationEngine
         Logger
         EV3_filesystem
         Vector2
+        boost::boost
         )

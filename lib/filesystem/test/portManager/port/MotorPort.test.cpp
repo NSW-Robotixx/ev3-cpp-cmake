@@ -1,10 +1,10 @@
 #include <gtest/gtest.h>
+#include <boost/unordered_map.hpp>
 
 #include <portManager/port/MotorPort.hpp>
 
 #include <Fakesys.hpp>
 
-#include <absl/container/flat_hash_map.h>
 #include <functional>
 
 TEST(MotorPort, CreateFakeSys) {
@@ -21,8 +21,8 @@ TEST(MotorPort, Constructor)
 
     finder::physical::MotorPort motorPort(FakeSys::getWorkingDir() + "/tacho-motor/motor0");
 
-    absl::StatusOr<finder::physical::DeviceType> deviceType = motorPort.getDeviceType();
-    ASSERT_TRUE(deviceType.ok());
+    boost::leaf::result<finder::physical::DeviceType> deviceType = motorPort.getDeviceType();
+    ASSERT_TRUE(deviceType);
     ASSERT_EQ(deviceType.value(), finder::physical::DeviceType::MOTOR);
 }
 
@@ -30,14 +30,14 @@ TEST(MotorPort, ConstructorWithPort)
 {
     using namespace finder::physical::test;
 
-    absl::StatusOr<std::string> portPath = FakeSys::getWorkingDir(EV3_PORT_OUTPUT_A);
-    ASSERT_TRUE(portPath.ok());
+    boost::leaf::result<std::string> portPath = FakeSys::getWorkingDir(EV3_PORT_OUTPUT_A);
+    ASSERT_TRUE(portPath);
 
     std::shared_ptr<finder::physical::Port> port = std::make_shared<finder::physical::Port>(portPath.value());
     finder::physical::MotorPort motorPort(port);
 
-    absl::StatusOr<finder::physical::DeviceType> deviceType = motorPort.getDeviceType();
-    ASSERT_TRUE(deviceType.ok());
+    boost::leaf::result<finder::physical::DeviceType> deviceType = motorPort.getDeviceType();
+    ASSERT_TRUE(deviceType);
     ASSERT_EQ(deviceType.value(), finder::physical::DeviceType::MOTOR);
 }
 
@@ -45,12 +45,12 @@ TEST(MotorPort, getPathFunctions)
 {   
     using namespace finder::physical::test;
 
-    absl::StatusOr<std::string> portPath = FakeSys::getWorkingDir(EV3_PORT_OUTPUT_A);
-    ASSERT_TRUE(portPath.ok());
+    boost::leaf::result<std::string> portPath = FakeSys::getWorkingDir(EV3_PORT_OUTPUT_A);
+    ASSERT_TRUE(portPath);
 
     finder::physical::MotorPort motorPort(portPath.value());
 
-    absl::flat_hash_map<std::string, std::function<absl::StatusOr<std::string>()>> paths = {
+    boost::unordered_map<std::string, std::function<boost::leaf::result<std::string>()>> paths = {
         {std::string{"/command"}, [&motorPort]() { return motorPort.getCommandPath(); }},
         {std::string{"/commands"}, [&motorPort]() { return motorPort.getCommandsPath(); }},
         {std::string{"/duty_cycle"}, [&motorPort]() { return motorPort.getDutyCyclePath(); }},
@@ -69,14 +69,14 @@ TEST(MotorPort, getPathFunctions)
 
     for (const auto &path : paths)
     {
-        absl::StatusOr<std::string> pathValue = path.second();
-        ASSERT_TRUE(pathValue.ok());
+        boost::leaf::result<std::string> pathValue = path.second();
+        ASSERT_TRUE(pathValue);
         ASSERT_EQ(pathValue.value(), portPath.value() + path.first);
 
         motorPort.overrideEnabled(false);
 
         pathValue = path.second();
-        ASSERT_FALSE(pathValue.ok());
+        ASSERT_FALSE(pathValue);
 
         motorPort.overrideEnabled(true);
     }
@@ -88,10 +88,8 @@ TEST(MotorPort, filestreams)
 
     finder::physical::MotorPort motorPort(FakeSys::getWorkingDir() + "/tacho-motor/motor0");
 
-    absl::Status status;
-
     motorPort.setSpeed(0);
-    status.Update(motorPort.setPositionSp(0));
+    EXPECT_TRUE(motorPort.setPositionSp(0));
     motorPort.setDutyCycle(0);
     motorPort.setPolarity(finder::physical::MotorPolarity::INVERSED);
     motorPort.setStopAction(finder::physical::MotorStopAction::HOLD);
@@ -131,6 +129,4 @@ TEST(MotorPort, filestreams)
     ASSERT_EQ(polarity, "inversed");
     ASSERT_EQ(stop_action, "hold");
     ASSERT_EQ(motorPort.getCountPerRotation(), 360);
-
-    ASSERT_TRUE(status.ok());
 }

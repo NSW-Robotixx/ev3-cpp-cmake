@@ -23,7 +23,7 @@ namespace finder::system
         ~System() = default;
 
         /// @brief Start the system, if enabled the system will connect to the compute module
-        void start();
+        boost::leaf::result<void> start();
 
         /// @brief Stop the system and disconnect from the compute module
         void stop();

@@ -1,5 +1,4 @@
-#ifndef __SENSOR_MANAGER_HPP__
-#define __SENSOR_MANAGER_HPP__
+#pragma once
 
 #include <DeviceManager.hpp>
 #include <memory>
@@ -27,19 +26,19 @@ namespace finder::physical
 
             /// @brief Read the gyro sensor
             /// @return The value of the gyro sensor
-            static absl::StatusOr<int> readGyro();
+            static boost::leaf::result<int> readGyro();
 
             /// @brief Read the left color sensor
             /// @return The value of the left color sensor
-            static absl::StatusOr<int> readColorLeft();
+            static boost::leaf::result<int> readColorLeft();
 
             /// @brief Read the right color sensor
             /// @return The value of the right color sensor
-            static absl::StatusOr<int> readColorRight();
+            static boost::leaf::result<int> readColorRight();
 
             /// @brief Read the front color sensor
             /// @return The value of the front color sensor
-            static absl::StatusOr<int> readColorFront();
+            static boost::leaf::result<int> readColorFront();
 
             /// @brief Read the left motor
             /// @return The value of the left motor
@@ -81,5 +80,3 @@ namespace finder::physical
             static std::thread _dispatcherFuture;
     };
 } // namespace finder::physical
-
-#endif // __SENSOR_MANAGER_HPP__

@@ -55,9 +55,9 @@ namespace finder
                         // std::cout << entry->d_name << std::endl;
                         // Port port{device_type_dir + "/" + std::string{entry->d_name}};
 
-                        absl::StatusOr<path_address_t> port = Port::getAddressPath(dir_entry.path().string());
-                        if (!port.ok()) {
-                            spdlog::error("Error getting port address: %s", port.status().message());
+                        boost::leaf::result<path_address_t> port = Port::getAddressPath(dir_entry.path().string());
+                        if (!port) {
+                            spdlog::error("Error getting port address");
                             continue;
                         }
                         spdlog::debug("Checking port: %s", port.value().c_str());

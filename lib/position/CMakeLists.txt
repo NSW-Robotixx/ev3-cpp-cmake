@@ -9,6 +9,8 @@ set(CMAKE_CXX_STANDARD 20)
 # set the C++ standard to required
 set(CMAKE_CXX_STANDARD_REQUIRED True)
 
+find_package(boost-leaf)
+
 # set variables to paths of source files
 set(EV3_POSITION_INCLUDE_DIR          ${CMAKE_CURRENT_SOURCE_DIR}/include CACHE INTERNAL "")
 set(EV3_POSITION_SRC_DIR              ${CMAKE_CURRENT_SOURCE_DIR}/src     CACHE INTERNAL "")

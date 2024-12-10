@@ -14,28 +14,28 @@ namespace finder::physical
     {
     }
 
-    absl::Status GearboxManager::setGear(GearboxGears gear)
+    boost::leaf::result<void> GearboxManager::setGear(GearboxGears gear)
     {
         if (!isInitialized())
         {
-            return absl::FailedPreconditionError("GearboxManager not initialized");
+            return boost::leaf::new_error(std::logic_error("GearboxManager not initialized"));
         }
 
-        absl::Status status = _motorShift->moveToAbsPosition(gear);
-        if (!status.ok())
+        boost::leaf::result<void> status = _motorShift->moveToAbsPosition(gear);
+        if (!status)
         {
             return status;
         }
 
         _currentGear = gear;
-        return absl::OkStatus();
+        return boost::leaf::result<void>();
     }
 
-    absl::StatusOr<GearboxGears> GearboxManager::getGear()
+    boost::leaf::result<GearboxGears> GearboxManager::getGear()
     {
         if (!isInitialized())
         {
-            return absl::FailedPreconditionError("GearboxManager not initialized");
+            return boost::leaf::new_error(std::logic_error("GearboxManager not initialized"));
         }
 
         int currentPosition = _motorShift->getPosition();
@@ -62,14 +62,14 @@ namespace finder::physical
             return GearboxGears::EV3_GEARBOX_GEAR_4;
         }
 
-        return absl::OutOfRangeError("Position not within gear range");
+        return boost::leaf::new_error(std::out_of_range("Position not withing gear range"));
     }
 
-    absl::Status GearboxManager::calibrate()
+    boost::leaf::result<void> GearboxManager::calibrate()
     {
         if (!isInitialized())
         {
-            return absl::FailedPreconditionError("GearboxManager not initialized");
+            return boost::leaf::new_error(std::logic_error("GearboxManager not initialized"));
         }
 
         ToolControl toolControl = ToolControl{};
@@ -81,17 +81,17 @@ namespace finder::physical
 
         for (GearboxGears gear : gears)
         {
-            absl::Status status = setGear(gear);
-            if (!status.ok())
+            boost::leaf::result<void> status = setGear(gear);
+            if (!status)
             {
                 return status;
             }
 
-            absl::StatusOr<bool> statusBlocked = toolControl.isToolBlocked();
+            boost::leaf::result<bool> statusBlocked = toolControl.isToolBlocked();
 
-            if (!status.ok())
+            if (!status)
             {
-                return statusBlocked.status();
+                return statusBlocked.error();
             }
 
             if (statusBlocked.value())
@@ -100,7 +100,7 @@ namespace finder::physical
             }   
         }
 
-        return absl::NotFoundError("Not implemented");
+        return boost::leaf::new_error(std::invalid_argument("Function not implemented"));
     }
 
 } // namespace finder::physical

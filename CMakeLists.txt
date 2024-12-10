@@ -33,11 +33,12 @@ find_package(Doxygen)
 find_package(Eigen3 REQUIRED)
 find_package(yaml-cpp REQUIRED)
 find_package(ydcpp-tcpcat REQUIRED)
-find_package(absl REQUIRED)
 find_package(spdlog REQUIRED)
+find_package(boost-leaf REQUIRED)
+find_package(Boost REQUIRED)
 
 # new and untested stuff
-set(BUILD_SHARED_LIBS ON)
+set(BUILD_SHARED_LIBS OFF)
 # set(CMAKE_EXE_LINKER_FLAGS "-static-libgcc -static-libstdc++ -Wall -Werror -Wextra")
 # end of new and untested stuff
 
@@ -52,7 +53,14 @@ add_executable(Main src/main.cpp)
 # set the list of sources for all tests
 set_property(GLOBAL PROPERTY EV3_TESTS_SRC ${CMAKE_SOURCE_DIR}/src/tests.cpp)
 # set the list of libs to link to
-set_property(GLOBAL PROPERTY EV3_TESTS_LIBS gtest_main GTest::gtest_main absl::status absl::flat_hash_map absl::statusor spdlog::spdlog)
+set_property(GLOBAL PROPERTY 
+    EV3_TESTS_LIBS 
+    gtest_main 
+    GTest::gtest_main 
+    boost::leaf
+    boost::boost 
+    spdlog::spdlog
+)
 
 add_subdirectory(lib)
 add_subdirectory(src)
@@ -70,7 +78,8 @@ target_link_libraries(Main
 #   Logger
 #   EV3_system
 #   EV3_gearbox
-  absl::status
+  boost::leaf
+  boost::boost
   spdlog::spdlog
   EV3_filesystem
 )    
@@ -102,7 +111,7 @@ target_sources(FullTest
 )
 
 target_link_libraries(FullTest PUBLIC ${EV3_TESTS_LIBS})
-target_link_libraries(FullTest PUBLIC GTest::gtest_main GTest::gtest spdlog::spdlog)
+target_link_libraries(FullTest PUBLIC GTest::gtest_main GTest::gtest spdlog::spdlog boost::boost)
 
 add_dependencies(FullTest docs)
     

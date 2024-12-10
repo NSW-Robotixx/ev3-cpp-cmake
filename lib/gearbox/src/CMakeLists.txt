@@ -1,4 +1,5 @@
 find_package(ydcpp-tcpcat REQUIRED)
+find_package(boost-leaf)
 
 set(EV3_GEARBOX_SRC
     ${EV3_GEARBOX_SRC_DIR}/EV3_Gearbox.cpp
@@ -29,7 +30,8 @@ target_link_libraries(EV3_gearbox
         Logger
         EV3_filesystem
         spdlog::spdlog
-        absl::status
+        boost::leaf
+        boost::boost
         Eigen3::Eigen
 )
 

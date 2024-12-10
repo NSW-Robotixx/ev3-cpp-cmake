@@ -14,78 +14,78 @@ namespace finder::physical
     {
     }
 
-    absl::Status ToolControl::setAbsToolPosition(int position)
+    boost::leaf::result<void> ToolControl::setAbsToolPosition(int position)
     {
         if (!isInitialized())
         {
-            return absl::FailedPreconditionError("ToolControl not initialized");
+            return boost::leaf::new_error(std::logic_error("ToolControl not initialized"));
         }
 
-        absl::Status status = _motorTool->moveToAbsPosition(position);
-        if (!status.ok())
+        boost::leaf::result<void> status = _motorTool->moveToAbsPosition(position);
+        if (!status)
         {
             return status;
         }
 
-        return absl::OkStatus();
+        return boost::leaf::result<void>();
     }
 
-    absl::StatusOr<int> ToolControl::getAbsToolPosition()
+    boost::leaf::result<int> ToolControl::getAbsToolPosition()
     {
         if (!isInitialized())
         {
-            return absl::FailedPreconditionError("ToolControl not initialized");
+            return boost::leaf::new_error(std::logic_error("ToolControl not initialized"));
         }
 
         return _motorTool->getPosition();
     }
 
-    absl::Status ToolControl::moveToolForever(int speed)
+    boost::leaf::result<void> ToolControl::moveToolForever(int speed)
     {
         if (!isInitialized())
         {
-            return absl::FailedPreconditionError("ToolControl not initialized");
+            return boost::leaf::new_error(std::logic_error("ToolControl not initialized"));
         }
 
-        absl::Status status;
+        boost::leaf::result<void> status;
 
         _motorTool->setSpeed(speed);
-        status.Update(_motorTool->setCommand(MotorCommand::RUN_FOREVER));
+        status = (_motorTool->setCommand(MotorCommand::RUN_FOREVER));
 
-        if (!status.ok())
+        if (!status)
         {
             return status;
         }
 
-        return absl::OkStatus();
+        return boost::leaf::result<void>();
     }
 
-    absl::Status ToolControl::stopTool()
+    boost::leaf::result<void> ToolControl::stopTool()
     {
         if (!isInitialized())
         {
-            return absl::FailedPreconditionError("ToolControl not initialized");
+            return boost::leaf::new_error(std::logic_error("ToolControl not initialized"));
         }
 
         return _motorTool->stop();
     }
 
-    absl::StatusOr<bool> ToolControl::isToolBlocked()
+    boost::leaf::result<bool> ToolControl::isToolBlocked()
     {
         bool isBlocked = false;
 
         if (!isInitialized())
         {
-            return absl::FailedPreconditionError("ToolControl not initialized");
+            return boost::leaf::new_error(std::logic_error("ToolControl not initialized"));
         }
 
-        absl::Status status = this->moveToolForever(100);
-        if (!status.ok())
+        boost::leaf::result<void> status = this->moveToolForever(100);
+        if (!status)
         {
-            return status;
+            return status.error();
         }
 
-        absl::SleepFor(absl::Milliseconds(EV3_GEAR_BLOCKED_TIMEOUT_MS));
+        std::this_thread::sleep_until(std::chrono::system_clock::now() + std::chrono::milliseconds(EV3_GEAR_BLOCKED_TIMEOUT_MS));
 
         std::vector<MotorState> states = _motorTool->getState();
 
@@ -98,7 +98,12 @@ namespace finder::physical
             }
         }
 
-        status.Update(this->stopTool());
+        status = (this->stopTool());
+
+        if (status) 
+        {
+            return status.error();
+        }
 
         return isBlocked;
     }

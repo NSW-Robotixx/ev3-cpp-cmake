@@ -1,5 +1,7 @@
 #include <EV3_MotorManager.hpp>
 
+#include <chrono>
+
 #include "../../EV3_conf.hpp"
 
 namespace finder::physical
@@ -14,25 +16,25 @@ namespace finder::physical
             
             /// @brief Set the tool position
             /// @param position The position to set the tool to
-            /// @return absl::Status
-            absl::Status setAbsToolPosition(int position);
+            /// @return boost::leaf::result<void>
+            boost::leaf::result<void> setAbsToolPosition(int position);
 
             /// @brief Get the tool position
-            /// @return absl::StatusOr<int> The position of the tool in Motor tachometer counts or an error
-            absl::StatusOr<int> getAbsToolPosition();
+            /// @return boost::leaf::result<int> The position of the tool in Motor tachometer counts or an error
+            boost::leaf::result<int> getAbsToolPosition();
 
             /// @brief Move the tool infinitely
             /// @param speed The speed to move the tool at
-            /// @return absl::Status
-            absl::Status moveToolForever(int speed);
+            /// @return boost::leaf::result<void>
+            boost::leaf::result<void> moveToolForever(int speed);
 
             /// @brief Stop all tool movement
-            /// @return absl::Status
-            absl::Status stopTool();
+            /// @return boost::leaf::result<void>
+            boost::leaf::result<void> stopTool();
 
             /// @brief check if tool is blocked
-            /// @return absl::StatusOr<bool> True if blocked, false if not or an error
-            absl::StatusOr<bool> isToolBlocked();
+            /// @return boost::leaf::result<bool> True if blocked, false if not or an error
+            boost::leaf::result<bool> isToolBlocked();
 
     
         private:

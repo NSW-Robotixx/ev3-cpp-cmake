@@ -13,7 +13,7 @@
 
 // 3rd party imports
 #include <gtest/gtest.h>
-#include <absl/status/statusor.h>
+#include <boost/leaf.hpp>
 
 // other imports
 #include <sys/inotify.h>
@@ -51,7 +51,7 @@ namespace finder::physical::test
             /// @brief get the base dir for the specified device
             /// @param port Port to get the path for
             /// @return The base dir of the device
-            static absl::StatusOr<std::string> getWorkingDir(DevicePort port);
+            static boost::leaf::result<std::string> getWorkingDir(DevicePort port);
 
             // set gyro sensor files
 

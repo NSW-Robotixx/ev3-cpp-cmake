@@ -1,5 +1,5 @@
 #include <gtest/gtest.h>
-#include <absl/container/flat_hash_map.h>
+#include <boost/unordered_map.hpp>
 
 #include <portManager/port/SensorPort.hpp>
 #include <Fakesys.hpp>
@@ -17,12 +17,12 @@ TEST(SensorPort, Constructor)
 {
     using namespace finder::physical::test;
 
-    absl::StatusOr<std::string> portPath = FakeSys::getWorkingDir(EV3_PORT_INPUT_1);
-    ASSERT_TRUE(portPath.ok());
+    boost::leaf::result<std::string> portPath = FakeSys::getWorkingDir(EV3_PORT_INPUT_1);
+    ASSERT_TRUE(portPath);
 
     finder::physical::SensorPort sensorPort(portPath.value());
-    absl::StatusOr<finder::physical::DeviceType> deviceType = sensorPort.getDeviceType();
-    ASSERT_TRUE(deviceType.ok());
+    boost::leaf::result<finder::physical::DeviceType> deviceType = sensorPort.getDeviceType();
+    ASSERT_TRUE(deviceType);
     ASSERT_EQ(deviceType.value(), finder::physical::DeviceType::SENSOR);
 
     if constexpr (EV3_THROW_ON_ERROR) {ASSERT_ANY_THROW(finder::physical::SensorPort sensorPort("")); }
@@ -32,19 +32,19 @@ TEST(SensorPort, Constructor)
 // {
 //     using namespace finder::physical::test;
 
-//     absl::StatusOr<std::string> portPath = FakeSys::getWorkingDir(EV3_PORT_INPUT_1);
-//     ASSERT_TRUE(portPath.ok());
+//     boost::leaf::result<std::string> portPath = FakeSys::getWorkingDir(EV3_PORT_INPUT_1);
+//     ASSERT_TRUE(portPath);
 
 //     std::shared_ptr<finder::physical::Port> port = std::make_shared<finder::physical::Port>(portPath.value());
 
 //     finder::physical::SensorPort sensorPort(port);
 
-//     absl::StatusOr<finder::physical::DeviceType> deviceType = sensorPort.getDeviceType();
-//     ASSERT_TRUE(deviceType.ok());
+//     boost::leaf::result<finder::physical::DeviceType> deviceType = sensorPort.getDeviceType();
+//     ASSERT_TRUE(deviceType);
 //     ASSERT_EQ(deviceType.value(), finder::physical::DeviceType::SENSOR);
 
-//     absl::StatusOr<std::string> basePath = sensorPort.getBasePath();
-//     ASSERT_TRUE(basePath.ok());
+//     boost::leaf::result<std::string> basePath = sensorPort.getBasePath();
+//     ASSERT_TRUE(basePath);
 //     ASSERT_EQ(basePath.value(), portPath.value());
 // }
 
@@ -52,23 +52,23 @@ TEST(SensorPort, Constructor)
 // {
 //     using namespace finder::physical::test;
 
-//     absl::StatusOr<std::string> portPath = FakeSys::getWorkingDir(EV3_PORT_INPUT_1);
-//     ASSERT_TRUE(portPath.ok());
+//     boost::leaf::result<std::string> portPath = FakeSys::getWorkingDir(EV3_PORT_INPUT_1);
+//     ASSERT_TRUE(portPath);
     
 //     finder::physical::SensorPort sensorPort{portPath.value()};
 
-//     absl::StatusOr<std::string> newPortPath = FakeSys::getWorkingDir(EV3_PORT_INPUT_2);
-//     ASSERT_TRUE(newPortPath.ok());
+//     boost::leaf::result<std::string> newPortPath = FakeSys::getWorkingDir(EV3_PORT_INPUT_2);
+//     ASSERT_TRUE(newPortPath);
 
 //     absl::Status status = sensorPort.setBasePath(newPortPath.value());
-//     ASSERT_TRUE(status.ok());
+//     ASSERT_TRUE(status);
 
-//     absl::StatusOr<finder::physical::DeviceType> deviceType = sensorPort.getDeviceType();
-//     ASSERT_TRUE(deviceType.ok());
+//     boost::leaf::result<finder::physical::DeviceType> deviceType = sensorPort.getDeviceType();
+//     ASSERT_TRUE(deviceType);
 //     ASSERT_EQ(deviceType.value(), finder::physical::DeviceType::SENSOR);
 
-//     absl::StatusOr<std::string> basePath = sensorPort.getBasePath();
-//     ASSERT_TRUE(basePath.ok());
+//     boost::leaf::result<std::string> basePath = sensorPort.getBasePath();
+//     ASSERT_TRUE(basePath);
 //     ASSERT_EQ(basePath.value(), newPortPath.value());
 // }
 
@@ -76,12 +76,12 @@ TEST(SensorPort, getPathFunctions)
 {
     using namespace finder::physical::test;
 
-    absl::StatusOr<std::string> portPath = FakeSys::getWorkingDir(EV3_PORT_INPUT_1);
-    ASSERT_TRUE(portPath.ok());
+    boost::leaf::result<std::string> portPath = FakeSys::getWorkingDir(EV3_PORT_INPUT_1);
+    ASSERT_TRUE(portPath);
 
     finder::physical::SensorPort sensorPort(portPath.value());
 
-    absl::flat_hash_map<std::string, std::function<absl::StatusOr<std::string>()>> paths = {
+    boost::unordered_map<std::string, std::function<boost::leaf::result<std::string>()>> paths = {
         {std::string{"/command"}, [&sensorPort]() { return sensorPort.getCommandPath(); }},
         {std::string{"/commands"}, [&sensorPort]() { return sensorPort.getCommandsPath(); }},
         {std::string{"/address"}, [&sensorPort]() { return sensorPort.getAddressPath(); }},
@@ -98,14 +98,14 @@ TEST(SensorPort, getPathFunctions)
 
     for (const auto &path : paths)
     {
-        absl::StatusOr<std::string> pathValue = path.second();
-        ASSERT_TRUE(pathValue.ok());
+        boost::leaf::result<std::string> pathValue = path.second();
+        ASSERT_TRUE(pathValue);
         ASSERT_EQ(pathValue.value(), portPath.value() + path.first);
 
         sensorPort.overrideEnabled(false);
 
         pathValue = path.second();
-        ASSERT_FALSE(pathValue.ok());
+        ASSERT_FALSE(pathValue);
 
         sensorPort.overrideEnabled(true);
     }
@@ -119,27 +119,27 @@ TEST(SensorPort, getValue)
     finder::physical::SensorPort sensorPort(FakeSys::getWorkingDir() + "/lego-sensor/sensor0");
     sensorPort.overrideEnabled(false);
 
-    absl::StatusOr<int> value = sensorPort.getValue(0);
-    ASSERT_FALSE(value.ok());
+    boost::leaf::result<int> value = sensorPort.getValue(0);
+    ASSERT_FALSE(value);
 
     sensorPort.overrideEnabled(true);
     value = sensorPort.getValue(0);
-    ASSERT_TRUE(value.ok());
+    ASSERT_TRUE(value);
     ASSERT_EQ(value.value(), 0);
 
     value = sensorPort.getValue(100);
-    ASSERT_FALSE(value.ok());
+    ASSERT_FALSE(value);
 
     value = sensorPort.getValue(-1);
-    ASSERT_FALSE(value.ok());
+    ASSERT_FALSE(value);
 }
 
 TEST(SensorPort, getModes)
 {
     using namespace finder::physical::test;
 
-    absl::StatusOr<std::string> portPath = FakeSys::getWorkingDir(EV3_PORT_INPUT_1);
-    ASSERT_TRUE(portPath.ok());
+    boost::leaf::result<std::string> portPath = FakeSys::getWorkingDir(EV3_PORT_INPUT_1);
+    ASSERT_TRUE(portPath);
 
     finder::physical::SensorPort sensorPort(portPath.value());
     std::vector<std::string> modes = sensorPort.getModes();
@@ -157,8 +157,8 @@ TEST(SensorPort, filestreams)
 
     FakeSys::reinit();
 
-    absl::StatusOr<std::string> portPath = FakeSys::getWorkingDir(EV3_PORT_INPUT_1);
-    ASSERT_TRUE(portPath.ok()) << "Failed to get port path";
+    boost::leaf::result<std::string> portPath = FakeSys::getWorkingDir(EV3_PORT_INPUT_1);
+    ASSERT_TRUE(portPath) << "Failed to get port path";
 
     std::ofstream fs_value(portPath.value() + "/value0");
     std::ofstream fs_address(portPath.value() + "/address");
@@ -188,24 +188,24 @@ TEST(SensorPort, filestreams)
 
     finder::physical::SensorPort sensorPort(FakeSys::getWorkingDir() + "/lego-sensor/sensor0");
     // sensorPort.setBasePath(FakeSys::getWorkingDir() + "/lego-sensor/sensor0");
-    absl::StatusOr<finder::physical::DeviceType> deviceType = sensorPort.getDeviceType();
-    ASSERT_TRUE(deviceType.ok()) << "Failed to get device type";
+    boost::leaf::result<finder::physical::DeviceType> deviceType = sensorPort.getDeviceType();
+    ASSERT_TRUE(deviceType) << "Failed to get device type";
     ASSERT_EQ(deviceType.value(), finder::physical::DeviceType::SENSOR);
 
-    absl::StatusOr<std::string> valuePath = sensorPort.getValuePath(0);
-    ASSERT_TRUE(valuePath.ok()) << "Failed to get value path";
+    boost::leaf::result<std::string> valuePath = sensorPort.getValuePath(0);
+    ASSERT_TRUE(valuePath) << "Failed to get value path";
     ASSERT_EQ(valuePath.value(), FakeSys::getWorkingDir() + "/lego-sensor/sensor0/value0");
     
-    absl::StatusOr<int> value = sensorPort.getValue(0);
-    ASSERT_TRUE(value.ok()) << "Failed to get value";
+    boost::leaf::result<int> value = sensorPort.getValue(0);
+    ASSERT_TRUE(value) << "Failed to get value";
     ASSERT_EQ(value.value(), 42);
     
-    absl::StatusOr<std::string> address = sensorPort.getAddress();
-    ASSERT_TRUE(address.ok()) << "Failed to get address";
+    boost::leaf::result<std::string> address = sensorPort.getAddress();
+    ASSERT_TRUE(address) << "Failed to get address";
     ASSERT_EQ(address.value(), "ev3-ports:in1");
 
-    absl::Status status = sensorPort.setMode("test-mode");
-    ASSERT_TRUE(status.ok()) << "Failed to set mode";
+    boost::leaf::result status = sensorPort.setMode("test-mode");
+    ASSERT_TRUE(status) << "Failed to set mode";
     std::ifstream mode_file(FakeSys::getWorkingDir() + "/lego-sensor/sensor0/mode");
     std::string mode_str;
     mode_file >> mode_str;
@@ -217,13 +217,13 @@ TEST(SensorPort, filestreams)
     ASSERT_EQ(modes[1], "EV3-Color");
     ASSERT_EQ(modes[2], "EV3-Ultrasonic");
 
-    absl::StatusOr<int> numValues = sensorPort.getNumValues();
-    ASSERT_TRUE(numValues.ok()) << "Failed to get num values";
+    boost::leaf::result<int> numValues = sensorPort.getNumValues();
+    ASSERT_TRUE(numValues) << "Failed to get num values";
     ASSERT_EQ(numValues.value(), 1);
 
     sensorPort.overrideEnabled(false);
     numValues = sensorPort.getNumValues();
-    ASSERT_FALSE(numValues.ok()) << "Failed to get num values";
+    ASSERT_FALSE(numValues) << "Failed to get num values";
 
     sensorPort.overrideEnabled(true);
     ASSERT_EQ(sensorPort.getPollMs(), 100);

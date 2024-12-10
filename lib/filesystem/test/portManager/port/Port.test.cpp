@@ -1,5 +1,5 @@
 #include <gtest/gtest.h>
-#include <absl/container/flat_hash_map.h>
+#include <boost/unordered_map.hpp>
 
 #include <portManager/port/Port.hpp>
 
@@ -23,18 +23,18 @@ TEST(Port, getPortKey)
 {
     using namespace finder::physical::test;
 
-    absl::StatusOr<std::string> portPath = FakeSys::getWorkingDir(EV3_PORT_INPUT_1);
-    ASSERT_TRUE(portPath.ok());
+    boost::leaf::result<std::string> portPath = FakeSys::getWorkingDir(EV3_PORT_INPUT_1);
+    ASSERT_TRUE(portPath);
 
     finder::physical::Port port{portPath.value()};
 
     port.overrideEnabled(false);
-    ASSERT_TRUE(absl::IsInvalidArgument(port.getPortKey().status()));
+    ASSERT_FALSE(portPath);
 
     port.overrideEnabled(true);
 
-    absl::StatusOr<char> portKey = port.getPortKey();
-    ASSERT_TRUE(portKey.ok());
+    boost::leaf::result<char> portKey = port.getPortKey();
+    ASSERT_TRUE(portKey);
     ASSERT_EQ(portKey.value(), '0');
 }
 
@@ -42,12 +42,12 @@ TEST(Port, getPathFunctions)
 {
     using namespace finder::physical::test;
 
-    absl::StatusOr<std::string> portPath = FakeSys::getWorkingDir(EV3_PORT_INPUT_1);
-    ASSERT_TRUE(portPath.ok());
+    boost::leaf::result<std::string> portPath = FakeSys::getWorkingDir(EV3_PORT_INPUT_1);
+    ASSERT_TRUE(portPath);
 
     finder::physical::Port port{portPath.value()};
 
-    absl::flat_hash_map<std::string, std::function<absl::StatusOr<std::string>()>> paths = {
+    boost::unordered_map<std::string, std::function<boost::leaf::result<std::string>()>> paths = {
         {std::string{""}, [&port]() { return port.getBasePath(); }},
         {std::string{"/address"}, [&port]() { return port.getAddressPath(); }},
         {std::string{"/command"}, [&port]() { return port.getCommandPath(); }},
@@ -55,14 +55,14 @@ TEST(Port, getPathFunctions)
     };
 
     for (const auto& path : paths) {
-        absl::StatusOr<std::string> pathValue = path.second();
-        ASSERT_TRUE(pathValue.ok());
+        boost::leaf::result<std::string> pathValue = path.second();
+        ASSERT_TRUE(pathValue);
         ASSERT_EQ(pathValue.value(), portPath.value() + path.first);
 
         port.overrideEnabled(false);
 
         pathValue = path.second();
-        ASSERT_FALSE(pathValue.ok());
+        ASSERT_FALSE(pathValue);
 
         port.overrideEnabled(true);
     }
@@ -73,15 +73,15 @@ TEST(Port, setCommand)
 {
     using namespace finder::physical::test;
 
-    absl::StatusOr<std::string> portPath = FakeSys::getWorkingDir(EV3_PORT_INPUT_1);
-    ASSERT_TRUE(portPath.ok());
+    boost::leaf::result<std::string> portPath = FakeSys::getWorkingDir(EV3_PORT_INPUT_1);
+    ASSERT_TRUE(portPath);
 
     finder::physical::Port port{portPath.value()};
 
     port.overrideEnabled(false);
 
-    absl::Status status = port.setCommand("test-command");
-    ASSERT_FALSE(status.ok());
+    boost::leaf::result<void> status = port.setCommand("test-command");
+    ASSERT_FALSE(status);
 }
 
 // TEST(Port, getCommands)
@@ -102,13 +102,13 @@ TEST(Port, getDeviceType)
 {
     using namespace finder::physical::test;
 
-    absl::StatusOr<std::string> sensorPortPath = FakeSys::getWorkingDir(EV3_PORT_INPUT_1);
-    absl::StatusOr<std::string> motorPortPath = FakeSys::getWorkingDir(EV3_PORT_OUTPUT_A);
-    absl::StatusOr<std::string> portPath = FakeSys::getWorkingDir(EV3_PORT_INPUT_1);
+    boost::leaf::result<std::string> sensorPortPath = FakeSys::getWorkingDir(EV3_PORT_INPUT_1);
+    boost::leaf::result<std::string> motorPortPath = FakeSys::getWorkingDir(EV3_PORT_OUTPUT_A);
+    boost::leaf::result<std::string> portPath = FakeSys::getWorkingDir(EV3_PORT_INPUT_1);
 
-    ASSERT_TRUE(sensorPortPath.ok());
-    ASSERT_TRUE(motorPortPath.ok());
-    ASSERT_TRUE(portPath.ok());
+    ASSERT_TRUE(sensorPortPath);
+    ASSERT_TRUE(motorPortPath);
+    ASSERT_TRUE(portPath);
 
     finder::physical::Port sensorPort{sensorPortPath.value()};
     finder::physical::Port motorPort{motorPortPath.value()};
@@ -118,13 +118,13 @@ TEST(Port, getDeviceType)
     motorPort.overrideEnabled(true);
     unknownPort.overrideEnabled(true);
     
-    absl::StatusOr<finder::physical::DeviceType> sensorType = sensorPort.getDeviceType();
-    absl::StatusOr<finder::physical::DeviceType> motorType = motorPort.getDeviceType();
-    absl::StatusOr<finder::physical::DeviceType> unknownType = unknownPort.getDeviceType();
+    boost::leaf::result<finder::physical::DeviceType> sensorType = sensorPort.getDeviceType();
+    boost::leaf::result<finder::physical::DeviceType> motorType = motorPort.getDeviceType();
+    boost::leaf::result<finder::physical::DeviceType> unknownType = unknownPort.getDeviceType();
 
-    ASSERT_TRUE(sensorType.ok());
-    ASSERT_TRUE(motorType.ok());
-    ASSERT_TRUE(unknownType.ok());
+    ASSERT_TRUE(sensorType);
+    ASSERT_TRUE(motorType);
+    ASSERT_TRUE(unknownType);
 
     ASSERT_EQ(sensorType.value(), finder::physical::DeviceType::SENSOR);
     ASSERT_EQ(motorType.value(), finder::physical::DeviceType::MOTOR);

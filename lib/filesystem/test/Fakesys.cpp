@@ -86,7 +86,7 @@ namespace finder::physical::test
         _initialized = true;
     }
 
-    absl::StatusOr<std::string> FakeSys::getWorkingDir(DevicePort port)
+    boost::leaf::result<std::string> FakeSys::getWorkingDir(DevicePort port)
     {
         switch (port)
         {
@@ -123,11 +123,11 @@ namespace finder::physical::test
             break;
 
         default:
-            return absl::OutOfRangeError("Requested port is out of range: " + port);
+            return boost::leaf::new_error(std::out_of_range("Requested port ist out of range: " + port));
             break;
         }
 
-        return absl::InvalidArgumentError("Exited switch without result for port: " + port);
+        return boost::leaf::new_error(std::invalid_argument("Exited switch without result for port: " + port));
     }
 
     void FakeSys::disconnectGyroSensor()

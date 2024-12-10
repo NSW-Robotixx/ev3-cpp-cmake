@@ -1,5 +1,6 @@
 find_package(GTest REQUIRED)
 find_package(spdlog REQUIRED)
+find_package(boost-leaf)
 
 set(EV3_GEARBOX_TEST_SRC
     ${EV3_GEARBOX_TEST_DIR}/
@@ -41,7 +42,8 @@ target_link_libraries(EV3_gearbox_test
         GTest::gtest
         EV3_filesystem
         spdlog::spdlog
-        absl::status
+        boost::leaf
+        boost::boost
         Eigen3::Eigen
         # Logger
 )

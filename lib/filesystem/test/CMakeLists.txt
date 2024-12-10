@@ -50,6 +50,7 @@ target_link_libraries(EV3_filesystem_test
         spdlog::spdlog
         Eigen3::Eigen
         boost::leaf
+        boost::boost
         # Logger
 )
 

@@ -32,6 +32,7 @@ target_link_libraries(EV3_position
         EV3_filesystem
         Vector2
         Vector3
-        absl::status
+        boost::leaf
+        boost::boost
         spdlog::spdlog
 )
