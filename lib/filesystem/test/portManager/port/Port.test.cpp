@@ -16,7 +16,7 @@ TEST(Port, Constructor)
 {
     using namespace finder::physical::test;
 
-    ASSERT_ANY_THROW(finder::physical::Port{"/sys/class/lego-sensor/sensor0"});
+    ASSERT_NO_THROW(finder::physical::Port{"/sys/class/lego-sensor/sensor0"});
 }
 
 TEST(Port, getPortKey)
@@ -29,7 +29,7 @@ TEST(Port, getPortKey)
     finder::physical::Port port{portPath.value()};
 
     port.overrideEnabled(false);
-    ASSERT_FALSE(portPath);
+    ASSERT_FALSE(port.getPortKey());
 
     port.overrideEnabled(true);
 

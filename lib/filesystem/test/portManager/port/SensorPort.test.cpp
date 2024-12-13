@@ -117,8 +117,10 @@ TEST(SensorPort, getValue)
     FakeSys::reinit();
 
     finder::physical::SensorPort sensorPort(FakeSys::getWorkingDir() + "/lego-sensor/sensor0");
+    spdlog::trace("Overriding enabled = false");
     sensorPort.overrideEnabled(false);
 
+    spdlog::trace("getting value0 from sensor");
     boost::leaf::result<int> value = sensorPort.getValue(0);
     ASSERT_FALSE(value);
 
@@ -153,6 +155,8 @@ TEST(SensorPort, getModes)
 
 TEST(SensorPort, filestreams)
 {
+    spdlog::set_level(spdlog::level::trace);
+
     using namespace finder::physical::test;
 
     FakeSys::reinit();
@@ -160,6 +164,7 @@ TEST(SensorPort, filestreams)
     boost::leaf::result<std::string> portPath = FakeSys::getWorkingDir(EV3_PORT_INPUT_1);
     ASSERT_TRUE(portPath) << "Failed to get port path";
 
+    spdlog::trace("Manually opening port files");
     std::ofstream fs_value(portPath.value() + "/value0");
     std::ofstream fs_address(portPath.value() + "/address");
     std::ofstream fs_mode(portPath.value() + "/mode");
@@ -169,6 +174,7 @@ TEST(SensorPort, filestreams)
     std::ofstream fs_commmand(portPath.value() + "/command");
     std::ofstream fs_commands(portPath.value() + "/commands");
 
+    spdlog::trace("Writing test values to port files");
     fs_value << "42";
     fs_address << "ev3-ports:in1";
     fs_mode << "";
@@ -177,6 +183,7 @@ TEST(SensorPort, filestreams)
     fs_poll_ms << "100";
     fs_commands << "";
     
+    spdlog::trace("Closing port files");
     fs_value.close();
     fs_address.close();
     fs_mode.close();
@@ -186,8 +193,11 @@ TEST(SensorPort, filestreams)
     fs_commmand.close();
     fs_commands.close();
 
+    spdlog::trace("Creating sensor port");
     finder::physical::SensorPort sensorPort(FakeSys::getWorkingDir() + "/lego-sensor/sensor0");
     // sensorPort.setBasePath(FakeSys::getWorkingDir() + "/lego-sensor/sensor0");
+
+    spdlog::trace("Getting device type");
     boost::leaf::result<finder::physical::DeviceType> deviceType = sensorPort.getDeviceType();
     ASSERT_TRUE(deviceType) << "Failed to get device type";
     ASSERT_EQ(deviceType.value(), finder::physical::DeviceType::SENSOR);
@@ -204,6 +214,7 @@ TEST(SensorPort, filestreams)
     ASSERT_TRUE(address) << "Failed to get address";
     ASSERT_EQ(address.value(), "ev3-ports:in1");
 
+    spdlog::trace("Setting mode for sensor");
     boost::leaf::result status = sensorPort.setMode("test-mode");
     ASSERT_TRUE(status) << "Failed to set mode";
     std::ifstream mode_file(FakeSys::getWorkingDir() + "/lego-sensor/sensor0/mode");
@@ -211,26 +222,33 @@ TEST(SensorPort, filestreams)
     mode_file >> mode_str;
     ASSERT_EQ(mode_str, "test-mode");
 
+    spdlog::trace("Getting mode from sensor");
     std::vector<std::string> modes = sensorPort.getModes();
     ASSERT_EQ(modes.size(), 3);
     ASSERT_EQ(modes[0], "EV3-IR");
     ASSERT_EQ(modes[1], "EV3-Color");
     ASSERT_EQ(modes[2], "EV3-Ultrasonic");
 
+    spdlog::trace("Getting num values from sensor");
     boost::leaf::result<int> numValues = sensorPort.getNumValues();
     ASSERT_TRUE(numValues) << "Failed to get num values";
     ASSERT_EQ(numValues.value(), 1);
 
+
+    spdlog::trace("Getting num values from disabled sensor");
     sensorPort.overrideEnabled(false);
     numValues = sensorPort.getNumValues();
-    ASSERT_FALSE(numValues) << "Failed to get num values";
+    ASSERT_FALSE(numValues) << "Successfully failed to get num values";
 
     sensorPort.overrideEnabled(true);
+    spdlog::trace("Trying to get pollMs with enabled port");
     ASSERT_EQ(sensorPort.getPollMs(), 100);
     sensorPort.overrideEnabled(false);
+    spdlog::trace("Trying to get pollMs with disabled port");
     ASSERT_EQ(sensorPort.getPollMs(), -1);
     sensorPort.overrideEnabled(true);
 
     // remove temp files
-    std::filesystem::remove_all(FakeSys::getWorkingDir() + "");
+    spdlog::debug("Removing temporary files");
+    ASSERT_NO_FATAL_FAILURE(std::filesystem::remove_all(FakeSys::getWorkingDir() + ""));
 }

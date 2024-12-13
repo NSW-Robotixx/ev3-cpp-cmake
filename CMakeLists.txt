@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.24...3.24)
 
-set(CONAN_HOST_PROFILE "ev3" CACHE STRING "Conan profile to use for host")
+set(CONAN_HOST_PROFILE "default" CACHE STRING "Conan profile to use for host")
 
 if(NOT EXISTS "${CMAKE_BINARY_DIR}/conan.cmake")
 message(STATUS "Downloading conan.cmake from https://github.com/conan-io/cmake-conan")
@@ -38,7 +38,7 @@ find_package(boost-leaf REQUIRED)
 find_package(Boost REQUIRED)
 
 # new and untested stuff
-set(BUILD_SHARED_LIBS OFF)
+set(BUILD_SHARED_LIBS ON)
 # set(CMAKE_EXE_LINKER_FLAGS "-static-libgcc -static-libstdc++ -Wall -Werror -Wextra")
 # end of new and untested stuff
 
@@ -46,6 +46,8 @@ set(BUILD_SHARED_LIBS OFF)
 add_executable(Main src/main.cpp)
 # add_executable(Test src/tests.cpp)
 
+# set executables to be static
+# SET_TARGET_PROPERTIES(Main PROPERTIES LINK_FLAGS "-static -lc -lm -L/usr/local/lib/")
 # add include directories
 # include_directories(${CMAKE_SOURCE_DIR}/lib)
 # include_directories(${CMAKE_SOURCE_DIR}/tests)
@@ -54,12 +56,12 @@ add_executable(Main src/main.cpp)
 set_property(GLOBAL PROPERTY EV3_TESTS_SRC ${CMAKE_SOURCE_DIR}/src/tests.cpp)
 # set the list of libs to link to
 set_property(GLOBAL PROPERTY 
-    EV3_TESTS_LIBS 
-    gtest_main 
-    GTest::gtest_main 
-    boost::leaf
-    boost::boost 
-    spdlog::spdlog
+EV3_TESTS_LIBS 
+gtest_main 
+GTest::gtest_main 
+boost::leaf
+boost::boost 
+spdlog::spdlog
 )
 
 add_subdirectory(lib)
@@ -73,37 +75,38 @@ add_subdirectory(doc)
 
 target_include_directories(Main PUBLIC ${CMAKE_SOURCE_DIR}/lib)
 target_include_directories(Main PUBLIC ${CMAKE_SOURCE_DIR}/deps)
-    
+
 target_link_libraries(Main
 #   Logger
 #   EV3_system
 #   EV3_gearbox
-  boost::leaf
+boost::leaf
   boost::boost
   spdlog::spdlog
   EV3_filesystem
-)    
+  )    
   
-
-# add all tests executable
-
-# get global property EV3_TESTS_SRC
-get_property(EV3_TESTS_SRC GLOBAL PROPERTY EV3_TESTS_SRC)
-message(STATUS EV3_TESTS_SRC: ${EV3_TESTS_SRC})
-
-# get global property EV3_TESTS_HDR
-get_property(EV3_TESTS_HDR GLOBAL PROPERTY EV3_TESTS_HDR)
-message(STATUS EV3_TESTS_HDR: ${EV3_TESTS_HDR})
-
-# get global property EV3_TESTS_LIBS
-get_property(EV3_TESTS_LIBS GLOBAL PROPERTY EV3_TESTS_LIBS)
-message(STATUS EV3_TESTS_LIBS: ${EV3_TESTS_LIBS} GTest::gtest_main)
-
-
-
-add_executable(FullTest ${EV3_TESTS_SRC})
-
-target_sources(FullTest
+  
+  # add all tests executable
+  
+  # get global property EV3_TESTS_SRC
+  get_property(EV3_TESTS_SRC GLOBAL PROPERTY EV3_TESTS_SRC)
+  message(STATUS EV3_TESTS_SRC: ${EV3_TESTS_SRC})
+  
+  # get global property EV3_TESTS_HDR
+  get_property(EV3_TESTS_HDR GLOBAL PROPERTY EV3_TESTS_HDR)
+  message(STATUS EV3_TESTS_HDR: ${EV3_TESTS_HDR})
+  
+  # get global property EV3_TESTS_LIBS
+  get_property(EV3_TESTS_LIBS GLOBAL PROPERTY EV3_TESTS_LIBS)
+  message(STATUS EV3_TESTS_LIBS: ${EV3_TESTS_LIBS} GTest::gtest_main)
+  
+  
+  add_executable(FullTest ${EV3_TESTS_SRC})
+  # SET_TARGET_PROPERTIES(FullTest PROPERTIES LINK_FLAGS "-static -lc -lm -L/usr/local/lib/")
+  
+  
+  target_sources(FullTest
     PRIVATE
         ${EV3_TESTS_SRC}
     PUBLIC

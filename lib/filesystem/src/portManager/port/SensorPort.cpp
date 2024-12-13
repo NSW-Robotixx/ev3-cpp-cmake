@@ -30,7 +30,7 @@ namespace finder
             {
                 spdlog::error("Failed to initialize files");
                 _path = "";
-                throw success.error();
+                // throw success.error();
             } else
             {
                 _is_initialized = true;
@@ -42,7 +42,7 @@ namespace finder
             spdlog::trace("SensorPort::SensorPort(std::shared_ptr<Port> port)");
             boost::leaf::result<std::string> path = port->getBasePath();
 
-            if (path) {
+            if (!path) {
                 spdlog::error("Unable to get path from port");
                 throw path.error();
             } else if (path.value().length() <= 0) {
@@ -55,7 +55,7 @@ namespace finder
             if (!success)
             {
                 spdlog::error("Failed to initialize files");
-                throw success.error();
+                // throw success.error();
             } else {
                 _is_initialized = true;
             }
