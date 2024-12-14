@@ -2,7 +2,6 @@
 #include <Vector2.hpp>
 #include <pf/AStar.hpp>
 #include <pf/SmoothPath.hpp>
-#include <Logger.hpp>
 #include "../../EV3_conf.hpp"
 #include <memory>
 #include <future>
@@ -10,7 +9,8 @@
 #include <string>
 #include <vector>
 #include <thread>
-#include "../../EV3_conf.hpp"
+
+#include <spdlog/spdlog.h>
 
 #ifdef EV3_COMPUTE_NO_TCP
     //#error "COMPUTE_NO_TCP set, this file should not be imported!"
@@ -32,8 +32,6 @@ namespace finder::compute
         void stop();
 
     private:
-        ::finder::log::Logger _logger;
-
         std::unique_ptr<::finder::network::tcp::TCPServer> m_tcp_communication_server;
         std::atomic_bool m_running = true;
         std::thread m_client_thread;

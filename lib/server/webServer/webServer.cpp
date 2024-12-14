@@ -29,7 +29,7 @@ namespace finder::server
         }
         catch(const std::exception& e)
         {
-            std::cerr << e.what() << '\n';
+            spdlog::error(e.what());
         }
         
     }
@@ -42,7 +42,7 @@ namespace finder::server
         }
         catch(const std::exception& e)
         {
-            std::cerr << e.what() << '\n';
+            spdlog::error(e.what());
         }
         
     }

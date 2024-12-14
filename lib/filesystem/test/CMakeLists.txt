@@ -45,13 +45,12 @@ target_include_directories(EV3_filesystem_test PRIVATE ${EV3_FILESYSTEM_SRC_DIR}
 
 target_link_libraries(EV3_filesystem_test
     PUBLIC
+    EV3_filesystem
         GTest::gtest
-        EV3_filesystem
         spdlog::spdlog
         Eigen3::Eigen
         boost::leaf
         boost::boost
-        # Logger
 )
 
 add_test(NAME EV3_filesystem_test COMMAND EV3_filesystem_test)

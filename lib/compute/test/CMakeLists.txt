@@ -40,7 +40,6 @@ target_link_libraries(EV3_compute_test
         Vector2
         Line
         ydcpp-tcpcat
-        # Logger
 )
 
 add_test(NAME EV3_compute_test COMMAND EV3_compute_test)

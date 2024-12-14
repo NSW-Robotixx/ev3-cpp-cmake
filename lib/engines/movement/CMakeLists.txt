@@ -14,8 +14,8 @@ target_sources(MovementEngine
 
 target_link_libraries(MovementEngine
     PUBLIC
-        Logger
         Vector2
         RobotMovement
         EV3_compute
+        spdlog::spdlog
     )

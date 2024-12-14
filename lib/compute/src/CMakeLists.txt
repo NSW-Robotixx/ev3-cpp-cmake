@@ -30,12 +30,12 @@ target_include_directories(EV3_compute PUBLIC ${EV3_COMPUTE_INCLUDE_DIR})
 
 target_link_libraries(EV3_compute
     PUBLIC
-        Logger
         EV3_tcp_communication
         Vector2
         Line
         ydcpp-tcpcat
         boost::leaf
+        spdlog::spdlog
 )
 
 set(ENABLE_LOGGING ON CACHE BOOL "Enable logging")

@@ -36,10 +36,10 @@ namespace finder::system
             m_currentPosition = math::Vector2(destination.x, destination.y);
         }
 
-        log::Logger::info("Path: ");
+        spdlog::info("Path: ");
         for (auto &point : m_path)
         {
-            log::Logger::info("x: " + std::to_string(point.x) + " y: " + std::to_string(point.y));
+            spdlog::info("x: " + std::to_string(point.x) + " y: " + std::to_string(point.y));
         }
         #endif
 
@@ -53,7 +53,7 @@ namespace finder::system
         #else
         #endif
 
-        log::Logger::info("System stopped");
+        spdlog::info("System stopped");
     }
 
 } // namespace finder::system

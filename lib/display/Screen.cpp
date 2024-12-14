@@ -14,7 +14,6 @@
 
 namespace finder::physical::display
 {
-::finder::log::Logger Screen::_logger = ::finder::log::Logger();
 
 Screen::Screen()
 {
@@ -67,7 +66,7 @@ Screen::~Screen()
     void Screen::drawPixel(int x, int y, uint32_t color)
     {
         if(x < 0 || x > width || y < 0 || y > height) {
-            _logger.warn("Tried to draw pixel outside of screen at x: " + std::to_string(x) + " y: " + std::to_string(y));
+            spdlog::warn("Tried to draw pixel outside of screen at x: " + std::to_string(x) + " y: " + std::to_string(y));
             return;
         }
 

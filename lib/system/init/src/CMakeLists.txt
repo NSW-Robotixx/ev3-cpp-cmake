@@ -30,9 +30,9 @@ target_include_directories(EV3_system
 
 target_link_libraries(EV3_system
     PUBLIC
-        Logger
         Vector3
         EV3_compute
         yaml-cpp::yaml-cpp
         boost::boost
+        spdlog::spdlog
 )

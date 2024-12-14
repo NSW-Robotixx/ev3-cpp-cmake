@@ -16,6 +16,6 @@ target_include_directories(RobotMovement
 
 target_link_libraries(RobotMovement
     PUBLIC
-        Logger
         EV3_filesystem
+        spdlog::spdlog
 )

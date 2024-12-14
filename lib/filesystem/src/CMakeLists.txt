@@ -38,7 +38,6 @@ target_link_libraries(EV3_filesystem
         Eigen3::Eigen
         boost::leaf
         boost::boost
-        # Logger
 )
 
 # set(ENABLE_LOGGING ON CACHE BOOL "Enable logging")

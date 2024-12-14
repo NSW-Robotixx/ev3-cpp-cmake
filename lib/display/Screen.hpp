@@ -5,7 +5,8 @@
 #include <sys/mman.h>
 #include <stdint.h>
 #include <memory>
-#include <Logger.hpp>
+
+#include <spdlog/spdlog.h>
 
 
 #ifndef __DISPLAY_HPP__
@@ -25,8 +26,6 @@ namespace finder::physical::display
   /// @brief Screen class, controlling the display of the EV3
   class Screen
   {
-  private:
-    static ::finder::log::Logger _logger;
   protected:
       Screen();
       ~Screen();

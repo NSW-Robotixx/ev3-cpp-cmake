@@ -2,6 +2,8 @@
 #include <string>
 #include <spdlog/spdlog.h>
 
+#error "Logger is depreciated"
+
 #ifndef __LOGGER_HPP__
 #define __LOGGER_HPP__
 

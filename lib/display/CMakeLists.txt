@@ -1,6 +1,6 @@
 add_subdirectory(bitmaps)
 
-# find_package(freetype REQUIRED)
+find_package(spdlog REQUIRED)
 
 #screen
 add_library(Screen Screen.cpp)
@@ -19,7 +19,7 @@ target_include_directories(Screen
 
 target_link_libraries(Screen
     PUBLIC
-        Logger
+        spdlog::spdlog
 )
 
 #WindowManager
@@ -40,7 +40,7 @@ target_include_directories(WindowManager
 target_link_libraries(WindowManager
     PUBLIC
         Screen
-        Logger
+        spdlog::spdlog
 )
 
 #window
@@ -60,7 +60,7 @@ target_include_directories(Window
 
 target_link_libraries(Window
     PUBLIC
-        Logger
+        spdlog::spdlog
         Bitmaps
         # Freetype::Freetype
 )

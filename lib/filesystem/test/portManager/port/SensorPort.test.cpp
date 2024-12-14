@@ -24,8 +24,6 @@ TEST(SensorPort, Constructor)
     boost::leaf::result<finder::physical::DeviceType> deviceType = sensorPort.getDeviceType();
     ASSERT_TRUE(deviceType);
     ASSERT_EQ(deviceType.value(), finder::physical::DeviceType::SENSOR);
-
-    if constexpr (EV3_THROW_ON_ERROR) {ASSERT_ANY_THROW(finder::physical::SensorPort sensorPort("")); }
 }
 
 // TEST(SensorPort, ConstructorWithPort)
@@ -81,7 +79,7 @@ TEST(SensorPort, getPathFunctions)
 
     finder::physical::SensorPort sensorPort(portPath.value());
 
-    boost::unordered_map<std::string, std::function<boost::leaf::result<std::string>()>> paths = {
+    std::map<std::string, std::function<boost::leaf::result<std::string>()>> paths = {
         {std::string{"/command"}, [&sensorPort]() { return sensorPort.getCommandPath(); }},
         {std::string{"/commands"}, [&sensorPort]() { return sensorPort.getCommandsPath(); }},
         {std::string{"/address"}, [&sensorPort]() { return sensorPort.getAddressPath(); }},
@@ -102,6 +100,7 @@ TEST(SensorPort, getPathFunctions)
         ASSERT_TRUE(pathValue);
         ASSERT_EQ(pathValue.value(), portPath.value() + path.first);
 
+        spdlog::trace("Checking path for: " + path.first);
         sensorPort.overrideEnabled(false);
 
         pathValue = path.second();

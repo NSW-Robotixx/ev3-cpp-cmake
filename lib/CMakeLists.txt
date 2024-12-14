@@ -1,5 +1,5 @@
 add_subdirectory(physical)
-add_subdirectory(log)
+# add_subdirectory(log)
 add_subdirectory(math)
 add_subdirectory(server)
 add_subdirectory(utility)

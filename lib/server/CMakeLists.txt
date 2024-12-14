@@ -18,5 +18,4 @@ target_include_directories(ServerManager
 target_link_libraries(ServerManager 
     PUBLIC
         webServer
-        Logger
 )

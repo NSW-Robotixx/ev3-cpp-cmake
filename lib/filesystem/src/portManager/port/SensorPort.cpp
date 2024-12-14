@@ -94,8 +94,8 @@ namespace finder
             }
             else
             {
-                spdlog::warn(("Port is not enabled for %s"), getBasePath().value().c_str());
-                return boost::leaf::new_error(std::invalid_argument("Port is not enabled: " + getBasePath().value()));
+                spdlog::warn(("Port is not enabled for %s"), _path);
+                return boost::leaf::new_error(std::invalid_argument("Port is not enabled: " + _path));
             }
         }
 
@@ -115,8 +115,8 @@ namespace finder
             }
             else
             {
-                spdlog::warn(("Port is not enabled for %s"), getBasePath().value().c_str());
-                return boost::leaf::new_error(std::invalid_argument("Port is not enabled: " + getBasePath().value()));
+                spdlog::warn(("Port is not enabled for %s"), _path);
+                return boost::leaf::new_error(std::invalid_argument("Port is not enabled"));
             }
         }
 
@@ -136,11 +136,11 @@ namespace finder
             }
             else
             {
-                spdlog::warn(("Port is not enabled for %s"), getBasePath().value().c_str());
-                boost::leaf::new_error(std::invalid_argument("Port is not enabled: " + getBasePath().value()));
+                spdlog::warn(("Port is not enabled for %s"), _path);
+                boost::leaf::new_error(std::invalid_argument("Port is not enabled: " + _path));
             }
 
-            return boost::leaf::new_error(std::invalid_argument("Port is not enabled: " + getBasePath().value()));
+            return boost::leaf::new_error(std::invalid_argument("Port is not enabled: " + _path));
         }
 
         boost::leaf::result<path_num_values_t> SensorPort::getNumValuesPath()
@@ -159,8 +159,8 @@ namespace finder
             }
             else
             {
-                spdlog::warn(("Port is not enabled for %s"), getBasePath().value().c_str());
-                return boost::leaf::new_error(std::invalid_argument("Port is not enabled: " + getBasePath().value()));
+                spdlog::warn(("Port is not enabled for %s"), _path);
+                return boost::leaf::new_error(std::invalid_argument("Port is not enabled: " + _path));
             }
         }
 
@@ -180,8 +180,8 @@ namespace finder
             }
             else
             {
-                spdlog::warn(("Port is not enabled for %s"), getBasePath().value().c_str());
-                return boost::leaf::new_error(std::invalid_argument("Port is not enabled: " + getBasePath().value()));
+                spdlog::warn(("Port is not enabled for %s"), _path);
+                return boost::leaf::new_error(std::invalid_argument("Port is not enabled: " + _path));
             }
         }
 
@@ -189,7 +189,7 @@ namespace finder
         {
             spdlog::trace("SensorPort::getValue()");
 
-            if (isEnabled())
+            if (isEnabled() && isEnabled().value())
             {
                 if (index < 0 || index >= _file_value_path.size())
                 {
@@ -205,8 +205,8 @@ namespace finder
                     return value;
                 } 
             } 
-            spdlog::warn(("Port is not enabled for %s"), getBasePath().value().c_str());
-            return boost::leaf::new_error(std::invalid_argument("Port is not enabled: " + getBasePath().value()));
+            spdlog::warn(("Port is not enabled for %s"), _path);
+            return boost::leaf::new_error(std::invalid_argument("Port is not enabled: " + _path));
         }
 
         boost::leaf::result<void> SensorPort::setMode(sensor_mode_t mode)
@@ -268,8 +268,8 @@ namespace finder
                     return num_values;
                 }
             }
-            spdlog::warn("Port is not enabled for {}", getBasePath().value().c_str());
-            return boost::leaf::new_error(std::invalid_argument("Port is not enabled: " + getBasePath().value()));
+            spdlog::warn("Port is not enabled for {}", _path);
+            return boost::leaf::new_error(std::invalid_argument("Port is not enabled: " + _path));
         }
 
         int SensorPort::getPollMs()
@@ -286,7 +286,7 @@ namespace finder
                     return poll_ms;
                 }
             }
-            spdlog::warn(("Port is not enabled for %s"), getBasePath().value().c_str());
+            spdlog::warn("Port is not enabled for: " + _path);
             return -1;
         }
 

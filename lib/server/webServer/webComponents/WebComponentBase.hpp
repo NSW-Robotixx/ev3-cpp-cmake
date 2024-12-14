@@ -4,7 +4,7 @@
 #include <string>
 #include <vector>
 #include <memory>
-#include <Logger.hpp>
+#include <spdlog/spdlog.h>
 
 namespace finder::server::webComponents
 {

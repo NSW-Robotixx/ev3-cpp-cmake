@@ -77,14 +77,13 @@ target_include_directories(Main PUBLIC ${CMAKE_SOURCE_DIR}/lib)
 target_include_directories(Main PUBLIC ${CMAKE_SOURCE_DIR}/deps)
 
 target_link_libraries(Main
-#   Logger
 #   EV3_system
 #   EV3_gearbox
-boost::leaf
-  boost::boost
-  spdlog::spdlog
-  EV3_filesystem
-  )    
+    boost::leaf
+    boost::boost
+    spdlog::spdlog
+    EV3_filesystem
+)   
   
   
   # add all tests executable

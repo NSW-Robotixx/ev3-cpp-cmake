@@ -27,7 +27,6 @@ target_include_directories(EV3_gearbox PUBLIC ${EV3_GEARBOX_INCLUDE_DIR})
 
 target_link_libraries(EV3_gearbox
     PUBLIC
-        Logger
         EV3_filesystem
         spdlog::spdlog
         boost::leaf

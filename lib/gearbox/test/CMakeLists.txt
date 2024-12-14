@@ -45,7 +45,6 @@ target_link_libraries(EV3_gearbox_test
         boost::leaf
         boost::boost
         Eigen3::Eigen
-        # Logger
 )
 
 add_test(NAME EV3_gearbox_test COMMAND EV3_gearbox_test)

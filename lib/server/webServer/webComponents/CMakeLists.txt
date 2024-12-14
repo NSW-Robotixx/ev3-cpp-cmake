@@ -22,5 +22,5 @@ target_include_directories(webComponents
 
 target_link_libraries(webComponents
     PUBLIC
-        Logger
+        spdlog::spdlog
 )

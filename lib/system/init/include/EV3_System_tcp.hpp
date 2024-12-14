@@ -1,7 +1,6 @@
 #ifndef __EV3_SYSTEM_HPP__
 #define __EV3_SYSTEM_HPP__
 
-#include <Logger.hpp>
 #include <Vector3.hpp>
 #include <ConfigReader.hpp>
 #include <EV3_compute_tcp.hpp>
@@ -10,6 +9,8 @@
 #include <memory>
 #include <condition_variable>
 #include <tcpcat/tcpcat.h>
+
+#include <spdlog/spdlog.h>
 
 namespace finder::system
 {

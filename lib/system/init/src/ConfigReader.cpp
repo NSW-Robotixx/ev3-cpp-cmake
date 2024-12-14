@@ -11,9 +11,9 @@ namespace finder::system
 
         if (!config["destinations"])
         {
-            log::Logger::error("No destinations found in file: " + std::string(EV3_DESTINATIONS_FILE_PATH));
-            log::Logger::error("Make sure the file is formatted correctly.");
-            log::Logger::error("No destinations found, Exiting...");
+            spdlog::error("No destinations found in file: " + std::string(EV3_DESTINATIONS_FILE_PATH));
+            spdlog::error("Make sure the file is formatted correctly.");
+            spdlog::error("No destinations found, Exiting...");
             exit(-1);
             return destinations;
         }
@@ -29,9 +29,9 @@ namespace finder::system
 
         if (!file.is_open() || !file.good())
         {
-            log::Logger::error("Failed to open file: " + std::string(EV3_DESTINATIONS_FILE_PATH));
-            log::Logger::error("Make sure the file exists and is accessible.");
-            log::Logger::error("No destinations found, Exiting...");
+            spdlog::error("Failed to open file: " + std::string(EV3_DESTINATIONS_FILE_PATH));
+            spdlog::error("Make sure the file exists and is accessible.");
+            spdlog::error("No destinations found, Exiting...");
             exit(-1);
             return destinations;
         }
@@ -51,9 +51,9 @@ namespace finder::system
             }
             catch (const std::invalid_argument &e)
             {
-                log::Logger::error("Invalid destination format: " + line);
-                log::Logger::error("Make sure the file is formatted correctly.");
-                log::Logger::error("No destinations found, Exiting...");
+                spdlog::error("Invalid destination format: " + line);
+                spdlog::error("Make sure the file is formatted correctly.");
+                spdlog::error("No destinations found, Exiting...");
                 exit(-1);
                 return destinations;
             }
@@ -62,11 +62,11 @@ namespace finder::system
         file.close();
 #endif
 
-        log::Logger::info("Found destinations: ");
+        spdlog::info("Found destinations: ");
         
         for (const auto &destination : destinations)
         {
-            log::Logger::info(destination.toString());
+            spdlog::info(destination.toString());
         }
 
         return destinations;

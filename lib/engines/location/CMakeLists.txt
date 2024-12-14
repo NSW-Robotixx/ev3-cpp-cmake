@@ -9,8 +9,8 @@ target_sources(LocationEngine
     
 target_link_libraries(LocationEngine
     PUBLIC
-        Logger
         EV3_filesystem
         Vector2
         boost::boost
+        spdlog::spdlog
         )

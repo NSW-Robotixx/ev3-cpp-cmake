@@ -4,9 +4,10 @@
 #include <Vector3.hpp>
 #include <EV3_compute_local.hpp>
 #include <ConfigReader.hpp>
-#include <Logger.hpp>
 
 #include <deque>
+
+#include <spdlog/spdlog.h>
 
 #if EV3_COMPUTE_MODULE_TCP_ENABLED
 #include <EV3_System_tcp.hpp>

@@ -3,14 +3,13 @@
 #ifndef __WINDOW_HPP__
 #define __WINDOW_HPP__
 
-#include "../../EV3_conf.hpp"
+#include "../EV3_conf.hpp"
 #include <memory>
 #include <string>
 #include <atomic>
 #include <vector>
 #include <map>
 #include <iomanip>
-#include <Logger.hpp>
 #include "Screen.hpp"
 #include "bitmaps/Bitmaps.hpp"
 
@@ -174,7 +173,6 @@ namespace finder::physical::display
             int getStartY() { return y; };
             
         private:
-            static ::finder::log::Logger _logger;
             std::string name;
             int width;
             int height;

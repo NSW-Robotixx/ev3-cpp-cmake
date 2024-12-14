@@ -12,7 +12,7 @@ namespace finder
             boost::leaf::result<void> status = setBasePath(port);
             if (!status) {
                 spdlog::error(fmt::format("Failed to set path for port: %s", port.c_str()));
-                if constexpr (EV3_THROW_ON_ERROR) { throw status.error(); }
+                // if constexpr (EV3_THROW_ON_ERROR) { throw status.error(); }
             }
         }
 

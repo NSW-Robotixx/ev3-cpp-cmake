@@ -28,7 +28,6 @@ target_include_directories(EV3_position PUBLIC ${EV3_POSITION_SRC_DIR})
 
 target_link_libraries(EV3_position
     PUBLIC
-        Logger
         EV3_filesystem
         Vector2
         Vector3

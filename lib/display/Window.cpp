@@ -4,8 +4,6 @@
 
 namespace finder::physical::display
 {
-    ::finder::log::Logger Window::_logger = ::finder::log::Logger();
-
     Window::Window(std::string name, int width, int height, int x, int y) : Screen()
     {
         this->name = name;
@@ -18,7 +16,7 @@ namespace finder::physical::display
 
     Window::~Window()
     {
-        _logger.debug("Window destroyed: " + this->name);
+        spdlog::debug("Window destroyed: " + this->name);
 
 #if EV3_DISPLAY_USE_FREETYPE
         FT_Done_FreeType(ft);
@@ -175,7 +173,7 @@ namespace finder::physical::display
         this->drawLine(x1, y0, x1, y1, color);
         this->drawLine(x0, y1, x1, y1, color);
 
-        std::cout << std::hex << color << std::endl;
+        spdlog::debug(color);
 
         return 0;
     }
@@ -281,11 +279,11 @@ namespace finder::physical::display
         for (int i = 0; i < text.size(); i++)
         {
             int ascii = static_cast<int>(text[i]) - 97;
-            _logger.debug("Ascii version of character: " + std::to_string(ascii));
+            spdlog::debug("Ascii version of character: " + std::to_string(ascii));
 
             if (ascii < 0 || ascii >= bitmaps::Keyboard::Keyboard_images.size()) 
             {
-                _logger.warn("Character not found in font: " + std::to_string(text[i]) + " ascii: " + std::to_string(ascii));
+                spdlog::warn("Character not found in font: " + std::to_string(text[i]) + " ascii: " + std::to_string(ascii));
                 continue;
             }
 
@@ -295,7 +293,7 @@ namespace finder::physical::display
                 ypos += bitmaps::Keyboard::Keyboard_images[ascii]->height + 1;
             }
 
-            _logger.debug("Drawing character: " + std::to_string(text[i]) + " at: " + std::to_string(xpos) + ", " + std::to_string(ypos));
+            spdlog::debug("Drawing character: " + std::to_string(text[i]) + " at: " + std::to_string(xpos) + ", " + std::to_string(ypos));
             this->drawBitmap(xpos, ypos, bitmaps::Keyboard::Keyboard_images[ascii]);
             xpos += bitmaps::Keyboard::Keyboard_images[ascii]->width + 1;
         }
@@ -307,9 +305,9 @@ namespace finder::physical::display
 
     int Window::drawBitmap(int x, int y, std::shared_ptr<bitmaps::ImageFormat> bitmap)
     {
-        _logger.debug("Drawing bitmap at: " + std::to_string(x) + ", " + std::to_string(y));
-        _logger.debug("Bitmap width: " + std::to_string(bitmap->width));
-        _logger.debug("Bitmap height: " + std::to_string(bitmap->height));
+        spdlog::debug("Drawing bitmap at: " + std::to_string(x) + ", " + std::to_string(y));
+        spdlog::debug("Bitmap width: " + std::to_string(bitmap->width));
+        spdlog::debug("Bitmap height: " + std::to_string(bitmap->height));
         for (int i = 0; i < bitmap->height; i++)
         {
             for (int j = 0; j < bitmap->width; j++)
@@ -333,7 +331,7 @@ namespace finder::physical::display
     {
         fillScreen(color);
 
-        _logger.debug("Filled window with color: " + std::to_string(color));
+        spdlog::debug("Filled window with color: " + std::to_string(color));
         return 0;
     }
 } // namespace finder::physical::display
