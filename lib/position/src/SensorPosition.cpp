@@ -40,7 +40,6 @@ namespace finder::position {
 
     void SensorPosition::init() {
         sensorManager.addEventListeners(DeviceID::ANY_SENSOR, &update);
-        MotorManager::onDirectionChange(&movementDirectionChange);
     }
     
     void SensorPosition::movementDirectionChange(TurnDirection direction)

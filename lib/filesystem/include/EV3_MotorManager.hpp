@@ -14,14 +14,6 @@
 
 namespace finder::physical
 {
-
-    /// @brief Enum for launch types
-    enum struct LaunchType
-    {
-        IMMEDIATE = 0,
-        DEFFERED = 1,
-    };
-
     /// @brief Enum for turn directions
     enum struct TurnDirection
     {
@@ -40,64 +32,61 @@ namespace finder::physical
             MotorManager(std::string portBasePath);
             ~MotorManager();
 
-            /// @brief Set the speed of a motor
-            /// @param motor Which motor to set the speed for
-            /// @param speed Speed to set the motor to. Positive for forward, negative for backward. Has to be less than or equal to max speed. See getMaxSpeed().
-            static void setMotorSpeed(DeviceID motor, int speed);
+            /// @brief Set the speed of the drive motors
+            /// @param speed Speed of the motors
+            void setSpeed(int speed);
 
-            /// @brief Move the robot forward.
-            /// @param launch Async or not.
-            /// @param speed Max speed to move the motor at
-            /// @param distance Distance to move.
-            /// @param stopCallback Function to call when the movement has finished.
-            /// @return boost::leaf::result<void>
-            boost::leaf::result<void> moveForward(LaunchType launch, int speed, int distance, std::function<void()> stopCallback);
+            /// @brief Set the duty cycle of the drive motors
+            /// @param dutyCycle Duty cycle of the motors
+            void setDutyCycle(int dutyCycle);
 
-            /// @brief Move the robot backward.
-            /// @param launch Async or not.
-            /// @param speed Max speed to move at
-            /// @param distance 
-            /// @param stopCallback 
-            /// @return boost::leaf::result<void>
-            boost::leaf::result<void> moveBackward(LaunchType launch, int speed, int distance, std::function<void()> stopCallback);
+            /// @brief Set the duty cycle of the drive motors
+            /// @param dutyCycle Duty cycle of the motors
+            void setDutyCycle(int dutyCycleLeft, int dutyCycleRight);
 
-            /// @brief Turn the robot left.
-            /// @return boost::leaf::result<void>
-            /// @param launch Launch type
-            /// @param speed Speed to turn at
+            /// @brief Move the robot forward
+            /// @param distance Distance to move
+            /// @param speed Speed of the motors
+            void moveForward(int distance, int speed);
+
+            /// @brief Move the robot direct forward
+            /// @param speed Speed of the motors
+            void moveForwardDirect(int speed);
+
+            /// @brief Move the robot direct forward
+            /// @param speed Speed of the motors
+            void moveForwardDirect(int speedLeft, int speedRight);
+
+            /// @brief Move the robot backward
+            /// @param distance Distance to move
+            /// @param speed Speed of the motors
+            void moveBackward(int distance, int speed);
+
+            /// @brief Turn the robot
+            /// @param direction Direction to turn
             /// @param distance Distance to turn
-            /// @param stopCallback Function to call when the turn has finished.
-            /// @return boost::leaf::result<void>
-            static boost::leaf::result<void> turnLeft(LaunchType launch, int speed, int distance, std::function<void()> stopCallback);
+            /// @param speed Speed of the motors
+            void turn(TurnDirection direction, int distance, int speed);
 
-            /// @brief Turn the robot right.
-            /// @return boost::leaf::result<void>
-            /// @param launch Launch type
-            /// @param speed Speed to turn at
-            /// @param distance Distance to turn
-            /// @param stopCallback Function to call when the turn has finished.
-            /// @return boost::leaf::result<void>
-            static boost::leaf::result<void> turnRight(LaunchType launch, int speed, int distance, std::function<void()> stopCallback);
+            /// @brief Stop the motors
+            void stop();
 
-            /// @brief Callback for when the direction changes
-            /// @param callback Function to call when the direction changes
-            static void onDirectionChange(std::function<void(TurnDirection)> callback);
+            /// @brief Get the distance of motor
+            /// @param port Port of the motor
+            /// @return Distance of the motor
+            boost::leaf::result<int> getPosition(DeviceID port);
 
-            /// @brief Get the max speed of the motors
-            /// @return The max speed of the motors
-            static int getMaxSpeed();
+            /// @brief Get the speed of motor
+            /// @param port Port of the motor
+            /// @return Speed of the motor
+            boost::leaf::result<int> getSpeed(DeviceID port);
 
-        private:
-            static boost::leaf::result<void> move(LaunchType launch, int speed, int distance, std::function<void()> stopCallback);
-            static boost::leaf::result<void> turn(LaunchType launch, int speed, int distance, std::function<void()> stopCallback, TurnDirection direction);
+            /// @brief Get the state of the motor
+            /// @param port Port of the motor
+            /// @return State of the motor
+            boost::leaf::result<std::vector<MotorState>> getState(DeviceID port);
 
-            static boost::leaf::result<void> moveNow(int speed, int distance, std::function<void()> stopCallback);
-            // static void moveAsync(int speed, int distance, std::function<void()> stopCallback, DeviceID motor);
-
-            static TurnDirection _prevTurnDirection;
-
-            static std::vector<std::function<void(TurnDirection)>> _directionChangeListeners;
-    };
+            };
 }
 
 

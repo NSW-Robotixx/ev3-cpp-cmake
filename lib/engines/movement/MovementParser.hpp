@@ -1,5 +1,3 @@
-// missing dependencies
-
 // #ifndef __MOVEMENT_PARSER_HPP__
 // #define __MOVEMENT_PARSER_HPP__
 
@@ -21,7 +19,6 @@
 //             void parse(math::Vector2 destination);
 
 //         private:
-//             robot::RobotMovement _robotMovement;
 //     };
 // } // namespace finder::engines::movement
 

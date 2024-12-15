@@ -18,4 +18,5 @@ target_link_libraries(MovementEngine
         RobotMovement
         EV3_compute
         spdlog::spdlog
+        boost::leaf
     )

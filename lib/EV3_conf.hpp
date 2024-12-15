@@ -3,6 +3,7 @@
 
     // general settings
     constexpr bool EV3_THROW_ON_ERROR = true;
+    constexpr bool EV3_DETAILED_LOGGING = true;
 
     // map the physical ports to the internal ports
     typedef char DevicePort;

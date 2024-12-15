@@ -518,6 +518,21 @@ namespace finder
             return boost::leaf::result<void>();
         }
 
+        boost::leaf::result<void> MotorPort::waitUntilStopped()
+        {
+            while (true) {
+                std::vector<MotorState> states = getState();
+                if (std::find(states.begin(), states.end(), MotorState::STOPPED) != states.end()) {
+                    if constexpr (EV3_DETAILED_LOGGING) {
+                        spdlog::info("MotorPort::waitUntilStopped() still running: "+ std::to_string(getPosition()));
+                    } else {
+                        spdlog::info("MotorPort::waitUntilStopped() still running");
+                    }
+                    return boost::leaf::result<void>();
+                }
+            }
+        }
+
         boost::leaf::result<void> MotorPort::reset()
         {
             spdlog::trace("MotorPort::reset()");

@@ -3,6 +3,7 @@
 
 #include <portManager/port/Port.hpp>
 #include "../../EV3_macros.hpp"
+#include "../../EV3_conf.hpp" 
 #include <filesystem>
 #include <vector>
 #include <future>
@@ -162,6 +163,10 @@ namespace finder
                 /// @param abs_position_sp Position to move to in pulses.
                 /// @return boost::leaf::result<void>
                 boost::leaf::result<void> moveToAbsPosition(int abs_position_sp);
+
+                /// @brief Wait until the motor has stopped moving.
+                /// @return boost::leaf::result<void>
+                boost::leaf::result<void> waitUntilStopped();
 
                 /// @brief Reset the motor to its default state. This will stop the motor. Reinit file streams.
                 /// @return boost::leaf::result<void>
