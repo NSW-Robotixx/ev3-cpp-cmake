@@ -114,7 +114,7 @@ namespace finder::physical
             }
         }
 
-        if (_motorTool->getPosition() <= position - EV3_GEAR_BLOCKED_TOLERANCE && _motorTool->getPosition() >= position + EV3_GEAR_BLOCKED_TOLERANCE)
+        if (_motorTool->getPosition() <= position + EV3_GEAR_BLOCKED_TOLERANCE && _motorTool->getPosition() >= position - EV3_GEAR_BLOCKED_TOLERANCE)
         {
             spdlog::debug("ToolControl::isToolBlocked(): Inferring tool is blocked, position has not changed");
             isBlocked = true;

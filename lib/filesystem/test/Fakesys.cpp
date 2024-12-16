@@ -26,6 +26,7 @@ namespace finder::physical::test
         // check if init is required
         if (std::filesystem::exists(_basePath)) 
         {
+            spdlog::info("FakeSys already initialized, skipping init");
             _initialized = true;
             _initializationIsPatial = true;
             return;
@@ -288,7 +289,7 @@ namespace finder::physical::test
         writeToFile(relPath + "/duty_cycle", 0);
         writeToFile(relPath + "/duty_cycle_sp", 0);
         writeToFile(relPath + "/polarity", "normal");
-        writeToFile(relPath + "/position", 0);
+        writeToFile(relPath + "/position", 55);
         writeToFile(relPath + "/position_sp", 0);
         writeToFile(relPath + "/max_speed", 1050);
         writeToFile(relPath + "/speed", 0);

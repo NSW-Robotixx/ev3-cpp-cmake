@@ -11,9 +11,11 @@ namespace finder::physical
     {
         using namespace finder::physical::test;
 
-        finder::physical::test::FakeSys::init();
+        finder::physical::test::FakeSys::reinit();
 
         DeviceManager device_manager = DeviceManager(FakeSys::getWorkingDir());
+
+        device_manager.reinit();
 
         GearboxManager gearbox_manager = GearboxManager();
         gearbox_manager.calibrate();

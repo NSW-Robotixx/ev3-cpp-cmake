@@ -12,7 +12,8 @@ namespace finder::physical
         EV3_GEARBOX_GEAR_1 = EV3_GEARBOX_GEAR_POS_1,
         EV3_GEARBOX_GEAR_2 = EV3_GEARBOX_GEAR_POS_2,
         EV3_GEARBOX_GEAR_3 = EV3_GEARBOX_GEAR_POS_3,
-        EV3_GEARBOX_GEAR_4 = EV3_GEARBOX_GEAR_POS_4
+        EV3_GEARBOX_GEAR_4 = EV3_GEARBOX_GEAR_POS_4,
+        EV3_GEARBOX_GEAR_NONE = 0
     };
 
     /// @brief Gearbox controller
@@ -40,7 +41,7 @@ namespace finder::physical
 
     
         private:
-            GearboxGears _currentGear;
+            GearboxGears _currentGear = GearboxGears::EV3_GEARBOX_GEAR_NONE;
 
             static int _gearStartOffset;
     };

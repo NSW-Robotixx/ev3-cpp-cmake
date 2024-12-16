@@ -391,7 +391,8 @@ namespace finder
             if (isEnabled() && *isEnabled()) {
                 if (_file_position_path->is_open()) {
                     if (!_file_position_path->bad()) {
-                        int position;
+                        int position = 0;
+                        _file_position_path->seekg(0);
                         *_file_position_path >> position;
 
                         spdlog::debug(("POSITION.GET: WITH_RESULT: {}"), position);

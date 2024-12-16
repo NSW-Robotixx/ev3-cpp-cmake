@@ -14,6 +14,7 @@
 // 3rd party imports
 #include <gtest/gtest.h>
 #include <boost/leaf.hpp>
+#include <spdlog/spdlog.h>
 
 // other imports
 #include <sys/inotify.h>
