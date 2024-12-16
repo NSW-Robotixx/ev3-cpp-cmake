@@ -3,7 +3,7 @@ find_package(spdlog REQUIRED)
 find_package(boost-leaf)
 
 set(EV3_GEARBOX_TEST_SRC
-    ${EV3_GEARBOX_TEST_DIR}/
+    ${EV3_GEARBOX_TEST_DIR}/EV3_Gearbox.test.cpp
 )
 
 get_property(EV3_TESTS_SRC GLOBAL PROPERTY EV3_TESTS_SRC)
@@ -40,6 +40,7 @@ target_include_directories(EV3_gearbox_test PRIVATE ${EV3_GEARBOX_SRC_DIR})
 target_link_libraries(EV3_gearbox_test
     PUBLIC
         GTest::gtest
+        EV3_gearbox
         EV3_filesystem
         spdlog::spdlog
         boost::leaf

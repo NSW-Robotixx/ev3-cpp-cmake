@@ -53,7 +53,7 @@ TEST(MotorPort, getPathFunctions)
     boost::unordered_map<std::string, std::function<boost::leaf::result<std::string>()>> paths = {
         {std::string{"/command"}, [&motorPort]() { return motorPort.getCommandPath(); }},
         {std::string{"/commands"}, [&motorPort]() { return motorPort.getCommandsPath(); }},
-        {std::string{"/duty_cycle"}, [&motorPort]() { return motorPort.getDutyCyclePath(); }},
+        {std::string{"/duty_cycle_sp"}, [&motorPort]() { return motorPort.getDutyCyclePath(); }},
         {std::string{"/position"}, [&motorPort]() { return motorPort.getPositionPath(); }},
         {std::string{"/position_sp"}, [&motorPort]() { return motorPort.getPositionSpPath(); }},
         {std::string{"/speed"}, [&motorPort]() { return motorPort.getSpeedPath(); }},

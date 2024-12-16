@@ -97,7 +97,7 @@ namespace finder
             if (isEnabled() && *isEnabled()) {
                 boost::leaf::result<path_duty_cycle_t> path = getBasePath();
                 if (path) {
-                    return path.value() + "/duty_cycle";
+                    return path.value() + "/duty_cycle_sp";
                 } else {
                     return boost::leaf::new_error(std::invalid_argument("Failed to get base path"));
                 }
@@ -304,26 +304,27 @@ namespace finder
         boost::leaf::result<void> MotorPort::setCommand(MotorCommand command)
         {
             spdlog::trace("MotorPort::setCommand()");
+
             if (command == MotorCommand::STOP) {
-                spdlog::debug(("Setting command to stop for"));
+                spdlog::debug(("Setting command to stop for: " + _path));
                 *this->_file_command_path << "stop";
             } else if (command == MotorCommand::RUN_DIRECT) {
-                spdlog::debug(("Setting command to run-direct for"));
+                spdlog::debug(("Setting command to run-direct for" + _path));
                 *this->_file_command_path << "run-direct";
             } else if (command == MotorCommand::RUN_FOREVER) {
-                spdlog::debug(("Setting command to run-forever for"));
+                spdlog::debug(("Setting command to run-forever for" + _path));
                 *this->_file_command_path << "run-forever";
             } else if (command == MotorCommand::RUN_TO_ABS_POS) {
-                spdlog::debug(("Setting command to run-to-abs-pos for"));
+                spdlog::debug(("Setting command to run-to-abs-pos for" + _path));
                 *this->_file_command_path << "run-to-abs-pos";
             } else if (command == MotorCommand::RUN_TO_REL_POS) {
-                spdlog::debug(("Setting command to run-to-rel-pos for"));
+                spdlog::debug(("Setting command to run-to-rel-pos for" + _path));
                 *this->_file_command_path << "run-to-rel-pos";
             } else if (command == MotorCommand::RUN_TIMED) {
-                spdlog::debug(("Setting command to run-timed for"));
+                spdlog::debug(("Setting command to run-timed for" + _path));
                 *this->_file_command_path << "run-timed";
             } else if (command == MotorCommand::RESET) {
-                spdlog::debug(("Setting command to reset for"));
+                spdlog::debug(("Setting command to reset for" + _path));
                 *this->_file_command_path << "reset";
             } else {
                 spdlog::error("MotorPort failed to set command for");
@@ -497,7 +498,7 @@ namespace finder
 
         boost::leaf::result<void> MotorPort::moveToAbsPosition(int abs_position_sp)
         {
-            spdlog::trace("MotorPort::moveToPosition()");
+            spdlog::trace("MotorPort::moveToAbsPosition()");
 
             if (isEnabled() && *isEnabled()) {
                 boost::leaf::result<void> status = setPositionSp(abs_position_sp);

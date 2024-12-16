@@ -4,6 +4,7 @@
     // general settings
     constexpr bool EV3_THROW_ON_ERROR = true;
     constexpr bool EV3_DETAILED_LOGGING = true;
+    #define EV3_DEFAULT_PORT_BASE_PATH = "/sys/class/";
 
     // map the physical ports to the internal ports
     typedef char DevicePort;
@@ -21,13 +22,19 @@
 
     constexpr char EV3_PORT_GEARBOX_SHIFT = EV3_PORT_OUTPUT_D;
     
+    // define the gear positions of the gearbox
     constexpr unsigned int EV3_GEARBOX_GEAR_POS_1  = 0;
     constexpr unsigned int EV3_GEARBOX_GEAR_POS_2  = 90;
     constexpr unsigned int EV3_GEARBOX_GEAR_POS_3  = 180;
     constexpr unsigned int EV3_GEARBOX_GEAR_POS_4  = 270;
 
+    // define the speed for the gearbox shift motor
+    constexpr unsigned int EV3_GEARBOX_SHIFT_SPEED = 500;
+
+    // define the tolerance for the gearbox
     constexpr unsigned int EV3_GEARBOX_GEAR_POS_TOLERANCE = 5;
 
+    // define the timeout for the blocked gear
     constexpr unsigned int EV3_GEAR_BLOCKED_TIMEOUT_MS = 1000;
 
     // define the tolerance for the gyro sensor

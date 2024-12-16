@@ -42,6 +42,8 @@ namespace finder::physical
 
     boost::leaf::result<void> ToolControl::moveToolForever(int speed)
     {
+        spdlog::trace("ToolControl::moveToolForever(): Moving tool forever at speed {}", speed);
+
         if (!isInitialized())
         {
             return boost::leaf::new_error(std::logic_error("ToolControl not initialized"));
@@ -62,6 +64,8 @@ namespace finder::physical
 
     boost::leaf::result<void> ToolControl::stopTool()
     {
+        spdlog::trace("ToolControl::stopTool(): Stopping tool");
+
         if (!isInitialized())
         {
             return boost::leaf::new_error(std::logic_error("ToolControl not initialized"));
@@ -72,36 +76,46 @@ namespace finder::physical
 
     boost::leaf::result<bool> ToolControl::isToolBlocked()
     {
+        spdlog::trace("ToolControl::isToolBlocked(): Checking if tool is blocked");
+
         bool isBlocked = false;
 
         if (!isInitialized())
         {
+            spdlog::error("DeviceManager not initialized");
             return boost::leaf::new_error(std::logic_error("ToolControl not initialized"));
         }
 
-        boost::leaf::result<void> status = this->moveToolForever(100);
+        spdlog::debug("ToolControl::isToolBlocked(): Moving tool to check if it is blocked");
+        boost::leaf::result<void> status = this->moveToolForever(400);
         if (!status)
         {
+            spdlog::error("ToolControl::isToolBlocked(): Failed to move tool");
             return status.error();
         }
 
+        spdlog::debug("ToolControl::isToolBlocked(): Waiting for tool to move");
         std::this_thread::sleep_until(std::chrono::system_clock::now() + std::chrono::milliseconds(EV3_GEAR_BLOCKED_TIMEOUT_MS));
 
+        spdlog::debug("ToolControl::isToolBlocked(): Checking if tool is blocked");
         std::vector<MotorState> states = _motorTool->getState();
 
         for (MotorState state : states)
         {
             if (state == MotorState::OVERLOADED || state == MotorState::STALLED)
             {
+                spdlog::debug("ToolControl::isToolBlocked(): Tool is blocked");
                 isBlocked = true;
                 break;
             }
         }
 
-        status = (this->stopTool());
+        spdlog::debug("ToolControl::isToolBlocked(): Stopping tool");
+        status = this->stopTool();
 
-        if (status) 
+        if (!status) 
         {
+            spdlog::debug("ToolControl::isToolBlocked(): Failed to stop tool");
             return status.error();
         }
 

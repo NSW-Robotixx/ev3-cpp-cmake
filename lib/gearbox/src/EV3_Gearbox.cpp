@@ -5,9 +5,11 @@ namespace finder::physical
 {
     int GearboxManager::_gearStartOffset = 0;
 
-    GearboxManager::GearboxManager()
+    GearboxManager::GearboxManager() : DeviceManager()
     {
-        
+        spdlog::trace("Initializing GearboxManager");
+
+        // this->init("/sys/class/");
     }
 
     GearboxManager::~GearboxManager()
@@ -16,12 +18,18 @@ namespace finder::physical
 
     boost::leaf::result<void> GearboxManager::setGear(GearboxGears gear)
     {
+        spdlog::trace("Setting gear to {}", gear);
+
         if (!isInitialized())
         {
+            spdlog::error("GearboxManager not initialized");
             return boost::leaf::new_error(std::logic_error("GearboxManager not initialized"));
         }
 
-        boost::leaf::result<void> status = _motorShift->moveToAbsPosition(gear);
+        _motorShift->setSpeed(EV3_GEARBOX_SHIFT_SPEED);
+
+        boost::leaf::result<void> status = _motorShift->moveToAbsPosition(gear + _gearStartOffset);
+
         if (!status)
         {
             return status;
@@ -67,8 +75,11 @@ namespace finder::physical
 
     boost::leaf::result<void> GearboxManager::calibrate()
     {
+        spdlog::trace("Calibrating gearbox");
+
         if (!isInitialized())
         {
+            spdlog::error("GearboxManager not initialized");
             return boost::leaf::new_error(std::logic_error("GearboxManager not initialized"));
         }
 
@@ -81,6 +92,8 @@ namespace finder::physical
 
         for (GearboxGears gear : gears)
         {
+            spdlog::trace("Calibrating gear {}", gear);
+
             boost::leaf::result<void> status = setGear(gear);
             if (!status)
             {
@@ -100,7 +113,8 @@ namespace finder::physical
             }   
         }
 
-        return boost::leaf::new_error(std::invalid_argument("Function not implemented"));
+        // return boost::leaf::new_error(std::invalid_argument("Function not implemented"));
+        return boost::leaf::result<void>();
     }
 
 } // namespace finder::physical
