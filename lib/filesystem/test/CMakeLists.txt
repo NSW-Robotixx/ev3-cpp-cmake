@@ -54,3 +54,36 @@ target_link_libraries(EV3_filesystem_test
 )
 
 add_test(NAME EV3_filesystem_test COMMAND EV3_filesystem_test)
+
+
+## Add the fakesys library
+
+set(EV3_FILESYSTEM_FAKESYS_SRC
+    ${EV3_FILESYSTEM_TEST_DIR}/Fakesys.cpp
+)
+
+set(EV3_FILESYSTEM_FAKESYS_HDR
+    ${EV3_FILESYSTEM_INCLUDE_DIR}/Fakesys.hpp
+)
+
+add_library(EV3_filesystem_fakesys ${EV3_FILESYSTEM_FAKESYS_SRC})
+
+target_sources(EV3_filesystem_fakesys
+    PRIVATE
+        ${EV3_FILESYSTEM_FAKESYS_SRC}
+    PUBLIC
+        ${EV3_FILESYSTEM_FAKESYS_HDR}
+)
+
+target_include_directories(EV3_filesystem_fakesys PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
+target_include_directories(EV3_filesystem_fakesys PUBLIC ${EV3_FILESYSTEM_INCLUDE_DIR})
+
+target_link_libraries(EV3_filesystem_fakesys
+    PUBLIC
+        EV3_filesystem
+        GTest::gtest
+        spdlog::spdlog
+        Eigen3::Eigen
+        boost::leaf
+        boost::boost
+)

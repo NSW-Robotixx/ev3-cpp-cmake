@@ -34,6 +34,9 @@
     // define the tolerance for the gearbox
     constexpr unsigned int EV3_GEARBOX_GEAR_POS_TOLERANCE = 5;
 
+    // define the tolerance for the blocked gear
+    constexpr unsigned int EV3_GEAR_BLOCKED_TOLERANCE = 5;
+
     // define the timeout for the blocked gear
     constexpr unsigned int EV3_GEAR_BLOCKED_TIMEOUT_MS = 1000;
 

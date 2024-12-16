@@ -373,7 +373,7 @@ namespace finder
                         int position;
                         *_file_position_path >> position;
 
-                        spdlog::debug(("POSITION.GET: WITH_RESULT: %d"), position);
+                        spdlog::debug(("POSITION.GET: WITH_RESULT: {}"), position);
                         return position;
                     }
                     spdlog::error("MotorPort failed to get position, File bad for");

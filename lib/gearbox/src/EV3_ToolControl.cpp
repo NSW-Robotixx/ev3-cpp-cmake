@@ -86,6 +86,10 @@ namespace finder::physical
             return boost::leaf::new_error(std::logic_error("ToolControl not initialized"));
         }
 
+        int position = _motorTool->getPosition();
+        spdlog::debug("ToolControl::isToolBlocked(): Tool position: {}", position);
+
+
         spdlog::debug("ToolControl::isToolBlocked(): Moving tool to check if it is blocked");
         boost::leaf::result<void> status = this->moveToolForever(400);
         if (!status)
@@ -110,6 +114,12 @@ namespace finder::physical
             }
         }
 
+        if (_motorTool->getPosition() <= position - EV3_GEAR_BLOCKED_TOLERANCE && _motorTool->getPosition() >= position + EV3_GEAR_BLOCKED_TOLERANCE)
+        {
+            spdlog::debug("ToolControl::isToolBlocked(): Inferring tool is blocked, position has not changed");
+            isBlocked = true;
+        }
+   
         spdlog::debug("ToolControl::isToolBlocked(): Stopping tool");
         status = this->stopTool();
 

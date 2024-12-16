@@ -28,6 +28,7 @@ target_include_directories(EV3_gearbox PUBLIC ${EV3_GEARBOX_INCLUDE_DIR})
 target_link_libraries(EV3_gearbox
     PUBLIC
         EV3_filesystem
+        EV3_filesystem_fakesys
         spdlog::spdlog
         boost::leaf
         boost::boost

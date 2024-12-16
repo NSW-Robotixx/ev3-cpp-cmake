@@ -62,6 +62,7 @@ GTest::gtest_main
 boost::leaf
 boost::boost 
 spdlog::spdlog
+EV3_filesystem
 )
 
 add_subdirectory(lib)
