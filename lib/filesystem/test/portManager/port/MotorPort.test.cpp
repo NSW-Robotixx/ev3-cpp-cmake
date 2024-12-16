@@ -130,3 +130,55 @@ TEST(MotorPort, filestreams)
     ASSERT_EQ(stop_action, "hold");
     ASSERT_EQ(motorPort.getCountPerRotation(), 360);
 }
+TEST(MotorPort, GetSpeed)
+{
+    using namespace finder::physical::test;
+
+    finder::physical::MotorPort motorPort(FakeSys::getWorkingDir() + "/tacho-motor/motor0");
+
+    motorPort.setSpeed(100);
+    int speed = motorPort.getSpeed();
+    ASSERT_EQ(speed, 0);
+}
+
+TEST(MotorPort, GetPosition)
+{
+    using namespace finder::physical::test;
+
+    finder::physical::MotorPort motorPort(FakeSys::getWorkingDir() + "/tacho-motor/motor0");
+
+    motorPort.setPositionSp(200);
+    int position = motorPort.getPosition();
+    ASSERT_EQ(position, 55);
+}
+
+TEST(MotorPort, GetCountPerRotation)
+{
+    using namespace finder::physical::test;
+
+    finder::physical::MotorPort motorPort(FakeSys::getWorkingDir() + "/tacho-motor/motor0");
+
+    int countPerRotation = motorPort.getCountPerRotation();
+    ASSERT_EQ(countPerRotation, 360);
+}
+
+TEST(MotorPort, GetMaxSpeed)
+{
+    using namespace finder::physical::test;
+
+    finder::physical::MotorPort motorPort(FakeSys::getWorkingDir() + "/tacho-motor/motor0");
+
+    int maxSpeed = motorPort.getMaxSpeed();
+    ASSERT_EQ(maxSpeed, 1050); // Assuming 1050 is the max speed set in the fake system
+}
+
+TEST(MotorPort, GetState)
+{
+    using namespace finder::physical::test;
+
+    finder::physical::MotorPort motorPort(FakeSys::getWorkingDir() + "/tacho-motor/motor0");
+
+    motorPort.setCommand(finder::physical::MotorCommand::RUN_FOREVER);
+    std::vector<finder::physical::MotorState> states = motorPort.getState();
+    ASSERT_TRUE(std::find(states.begin(), states.end(), finder::physical::MotorState::RUNNING) != states.end());
+}
