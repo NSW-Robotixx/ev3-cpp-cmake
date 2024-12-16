@@ -25,6 +25,27 @@ namespace finder
             }
         }
 
+        boost::leaf::result<void> MotorPort::reinit()
+        {
+            spdlog::trace("MotorPort reinit()");
+
+            _file_address_path.reset();
+            _file_command_path.reset();
+            _file_commands_path.reset();
+            _file_duty_cycle_path.reset();
+            _file_polarity_path.reset();
+            _file_position_path.reset();
+            _file_position_sp_path.reset();
+            _file_speed_path.reset();
+            _file_speed_sp_path.reset();
+            _file_state_path.reset();
+            _file_stop_action_path.reset();
+            _file_count_per_rotation_path.reset();
+            _file_max_speed_path.reset();
+            
+            return init();
+        }
+
         boost::leaf::result<path_speed_t> MotorPort::getSpeedSpPath()
         {
             spdlog::trace("MotorPort::getSpeedSpPath()");

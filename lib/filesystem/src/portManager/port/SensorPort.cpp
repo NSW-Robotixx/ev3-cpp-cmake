@@ -1,5 +1,6 @@
 // #include <physical/portManager/port/SensorPort.hpp>
 #include "./SensorPort.hpp"
+#include "SensorPort.hpp"
 
 namespace finder
 {
@@ -76,6 +77,26 @@ namespace finder
                 return success.error();
             }
             return status;
+        }
+
+        boost::leaf::result<void> SensorPort::reinit()
+        {
+            _file_address_path.reset();
+            _file_command_path.reset();
+            _file_commands_path.reset();
+            _file_mode_path.reset();
+            _file_modes_path.reset();
+            _file_num_values_path.reset();
+            _file_poll_ms_path.reset();
+            
+            for (auto& file : _file_value_path)
+            {
+                file.reset();
+            }
+
+            _file_value_path.clear();
+
+            return initFiles();
         }
 
         boost::leaf::result<path_value_t> SensorPort::getValuePath(int index)

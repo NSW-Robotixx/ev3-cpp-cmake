@@ -19,6 +19,10 @@ namespace finder
                 DeviceManager(std::string portBasePath);
                 ~DeviceManager();
 
+                /// @brief Reinitialize the DeviceManager
+                void reinit();
+
+
             protected:
                 DeviceManager();
 

@@ -65,6 +65,10 @@ namespace finder
                 /// @param port Existing port to initialize a new MotorPort.
                 MotorPort(std::shared_ptr<Port> port);
 
+                /// @brief Reinitialize the MotorPort
+                /// @return boost::leaf::result<void>
+                boost::leaf::result<void> reinit() override;
+
                 /// @brief Get the path for reading the speed of the motor using the initialized path.
                 /// @return The Path for reading the speed of the motor.
                 boost::leaf::result<path_speed_t> getSpeedPath();

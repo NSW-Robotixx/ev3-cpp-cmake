@@ -57,7 +57,16 @@ namespace finder
             }
             return boost::leaf::result<void>();
         }
-        
+
+        boost::leaf::result<void> Port::reinit()
+        {
+            _file_address_path.reset();
+            _file_command_path.reset();
+            _file_commands_path.reset();
+
+            return initFiles();
+        }
+
         boost::leaf::result<path_port_t> Port::getBasePath()
         {
             // spdlog::trace("Port::getBasePath()");

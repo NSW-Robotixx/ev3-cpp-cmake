@@ -26,6 +26,11 @@ namespace finder
         {
         }
 
+        void DeviceManager::reinit()
+        {
+                    
+        }
+
         DeviceManager::DeviceManager()
         {
             spdlog::trace("protected DeviceManager::DeviceManager()");

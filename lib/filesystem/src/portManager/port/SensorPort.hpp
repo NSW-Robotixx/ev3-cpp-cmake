@@ -28,6 +28,9 @@ namespace finder
                 /// @param path The path to set
                 boost::leaf::result<void> setBasePath(const path_port_t& path) override;
 
+                /// @brief Reinitialize the SensorPort
+                boost::leaf::result<void> reinit() override;
+
                 /// @brief Get the value path of the port
                 /// @param index Index of the value
                 /// @return The value path
