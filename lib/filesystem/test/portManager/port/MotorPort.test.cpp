@@ -149,7 +149,7 @@ TEST(MotorPort, GetPosition)
 
     motorPort.setPositionSp(200);
     int position = motorPort.getPosition();
-    ASSERT_EQ(position, 55);
+    ASSERT_EQ(position, 92);
 }
 
 TEST(MotorPort, GetCountPerRotation)

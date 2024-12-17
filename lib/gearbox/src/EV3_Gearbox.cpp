@@ -90,6 +90,9 @@ namespace finder::physical
                                              GearboxGears::EV3_GEARBOX_GEAR_3,
                                              GearboxGears::EV3_GEARBOX_GEAR_4};
 
+
+        bool _foundBlocked = false;
+
         for (GearboxGears gear : gears)
         {
             spdlog::trace("Calibrating gear {}", gear);
@@ -109,7 +112,13 @@ namespace finder::physical
 
             if (statusBlocked.value())
             {
+                if (_foundBlocked)
+                {
+                    spdlog::error("Multiple gears blocked, cannot calibrate");
+                    return boost::leaf::new_error(std::runtime_error("Multiple gears blocked, cannot calibrate"));
+                }
                 _gearStartOffset = gear;
+                _foundBlocked = true;
             }   
         }
 
