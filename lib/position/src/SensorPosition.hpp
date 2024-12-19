@@ -1,4 +1,5 @@
 #include "../../EV3_conf.hpp"
+
 #include "MotorPosition.hpp"
 #include <EV3_SensorManager.hpp>
 #include <EV3_MotorManager.hpp>
@@ -56,8 +57,6 @@ namespace finder::position {
         static void updatePosition();
 
     private:
-        static SensorManager sensorManager;
-
         static math::Vector2 _sensorPosition;
         static float _angle;
 

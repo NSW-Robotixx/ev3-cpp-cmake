@@ -1,3 +1,5 @@
+#pragma once
+
 #include "../../EV3_conf.hpp"
 
 #include <Vector2.hpp>

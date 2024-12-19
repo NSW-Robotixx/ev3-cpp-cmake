@@ -16,7 +16,7 @@ namespace finder::physical
     {
         spdlog::trace("Destroying MotorManager");
 
-        this->stop();
+        stop();
     }
 
     void MotorManager::setSpeed(int speed)
@@ -29,7 +29,7 @@ namespace finder::physical
 
     void MotorManager::setDutyCycle(int dutyCycle)
     {
-        this->setDutyCycle(dutyCycle, dutyCycle);
+        setDutyCycle(dutyCycle, dutyCycle);
     }
 
     void MotorManager::setDutyCycle(int dutyCycleLeft, int dutyCycleRight)
@@ -42,7 +42,7 @@ namespace finder::physical
     {
         spdlog::trace("Moving forward " + std::to_string(distance) + " at speed " + std::to_string(speed));
 
-        this->setSpeed(speed);
+        setSpeed(speed);
 
         _motorLeft->setPositionSp(distance);
         _motorRight->setPositionSp(distance);
@@ -58,7 +58,7 @@ namespace finder::physical
 
     void MotorManager::moveForwardDirect(int speed)
     {
-        this->moveForwardDirect(speed, speed);
+        moveForwardDirect(speed, speed);
     }
 
     void MotorManager::moveForwardDirect(int speedLeft, int speedRight)
@@ -76,7 +76,7 @@ namespace finder::physical
 
     void MotorManager::moveBackward(int distance, int speed)
     {
-        this->moveForward(-distance, speed);
+        moveForward(-distance, speed);
     }
 
     void MotorManager::turn(TurnDirection direction, int angle, int speed)

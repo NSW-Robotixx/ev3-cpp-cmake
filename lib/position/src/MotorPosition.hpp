@@ -1,3 +1,5 @@
+#pragma once
+
 #include <Vector2.hpp>
 #include <EV3_MotorManager.hpp>
 
@@ -19,6 +21,10 @@ namespace finder::position
             /// @brief Get the current position of the robot
             /// @return The current position estimate of the robot
             static inline math::Vector2 getPosition() { return _position; }
+
+            /// @brief Get the current angle of the robot
+            /// @return The current angle estimate of the robot
+            static inline float getAngle() { return _angle; }
 
         private:
             static math::Vector2 _position;

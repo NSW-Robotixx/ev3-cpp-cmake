@@ -63,6 +63,7 @@ boost::leaf
 boost::boost 
 spdlog::spdlog
 EV3_filesystem
+MovementEngine
 )
 
 add_subdirectory(lib)
@@ -79,7 +80,7 @@ target_include_directories(Main PUBLIC ${CMAKE_SOURCE_DIR}/deps)
 
 target_link_libraries(Main
 #   EV3_system
-  EV3_gearbox
+    EV3_gearbox
     boost::leaf
     boost::boost
     spdlog::spdlog

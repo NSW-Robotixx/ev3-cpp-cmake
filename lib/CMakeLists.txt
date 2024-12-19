@@ -11,6 +11,7 @@ add_subdirectory(system/init)
 add_subdirectory(tcp)
 add_subdirectory(gearbox)
 add_subdirectory(display)
+add_subdirectory(movement)
 
 if (BUILD_INTERNAL_TCP_SERVER)
 endif()

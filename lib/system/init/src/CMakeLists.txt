@@ -32,6 +32,8 @@ target_link_libraries(EV3_system
     PUBLIC
         Vector3
         EV3_compute
+        EV3_position
+        MovementEngine
         yaml-cpp::yaml-cpp
         boost::boost
         spdlog::spdlog

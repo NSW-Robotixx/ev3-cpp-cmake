@@ -2,13 +2,11 @@
 #define __MOVEMENT_ENGINE_HPP__
 
 #include <Vector2.hpp>
-#include <compute/include/EV3_compute_local.hpp>
+#include <EV3_compute_local.hpp>
 #include <pf/SmoothPath.hpp>
-#include <utility/RobotMovement/RobotMovement.hpp>
-#include <utility/RobotMovement/MovementAction.hpp>
-#include <engines/location/LocationEngine.hpp>
 #include "MovementParser.hpp"
-
+#include <Position.hpp>
+#include <EV3_MotorManager.hpp>
 
 namespace finder::engines::movement
 {

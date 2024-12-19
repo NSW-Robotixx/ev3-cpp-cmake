@@ -2,8 +2,12 @@
 
 
 namespace finder::position {
+    std::deque<math::Vector3> SensorPosition::_sensorLineOrder;
+    float SensorPosition::_angle;
+    TurnDirection SensorPosition::_lastDirection;
+
     SensorPosition::SensorPosition(std::string portBasePath) {
-        sensorManager = SensorManager(portBasePath);
+        spdlog::trace("Initializing SensorPosition");
     }
 
     void SensorPosition::update(DeviceID port, int value) {
@@ -39,7 +43,7 @@ namespace finder::position {
     }
 
     void SensorPosition::init() {
-        sensorManager.addEventListeners(DeviceID::ANY_SENSOR, &update);
+        SensorManager::addEventListeners(DeviceID::ANY_SENSOR, &update);
     }
     
     void SensorPosition::movementDirectionChange(TurnDirection direction)
