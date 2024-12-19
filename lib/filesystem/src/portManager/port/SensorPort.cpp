@@ -220,9 +220,10 @@ namespace finder
                 
                 if (_file_value_path[index]->is_open())
                 {
-                    int value;
+                    int value = 0;
+                    _file_value_path[index]->seekg(0);
                     *_file_value_path[index] >> value;
-                    spdlog::info(("VALUE.GET: %s WITH_RESULT: %d"), getBasePath().value().c_str(), value);
+                    spdlog::info("VALUE.GET: " + std::string(getBasePath().value().c_str()) + " WITH VALUE: " + std::to_string(value));
                     return value;
                 } 
             } 

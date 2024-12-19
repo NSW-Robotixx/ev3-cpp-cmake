@@ -34,7 +34,7 @@ namespace finder::engines::movement
                 physical::MotorManager::turn(physical::TurnDirection::RIGHT,position::Position::getAngle() - lineAngle, 100);
             }
 
-            physical::MotorManager::moveForward(destination.distanceTo(position::Position::getPosition()), 300);
+            physical::MotorManager::moveBackward(destination.distanceTo(position::Position::getPosition()), 300);
         }
     }
 } // namespace finder::movement

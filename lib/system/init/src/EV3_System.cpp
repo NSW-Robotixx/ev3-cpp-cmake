@@ -40,6 +40,8 @@ namespace finder::system
         for (auto &point : m_path)
         {
             spdlog::info("x: " + std::to_string(point.x) + " y: " + std::to_string(point.y));
+
+            finder::engines::movement::MovementEngine::move(point); // Move to the next point
         }
         #endif
 
