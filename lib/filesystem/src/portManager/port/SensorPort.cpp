@@ -259,6 +259,7 @@ namespace finder
                 if (_file_modes_path->is_open())
                 {
                     std::string mode;
+                    _file_modes_path->seekg(0);
                     _modes.clear();
                     while (*_file_modes_path >> mode)
                     {
@@ -285,6 +286,7 @@ namespace finder
                 if (_file_num_values_path->is_open())
                 {
                     int num_values;
+                    _file_num_values_path->seekg(0);
                     *_file_num_values_path >> num_values;
                     spdlog::info("NUM_VALUES.GET: %s WITH_RESULT: %d", getBasePath().value().c_str(), num_values);
                     return num_values;
@@ -303,6 +305,7 @@ namespace finder
                 if (_file_poll_ms_path->is_open())
                 {
                     int poll_ms;
+                    _file_poll_ms_path->seekg(0);
                     *_file_poll_ms_path >> poll_ms;
                     spdlog::info(("POLL_MS.GET: %s WITH_RESULT: %d"), getBasePath().value().c_str(), poll_ms);
                     return poll_ms;
