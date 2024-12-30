@@ -81,6 +81,7 @@ namespace finder::physical
 
     void MotorManager::turn(TurnDirection direction, int angle, int speed)
     {
+        spdlog::trace("MotorManager::turn()");
         spdlog::trace("Turning " + (direction == TurnDirection::LEFT ? std::string("left") : std::string("right")) + " " + std::to_string(angle) + " at speed " + std::to_string(speed));
 
         switch (direction)
@@ -102,13 +103,13 @@ namespace finder::physical
 
         _motorLeft->setCommand(physical::MotorCommand::RUN_DIRECT);
         _motorRight->setCommand(physical::MotorCommand::RUN_DIRECT);
-
+    
 
         for (boost::leaf::result<int> result = _gyroSensor->getValue(0); result && result.value() < angle; result = _gyroSensor->getValue(0))
         {
             spdlog::trace("Current angle: " + std::to_string(result.value()));
         }
-
+    
         _motorLeft->stop();
         _motorRight->stop();
 

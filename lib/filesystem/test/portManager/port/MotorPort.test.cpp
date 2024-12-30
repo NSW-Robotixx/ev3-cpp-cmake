@@ -125,7 +125,7 @@ TEST(MotorPort, filestreams)
     ASSERT_EQ(speed, "0");
     ASSERT_EQ(position_sp, "0");
     ASSERT_EQ(duty_cycle, "0");
-    ASSERT_EQ(state, "running");
+    ASSERT_EQ(state, "holding");
     ASSERT_EQ(polarity, "inversed");
     ASSERT_EQ(stop_action, "hold");
     ASSERT_EQ(motorPort.getCountPerRotation(), 360);
@@ -180,5 +180,5 @@ TEST(MotorPort, GetState)
 
     motorPort.setCommand(finder::physical::MotorCommand::RUN_FOREVER);
     std::vector<finder::physical::MotorState> states = motorPort.getState();
-    ASSERT_TRUE(std::find(states.begin(), states.end(), finder::physical::MotorState::RUNNING) != states.end());
+    ASSERT_TRUE(std::find(states.begin(), states.end(), finder::physical::MotorState::HOLDING) != states.end());
 }

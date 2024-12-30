@@ -417,6 +417,7 @@ namespace finder
                 if (isEnabled() && *isEnabled()) {
                     if (_file_state_path->is_open()) {
                         std::string state;
+                        _file_state_path->seekg(0);
                         *_file_state_path >> state;
                         // split state string by space
                         std::istringstream iss(state);
@@ -426,22 +427,22 @@ namespace finder
                         }
                         for (auto token : state_tokens) {
                             if (token == "running") {
-                                spdlog::debug(("STATE.GET: WITH_RESULT: %d"), static_cast<int>(MotorState::RUNNING));
+                                spdlog::debug(("STATE.GET: WITH_RESULT: " + static_cast<int>(MotorState::RUNNING)));
                                 states.push_back(MotorState::RUNNING);
                             } else if (token == "ramping") {
-                                spdlog::debug(("STATE.GET: WITH_RESULT: %d"), static_cast<int>(MotorState::RAMPING));
+                                spdlog::debug(("STATE.GET: WITH_RESULT: " + static_cast<int>(MotorState::RAMPING)));
                                 states.push_back(MotorState::RAMPING);
                             } else if (token == "holding") {
-                                spdlog::debug(("STATE.GET: WITH_RESULT: %d"), static_cast<int>(MotorState::HOLDING));
+                                spdlog::debug(("STATE.GET: WITH_RESULT: " + static_cast<int>(MotorState::HOLDING)));
                                 states.push_back(MotorState::HOLDING);
                             } else if (token == "overloaded") {
-                                spdlog::debug(("STATE.GET: WITH_RESULT: %d"), static_cast<int>(MotorState::OVERLOADED));
+                                spdlog::debug(("STATE.GET: WITH_RESULT: " + static_cast<int>(MotorState::OVERLOADED)));
                                 states.push_back(MotorState::OVERLOADED);
                             } else if (token == "stalled") {
-                                spdlog::debug(("STATE.GET: WITH_RESULT: %d"), static_cast<int>(MotorState::STALLED));
+                                spdlog::debug(("STATE.GET: WITH_RESULT: " + static_cast<int>(MotorState::STALLED)));
                                 states.push_back(MotorState::STALLED);
                             } else if (token == "stopped") {
-                                spdlog::debug(("STATE.GET: WITH_RESULT: %d"), static_cast<int>(MotorState::STOPPED));
+                                spdlog::debug(("STATE.GET: WITH_RESULT: " + static_cast<int>(MotorState::STOPPED)));
                                 states.push_back(MotorState::STOPPED);
                             } else {
                                 spdlog::error("MotorPort failed to get state for"), token;
@@ -549,7 +550,7 @@ namespace finder
         {
             while (true) {
                 std::vector<MotorState> states = getState();
-                if (std::find(states.begin(), states.end(), MotorState::STOPPED) != states.end()) {
+                if (std::find(states.begin(), states.end(), MotorState::HOLDING) != states.end()) {
                     if constexpr (EV3_DETAILED_LOGGING) {
                         spdlog::info("MotorPort::waitUntilStopped() still running: "+ std::to_string(getPosition()));
                     } else {
@@ -756,46 +757,57 @@ namespace finder
                     spdlog::error("MotorPort failed to initialize, command file is not open");
                     return boost::leaf::new_error(std::invalid_argument("MotorPort failed to initialize, command file is not open"));
                 }
+                spdlog::info("MotorPort::init() command file opened at: " + command_path.value());
                 if (!_file_speed_path->is_open() || _file_speed_path->bad()) {
                     spdlog::error("MotorPort failed to initialize, speed file is not open");
                     return boost::leaf::new_error(std::invalid_argument("MotorPort failed to initialize, speed file is not open"));
                 }
+                spdlog::info("MotorPort::init() speed file opened at: " + speed_path.value());
                 if (!_file_speed_sp_path->is_open() || _file_speed_sp_path->bad()) {
                     spdlog::error("MotorPort failed to initialize, speed_sp file is not open");
                     return boost::leaf::new_error(std::invalid_argument("MotorPort failed to initialize, speed_sp file is not open"));
                 }
+                spdlog::info("MotorPort::init() speed_sp file opened at: " + speed_sp_path.value());
                 if (!_file_position_path->is_open() || _file_position_path->bad()) {
                     spdlog::error("MotorPort failed to initialize, position file is not open");
                     return boost::leaf::new_error(std::invalid_argument("MotorPort failed to initialize, position file is not open"));
                 }
+                spdlog::info("MotorPort::init() position file opened at: " + position_path.value());
                 if (!_file_position_sp_path->is_open() || _file_position_sp_path->bad()) {
                     spdlog::error("MotorPort failed to initialize, position_sp file is not open");
                     return boost::leaf::new_error(std::invalid_argument("MotorPort failed to initialize, position_sp file is not open"));
                 }
+                spdlog::info("MotorPort::init() position_sp file opened at: " + position_sp_path.value());
                 if (!_file_duty_cycle_path->is_open() || _file_duty_cycle_path->bad()) {
                     spdlog::error("MotorPort failed to initialize, duty_cycle file is not open");
                     return boost::leaf::new_error(std::invalid_argument("MotorPort failed to initialize, duty_cycle file is not open"));
                 }
+                spdlog::info("MotorPort::init() duty_cycle file opened at: " + duty_cycle_path.value());
                 if (!_file_state_path->is_open() || _file_state_path->bad()) {
                     spdlog::error("MotorPort failed to initialize, state file is not open");
                     return boost::leaf::new_error(std::invalid_argument("MotorPort failed to initialize, state file is not open"));
                 }
+                spdlog::info("MotorPort::init() state file opened at: " + state_path.value());
                 if (!_file_polarity_path->is_open() || _file_polarity_path->bad()) {
                     spdlog::error("MotorPort failed to initialize, polarity file is not open");
                     return boost::leaf::new_error(std::invalid_argument("MotorPort failed to initialize, polarity file is not open"));
                 }
+                spdlog::info("MotorPort::init() polarity file opened at: " + polarity_path.value());
                 if (!_file_stop_action_path->is_open() || _file_stop_action_path->bad()) {
                     spdlog::error("MotorPort failed to initialize, stop_action file is not open");
                     return boost::leaf::new_error(std::invalid_argument("MotorPort failed to initialize, stop_action file is not open"));
                 }
+                spdlog::info("MotorPort::init() stop_action file opened at: " + stop_action_path.value());
                 if (!_file_count_per_rotation_path->is_open() || _file_count_per_rotation_path->bad()) {
                     spdlog::error("MotorPort failed to initialize, count_per_rotation file is not open");
                     return boost::leaf::new_error(std::invalid_argument("MotorPort failed to initialize, count_per_rotation file is not open"));
                 }
+                spdlog::info("MotorPort::init() count_per_rotation file opened at: " + count_per_rotation_path.value());
                 if (!_file_max_speed_path->is_open() || _file_max_speed_path->bad()) {
                     spdlog::error("MotorPort failed to initialize, max_speed file is not open");
                     return boost::leaf::new_error(std::invalid_argument("MotorPort failed to initialize, max_speed file is not open"));
                 }
+                spdlog::info("MotorPort::init() max_speed file opened at: " + max_speed_path.value());
 
                 spdlog::debug("MotorPort::init() file readers opened");
 
@@ -803,6 +815,27 @@ namespace finder
 
                 return boost::leaf::result<void>();
             // }).get();
+        }
+
+        std::string MotorPort::getStringFromState(MotorState state) noexcept
+        {
+            switch (state)
+        {
+            case MotorState::RUNNING:
+                return "running";
+            case MotorState::RAMPING:
+                return "ramping";
+            case MotorState::HOLDING:
+                return "holding";
+            case MotorState::OVERLOADED:
+                return "overloaded";
+            case MotorState::STALLED:
+                return "stalled";
+            case MotorState::STOPPED:
+                return "";
+            default:
+                return "unknown";
+        }
         }
     }
 }

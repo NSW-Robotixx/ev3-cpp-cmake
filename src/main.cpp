@@ -8,6 +8,7 @@
 // #include <EV3_System.hpp>
 #include <EV3_Gearbox.hpp>
 #include <DeviceManager.hpp>
+#include <EV3_MotorManager.hpp>
 
 // finder::log::Logger logger = finder::log::Logger();
 // finder::system::System ev3_system = finder::system::System();
@@ -35,9 +36,9 @@ int main(int argc, char const *argv[])
 
     spdlog::debug("Debug message");
 
-    finder::physical::DeviceManager device_manager = finder::physical::DeviceManager("/sys/class/");
     // ev3_system.start();
 
+    // finder::physical::DeviceManager device_manager = finder::physical::DeviceManager("/sys/class/");
 //    finder::engines::movement::MovementEngine movementEngine = finder::engines::movement::MovementEngine();
 //
 //    movementEngine.move(finder::math::Vector2{100, 100});
@@ -48,12 +49,24 @@ int main(int argc, char const *argv[])
 
     gearbox_manager.calibrate();
 
-    while (true)
-    {
-        std::cout << "Press enter to continue..." << std::endl;
-        std::cin.get();
-        break;
-    }
+    finder::physical::MotorManager motor_manager = finder::physical::MotorManager("/sys/class");
+
+    motor_manager.moveForward(100, 400);
+    motor_manager.moveBackward(100, 400);
+
+    motor_manager.stop();
+
+    motor_manager.turn(finder::physical::TurnDirection::LEFT, 90, 200);
+    motor_manager.turn(finder::physical::TurnDirection::LEFT, -90, 200);
+    motor_manager.turn(finder::physical::TurnDirection::RIGHT, 0, 300);
+
+
+    // while (true)
+    // {
+    //     std::cout << "Press enter to continue..." << std::endl;
+    //     std::cin.get();
+    //     break;
+    // }
 
     // logger.success("Application finished.");
     return 0;

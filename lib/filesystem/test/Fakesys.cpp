@@ -296,7 +296,7 @@ namespace finder::physical::test
         writeToFile(relPath + "/speed_sp", 0);
         writeToFile(relPath + "/ramp_up_sp", 0);
         writeToFile(relPath + "/ramp_down_sp", 0);
-        writeToFile(relPath + "/state", "running");
+        writeToFile(relPath + "/state", "holding");
         writeToFile(relPath + "/stop_action", "hold");
         writeToFile(relPath + "/stop_actions", {"coast", "brake", "hold"});
         writeToFile(relPath + "/time_sp", 0);

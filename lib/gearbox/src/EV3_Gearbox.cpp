@@ -83,6 +83,8 @@ namespace finder::physical
             return boost::leaf::new_error(std::logic_error("GearboxManager not initialized"));
         }
 
+        _motorShift->reset();
+
         ToolControl toolControl = ToolControl{};
 
         std::array<GearboxGears, 4> gears = {GearboxGears::EV3_GEARBOX_GEAR_1,

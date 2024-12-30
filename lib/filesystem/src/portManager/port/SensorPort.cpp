@@ -210,6 +210,8 @@ namespace finder
         {
             spdlog::trace("SensorPort::getValue()");
 
+            
+
             if (isEnabled() && isEnabled().value())
             {
                 if (index < 0 || index >= _file_value_path.size())
@@ -218,12 +220,24 @@ namespace finder
                     return boost::leaf::new_error(std::invalid_argument("Index out of range"));
                 }
                 
+                if (_file_value_path[index]->bad())
+                {
+                    spdlog::error(("Failed to get value for %s"), getBasePath().value().c_str());
+                    return boost::leaf::new_error(std::invalid_argument("Failed to get value"));
+                }
+
+                if (_file_value_path[index]->fail())
+                {
+                    spdlog::error(("Failed to get value for %s"), getBasePath().value().c_str());
+                    return boost::leaf::new_error(std::invalid_argument("Failed to get value"));
+                }
+
                 if (_file_value_path[index]->is_open())
                 {
                     int value = 0;
                     _file_value_path[index]->seekg(0);
                     *_file_value_path[index] >> value;
-                    spdlog::info("VALUE.GET: " + std::string(getBasePath().value().c_str()) + " WITH VALUE: " + std::to_string(value));
+                    spdlog::debug("VALUE.GET: " + std::string(getBasePath().value().c_str()) + " WITH VALUE: " + std::to_string(value));
                     return value;
                 } 
             } 

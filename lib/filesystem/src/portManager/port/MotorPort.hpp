@@ -197,6 +197,8 @@ namespace finder
 
                 /// @brief Inititalize the motor class by checking if files exist and opening file streams.
                 boost::leaf::result<void> init();
+
+                std::string getStringFromState(MotorState state) noexcept;
         };
     } // namespace physical
 } // namespace finder
