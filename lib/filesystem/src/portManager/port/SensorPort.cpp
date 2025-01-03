@@ -67,7 +67,7 @@ namespace finder
             boost::leaf::result<void> status = Port::setBasePath(path);
             if (!status)
             {
-                spdlog::error("Failed to set path for port: %s", path.c_str());
+                spdlog::error("Failed to set path for port: {}", path.c_str());
                 return boost::leaf::new_error(std::invalid_argument("Failed to set path for port: " + path));
             }
             boost::leaf::result<void> success = initFiles();
@@ -81,22 +81,38 @@ namespace finder
 
         boost::leaf::result<void> SensorPort::reinit()
         {
-            _file_address_path.reset();
-            _file_command_path.reset();
-            _file_commands_path.reset();
-            _file_mode_path.reset();
-            _file_modes_path.reset();
-            _file_num_values_path.reset();
-            _file_poll_ms_path.reset();
-            
-            for (auto& file : _file_value_path)
+            spdlog::trace("SensorPort::reinit()");
+
+            try
             {
-                file.reset();
+                _file_address_path.reset();
+                _file_command_path.reset();
+                _file_commands_path.reset();
+                _file_mode_path.reset();
+                _file_modes_path.reset();
+                _file_num_values_path.reset();
+                _file_poll_ms_path.reset();
+                _file_driver_name_path.reset();
+                
+                for (auto& file : _file_value_path)
+                {
+                    file.reset();
+                }
+
+                _file_value_path.clear();    
             }
+            catch(const std::exception& e)
+            {
+                spdlog::error("Failed to reset files");
+                return boost::leaf::new_error(std::invalid_argument("Failed to reset files"));
+            }
+            boost::leaf::result<void> init_result = initFiles();
 
-            _file_value_path.clear();
-
-            return initFiles();
+            if (!init_result) {
+                spdlog::error("Failed to initialize files");
+                return init_result.error();
+            }
+            return boost::leaf::result<void>();
         }
 
         boost::leaf::result<path_value_t> SensorPort::getValuePath(int index)
@@ -111,11 +127,18 @@ namespace finder
                     spdlog::error("Failed to get path");
                     return path;
                 }
+
+                if (path.value().length() <= 0)
+                {
+                    spdlog::error("Failed to complete value path, path is empty");
+                    return boost::leaf::new_error(std::invalid_argument("Path is empty"));
+                }
+
                 return path.value() + "/value" + std::to_string(index);
             }
             else
             {
-                spdlog::warn(("Port is not enabled for %s"), _path);
+                spdlog::warn(("Port is not enabled for {}"), _path);
                 return boost::leaf::new_error(std::invalid_argument("Port is not enabled: " + _path));
             }
         }
@@ -136,7 +159,7 @@ namespace finder
             }
             else
             {
-                spdlog::warn(("Port is not enabled for %s"), _path);
+                spdlog::warn(("Port is not enabled for {}"), _path);
                 return boost::leaf::new_error(std::invalid_argument("Port is not enabled"));
             }
         }
@@ -157,7 +180,7 @@ namespace finder
             }
             else
             {
-                spdlog::warn(("Port is not enabled for %s"), _path);
+                spdlog::warn(("Port is not enabled for {}"), _path);
                 boost::leaf::new_error(std::invalid_argument("Port is not enabled: " + _path));
             }
 
@@ -180,7 +203,7 @@ namespace finder
             }
             else
             {
-                spdlog::warn(("Port is not enabled for %s"), _path);
+                spdlog::warn(("Port is not enabled for {}"), _path);
                 return boost::leaf::new_error(std::invalid_argument("Port is not enabled: " + _path));
             }
         }
@@ -201,7 +224,7 @@ namespace finder
             }
             else
             {
-                spdlog::warn(("Port is not enabled for %s"), _path);
+                spdlog::warn(("Port is not enabled for {}"), _path);
                 return boost::leaf::new_error(std::invalid_argument("Port is not enabled: " + _path));
             }
         }
@@ -216,19 +239,19 @@ namespace finder
             {
                 if (index < 0 || index >= _file_value_path.size())
                 {
-                    spdlog::warn(("Index out of range for %s"), getBasePath().value().c_str());
+                    spdlog::warn(("Index out of range for {}"), getBasePath().value().c_str());
                     return boost::leaf::new_error(std::invalid_argument("Index out of range"));
                 }
                 
                 if (_file_value_path[index]->bad())
                 {
-                    spdlog::error(("Failed to get value for %s"), getBasePath().value().c_str());
+                    spdlog::error(("Failed to get value for {}"), getBasePath().value().c_str());
                     return boost::leaf::new_error(std::invalid_argument("Failed to get value"));
                 }
 
                 if (_file_value_path[index]->fail())
                 {
-                    spdlog::error(("Failed to get value for %s"), getBasePath().value().c_str());
+                    spdlog::error(("Failed to get value for {}"), getBasePath().value().c_str());
                     return boost::leaf::new_error(std::invalid_argument("Failed to get value"));
                 }
 
@@ -241,7 +264,7 @@ namespace finder
                     return value;
                 } 
             } 
-            spdlog::warn(("Port is not enabled for %s"), _path);
+            spdlog::warn(("Port is not enabled for {}"), _path);
             return boost::leaf::new_error(std::invalid_argument("Port is not enabled: " + _path));
         }
 
@@ -252,11 +275,28 @@ namespace finder
             if (isEnabled() && isEnabled().value())
             {
                 spdlog::trace("Port is enabled");
-                if (_file_mode_path->good())
+
+                // reinit();
+                try
+                {
+                    spdlog::trace("Checking for bad mode file");
+                    if (_file_mode_path->bad())
+                    {
+                        spdlog::error("Mode file is bad");
+                        reinit();
+                    }
+                }
+                catch(const std::exception& e)
+                {
+                    spdlog::error("Mode file is bad");
+                    reinit();
+                }
+                
+                if (!_file_mode_path->fail())
                 {
                     spdlog::trace("Mode file is good");
                 } else {
-                    spdlog::error("Mode file is not good");
+                    spdlog::error("Mode file is not failed");
                     return boost::leaf::new_error(std::invalid_argument("Mode file is not good"));
                 }
                 if (_file_mode_path->is_open())
@@ -265,10 +305,10 @@ namespace finder
                     *_file_mode_path << mode;
                     _file_mode_path->flush();
                 }
-                spdlog::info(("MODE.SET: %s WITH_VALUE: %s"), getBasePath().value().c_str(), mode.c_str());
+                spdlog::info(("MODE.SET: {} WITH_VALUE: {}"), getBasePath().value().c_str(), mode.c_str());
                 return boost::leaf::result<void>();
             }
-            spdlog::warn(("Port is not enabled for %s"), getBasePath().value().c_str());
+            spdlog::warn(("Port is not enabled for {}"), getBasePath().value().c_str());
             return boost::leaf::new_error(std::invalid_argument("Port is not enabled: " + getBasePath().value()));
         }
 
@@ -291,12 +331,12 @@ namespace finder
                     _modes = _modes;
                     for (auto m : _modes)
                     {
-                        spdlog::info(("MODES.GET: %s WITH_RESULT: %s"), getBasePath().value().c_str(), m.c_str());
+                        spdlog::info(("MODES.GET: {} WITH_RESULT: {}"), getBasePath().value().c_str(), m.c_str());
                     }
                 }
                 return _modes;
             }
-            spdlog::warn(("Port is not enabled for %s"), getBasePath().value().c_str());
+            spdlog::warn(("Port is not enabled for {}"), getBasePath().value().c_str());
             return std::vector<sensor_mode_t>{};
         }
 
@@ -311,7 +351,7 @@ namespace finder
                     int num_values;
                     _file_num_values_path->seekg(0);
                     *_file_num_values_path >> num_values;
-                    spdlog::info("NUM_VALUES.GET: %s WITH_RESULT: %d", getBasePath().value().c_str(), num_values);
+                    spdlog::info("NUM_VALUES.GET: {} WITH_RESULT: %d", getBasePath().value().c_str(), num_values);
                     return num_values;
                 }
             }
@@ -330,7 +370,7 @@ namespace finder
                     int poll_ms;
                     _file_poll_ms_path->seekg(0);
                     *_file_poll_ms_path >> poll_ms;
-                    spdlog::info(("POLL_MS.GET: %s WITH_RESULT: %d"), getBasePath().value().c_str(), poll_ms);
+                    spdlog::info(("POLL_MS.GET: {} WITH_RESULT: %d"), getBasePath().value().c_str(), poll_ms);
                     return poll_ms;
                 }
             }
@@ -381,12 +421,12 @@ namespace finder
             spdlog::trace("SensorPort::initFiles()");
 
             // open files
-            for (int i = 0; i < 10; i++)
+            for (int i = 0; i < 8; i++)
             {
                 boost::leaf::result<std::string> value_path = getValuePath(i);
                 if (!value_path)
                 {
-                    spdlog::error("Failed to get value path for %d", i);
+                    spdlog::error("Failed to get value path for {}", i);
                     return value_path.error();
                     continue;
                 }
@@ -395,18 +435,18 @@ namespace finder
                 {
                     if (!_file_value_path[i]->is_open())
                     {
-                        spdlog::error(("Failed to open value0 file at: %s"), value_path.value().c_str());
+                        spdlog::error(("Failed to open value0 file at: {}"), value_path.value().c_str());
                         _file_value_path[i].reset();
                         return boost::leaf::new_error(std::invalid_argument("Failed to open value0 file: " + value_path.value()));
                     }
                     else
                     {
-                        spdlog::info(("Opened value0 file at: %s"), value_path.value().c_str());
+                        spdlog::info(("Opened value0 file at: {}"), value_path.value().c_str());
                     }
                 }
                 else
                 {
-                    spdlog::error(("File does not exist at: %s"), value_path.value().c_str());
+                    spdlog::error(("File does not exist at: {}"), value_path.value().c_str());
                     return boost::leaf::new_error(std::invalid_argument("File does not exist: " + value_path.value()));
                 }
             }  
@@ -443,61 +483,61 @@ namespace finder
             // check if mode path is opened
             if (!_file_mode_path->fail()) {
                 if (!_file_mode_path->is_open()) {
-                    spdlog::warn(("Failed to open value0 file at: %s"), mode_path.value().c_str());
+                    spdlog::warn(("Failed to open value0 file at: {}"), mode_path.value().c_str());
                     _file_mode_path.reset();
                     return boost::leaf::new_error(std::invalid_argument("Failed to open value0 file: " + mode_path.value()));
                 } else {
-                    spdlog::debug(("Opened mode file at: %s"), mode_path.value().c_str());
+                    spdlog::debug(("Opened mode file at: {}"), mode_path.value().c_str());
                 }
             } else {
-                spdlog::error(("File does not exist at: %s"), mode_path.value().c_str());
+                spdlog::error(("File does not exist at: {}"), mode_path.value().c_str());
                 return boost::leaf::new_error(std::invalid_argument("File does not exist: " + mode_path.value()));
             }
 
             // check if modes path is opened
             if (!_file_modes_path->fail()) {
                 if (!_file_modes_path->is_open()) {
-                    spdlog::warn(("Failed to open value0 file at: %s"), modes_path.value().c_str());
+                    spdlog::warn(("Failed to open value0 file at: {}"), modes_path.value().c_str());
                     _file_modes_path.reset();
                     return boost::leaf::new_error(std::invalid_argument("Failed to open value0 file: " + modes_path.value()));
                 } else {
-                    spdlog::debug(("Opened modes file at: %s"), modes_path.value().c_str());
+                    spdlog::debug(("Opened modes file at: {}"), modes_path.value().c_str());
                 }
             } else {
-                spdlog::error(("File does not exist at: %s"), modes_path.value().c_str());
+                spdlog::error(("File does not exist at: {}"), modes_path.value().c_str());
                 return boost::leaf::new_error(std::invalid_argument("File does not exist: " + modes_path.value()));                
             }
 
             // check if num_values path is opened
             if (!_file_num_values_path->fail()) {
                 if (!_file_num_values_path->is_open()) {
-                    spdlog::warn(("Failed to open value0 file at: %s"), num_values_path.value().c_str());
+                    spdlog::warn(("Failed to open value0 file at: {}"), num_values_path.value().c_str());
                     _file_num_values_path.reset();
                     return boost::leaf::new_error(std::invalid_argument("Failed to open value0 file: " + num_values_path.value()));
                 } else {
-                    spdlog::debug(("Opened num_values file at: %s"), num_values_path.value().c_str());
+                    spdlog::debug(("Opened num_values file at: {}"), num_values_path.value().c_str());
                 }
             } else {
-                spdlog::error(("File does not exist at: %s"), num_values_path.value().c_str());
+                spdlog::error(("File does not exist at: {}"), num_values_path.value().c_str());
                 return boost::leaf::new_error(std::invalid_argument("File does not exist: " + num_values_path.value()));
             }
 
             // check if poll_ms path is opened
             if (!_file_poll_ms_path->fail()) {
                 if (!_file_poll_ms_path->is_open()) {
-                    spdlog::warn(("Failed to open value0 file at: %s"), poll_ms_path.value().c_str());
+                    spdlog::warn(("Failed to open value0 file at: {}"), poll_ms_path.value().c_str());
                     _file_poll_ms_path.reset();
                     return boost::leaf::new_error(std::invalid_argument("Failed to open value0 file: " + poll_ms_path.value()));
                 } else {
-                    spdlog::info(("Opened poll_ms file at: %s"), poll_ms_path.value().c_str());
+                    spdlog::info(("Opened poll_ms file at: {}"), poll_ms_path.value().c_str());
                 }
             } else {
-                spdlog::error(("File does not exist at: %s"), poll_ms_path.value().c_str());
+                spdlog::error(("File does not exist at: {}"), poll_ms_path.value().c_str());
                 return boost::leaf::new_error(std::invalid_argument("File does not exist: " + poll_ms_path.value()));
             }
 
             return boost::leaf::result<void>();
         }
     } // namespace physical
-    
+
 } // namespace finder

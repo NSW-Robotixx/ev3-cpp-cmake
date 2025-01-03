@@ -305,7 +305,8 @@ namespace finder
 
         boost::leaf::result<bool> Port::isEnabled()
         {
-            boost::call_once(_init_flag, &Port::initFiles, this);
+            spdlog::trace("Port::isEnabled()");
+            // boost::call_once(_init_flag, &Port::initFiles, this);
 
             return _f_enabled;
         }

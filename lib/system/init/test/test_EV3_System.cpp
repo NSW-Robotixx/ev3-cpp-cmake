@@ -26,6 +26,6 @@ TEST(EV3_System, DefaultConstructor)
 #endif 
 
     finder::system::System system;
-    EXPECT_NO_THROW(system.start());
+    EXPECT_NO_THROW(system.read());
 
 }

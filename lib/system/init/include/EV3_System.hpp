@@ -28,6 +28,9 @@ namespace finder::system
         /// @brief Start the system, if enabled the system will connect to the compute module
         boost::leaf::result<void> start();
 
+        /// @brief Read the destinations from the file and set them as destinations
+        void read();
+
         /// @brief Stop the system and disconnect from the compute module
         void stop();
 

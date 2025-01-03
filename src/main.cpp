@@ -50,6 +50,7 @@ int main(int argc, char const *argv[])
     gearbox_manager.calibrate();
 
     finder::physical::MotorManager motor_manager = finder::physical::MotorManager("/sys/class");
+    finder::physical::SensorManager sensor_manager = finder::physical::SensorManager("/sys/class");
 
     motor_manager.moveForward(100, 400);
     motor_manager.moveBackward(100, 400);

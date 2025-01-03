@@ -41,7 +41,7 @@ namespace finder
 
                 for (const path_port_t& device_type_dir : dirs) {
                     if (!std::filesystem::exists(device_type_dir)) {
-                        spdlog::error("Directory not found: %s invalid path", device_type_dir.c_str());
+                        spdlog::error("Directory not found: {} invalid path", device_type_dir.c_str());
                         // throw std::logic_error("Directory not found: " + device_type_dir + " invalid path");
                         continue;
                     }

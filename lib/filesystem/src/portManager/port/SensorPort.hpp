@@ -96,6 +96,7 @@ namespace finder
                 bool _is_initialized;
 
                 boost::leaf::result<void> initFiles();
+
         };
     } // namespace physical
     
