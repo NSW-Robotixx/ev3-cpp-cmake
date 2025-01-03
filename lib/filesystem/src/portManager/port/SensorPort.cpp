@@ -342,6 +342,31 @@ namespace finder
             }
             return DeviceType::SENSOR;
         }
+        
+        void SensorPort::calibrateGyro()
+        {
+            if (isEnabled() && isEnabled().value())
+            {
+                if (getDriverName().value() == DriverName::SENSOR_GYRO) {
+                    spdlog::info("###### CALIBRATING ######");
+                    spdlog::info("Calibrating gyro sensor, please do not move the robot");
+
+                    setMode("GYRO-CAL");
+                    std::this_thread::sleep_for(std::chrono::milliseconds(1000));
+                    setMode("GYRO-ANG");
+                    spdlog::info("### END OF CALIBRATION ###");
+                }
+                else
+                {
+                    spdlog::error("Calibrate gyro called on non-gyro sensor");
+                }
+            }
+            else
+            {
+                spdlog::warn("Port is not enabled for: " + _path);
+            }
+        }
+        
         boost::leaf::result<void> SensorPort::initFiles()
         {
             spdlog::trace("SensorPort::initFiles()");

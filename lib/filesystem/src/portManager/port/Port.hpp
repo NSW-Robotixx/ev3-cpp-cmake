@@ -44,6 +44,16 @@ namespace finder
             DISABLED = 3,
             ANY = 4
         };
+
+
+        enum struct DriverName {
+            SENSOR_GYRO = 0,
+            SENSOR_COLOR = 1,
+            SENSOR_ULTRASONIC = 2,
+            MOTOR_LARGE = 3,
+            MOTOR_MEDIUM = 4
+        };
+
 #ifdef ENABLE_LOGGING
         /// @brief Port for the physical ports on the EV3
         struct Port
@@ -127,7 +137,10 @@ namespace finder
                 /// @return the device type of the port, SENSOR, MOTOR, UNKNOWN, or DISABLED
                 virtual boost::leaf::result<DeviceType> getDeviceType();
 
-            
+                /// @brief Get the driver name of the port
+                /// @return The driver name of the port
+                boost::leaf::result<DriverName> getDriverName();
+                        
                 /// @brief return the enabled status of the port
                 /// @return true if the port is enabled, false otherwise
                 boost::leaf::result<bool> isEnabled();
@@ -150,6 +163,9 @@ namespace finder
 
                 /// @brief File stream for the commands file
                 std::shared_ptr<std::ifstream> _file_commands_path;
+
+                /// @brief File stream for the driver name file
+                std::shared_ptr<std::ifstream> _file_driver_name_path;
 
                 /// @brief Directory path of the port
                 path_port_t _path;

@@ -43,6 +43,9 @@
     // define the tolerance for the gyro sensor
     constexpr unsigned int EV3_GYRO_TURN_TOLERANCE = 3;
 
+    // define the timeout for the calibration of the gyro sensor
+    constexpr unsigned int EV3_GYRO_CALIBRATION_TIMEOUT_MS = 1000;
+
     // define the offsets of the sensors on the robot
     constexpr unsigned int EV3_SENSOR_COLOR_RIGHT_OFFSET_X = 0;                  // to be implemented
     constexpr unsigned int EV3_SENSOR_COLOR_RIGHT_OFFSET_Y = 0;         // to be implemented

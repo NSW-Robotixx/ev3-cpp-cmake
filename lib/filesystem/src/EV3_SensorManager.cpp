@@ -131,6 +131,44 @@ namespace finder::physical
         _eventListeners[port] = callback;
     }
 
+    void SensorManager::calibrateGyroSensor()
+    {
+        spdlog::trace("SensorManager::calibrateGyroSensor()");
+
+        boost::leaf::result<int> old_gyro_value = _gyroSensor->getValue(0);
+
+        if (!old_gyro_value)
+        {
+            spdlog::error("Error reading first gyro sensor value");
+            return;
+        }
+
+
+        spdlog::info("Calibrating gyro sensor, please do not move the robot");
+        std::this_thread::sleep_for(std::chrono::milliseconds(EV3_GYRO_CALIBRATION_TIMEOUT_MS));
+
+        boost::leaf::result<int> new_gyro_value = _gyroSensor->getValue(0);
+
+        if (!new_gyro_value)
+        {
+            spdlog::error("Error reading second gyro sensor value");
+            return;
+        }
+
+        if (std::abs(old_gyro_value.value() - new_gyro_value.value()) > 0)
+        {
+            spdlog::info("Gyro sensor drift detected, recalibrating...");
+
+            _gyroSensor->calibrateGyro();
+
+            spdlog::info("Gyro sensor recalibrated, rechecking values");
+
+            calibrateGyroSensor();
+        } else {
+            spdlog::info("No drift detected, gyro sensor calibrated");
+        }
+    }
+
     void SensorManager::Dispatcher()
     {
         spdlog::trace("SensorManager::Dispatcher()");

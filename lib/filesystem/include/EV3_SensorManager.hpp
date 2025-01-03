@@ -61,6 +61,9 @@ namespace finder::physical
             /// @param callback Callback to call when the event occurs
             static void addEventListeners(DeviceID port, std::function<void(DeviceID, int)> callback);
 
+            /// @brief Calibrate gyro sensor
+            static void calibrateGyroSensor();
+
             /// @brief Dispatcher for the event listeners
             static void Dispatcher();
 

@@ -195,6 +195,38 @@ namespace finder
             return DeviceType::DISABLED;
         }
 
+        boost::leaf::result<DriverName> Port::getDriverName()
+        {
+            spdlog::trace("Port::getDriverName()");
+
+            if (isEnabled() && isEnabled().value()) {
+                if (_file_driver_name_path->good()) {
+                    std::string driver_name;
+
+                    _file_driver_name_path->seekg(0);
+                    *_file_driver_name_path >> driver_name;
+                    
+                    spdlog::info(fmt::format("Driver name: {}", driver_name));
+                    
+                    if (driver_name == "lego-ev3-gyro") {
+                        return DriverName::SENSOR_GYRO;
+                    } else if (driver_name == "lego-ev3-color") {
+                        return DriverName::SENSOR_COLOR;
+                    } else if (driver_name == "lego-ev3-us") {
+                        return DriverName::SENSOR_ULTRASONIC;
+                    } else if (driver_name == "lego-ev3-l-motor") {
+                        return DriverName::MOTOR_LARGE;
+                    } else if (driver_name == "lego-ev3-m-motor") {
+                        return DriverName::MOTOR_MEDIUM;
+                    } else {
+                        spdlog::error(fmt::format("Unknown driver name: {}", driver_name));
+                        return boost::leaf::new_error(std::invalid_argument("Unknown driver name: " + driver_name));
+                    }
+                }
+            }
+            spdlog::error("Failed to get driver name, port is not enabled");
+        }
+
         boost::leaf::result<void> Port::initFiles()
         {
             spdlog::trace("Port::initFiles()");
@@ -202,10 +234,12 @@ namespace finder
             std::string address_path = _path + "/address";
             std::string command_path = _path + "/command";
             std::string commands_path = _path + "/commands";
+            std::string driver_name_path = _path + "/driver_name";
 
             _file_address_path = std::make_shared<std::ifstream>(address_path);
             _file_command_path = std::make_shared<std::ofstream>(command_path);
             _file_commands_path = std::make_shared<std::ifstream>(commands_path);
+            _file_driver_name_path = std::make_shared<std::ifstream>(driver_name_path);
 
             // check if address file is opened
             if (!_file_address_path->fail()) {
@@ -248,6 +282,21 @@ namespace finder
                 spdlog::error(fmt::format("File does not exist at: {}", commands_path.c_str()));
                 return boost::leaf::new_error(std::invalid_argument("File does not exist: " + commands_path));
             }
+
+            // check if driver name file is opened
+            if (!_file_driver_name_path->fail()) {
+                if (!_file_driver_name_path->is_open()) {
+                    spdlog::warn("Failed to open driver name file at: {}", driver_name_path.c_str());
+                    _file_driver_name_path.reset();
+                    return boost::leaf::new_error(std::invalid_argument("Failed to open driver name file: " + driver_name_path));
+                } else {
+                    spdlog::debug("Opened driver name file at: {}", driver_name_path.c_str());
+                }
+            } else {
+                spdlog::error(fmt::format("File does not exist at: {}", driver_name_path.c_str()));
+                return boost::leaf::new_error(std::invalid_argument("File does not exist: " + driver_name_path));
+            }
+
             spdlog::info("All files opened successfully");
 
             return boost::leaf::result<void>();

@@ -84,16 +84,21 @@ namespace finder::physical
         spdlog::trace("MotorManager::turn()");
         spdlog::trace("Turning " + (direction == TurnDirection::LEFT ? std::string("left") : std::string("right")) + " " + std::to_string(angle) + " at speed " + std::to_string(speed));
 
+        if (speed > 100) {
+            spdlog::warn("Speed is higher than 100, setting to 100");
+            speed = 100;
+        }
+
         switch (direction)
         {
         case TurnDirection::LEFT:
-            _motorLeft->setPositionSp(-angle);
-            _motorRight->setPositionSp(angle);
+            _motorLeft->setDutyCycle(-speed);
+            _motorRight->setDutyCycle(speed);
             break;
 
         case TurnDirection::RIGHT:
-            _motorLeft->setPositionSp(angle);
-            _motorRight->setPositionSp(-angle);
+            _motorLeft->setDutyCycle(speed);
+            _motorRight->setDutyCycle(-speed);
             break;
 
         default:
@@ -105,7 +110,7 @@ namespace finder::physical
         _motorRight->setCommand(physical::MotorCommand::RUN_DIRECT);
     
 
-        for (boost::leaf::result<int> result = _gyroSensor->getValue(0); result && result.value() < angle; result = _gyroSensor->getValue(0))
+        for (boost::leaf::result<int> result = _gyroSensor->getValue(0); result && result.value() < angle; result = _gyroSensor->getValue(0)) // TODO: Fix angle checking for both turn directions
         {
             spdlog::trace("Current angle: " + std::to_string(result.value()));
         }

@@ -6,6 +6,9 @@
 #include <portManager/port/Port.hpp>
 #include <filesystem>
 #include <vector>
+#include <thread>
+#include <chrono>
+
 namespace finder
 {
     namespace physical
@@ -77,6 +80,9 @@ namespace finder
                 /// @brief Get the device type of the port
                 /// @return The device type of the port
                 boost::leaf::result<DeviceType> getDeviceType() override;
+
+                /// @brief Calibrate the gyro sensor, only works for gyro sensors
+                void calibrateGyro();
                 
             private:
                 static std::vector<sensor_mode_t> _modes;
