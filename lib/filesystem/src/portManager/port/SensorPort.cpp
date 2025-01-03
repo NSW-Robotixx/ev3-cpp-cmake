@@ -251,8 +251,17 @@ namespace finder
 
             if (isEnabled() && isEnabled().value())
             {
+                spdlog::trace("Port is enabled");
+                if (_file_mode_path->good())
+                {
+                    spdlog::trace("Mode file is good");
+                } else {
+                    spdlog::error("Mode file is not good");
+                    return boost::leaf::new_error(std::invalid_argument("Mode file is not good"));
+                }
                 if (_file_mode_path->is_open())
                 {
+                    _file_mode_path->seekp(0);
                     *_file_mode_path << mode;
                     _file_mode_path->flush();
                 }

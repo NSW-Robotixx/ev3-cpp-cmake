@@ -6,6 +6,6 @@
 
 TEST(SensorManager, Contructor) {
     using namespace finder::physical::test;
-    FakeSys::init();
+    FakeSys::reinit();
     EXPECT_NO_THROW(finder::physical::SensorManager SM = finder::physical::SensorManager{FakeSys::getWorkingDir()});
 }

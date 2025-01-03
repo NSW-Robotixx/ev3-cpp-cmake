@@ -10,6 +10,8 @@ namespace finder::physical
         _motorRight->setStopAction(MotorStopAction::HOLD);
         _motorShift->setStopAction(MotorStopAction::HOLD);
         _motorTool->setStopAction(MotorStopAction::HOLD);
+
+        _gyroSensor->calibrateGyro();
     }
 
     MotorManager::~MotorManager()

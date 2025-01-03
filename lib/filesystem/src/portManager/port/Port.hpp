@@ -12,6 +12,7 @@
 #include <spdlog/fmt/ostr.h>
 #include <boost/leaf/result.hpp>
 #include <boost/leaf/error.hpp>
+#include <boost/thread/once.hpp>
 
 namespace finder
 {
@@ -171,6 +172,8 @@ namespace finder
                 path_port_t _path;
             private:
                 bool _f_enabled;
+
+                boost::once_flag _init_flag;
         };
 
     } // namespace physical

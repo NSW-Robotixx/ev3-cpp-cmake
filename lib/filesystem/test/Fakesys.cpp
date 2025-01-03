@@ -242,6 +242,17 @@ namespace finder::physical::test
         writeToFile(relPath + "/command", "");
         writeToFile(relPath + "/commands", {});
 
+        switch (index)
+        {
+        case 0:
+            writeToFile(relPath + "/driver_name", "lego-ev3-gyro");
+            break;
+        
+        default:
+            writeToFile(relPath + "/driver_name", "lego-ev3-color");
+            break;
+        }
+
 
         // create files
         std::ofstream addressFile(_basePath + relPath + "/address");
@@ -300,6 +311,7 @@ namespace finder::physical::test
         writeToFile(relPath + "/stop_action", "hold");
         writeToFile(relPath + "/stop_actions", {"coast", "brake", "hold"});
         writeToFile(relPath + "/time_sp", 0);
+        writeToFile(relPath + "/driver_name", "lego-ev3-l-motor");
     }
 
     void FakeSys::writeToFile(std::string relPath, std::string value, bool init, bool append)

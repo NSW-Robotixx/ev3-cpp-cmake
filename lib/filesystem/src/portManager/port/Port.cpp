@@ -225,6 +225,7 @@ namespace finder
                 }
             }
             spdlog::error("Failed to get driver name, port is not enabled");
+            return boost::leaf::new_error(std::invalid_argument("Failed to get driver name, port is not enabled"));
         }
 
         boost::leaf::result<void> Port::initFiles()
@@ -304,6 +305,8 @@ namespace finder
 
         boost::leaf::result<bool> Port::isEnabled()
         {
+            boost::call_once(_init_flag, &Port::initFiles, this);
+
             return _f_enabled;
         }
     } // namespace physical
