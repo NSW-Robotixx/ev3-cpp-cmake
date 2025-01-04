@@ -1,15 +1,15 @@
 #pragma once
 
 #include <Vector2.hpp>
-#include <EV3_MotorManager.hpp>
+#include <EV3_MotorManager.hpp> 
 
 namespace finder::position
 {
     /// @brief Class that represents the motor position and handles the motor position estimate
-    class MotorPosition
+    class MotorPosition : public physical::DeviceManager
     {
         public:
-            MotorPosition();
+            MotorPosition(std::string base_path);
             ~MotorPosition();
 
             /// @brief Update the position estimate of the robot
@@ -27,6 +27,7 @@ namespace finder::position
             static inline float getAngle() { return _angle; }
 
         private:
+            static math::Vector2 _prev_motor_position;
             static math::Vector2 _position;
             static float _angle;
     };

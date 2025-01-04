@@ -1,6 +1,8 @@
 #ifndef __EV3_CONF_HPP__
 #define __EV3_CONF_HPP__
 
+    #include <math.h>
+
     // general settings
     constexpr bool EV3_THROW_ON_ERROR = true;
     constexpr bool EV3_DETAILED_LOGGING = true;
@@ -69,6 +71,18 @@
 
     // define the offsets of the motors on the robot
     constexpr unsigned int EV3_MOTOR_WHEELBASE = 0;                     // to be implemented
+
+    // define the circumference of the turn circle of the robot
+    constexpr unsigned int EV3_MOTOR_TURN_CIRCLE = M_PI * EV3_MOTOR_WHEELBASE;
+
+    // define the wheel circumference of the robot
+    constexpr unsigned int EV3_MOTOR_WHEEL_CIRCUMFERENCE = 17.5;        // to be implemented
+
+    // define the distance per degree of the motors
+    constexpr unsigned int EV3_MOTOR_DISTANCE_PER_DEGREE = EV3_MOTOR_WHEEL_CIRCUMFERENCE / 360;
+
+    // define the position jump tolerance of the motors for the position estimation
+    constexpr unsigned int EV3_POSITION_JUMP_TOLERANCE = 100;
 
     // define the field parameters
     constexpr unsigned int EV3_FIELD_WIDTH = 2000;
