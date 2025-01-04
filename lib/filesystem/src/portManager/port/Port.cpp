@@ -131,6 +131,7 @@ namespace finder
 
             if (isEnabled() && isEnabled().value()) {
                 std::string address;
+                _file_address_path->seekg(0);
                 *_file_address_path >> address;
                 spdlog::debug(fmt::format("Address: {}", address));
                 return address;
@@ -145,6 +146,7 @@ namespace finder
             spdlog::debug(fmt::format("Setting command: {}", command));
 
             if (isEnabled() && isEnabled().value()) {
+                _file_command_path->seekp(0);
                 *_file_command_path << command;
                 spdlog::debug(fmt::format("Command set: {}", command));
                 return boost::leaf::result<void>();
@@ -161,8 +163,11 @@ namespace finder
             if (isEnabled() && isEnabled().value()) {
                 std::vector<std::string> commands;
                 std::string command_total;
-                // split by space and store in vector
+                
+                _file_commands_path->seekg(0);
                 *_file_commands_path >> command_total;
+                
+                // split by space and store in vector
                 std::istringstream iss(command_total);
                 std::string command;
                 while (iss >> command) {

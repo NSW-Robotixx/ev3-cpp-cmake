@@ -331,6 +331,8 @@ namespace finder
         {
             spdlog::trace("MotorPort::setCommand()");
 
+            _file_command_path->seekp(0);
+
             if (command == MotorCommand::STOP) {
                 spdlog::debug(("Setting command to stop for: " + _path));
                 *this->_file_command_path << "stop";
@@ -477,6 +479,8 @@ namespace finder
                 if (isEnabled() && *isEnabled()) {
                     if (_file_count_per_rotation_path->is_open()) {
                         int count_per_rotation;
+
+                        _file_count_per_rotation_path->seekg(0);
                         *_file_count_per_rotation_path >> count_per_rotation;
                         spdlog::info(("COUNT_PER_ROTATION.GET: WITH_RESULT: %d"), count_per_rotation);
                         return count_per_rotation;
@@ -504,6 +508,7 @@ namespace finder
                         }
                         if (_file_max_speed_path->is_open()) {
                             int max_speed;
+                            _file_max_speed_path->seekg(0);
                             *_file_max_speed_path >> max_speed;
                             spdlog::info(("MAX_SPEED.GET: WITH_RESULT: %d"), max_speed);
                             return max_speed;
@@ -596,7 +601,7 @@ namespace finder
             if (std::filesystem::exists(_path)) {
                 boost::leaf::result<void> initStatus = init();
                 if (!initStatus) {
-                    spdlog::error("MotorPort failed to reset for");
+                    spdlog::error(initStatus.error());
                     return initStatus;
                 }
 
