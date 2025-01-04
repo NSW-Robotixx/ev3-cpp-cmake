@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.24...3.24)
 
-set(CONAN_HOST_PROFILE "ev3" CACHE STRING "Conan profile to use for host")
+set(CONAN_HOST_PROFILE "default" CACHE STRING "Conan profile to use for host")
 
 if(NOT EXISTS "${CMAKE_BINARY_DIR}/conan.cmake")
 message(STATUS "Downloading conan.cmake from https://github.com/conan-io/cmake-conan")
@@ -36,8 +36,8 @@ find_package(boost-leaf REQUIRED)
 find_package(Boost REQUIRED)
 
 # new and untested stuff
-set(BUILD_SHARED_LIBS OFF)
-set(CMAKE_EXE_LINKER_FLAGS "-static-libgcc -static-libstdc++ -Wall -Werror -Wextra")
+set(BUILD_SHARED_LIBS ON)
+# set(CMAKE_EXE_LINKER_FLAGS "-static-libgcc -static-libstdc++ -Wall -Werror -Wextra")
 # end of new and untested stuff
 
 # add executables
@@ -45,7 +45,7 @@ add_executable(Main src/main.cpp)
 # add_executable(Test src/tests.cpp)
 
 # set executables to be static
-SET_TARGET_PROPERTIES(Main PROPERTIES LINK_FLAGS "-static -lc -lm -L/usr/local/lib/")
+# SET_TARGET_PROPERTIES(Main PROPERTIES LINK_FLAGS "-static -lc -lm -L/usr/local/lib/")
 # add include directories
 # include_directories(${CMAKE_SOURCE_DIR}/lib)
 # include_directories(${CMAKE_SOURCE_DIR}/tests)
@@ -102,7 +102,7 @@ target_link_libraries(Main
   
   
   add_executable(FullTest ${EV3_TESTS_SRC})
-  SET_TARGET_PROPERTIES(FullTest PROPERTIES LINK_FLAGS "-static -lc -lm -L/usr/local/lib/")
+#   SET_TARGET_PROPERTIES(FullTest PROPERTIES LINK_FLAGS "-static -lc -lm -L/usr/local/lib/")
   
   
   target_sources(FullTest

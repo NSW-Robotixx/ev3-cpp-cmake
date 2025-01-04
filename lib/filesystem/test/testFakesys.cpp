@@ -27,7 +27,7 @@ namespace finder::physical::test
         // test if the sensor files are correctly created
         for (int i = 0; i < 4; i++) {
             //check if the value files are created
-            for (int j = 0; j < 10; j++) {
+            for (int j = 0; j < 8; j++) {
                 ASSERT_TRUE(std::filesystem::exists(FakeSys::getWorkingDir() + "/lego-sensor/sensor" + std::to_string(i) + "/value" + std::to_string(j)));
             }
             ASSERT_TRUE(std::filesystem::exists(FakeSys::getWorkingDir() + "/lego-sensor/sensor" + std::to_string(i) + "/address"));

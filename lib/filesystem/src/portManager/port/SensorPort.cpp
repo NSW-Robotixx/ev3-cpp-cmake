@@ -245,15 +245,16 @@ namespace finder
                 
                 if (_file_value_path[index]->bad())
                 {
-                    spdlog::error(("Failed to get value for {}"), getBasePath().value().c_str());
-                    return boost::leaf::new_error(std::invalid_argument("Failed to get value"));
+                    spdlog::error(("Failed to get value for {}, file bad"), getBasePath().value().c_str());
+                    reinit();
+                    // return boost::leaf::new_error(std::invalid_argument("Failed to get value"));
                 }
 
-                if (_file_value_path[index]->fail())
-                {
-                    spdlog::error(("Failed to get value for {}"), getBasePath().value().c_str());
-                    return boost::leaf::new_error(std::invalid_argument("Failed to get value"));
-                }
+                // if (_file_value_path[index]->fail())
+                // {
+                //     spdlog::error(("Failed to get value for {}, file failed"), getBasePath().value().c_str());
+                //     return boost::leaf::new_error(std::invalid_argument("Failed to get value"));
+                // }
 
                 if (_file_value_path[index]->is_open())
                 {

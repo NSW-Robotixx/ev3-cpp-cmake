@@ -281,7 +281,7 @@ namespace finder::physical::test
         commandsFile.close();
 
         // create the value files last
-        for (int i = 0; i < 10; i++)
+        for (int i = 0; i < 8; i++)
         {
             std::ofstream valueFile(_basePath + relPath + "/value" + std::to_string(i));
             valueFile << "0";
