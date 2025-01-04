@@ -215,6 +215,7 @@ namespace finder
 
             if (isEnabled() && *isEnabled()) {
                 if (_file_speed_sp_path->is_open()) {
+                    _file_speed_sp_path->seekp(0);
                     *_file_speed_sp_path << speed;
                     _file_speed_sp_path->flush();
                 } else {
@@ -234,6 +235,7 @@ namespace finder
             if (isEnabled() && *isEnabled()) {
                 if (!_file_position_sp_path->bad()) {
                     if (_file_position_sp_path->is_open()) {
+                        _file_position_sp_path->seekp(0);
                         *_file_position_sp_path << position_sp;
                         _file_position_sp_path->flush();
                     } else {
@@ -258,6 +260,7 @@ namespace finder
 
             if (isEnabled() && *isEnabled()) {
                 if (_file_duty_cycle_path->is_open()) {
+                    _file_duty_cycle_path->seekp(0);
                     *_file_duty_cycle_path << duty_cycle;
                     _file_duty_cycle_path->flush();
                 } else {
@@ -276,6 +279,7 @@ namespace finder
 
             if (isEnabled() && *isEnabled()) {
                 if (_file_polarity_path->is_open()) {
+                    _file_polarity_path->seekp(0);
                     if (polarity == MotorPolarity::NORMAL) {
                         *_file_polarity_path << "normal";
                     } else if (polarity == MotorPolarity::INVERSED) {
@@ -301,6 +305,7 @@ namespace finder
 
             if (isEnabled() && *isEnabled()) {
                 if (_file_stop_action_path->is_open()) {
+                    _file_stop_action_path->seekp(0);
                     if (stop_action == MotorStopAction::COAST) {
                         *_file_stop_action_path << "coast";
                     } else if (stop_action == MotorStopAction::BRAKE) {
@@ -374,6 +379,7 @@ namespace finder
                 if (_file_speed_path->is_open()) {
                     if (!_file_speed_path->bad()) {
                         int speed;
+                        _file_speed_path->seekg(0);
                         *_file_speed_path >> speed;
                         spdlog::debug(("SPEED.GET: WITH_RESULT: %d"), speed);
                         return speed;

@@ -20,10 +20,16 @@ TEST(SensorPort, Constructor)
     boost::leaf::result<std::string> portPath = FakeSys::getWorkingDir(EV3_PORT_INPUT_1);
     ASSERT_TRUE(portPath);
 
+
     finder::physical::SensorPort sensorPort(portPath.value());
-    boost::leaf::result<finder::physical::DeviceType> deviceType = sensorPort.getDeviceType();
-    ASSERT_TRUE(deviceType);
-    ASSERT_EQ(deviceType.value(), finder::physical::DeviceType::SENSOR);
+
+    for (size_t i = 0; i < 3; i++)
+    {
+        boost::leaf::result<finder::physical::DeviceType> deviceType = sensorPort.getDeviceType();
+        ASSERT_TRUE(deviceType);
+        ASSERT_EQ(deviceType.value(), finder::physical::DeviceType::SENSOR);    
+    }
+    
 }
 
 // TEST(SensorPort, ConstructorWithPort)
@@ -96,16 +102,24 @@ TEST(SensorPort, getPathFunctions)
 
     for (const auto &path : paths)
     {
-        boost::leaf::result<std::string> pathValue = path.second();
-        ASSERT_TRUE(pathValue);
-        ASSERT_EQ(pathValue.value(), portPath.value() + path.first);
+        // repeat 3 times to check for read pointer reset
+        for (size_t i = 0; i < 3; i++)
+        {
+            boost::leaf::result<std::string> pathValue = path.second();
+            ASSERT_TRUE(pathValue);
+            ASSERT_EQ(pathValue.value(), portPath.value() + path.first);
+        }
 
         spdlog::trace("Checking path for: " + path.first);
         sensorPort.overrideEnabled(false);
 
-        pathValue = path.second();
-        ASSERT_FALSE(pathValue);
-
+        // repeat 3 times to check for read pointer reset
+        for (size_t i = 0; i < 3; i++)
+        {
+            boost::leaf::result<std::string> pathValue = path.second();
+            ASSERT_FALSE(pathValue);
+        }
+        
         sensorPort.overrideEnabled(true);
     }
 }
@@ -124,6 +138,19 @@ TEST(SensorPort, getValue)
     ASSERT_FALSE(value);
 
     sensorPort.overrideEnabled(true);
+
+    // repeat 3 times to check for read pointer reset
+    ASSERT_NO_FATAL_FAILURE(
+        for (size_t i = 0; i < 8; i++)
+        {
+            for (size_t j = 0; j < 3; j++)
+            {
+                value = sensorPort.getValue(i);
+                EXPECT_TRUE(value);
+            }
+        }
+    );
+
     value = sensorPort.getValue(0);
     ASSERT_TRUE(value);
     ASSERT_EQ(value.value(), 0);

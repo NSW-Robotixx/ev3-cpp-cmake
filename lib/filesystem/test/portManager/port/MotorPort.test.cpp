@@ -69,13 +69,17 @@ TEST(MotorPort, getPathFunctions)
 
     for (const auto &path : paths)
     {
-        boost::leaf::result<std::string> pathValue = path.second();
-        ASSERT_TRUE(pathValue);
-        ASSERT_EQ(pathValue.value(), portPath.value() + path.first);
+
+        for (size_t i = 0; i < 3; i++)
+        {
+            boost::leaf::result<std::string> pathValue = path.second();
+            ASSERT_TRUE(pathValue);
+            ASSERT_EQ(pathValue.value(), portPath.value() + path.first);
+        }
 
         motorPort.overrideEnabled(false);
 
-        pathValue = path.second();
+        boost::leaf::result<std::string> pathValue = path.second();
         ASSERT_FALSE(pathValue);
 
         motorPort.overrideEnabled(true);
@@ -88,11 +92,15 @@ TEST(MotorPort, filestreams)
 
     finder::physical::MotorPort motorPort(FakeSys::getWorkingDir() + "/tacho-motor/motor0");
 
-    motorPort.setSpeed(0);
-    EXPECT_TRUE(motorPort.setPositionSp(0));
-    motorPort.setDutyCycle(0);
-    motorPort.setPolarity(finder::physical::MotorPolarity::INVERSED);
-    motorPort.setStopAction(finder::physical::MotorStopAction::HOLD);
+    for (size_t i = 0; i < 3; i++)
+    {
+        motorPort.setSpeed(0);
+        EXPECT_TRUE(motorPort.setPositionSp(0));
+        motorPort.setDutyCycle(0);
+        motorPort.setPolarity(finder::physical::MotorPolarity::INVERSED);
+        motorPort.setStopAction(finder::physical::MotorStopAction::HOLD);
+    }
+    
     
     std::ifstream fs_speed_read(FakeSys::getWorkingDir() + "/tacho-motor/motor0/speed_sp");
     std::ifstream fs_position_sp_read(FakeSys::getWorkingDir() + "/tacho-motor/motor0/position_sp");
@@ -134,18 +142,23 @@ TEST(MotorPort, GetSpeed)
 {
     using namespace finder::physical::test;
 
-    finder::physical::MotorPort motorPort(FakeSys::getWorkingDir() + "/tacho-motor/motor0");
+    finder::physical::MotorPort motorPort(FakeSys::getWorkingDir(EV3_PORT_OUTPUT_A).value());
 
-    motorPort.setSpeed(100);
-    int speed = motorPort.getSpeed();
-    ASSERT_EQ(speed, 0);
+    for (size_t i = 0; i < 3; i++)
+    {
+        motorPort.setSpeed(100);
+        int speed = motorPort.getSpeed();
+        ASSERT_EQ(speed, 0);
+    }
 }
 
 TEST(MotorPort, GetPosition)
 {
     using namespace finder::physical::test;
 
-    finder::physical::MotorPort motorPort(FakeSys::getWorkingDir() + "/tacho-motor/motor0");
+    finder::physical::MotorPort motorPort(FakeSys::getWorkingDir(EV3_PORT_OUTPUT_A).value());
+
+    motorPort.overrideEnabled(true);
 
     motorPort.setPositionSp(200);
     int position = motorPort.getPosition();
