@@ -11,6 +11,7 @@
 #include <thread>
 #include <atomic>
 #include <queue>
+#include <Eigen/Dense>
 
 
 namespace finder::position {
@@ -18,7 +19,7 @@ namespace finder::position {
     using namespace finder::physical;
 
     /// @brief Class that represents the sensor position and handles the sensor position estimate
-    class SensorPosition {
+    class SensorPosition : public DeviceManager {
     public:
         /// @brief Constructor
         /// @param portBasePath Path to the base directory of the ports 
@@ -59,10 +60,22 @@ namespace finder::position {
     private:
         static math::Vector2 _sensorPosition;
         static float _angle;
+        
+        #if EV3_COLOR_SENSOR_USE_RGB_MODE
+            static std::deque<Eigen::Vector3i> _prev_color_values_front;
+            static std::deque<Eigen::Vector3i> _prev_color_values_left;
+            static std::deque<Eigen::Vector3i> _prev_color_values_right;
+            static std::deque<int> _prev_gyro_values;
+        #else
+            static std::array<unsigned short int, 3> _prev_color_values;
+        #endif
 
         // stores the order of the last recognized lines from the sensors (last in the queue is the most recent)
         static std::deque<math::Vector3> _sensorLineOrder;
 
         static TurnDirection _lastDirection;
+        
+        /// @brief Get Position from detected lines
+        void LineDetectionParser();
     };
 }

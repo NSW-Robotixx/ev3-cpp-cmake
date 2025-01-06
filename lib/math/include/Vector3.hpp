@@ -4,6 +4,7 @@
 #include <iostream>
 #include <sstream>
 #include <algorithm>
+#include <boost/leaf/result.hpp>
 #include "Vector2.hpp"
 
 namespace finder

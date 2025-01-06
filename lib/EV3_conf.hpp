@@ -62,15 +62,19 @@
     constexpr unsigned int EV3_COLOR_SENSOR_TRIGGER = 42;
 
     // use the rgb mode for the color sensors
-    constexpr unsigned int EV3_COLOR_SENSOR_USE_RGB_MODE = 0;           // to be implemented
+    #define EV3_COLOR_SENSOR_USE_RGB_MODE 1           // to be implemented
+
+    // define the backlog of the sensors for position estimation
+    constexpr unsigned int EV3_COLOR_SENSOR_BACKLOG = 5;
+    constexpr unsigned int EV3_GYRO_SENSOR_BACKLOG = 5;
 
     // define the trigger values for the color sensors with rgb mode
     constexpr unsigned int EV3_COLOR_SENSOR_TRIGGER_RED = 42;           // to be implemented
     constexpr unsigned int EV3_COLOR_SENSOR_TRIGGER_GREEN = 42;         // to be implemented
     constexpr unsigned int EV3_COLOR_SENSOR_TRIGGER_BLUE = 42;          // to be implemented
 
-    // define the offsets of the motors on the robot
-    constexpr unsigned int EV3_MOTOR_WHEELBASE = 0;                     // to be implemented
+    // define the offsets of the motors on the robot in mm
+    constexpr unsigned int EV3_MOTOR_WHEELBASE = 140;                     // to be implemented
 
     // define the circumference of the turn circle of the robot
     constexpr unsigned int EV3_MOTOR_TURN_CIRCLE = M_PI * EV3_MOTOR_WHEELBASE;

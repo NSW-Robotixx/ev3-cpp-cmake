@@ -601,7 +601,7 @@ namespace finder
             if (std::filesystem::exists(_path)) {
                 boost::leaf::result<void> initStatus = init();
                 if (!initStatus) {
-                    spdlog::error(initStatus.error());
+                    spdlog::error("MotorPort could not be reinitialized, please check log");
                     return initStatus;
                 }
 

@@ -26,3 +26,6 @@ target_sources(Line
 target_include_directories(Vector2 PUBLIC ${EV3_MATH_INCLUDE_DIR})
 target_include_directories(Vector3 PUBLIC ${EV3_MATH_INCLUDE_DIR})
 target_include_directories(Line PUBLIC ${EV3_MATH_INCLUDE_DIR})
+
+target_link_libraries(Vector2 PUBLIC boost::leaf)
+target_link_libraries(Vector3 PUBLIC boost::leaf)

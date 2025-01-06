@@ -34,4 +34,5 @@ target_link_libraries(EV3_position
         boost::leaf
         boost::boost
         spdlog::spdlog
+        Eigen3::Eigen
 )

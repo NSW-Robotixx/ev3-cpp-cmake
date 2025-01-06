@@ -6,8 +6,20 @@ namespace finder::position {
     float SensorPosition::_angle;
     TurnDirection SensorPosition::_lastDirection;
 
-    SensorPosition::SensorPosition(std::string portBasePath) {
+    SensorPosition::SensorPosition(std::string portBasePath) : DeviceManager(portBasePath) {
         spdlog::trace("Initializing SensorPosition");
+
+        #if EV3_COLOR_SENSOR_USE_RGB_MODE
+            _colorSensorFront->setMode("RGB-RAW");
+            _colorSensorLeft->setMode("RGB-RAW");
+            _colorSensorRight->setMode("RGB-RAW");
+            _gyroSensor->setMode("GYRO-ANG");
+        #else
+            _colorSensorFront->setMode("COL-REFLECT");
+            _colorSensorLeft->setMode("COL-REFLECT");
+            _colorSensorRight->setMode("COL-REFLECT");
+            _gyroSensor->setMode("GYRO-ANG");
+        #endif
     }
 
     void SensorPosition::update(DeviceID port, int value) {
@@ -93,9 +105,75 @@ namespace finder::position {
     
     void SensorPosition::updatePosition()
     {
-        if (_sensorLineOrder.size() >= 2) 
-        {
+        #if EV3_COLOR_SENSOR_USE_RGB_MODE
+            Eigen::Vector3i color_values_front(
+                _colorSensorFront->getValue(0).value(),
+                _colorSensorFront->getValue(1).value(),
+                _colorSensorFront->getValue(2).value()
+            );
 
-        }
+            Eigen::Vector3i color_values_left(
+                _colorSensorLeft->getValue(0).value(),
+                _colorSensorLeft->getValue(1).value(),
+                _colorSensorLeft->getValue(2).value()
+            );
+
+            Eigen::Vector3i color_values_right(
+                _colorSensorRight->getValue(0).value(),
+                _colorSensorRight->getValue(1).value(),
+                _colorSensorRight->getValue(2).value()
+            );
+
+
+            _prev_color_values_front.push_back(color_values_front);
+            _prev_color_values_left.push_back(color_values_left);
+            _prev_color_values_right.push_back(color_values_right);
+
+            for (size_t i = 0; i < _prev_color_values_front.size(); i++)
+            {
+                if (color_values_front[i] >= EV3_COLOR_SENSOR_TRIGGER && _prev_color_values_front.size() - 1 < color_values_front[i])
+                {
+                    _sensorLineOrder.push_back({_sensorPosition, _angle});
+                }
+
+                if (color_values_left[i] >= EV3_COLOR_SENSOR_TRIGGER && _prev_color_values_left.size() - 1 < color_values_left[i])
+                {
+                    _sensorLineOrder.push_back({_sensorPosition, _angle});
+                }
+
+                if (color_values_right[i] >= EV3_COLOR_SENSOR_TRIGGER && _prev_color_values_right.size() - 1 < color_values_right[i])
+                {
+                    _sensorLineOrder.push_back({_sensorPosition, _angle});
+                }
+            }
+
+            _prev_gyro_values.push_back(_gyroSensor->getValue(0).value());
+
+            _angle = _prev_gyro_values.back();
+            
+                        
+            if (_prev_color_values_front.size() >= EV3_COLOR_SENSOR_BACKLOG)
+            {
+                _prev_color_values_front.pop_front();
+            }
+
+            if (_prev_color_values_left.size() >= EV3_COLOR_SENSOR_BACKLOG)
+            {
+                _prev_color_values_left.pop_front();
+            }
+
+            if (_prev_color_values_right.size() >= EV3_COLOR_SENSOR_BACKLOG)
+            {
+                _prev_color_values_right.pop_front();
+            }
+
+            if (_prev_gyro_values.size() >= EV3_GYRO_SENSOR_BACKLOG)
+            {
+                _prev_gyro_values.pop_front();
+            }
+
+        #else
+
+        #endif
     }
 }
