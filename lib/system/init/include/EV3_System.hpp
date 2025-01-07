@@ -26,6 +26,7 @@ namespace finder::system
         ~System() = default;
 
         /// @brief Start the system, if enabled the system will connect to the compute module
+        /// @return boost::leaf::result<void>
         boost::leaf::result<void> start();
 
         /// @brief Read the destinations from the file and set them as destinations

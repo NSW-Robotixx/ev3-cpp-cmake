@@ -156,6 +156,7 @@ namespace finder::physical::display
             /// @param x Offset X Coordinate
             /// @param y Offset Y Coordinate
             /// @param bitmap Bitmap to draw
+            /// @return 0 if successful, -1 if not
             int drawBitmap(int x, int y, std::shared_ptr<bitmaps::ImageFormat> bitmap);
 #endif
 

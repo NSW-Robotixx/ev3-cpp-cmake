@@ -4,7 +4,7 @@ yaml-cpp/0.8.0
 ydcpp-tcpcat/1.0.4
 gtest/1.15.0
 spdlog/1.10.0
-# doxygen/1.9.4
+doxygen/1.9.4
 boost/1.86.0
 boost-leaf/1.83.0
 

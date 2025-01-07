@@ -5,9 +5,12 @@
 
 namespace finder::physical
 {
+    /// @brief Test class for GearboxManager
     class GearboxManagerTest : public ::testing::Test
     {
     protected:
+
+        /// @brief Set up the test environment
         void SetUp() override
         {
             finder::physical::test::FakeSys::reinit();
@@ -16,7 +19,10 @@ namespace finder::physical
             gearbox_manager = std::make_unique<GearboxManager>();
         }
 
+        /// @brief local device manager
         std::unique_ptr<DeviceManager> device_manager;
+
+        /// @brief local gearbox manager
         std::unique_ptr<GearboxManager> gearbox_manager;
     };
 

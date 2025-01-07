@@ -2,11 +2,31 @@
 
 
 namespace finder::position {
-    std::deque<math::Vector3> SensorPosition::_sensorLineOrder;
+    std::deque<Eigen::Vector3d> SensorPosition::_sensorLineOrder;
     float SensorPosition::_angle;
     TurnDirection SensorPosition::_lastDirection;
 
-    SensorPosition::SensorPosition(std::string portBasePath) : DeviceManager(portBasePath) {
+    std::deque<Eigen::Vector3i> SensorPosition::_prev_color_values_front;
+    std::deque<Eigen::Vector3i> SensorPosition::_prev_color_values_left;
+    std::deque<Eigen::Vector3i> SensorPosition::_prev_color_values_right;
+    std::deque<int> SensorPosition::_prev_gyro_values;
+
+    Eigen::Vector2d SensorPosition::_sensorPosition;
+
+    const Eigen::Vector2d SensorPosition::EV3_SENSOR_COLOR_RIGHT_OFFSET_VECTOR{
+        EV3_SENSOR_COLOR_RIGHT_OFFSET_X,
+        EV3_SENSOR_COLOR_RIGHT_OFFSET_Y
+    };
+    const Eigen::Vector2d SensorPosition::EV3_SENSOR_COLOR_LEFT_OFFSET_VECTOR{
+        EV3_SENSOR_COLOR_LEFT_OFFSET_X,
+        EV3_SENSOR_COLOR_LEFT_OFFSET_Y
+    };
+    const Eigen::Vector2d SensorPosition::EV3_SENSOR_COLOR_FRONT_OFFSET_VECTOR{
+        EV3_SENSOR_COLOR_FRONT_OFFSET_X,
+        EV3_SENSOR_COLOR_FRONT_OFFSET_Y
+    };
+
+    SensorPosition::SensorPosition(std::string portBasePath) : DeviceManager(portBasePath){
         spdlog::trace("Initializing SensorPosition");
 
         #if EV3_COLOR_SENSOR_USE_RGB_MODE
@@ -84,17 +104,14 @@ namespace finder::position {
     
     void SensorPosition::updateColorLeft(int value)
     {
-        _sensorLineOrder.push_back({MotorPosition::getPosition(), _angle});
     }
     
     void SensorPosition::updateColorRight(int value)
     {
-        _sensorLineOrder.push_back({MotorPosition::getPosition(), _angle});
     }
     
     void SensorPosition::updateColorFront(int value)
     {
-        _sensorLineOrder.push_back({MotorPosition::getPosition(), _angle});
     }
     
     void SensorPosition::updateGyro(int value)
@@ -133,17 +150,28 @@ namespace finder::position {
             {
                 if (color_values_front[i] >= EV3_COLOR_SENSOR_TRIGGER && _prev_color_values_front.size() - 1 < color_values_front[i])
                 {
-                    _sensorLineOrder.push_back({_sensorPosition, _angle});
+                    Eigen::Vector2d sensorPosition = _sensorPosition + EV3_SENSOR_COLOR_FRONT_OFFSET_VECTOR;
+                    _sensorLineOrder.push_back(Eigen::Vector3d{sensorPosition.x(), sensorPosition.y(), _angle});
                 }
 
                 if (color_values_left[i] >= EV3_COLOR_SENSOR_TRIGGER && _prev_color_values_left.size() - 1 < color_values_left[i])
                 {
-                    _sensorLineOrder.push_back({_sensorPosition, _angle});
+                    Eigen::Vector2d sensorPosition = _sensorPosition + EV3_SENSOR_COLOR_LEFT_OFFSET_VECTOR;
+                    _sensorLineOrder.push_back(Eigen::Vector3d{
+                        sensorPosition.x(),
+                        sensorPosition.y(),
+                        _angle
+                    });;
                 }
 
                 if (color_values_right[i] >= EV3_COLOR_SENSOR_TRIGGER && _prev_color_values_right.size() - 1 < color_values_right[i])
                 {
-                    _sensorLineOrder.push_back({_sensorPosition, _angle});
+                    Eigen::Vector2d sensorPosition = _sensorPosition + EV3_SENSOR_COLOR_RIGHT_OFFSET_VECTOR;
+                    _sensorLineOrder.push_back(Eigen::Vector3d{
+                        sensorPosition.x(),
+                        sensorPosition.y(),
+                        _angle
+                    });
                 }
             }
 

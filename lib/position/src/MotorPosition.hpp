@@ -9,6 +9,8 @@ namespace finder::position
     class MotorPosition : public physical::DeviceManager
     {
         public:
+            /// @brief Constructor
+            /// @param base_path Path to the base directory of the ports
             MotorPosition(std::string base_path);
             ~MotorPosition();
 

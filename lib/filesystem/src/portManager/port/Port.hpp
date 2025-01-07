@@ -82,6 +82,8 @@ namespace finder
                 /// @param path The path to set
                 virtual boost::leaf::result<void> setBasePath(const path_port_t& path);
 
+                /// @brief Reinitialize the port
+                /// @return boost::leaf::result<void>
                 virtual boost::leaf::result<void> reinit();
                 
                 /// @brief Get the key of the port

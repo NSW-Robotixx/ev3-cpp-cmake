@@ -58,7 +58,7 @@ namespace finder::position {
         static void updatePosition();
 
     private:
-        static math::Vector2 _sensorPosition;
+        static Eigen::Vector2d _sensorPosition;
         static float _angle;
         
         #if EV3_COLOR_SENSOR_USE_RGB_MODE
@@ -71,8 +71,12 @@ namespace finder::position {
         #endif
 
         // stores the order of the last recognized lines from the sensors (last in the queue is the most recent)
-        static std::deque<math::Vector3> _sensorLineOrder;
+        static std::deque<Eigen::Vector3d> _sensorLineOrder;
 
+        static const Eigen::Vector2d EV3_SENSOR_COLOR_RIGHT_OFFSET_VECTOR;
+        static const Eigen::Vector2d EV3_SENSOR_COLOR_LEFT_OFFSET_VECTOR;
+        static const Eigen::Vector2d EV3_SENSOR_COLOR_FRONT_OFFSET_VECTOR;
+        
         static TurnDirection _lastDirection;
         
         /// @brief Get Position from detected lines

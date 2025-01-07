@@ -53,12 +53,12 @@ namespace finder
                 /// @brief Motor tool port
                 static std::shared_ptr<MotorPort> _motorTool;
 
-                /// @brief Chech if Devicemanager was initialized successfully
-                /// @return Initialized?
-
                 /// @brief Initialize the Ports in the DeviceManager
                 /// @param portBasePath Base path of the ports
                 static void init(std::string portBasePath);
+
+                /// @brief Check if the DeviceManager was initialized
+                /// @return Initialized?
                 bool isInitialized();
 
                 /// @brief Once flag for the DeviceManager

@@ -41,7 +41,8 @@ namespace finder::physical
             static void setDutyCycle(int dutyCycle);
 
             /// @brief Set the duty cycle of the drive motors
-            /// @param dutyCycle Duty cycle of the motors
+            /// @param dutyCycleLeft Duty cycle of the left motor
+            /// @param dutyCycleRight Duty cycle of the right motor
             static void setDutyCycle(int dutyCycleLeft, int dutyCycleRight);
 
             /// @brief Move the robot forward
@@ -54,7 +55,8 @@ namespace finder::physical
             static void moveForwardDirect(int speed);
 
             /// @brief Move the robot direct forward
-            /// @param speed Speed of the motors
+            /// @param speedLeft Speed of the left motor
+            /// @param speedRight Speed of the right motor
             static void moveForwardDirect(int speedLeft, int speedRight);
 
             /// @brief Move the robot backward

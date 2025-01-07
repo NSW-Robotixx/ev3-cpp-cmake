@@ -10,11 +10,14 @@
 
 namespace finder::engines::movement
 {
+    /// @brief Class that handles the movement of the robot
     class MovementEngine {
         public:
             MovementEngine();
             ~MovementEngine();
-
+            
+            /// @brief Move the robot to the destination
+            /// @param destination The destination to move to
             static void move(math::Vector2 destination);
 
         private:
