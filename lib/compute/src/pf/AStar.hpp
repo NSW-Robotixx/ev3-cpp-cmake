@@ -9,7 +9,7 @@
 #include <vector>
 #include <functional>
 #include <Vector2.hpp>
-#include "ObstacleManager.hpp"
+#include <EV3_ObstacleManager.hpp>
 #include "../../EV3_conf.hpp"
 
 
@@ -108,7 +108,7 @@ namespace finder::pathfind {
             void clearCollisions();
 
             /// @brief Obstacle manager
-            ObstacleManager om = ObstacleManager{};
+            finder::physical::ObstacleManager om = finder::physical::ObstacleManager{};
 
         private:
             HeuristicFunction heuristic;

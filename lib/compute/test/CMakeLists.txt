@@ -37,6 +37,7 @@ target_link_libraries(EV3_compute_test
         GTest::gtest_main
         EV3_compute
         EV3_tcp_communication
+        EV3_obstacle
         Vector2
         Line
         ydcpp-tcpcat

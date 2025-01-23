@@ -2,7 +2,6 @@ set(EV3_COMPUTE_SRC
     ${CMAKE_CURRENT_SOURCE_DIR}/EV3_compute_tcp.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/EV3_compute_local.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/pf/AStar.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/pf/ObstacleManager.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/pf/SmoothPath.cpp
 )
 
@@ -10,7 +9,6 @@ set(EV3_COMPUTE_HDR
     ${EV3_COMPUTE_INCLUDE_DIR}/EV3_compute_tcp.hpp
     ${EV3_COMPUTE_INCLUDE_DIR}/EV3_compute_local.hpp
     ${EV3_COMPUTE_SRC_DIR}/pf/AStar.hpp
-    ${EV3_COMPUTE_SRC_DIR}/pf/ObstacleManager.hpp
     ${EV3_COMPUTE_SRC_DIR}/pf/SmoothPath.hpp
 )
 
@@ -31,6 +29,7 @@ target_include_directories(EV3_compute PUBLIC ${EV3_COMPUTE_INCLUDE_DIR})
 target_link_libraries(EV3_compute
     PUBLIC
         EV3_tcp_communication
+        EV3_obstacle
         Vector2
         Line
         ydcpp-tcpcat

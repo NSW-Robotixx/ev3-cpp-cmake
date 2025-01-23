@@ -152,7 +152,7 @@ namespace finder::pathfind
             return true;
         }
         // std::cout << "dest: " << coordinates_ << " start: " << _origin;
-        bool intersect = om.isColliding(coordinates_, _origin);
+        bool intersect = om.isObstacle(Eigen::Vector2i(coordinates_.x, coordinates_.y));
         // std::cout << " intersect: " << intersect << std::endl;
         return intersect;
     }

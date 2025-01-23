@@ -107,7 +107,20 @@
         #define EV3_DESTINATIONS_FILE_PATH "./destinations.list"
     #endif
 
-
+    // define the file format of the obstacles file
+    #define EV3_OBSTACLES_FILE_FORMAT_YAML 0
+    #if     EV3_OBSTACLES_FILE_FORMAT_YAML
+        // define the obstacles.yaml path
+        #define EV3_OBSTACLES_FILE_ABS_PATH  1
+        #if     EV3_OBSTACLES_FILE_ABS_PATH
+            constexpr const char* EV3_OBSTACLES_FILE_PATH = "/home/dennis/src/niklas/ev3-cpp-cmake/lib/system/src/obstacles.yaml";
+        #else 
+            constexpr const char* EV3_OBSTACLES_FILE_PATH = "./obstacles.yaml";
+        #endif
+    #else
+        // define the obstacles.txt path
+        #define EV3_OBSTACLES_FILE_PATH "./obstacles.yaml"
+    #endif
 
     // disable tcp requests
     #define EV3_COMPUTE_NO_TCP  1

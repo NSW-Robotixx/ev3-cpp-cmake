@@ -303,7 +303,7 @@ namespace finder
         {
             spdlog::trace("MotorPort::setStopAction()");
 
-            if (isEnabled() && *isEnabled()) {
+            if (isEnabled() && isEnabled().value()) {
                 if (_file_stop_action_path->is_open()) {
                     _file_stop_action_path->seekp(0);
                     if (stop_action == MotorStopAction::COAST) {

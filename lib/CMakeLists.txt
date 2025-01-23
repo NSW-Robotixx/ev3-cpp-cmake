@@ -12,6 +12,7 @@ add_subdirectory(tcp)
 add_subdirectory(gearbox)
 add_subdirectory(display)
 add_subdirectory(movement)
+add_subdirectory(obstacles)
 
 if (BUILD_INTERNAL_TCP_SERVER)
 endif()

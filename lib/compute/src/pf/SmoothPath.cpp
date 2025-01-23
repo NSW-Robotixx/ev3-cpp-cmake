@@ -1,5 +1,5 @@
 #include "SmoothPath.hpp"
-#include "ObstacleManager.hpp"
+#include <EV3_ObstacleManager.hpp>
 
 namespace finder::pathfind
 {
@@ -17,7 +17,7 @@ namespace finder::pathfind
         {
             math::Line line(smoothedPath.back(), path[i + 1]);
 
-            bool isColliding = ObstacleManager::isColliding(smoothedPath.back(), path[i + 1]);
+            bool isColliding = finder::physical::ObstacleManager::isColliding(Eigen::Vector2i(smoothedPath.back().x, smoothedPath.back().y), Eigen::Vector2i(path[i + 1].x, path[i + 1].y));
 
             if (isColliding)
             {
