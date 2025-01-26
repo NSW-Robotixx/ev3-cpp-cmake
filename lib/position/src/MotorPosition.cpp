@@ -4,7 +4,7 @@
 namespace finder::position
 {
     math::Vector2 MotorPosition::_prev_motor_position = math::Vector2(0, 0);
-    math::Vector2 MotorPosition::_position = math::Vector2(0, 0);
+    math::Vector2 MotorPosition::_position = math::Vector2(EV3_ROBOT_POSITION_X, EV3_ROBOT_POSITION_Y);
     float MotorPosition::_angle;
 
     MotorPosition::MotorPosition(std::string base_path) : physical::DeviceManager(base_path)

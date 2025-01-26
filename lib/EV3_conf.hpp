@@ -92,13 +92,17 @@
     constexpr unsigned int EV3_FIELD_WIDTH = 2000;
     constexpr unsigned int EV3_FIELD_HEIGHT = 1000;
 
+    // define the position of the robot on the field
+    constexpr unsigned int EV3_ROBOT_POSITION_X = 40;
+    constexpr unsigned int EV3_ROBOT_POSITION_Y = 40;
+
     // set the file format of the destinations file
-    #define EV3_DESTINATIONS_FILE_FORMAT_YAML 0
+    #define EV3_DESTINATIONS_FILE_FORMAT_YAML 1
     #if     EV3_DESTINATIONS_FILE_FORMAT_YAML
         // define the destinations.yaml path
-        #define EV3_DESTINATIONS_FILE_ABS_PATH  1
+        #define EV3_DESTINATIONS_FILE_ABS_PATH  0
         #if     EV3_DESTINATIONS_FILE_ABS_PATH
-            constexpr const char* EV3_DESTINATIONS_FILE_PATH = "/home/dennis/src/niklas/ev3-cpp-cmake/lib/system/src/destinations.yaml";
+            constexpr const char* EV3_DESTINATIONS_FILE_PATH = "/home/robot/destinations.yaml";
         #else 
             constexpr const char* EV3_DESTINATIONS_FILE_PATH = "./destinations.yaml";
         #endif
@@ -108,10 +112,10 @@
     #endif
 
     // define the file format of the obstacles file
-    #define EV3_OBSTACLES_FILE_FORMAT_YAML 0
+    #define EV3_OBSTACLES_FILE_FORMAT_YAML 1
     #if     EV3_OBSTACLES_FILE_FORMAT_YAML
         // define the obstacles.yaml path
-        #define EV3_OBSTACLES_FILE_ABS_PATH  1
+        #define EV3_OBSTACLES_FILE_ABS_PATH  0
         #if     EV3_OBSTACLES_FILE_ABS_PATH
             constexpr const char* EV3_OBSTACLES_FILE_PATH = "/home/dennis/src/niklas/ev3-cpp-cmake/lib/system/src/obstacles.yaml";
         #else 

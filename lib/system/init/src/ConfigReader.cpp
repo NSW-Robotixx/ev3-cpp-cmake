@@ -29,8 +29,8 @@ namespace finder::system
 
         if (!file.is_open() || !file.good())
         {
-            spdlog::error("Failed to open file: " + std::string(EV3_DESTINATIONS_FILE_PATH));
-            spdlog::error("Make sure the file exists and is accessible.");
+            spdlog::error("Failed to open file, or not good: " + std::string(EV3_DESTINATIONS_FILE_PATH));
+            spdlog::error("Make sure the file exists and is accessible and is good.");
             spdlog::error("No destinations found, Exiting...");
             exit(-1);
             return destinations;
@@ -60,6 +60,7 @@ namespace finder::system
         }
 
         file.close();
+
 #endif
 
         spdlog::info("Found destinations: ");

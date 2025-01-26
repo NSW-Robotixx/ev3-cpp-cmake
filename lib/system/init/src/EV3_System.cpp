@@ -6,7 +6,17 @@ namespace finder::system
     std::deque<math::Vector3> System::m_destinations;
     std::deque<math::Vector2> System::m_path;
 
-    boost::leaf::result<void> System::start()
+    System::System()
+    {
+        // stop motors on program exit (ctrl+c)
+        signal(SIGINT, [](int signum) {
+            spdlog::info("Caught signal: {}", signum);
+            finder::physical::MotorManager::stop();
+            exit(signum);
+        });
+    }
+
+boost::leaf::result<void> System::start()
     {
         #if EV3_COMPUTE_MODULE_TCP_ENABLED
         m_compute.start();

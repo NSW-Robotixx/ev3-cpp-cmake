@@ -5,13 +5,13 @@
 #include <stdio.h>
 #include <chrono>
 
-// #include <EV3_System.hpp>
+#include <EV3_System.hpp>
 #include <EV3_Gearbox.hpp>
 #include <DeviceManager.hpp>
 #include <EV3_MotorManager.hpp>
 
 // finder::log::Logger logger = finder::log::Logger();
-// finder::system::System ev3_system = finder::system::System();
+finder::system::System ev3_system = finder::system::System();
 finder::physical::GearboxManager gearbox_manager = finder::physical::GearboxManager();
 
 constexpr auto& ascii_art_literal = R"(
@@ -30,7 +30,7 @@ int main(int argc, char const *argv[])
 {
     std::cout << ascii_art_literal << std::endl;
 
-    spdlog::set_level(spdlog::level::trace);
+    spdlog::set_level(spdlog::level::info);
 
     // logger.info("Starting application...");
 
@@ -45,21 +45,16 @@ int main(int argc, char const *argv[])
 //    movementEngine.move(finder::math::Vector2{100, 100});
 //    movementEngine.move(finder::math::Vector2{100, 100});
 //    movementEngine.move(finder::math::Vector2{100, 100});
-
+    finder::physical::MotorManager motor_manager = finder::physical::MotorManager("/sys/class");
 
     gearbox_manager.calibrate();
 
-    finder::physical::MotorManager motor_manager = finder::physical::MotorManager("/sys/class");
-    finder::physical::SensorManager sensor_manager = finder::physical::SensorManager("/sys/class");
+    // finder::physical::SensorManager sensor_manager = finder::physical::SensorManager("/sys/class");
 
-    motor_manager.moveForward(100, 400);
-    motor_manager.moveBackward(100, 400);
+    ev3_system.read();
+    ev3_system.start();
 
     motor_manager.stop();
-
-    motor_manager.turn(finder::physical::TurnDirection::LEFT, 90, 200);
-    motor_manager.turn(finder::physical::TurnDirection::LEFT, -90, 200);
-    motor_manager.turn(finder::physical::TurnDirection::RIGHT, 0, 300);
 
 
     // while (true)

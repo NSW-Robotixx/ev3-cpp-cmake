@@ -7,6 +7,8 @@
 #include <MovementEngine.hpp>
 
 #include <deque>
+#include <unistd.h>
+#include <signal.h>
 
 #include <spdlog/spdlog.h>
 #include <boost/leaf.hpp>
@@ -22,7 +24,7 @@ namespace finder::system
     class System
     {
     public:
-        System() = default;
+        System();
         ~System() = default;
 
         /// @brief Start the system, if enabled the system will connect to the compute module

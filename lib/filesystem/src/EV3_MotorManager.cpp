@@ -112,11 +112,27 @@ namespace finder::physical
         _motorRight->setCommand(physical::MotorCommand::RUN_DIRECT);
     
 
-        for (boost::leaf::result<int> result = _gyroSensor->getValue(0); result && result.value() < angle; result = _gyroSensor->getValue(0)) // TODO: Fix angle checking for both turn directions
+        switch (direction)  
         {
-            spdlog::trace("Current angle: " + std::to_string(result.value()));
+        case turnDirection::LEFT:
+            for (boost::leaf::result<int> result = _gyroSensor->getValue(0); result && result.value() > angle; result = _gyroSensor->getValue(0)) 
+            {
+                spdlog::info("Current angle: " + std::to_string(result.value()));
+            }
+            break;
+        
+        case turnDirection::RIGHT:
+            for (boost::leaf::result<int> result = _gyroSensor->getValue(0); result && result.value() < angle; result = _gyroSensor->getValue(0)) 
+            {
+                spdlog::info("Current angle: " + std::to_string(result.value()));
+            }
+            break;
+
+        default:
+            spdlog::error("Invalid turn direction");
+            break;
         }
-    
+
         _motorLeft->stop();
         _motorRight->stop();
 
