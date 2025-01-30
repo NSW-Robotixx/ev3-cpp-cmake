@@ -1,10 +1,10 @@
-#include "EV3_MotorManager.hpp"
+#include "EV3_MovementEngine.hpp"
 
-namespace finder::physical
+namespace finder::engines::movement
 {
-    MotorManager::MotorManager(std::string portBasePath) : DeviceManager(portBasePath)
+    MovementEngine::MovementEngine(std::string portBasePath) : DeviceManager(portBasePath)
     {
-        spdlog::trace("Initializing MotorManager");
+        spdlog::trace("Initializing MovementEngine");
 
         _motorLeft->setStopAction(MotorStopAction::HOLD);
         _motorRight->setStopAction(MotorStopAction::HOLD);
@@ -14,14 +14,40 @@ namespace finder::physical
         _gyroSensor->calibrateGyro();
     }
 
-    MotorManager::~MotorManager()
+    MovementEngine::~MovementEngine()
     {
-        spdlog::trace("Destroying MotorManager");
+        spdlog::trace("Destroying MovementEngine");
 
         stop();
     }
 
-    void MotorManager::setSpeed(int speed)
+    void MovementEngine::moveToPoint(math::Vector2 destination)
+    {
+        double lineAngle = math::Line(position::Position::getPosition(), destination).getAngle();
+        double lineAngleReverse = lineAngle + 180;
+        lineAngleReverse = lineAngleReverse > 360 ? lineAngleReverse - 360 : lineAngleReverse;
+
+        if (lineAngle < lineAngleReverse) {
+            if (position::Position::getAngle() > lineAngle) {
+                turn(physical::TurnDirection::RIGHT, position::Position::getAngle() - lineAngle, EV3_TURN_SPEED);
+            } else {
+                turn(physical::TurnDirection::LEFT, lineAngle - position::Position::getAngle(), EV3_TURN_SPEED);
+            }
+
+            moveForward(destination.distanceTo(position::Position::getPosition()), 300);
+        } else {
+            if (position::Position::getAngle() < lineAngle) {
+                turn(physical::TurnDirection::LEFT, position::Position::getAngle() - lineAngle, EV3_TURN_SPEED);
+            } else {
+                turn(physical::TurnDirection::RIGHT, position::Position::getAngle() - lineAngle, EV3_TURN_SPEED);
+            }
+
+            moveBackward(destination.distanceTo(position::Position::getPosition()), 300);
+        }
+    }
+
+
+    void MovementEngine::setSpeed(int speed)
     {
         spdlog::trace("Setting speed to " + std::to_string(speed));
 
@@ -29,18 +55,18 @@ namespace finder::physical
         _motorRight->setSpeed(speed);
     }
 
-    void MotorManager::setDutyCycle(int dutyCycle)
+    void MovementEngine::setDutyCycle(int dutyCycle)
     {
         setDutyCycle(dutyCycle, dutyCycle);
     }
 
-    void MotorManager::setDutyCycle(int dutyCycleLeft, int dutyCycleRight)
+    void MovementEngine::setDutyCycle(int dutyCycleLeft, int dutyCycleRight)
     {
         _motorLeft->setDutyCycle(dutyCycleLeft);
         _motorRight->setDutyCycle(dutyCycleRight);
     }
 
-    void MotorManager::moveForward(int distance, int speed)
+    void MovementEngine::moveForward(int distance, int speed)
     {
         spdlog::trace("Moving forward " + std::to_string(distance) + " at speed " + std::to_string(speed));
 
@@ -58,12 +84,12 @@ namespace finder::physical
         spdlog::trace("Motors stopped");
     }
 
-    void MotorManager::moveForwardDirect(int speed)
+    void MovementEngine::moveForwardDirect(int speed)
     {
         moveForwardDirect(speed, speed);
     }
 
-    void MotorManager::moveForwardDirect(int speedLeft, int speedRight)
+    void MovementEngine::moveForwardDirect(int speedLeft, int speedRight)
     {
         spdlog::trace("Moving forward direct at speed " + std::to_string(speedLeft) + " " + std::to_string(speedRight));
 
@@ -76,14 +102,14 @@ namespace finder::physical
         spdlog::trace("Motors started");
     }
 
-    void MotorManager::moveBackward(int distance, int speed)
+    void MovementEngine::moveBackward(int distance, int speed)
     {
         moveForward(-distance, speed);
     }
 
-    void MotorManager::turn(TurnDirection direction, int angle, int speed)
+    void MovementEngine::turn(TurnDirection direction, int angle, int speed)
     {
-        spdlog::trace("MotorManager::turn()");
+        spdlog::trace("MovementEngine::turn()");
         spdlog::trace("Turning " + (direction == TurnDirection::LEFT ? std::string("left") : std::string("right")) + " " + std::to_string(angle) + " at speed " + std::to_string(speed));
 
         if (speed > 100) {
@@ -115,16 +141,20 @@ namespace finder::physical
         switch (direction)  
         {
         case TurnDirection::LEFT:
-            for (boost::leaf::result<int> result = _gyroSensor->getValue(0); result && result.value() > angle; result = _gyroSensor->getValue(0)) 
+            for (boost::leaf::result<int> result = _gyroSensor->getValue(0); result && result.value() < angle; result = _gyroSensor->getValue(0)) 
             {
-                spdlog::info("Current angle: " + std::to_string(result.value()));
+                spdlog::info("Target angle: " + std::to_string(angle));
+                spdlog::info("Current Sensor Angle: " + std::to_string(result.value()));
+                spdlog::info("Current Motor Angle: " + std::to_string(position::Position::getAngle()));
             }
             break;
         
         case TurnDirection::RIGHT:
-            for (boost::leaf::result<int> result = _gyroSensor->getValue(0); result && result.value() < angle; result = _gyroSensor->getValue(0)) 
+            for (boost::leaf::result<int> result = _gyroSensor->getValue(0); result && result.value() > angle; result = _gyroSensor->getValue(0)) 
             {
+                spdlog::info("Target angle: " + std::to_string(angle));
                 spdlog::info("Current Sensor Angle: " + std::to_string(result.value()));
+                spdlog::info("Current Motor Angle: " + std::to_string(position::Position::getAngle()));
             }
             break;
 
@@ -139,7 +169,7 @@ namespace finder::physical
         spdlog::trace("Motors stopped");
     }
 
-    void MotorManager::stop()
+    void MovementEngine::stop()
     {
         spdlog::trace("Stopping motors");
 
@@ -149,7 +179,7 @@ namespace finder::physical
         spdlog::trace("Motors stopped");
     }
 
-    boost::leaf::result<int> MotorManager::getPosition(DeviceID port)
+    boost::leaf::result<int> MovementEngine::getPosition(DeviceID port)
     {
         switch (port)
         {
@@ -177,7 +207,7 @@ namespace finder::physical
         return boost::leaf::new_error(std::invalid_argument("Invalid motor port"));
     }
     
-    boost::leaf::result<int> MotorManager::getSpeed(DeviceID port)
+    boost::leaf::result<int> MovementEngine::getSpeed(DeviceID port)
     {
         switch (port)
         {
@@ -206,7 +236,7 @@ namespace finder::physical
     }
     
     
-    boost::leaf::result<std::vector<MotorState>> MotorManager::getState(DeviceID port)
+    boost::leaf::result<std::vector<MotorState>> MovementEngine::getState(DeviceID port)
     {
         switch (port)
         {

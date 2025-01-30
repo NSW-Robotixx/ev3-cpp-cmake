@@ -1,6 +1,7 @@
 #include "EV3_conf.hpp"
 
 #include <spdlog/spdlog.h>
+#include <gflags/gflags.h>
 #include <iostream>
 #include <stdio.h>
 #include <chrono>
@@ -26,11 +27,28 @@ constexpr auto& ascii_art_literal = R"(
 /                         _/                  
 )";
 
-int main(int argc, char const *argv[])
+DEFINE_bool(v, false, "Enable debug logging");
+DEFINE_bool(vv, false, "Enable trace logging");
+
+
+int main(int argc, char *argv[])
 {
+    gflags::ParseCommandLineFlags(&argc, &argv, true);
+
     std::cout << ascii_art_literal << std::endl;
 
-    spdlog::set_level(spdlog::level::info);
+    if (FLAGS_vv)
+    {
+        spdlog::set_level(spdlog::level::trace);
+    }
+    else if (FLAGS_v)
+    {
+        spdlog::set_level(spdlog::level::debug);
+    }
+    else
+    {
+        spdlog::set_level(spdlog::level::info);
+    }
 
     // logger.info("Starting application...");
 
@@ -47,7 +65,7 @@ int main(int argc, char const *argv[])
 //    movementEngine.move(finder::math::Vector2{100, 100});
     finder::physical::MotorManager motor_manager = finder::physical::MotorManager("/sys/class");
 
-    gearbox_manager.calibrate();
+    // gearbox_manager.calibrate();
 
     // finder::physical::SensorManager sensor_manager = finder::physical::SensorManager("/sys/class");
 

@@ -22,16 +22,19 @@
     constexpr char EV3_MOTOR_COUNT = 4;
     constexpr char EV3_SENSOR_COUNT = 4;
 
-    constexpr char EV3_PORT_GEARBOX_SHIFT = EV3_PORT_OUTPUT_D;
+    // define the default speed of the motors
+    constexpr unsigned int EV3_GEARBOX_SHIFT_SPEED = 500;
+    constexpr unsigned int EV3_MOTOR_TOOL_SPEED = 500;
+    constexpr unsigned int EV3_DRIVE_SPEED = 200;
+    constexpr unsigned int EV3_TURN_SPEED = 20;
     
     // define the gear positions of the gearbox
+    constexpr char EV3_PORT_GEARBOX_SHIFT = EV3_PORT_OUTPUT_D;
     constexpr unsigned int EV3_GEARBOX_GEAR_POS_1  = 0;
     constexpr unsigned int EV3_GEARBOX_GEAR_POS_2  = 90;
     constexpr unsigned int EV3_GEARBOX_GEAR_POS_3  = 180;
     constexpr unsigned int EV3_GEARBOX_GEAR_POS_4  = 270;
 
-    // define the speed for the gearbox shift motor
-    constexpr unsigned int EV3_GEARBOX_SHIFT_SPEED = 500;
 
     // define the tolerance for the gearbox
     constexpr unsigned int EV3_GEARBOX_GEAR_POS_TOLERANCE = 5;

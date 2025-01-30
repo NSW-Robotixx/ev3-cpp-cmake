@@ -262,7 +262,8 @@ namespace finder
                     _file_value_path[index]->seekg(0);
                     *_file_value_path[index] >> value;
                     spdlog::debug("VALUE.GET: " + std::string(getBasePath().value().c_str()) + " WITH VALUE: " + std::to_string(value));
-                    return value % 360;
+                    spdlog::debug("Returning value: " + std::to_string(abs(value) % 360));
+                    return abs(value) % 360;
                 } 
             } 
             spdlog::warn(("Port is not enabled for {}"), _path);

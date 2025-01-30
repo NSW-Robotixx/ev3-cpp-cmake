@@ -435,22 +435,22 @@ namespace finder
                         }
                         for (auto token : state_tokens) {
                             if (token == "running") {
-                                spdlog::debug(("STATE.GET: WITH_RESULT: " + static_cast<int>(MotorState::RUNNING)));
+                                spdlog::debug(("STATE.GET: WITH_RESULT: " + std::string("RUNNING")));
                                 states.push_back(MotorState::RUNNING);
                             } else if (token == "ramping") {
-                                spdlog::debug(("STATE.GET: WITH_RESULT: " + static_cast<int>(MotorState::RAMPING)));
+                                spdlog::debug(("STATE.GET: WITH_RESULT: " + std::string("RAMPING")));
                                 states.push_back(MotorState::RAMPING);
                             } else if (token == "holding") {
-                                spdlog::debug(("STATE.GET: WITH_RESULT: " + static_cast<int>(MotorState::HOLDING)));
+                                spdlog::debug(("STATE.GET: WITH_RESULT: " + std::string("HOLDING")));
                                 states.push_back(MotorState::HOLDING);
                             } else if (token == "overloaded") {
-                                spdlog::debug(("STATE.GET: WITH_RESULT: " + static_cast<int>(MotorState::OVERLOADED)));
+                                spdlog::debug(("STATE.GET: WITH_RESULT: " + std::string("OVERLOADED")));
                                 states.push_back(MotorState::OVERLOADED);
                             } else if (token == "stalled") {
-                                spdlog::debug(("STATE.GET: WITH_RESULT: " + static_cast<int>(MotorState::STALLED)));
+                                spdlog::debug(("STATE.GET: WITH_RESULT: " + std::string("STALLED")));
                                 states.push_back(MotorState::STALLED);
                             } else if (token == "stopped") {
-                                spdlog::debug(("STATE.GET: WITH_RESULT: " + static_cast<int>(MotorState::STOPPED)));
+                                spdlog::debug(("STATE.GET: WITH_RESULT: " + std::string("STOPPED")));
                                 states.push_back(MotorState::STOPPED);
                             } else {
                                 spdlog::error("MotorPort failed to get state for"), token;
@@ -464,9 +464,9 @@ namespace finder
                     // _init_future.wait();
                     // return getState().get();
                 } 
-                for (auto s : states) {
-                    spdlog::info(("STATE.GET: WITH_RESULT:"), static_cast<int>(s));
-                }
+                // for (auto s : states) {
+                //     spdlog::info(("STATE.GET: WITH_RESULT:"), static_cast<int>(s));
+                // }
                 return states;
             // });
         }

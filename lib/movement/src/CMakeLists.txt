@@ -1,10 +1,10 @@
 set(EV3_MOVEMENT_SRC
-    ${EV3_MOVEMENT_SRC_DIR}/MovementEngine.cpp
+    ${EV3_MOVEMENT_SRC_DIR}/EV3_MovementEngine.cpp
     ${EV3_MOVEMENT_SRC_DIR}/MovementParser.cpp
 )
 
 set(EV3_MOVEMENT_HDR
-    ${EV3_MOVEMENT_INCLUDE_DIR}/MovementEngine.hpp
+    ${EV3_MOVEMENT_INCLUDE_DIR}/EV3_MovementEngine.hpp
     ${EV3_MOVEMENT_SRC_DIR}/MovementParser.hpp
 )
 
@@ -29,6 +29,7 @@ target_link_libraries(MovementEngine
         boost::leaf
         boost::boost
         Vector2
+        Line
         EV3_compute
         EV3_position
 )

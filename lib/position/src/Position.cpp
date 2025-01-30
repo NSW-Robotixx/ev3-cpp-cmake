@@ -9,6 +9,7 @@ namespace finder::position
 
     float Position::getAngle()
     {
-        return m_motor_position.getAngle();
+        // return m_motor_position.getAngle();
+        return m_sensor_position.getAngle();
     }
 }

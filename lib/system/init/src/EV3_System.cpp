@@ -25,9 +25,9 @@ boost::leaf::result<void> System::start()
         spdlog::info("Path: ");
         for (auto &point : m_path)
         {
-            spdlog::info("x: " + std::to_string(point.x) + " y: " + std::to_string(point.y));
+            spdlog::info("Moving to point x: " + std::to_string(point.x) + " y: " + std::to_string(point.y));
 
-            finder::engines::movement::MovementEngine::move(point); // Move to the next point
+            finder::engines::movement::MovementEngine::moveToPoint(point); // Move to the next point
         }
         #endif
 

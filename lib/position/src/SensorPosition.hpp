@@ -14,6 +14,18 @@
 #include <Eigen/Dense>
 
 
+#ifndef EV3_DEFINITION_TURN_DIRECTION     
+    /// @brief Enum for turn directions
+    enum struct TurnDirection
+    {
+        LEFT = 0,
+        RIGHT = 1,
+        FORWARD = 2,
+        BACKWARD = 3,
+    };
+#endif
+
+
 namespace finder::position {
     // not recommended to do this 
     using namespace finder::physical;
@@ -36,6 +48,14 @@ namespace finder::position {
         /// @brief Update the position estimate of the robot, notify the estimate of the direction change
         /// @param direction The direction the robot is turning
         static void movementDirectionChange(TurnDirection direction);
+
+        /// @brief Get the current position of the robot
+        /// @return The current position estimate of the robot
+        static inline Eigen::Vector2d getPosition() { return _sensorPosition; }
+
+        /// @brief Get the current angle of the robot
+        /// @return The current angle estimate of the robot
+        static inline float getAngle() { return _gyroSensor->getValue(0).value(); }
 
     protected:
         /// @brief Update the color sensor left position estimate

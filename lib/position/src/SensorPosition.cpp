@@ -166,6 +166,7 @@ namespace finder::position {
 
                 if (color_values_right[i] >= EV3_COLOR_SENSOR_TRIGGER && _prev_color_values_right.size() - 1 < color_values_right[i])
                 {
+                    // recalculate the position of the sensor
                     Eigen::Vector2d sensorPosition = _sensorPosition + EV3_SENSOR_COLOR_RIGHT_OFFSET_VECTOR;
                     _sensorLineOrder.push_back(Eigen::Vector3d{
                         sensorPosition.x(),

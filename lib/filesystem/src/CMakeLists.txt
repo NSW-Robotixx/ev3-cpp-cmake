@@ -11,7 +11,7 @@ set(EV3_FILESYSTEM_SRC
 set(EV3_FILESYSTEM_HDR
     ${EV3_FILESYSTEM_INCLUDE_DIR}/EV3_MotorManager.hpp
     ${EV3_FILESYSTEM_INCLUDE_DIR}/EV3_SensorManager.hpp
-    ${EV3_FILESYSTEM_SRC_DIR}/DeviceManager.hpp
+    ${EV3_FILESYSTEM_INCLUDE_DIR}/DeviceManager.hpp
     ${EV3_FILESYSTEM_SRC_DIR}/portManager/PortManager.hpp
     ${EV3_FILESYSTEM_SRC_DIR}/portManager/port/MotorPort.hpp
     ${EV3_FILESYSTEM_SRC_DIR}/portManager/port/Port.hpp
