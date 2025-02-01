@@ -57,6 +57,9 @@ namespace finder::position {
         /// @return The current angle estimate of the robot
         static inline float getAngle() { return _gyroSensor->getValue(0).value(); }
 
+        /// @brief Update the general sensor position estimate
+        static void updatePosition();
+
     protected:
         /// @brief Update the color sensor left position estimate
         /// @param value The value of the color sensor
@@ -74,8 +77,6 @@ namespace finder::position {
         /// @param value The value of the gyro sensor
         static void updateGyro(int value);
 
-        /// @brief Update the general sensor position estimate
-        static void updatePosition();
 
     private:
         static Eigen::Vector2d _sensorPosition;

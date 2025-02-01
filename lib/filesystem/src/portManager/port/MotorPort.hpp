@@ -170,7 +170,7 @@ namespace finder
 
                 /// @brief Wait until the motor has stopped moving.
                 /// @return boost::leaf::result<void>
-                boost::leaf::result<void> waitUntilStopped();
+                boost::leaf::result<void> waitUntilStopped(std::function<void()> loopCallback = nullptr);
 
                 /// @brief Reset the motor to its default state. This will stop the motor. Reinit file streams.
                 /// @return boost::leaf::result<void>

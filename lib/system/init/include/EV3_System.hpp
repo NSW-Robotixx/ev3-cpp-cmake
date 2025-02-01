@@ -2,6 +2,7 @@
 
 #include <Vector2.hpp>
 #include <Vector3.hpp>
+#include <MotorPosition.hpp>
 #include <EV3_compute_local.hpp>
 #include <ConfigReader.hpp>
 #include <EV3_MovementEngine.hpp>

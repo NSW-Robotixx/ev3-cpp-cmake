@@ -22,11 +22,16 @@ namespace finder::position
 
             /// @brief Get the current position of the robot
             /// @return The current position estimate of the robot
-            static inline math::Vector2 getPosition() { return _position; }
+            static inline math::Vector2 getPosition() {
+                spdlog::debug("Getting position: " + std::to_string(_position.x) + " " + std::to_string(_position.y));
+                return _position; 
+            }
 
             /// @brief Get the current angle of the robot
             /// @return The current angle estimate of the robot
             static inline float getAngle() { return _angle; }
+
+            static inline void setPosition(math::Vector2 position) { _position = position; }
 
         private:
             static math::Vector2 _prev_motor_position;

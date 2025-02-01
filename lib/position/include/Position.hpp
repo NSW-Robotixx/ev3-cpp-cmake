@@ -23,6 +23,8 @@ namespace finder::position
             /// @return Current angle in degrees
             static float getAngle();
 
+            static void updatePosition();
+
         private:
             static finder::position::SensorPosition m_sensor_position;
             static finder::position::MotorPosition m_motor_position;

@@ -29,6 +29,7 @@ constexpr auto& ascii_art_literal = R"(
 
 DEFINE_bool(v, false, "Enable debug logging");
 DEFINE_bool(vv, false, "Enable trace logging");
+DEFINE_bool(gearbox, false, "Calibrate gearbox");
 
 
 int main(int argc, char *argv[])

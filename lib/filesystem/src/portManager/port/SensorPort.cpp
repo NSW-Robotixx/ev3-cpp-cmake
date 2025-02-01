@@ -261,8 +261,8 @@ namespace finder
                     int value = 0;
                     _file_value_path[index]->seekg(0);
                     *_file_value_path[index] >> value;
-                    spdlog::debug("VALUE.GET: " + std::string(getBasePath().value().c_str()) + " WITH VALUE: " + std::to_string(value));
-                    spdlog::debug("Returning value: " + std::to_string(abs(value) % 360));
+                    spdlog::trace("VALUE.GET: " + std::string(getBasePath().value().c_str()) + " WITH VALUE: " + std::to_string(value));
+                    spdlog::trace("Returning value: " + std::to_string(abs(value) % 360));
                     return abs(value) % 360;
                 } 
             } 

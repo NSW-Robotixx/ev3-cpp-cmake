@@ -8,12 +8,12 @@ namespace finder::system
 
     System::System()
     {
-        // stop motors on program exit (ctrl+c)
-        signal(SIGINT, [](int signum) {
-            spdlog::info("Caught signal: {}", signum);
-            finder::physical::MotorManager::stop();
-            exit(signum);
-        });
+        // // stop motors on program exit (ctrl+c)
+        // signal(SIGINT, [](int signum) {
+        //     spdlog::info("Caught signal: {}", signum);
+        //     finder::physical::MotorManager::stop();
+        //     exit(signum);
+        // });
     }
 
 boost::leaf::result<void> System::start()
@@ -28,6 +28,10 @@ boost::leaf::result<void> System::start()
             spdlog::info("Moving to point x: " + std::to_string(point.x) + " y: " + std::to_string(point.y));
 
             finder::engines::movement::MovementEngine::moveToPoint(point); // Move to the next point
+
+            finder::position::MotorPosition::setPosition(math::Vector2(point.x, point.y)); // Update the position
+
+            // finder::engines::movement::MovementEngine::turn(physical::TurnDirection::LEFT, point.y, EV3_TURN_SPEED); 
         }
         #endif
 

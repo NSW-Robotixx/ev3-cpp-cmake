@@ -12,4 +12,10 @@ namespace finder::position
         // return m_motor_position.getAngle();
         return m_sensor_position.getAngle();
     }
+    
+    void Position::updatePosition()
+    {
+        m_motor_position.updatePosition();
+        m_sensor_position.updatePosition();
+    }
 }

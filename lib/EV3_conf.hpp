@@ -46,7 +46,7 @@
     constexpr unsigned int EV3_GEAR_BLOCKED_TIMEOUT_MS = 1000;
 
     // define the tolerance for the gyro sensor
-    constexpr unsigned int EV3_GYRO_TURN_TOLERANCE = 3;
+    constexpr unsigned int EV3_GYRO_TURN_TOLERANCE = 1;
 
     // define the timeout for the calibration of the gyro sensor
     constexpr unsigned int EV3_GYRO_CALIBRATION_TIMEOUT_MS = 1000;

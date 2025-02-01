@@ -6,6 +6,9 @@ namespace finder::engines::movement
     {
         spdlog::trace("Initializing MovementEngine");
 
+        _motorLeft.reset();
+        _motorRight.reset();
+
         _motorLeft->setStopAction(MotorStopAction::HOLD);
         _motorRight->setStopAction(MotorStopAction::HOLD);
         _motorShift->setStopAction(MotorStopAction::HOLD);
@@ -24,22 +27,25 @@ namespace finder::engines::movement
     void MovementEngine::moveToPoint(math::Vector2 destination)
     {
         double lineAngle = math::Line(position::Position::getPosition(), destination).getAngle();
-        double lineAngleReverse = lineAngle + 180;
-        lineAngleReverse = lineAngleReverse > 360 ? lineAngleReverse - 360 : lineAngleReverse;
+        double lineAngleReverse = std::fmod(lineAngle + 180, 360);
+
+        spdlog::debug("Turning to angle: " + std::to_string(lineAngle));    
 
         if (lineAngle < lineAngleReverse) {
+            spdlog::debug("Turning to normal angle: " + std::to_string(lineAngle));
             if (position::Position::getAngle() > lineAngle) {
-                turn(physical::TurnDirection::RIGHT, position::Position::getAngle() - lineAngle, EV3_TURN_SPEED);
+                turn(physical::TurnDirection::RIGHT, lineAngle, EV3_TURN_SPEED);
             } else {
-                turn(physical::TurnDirection::LEFT, lineAngle - position::Position::getAngle(), EV3_TURN_SPEED);
+                turn(physical::TurnDirection::LEFT, lineAngle, EV3_TURN_SPEED);
             }
 
             moveForward(destination.distanceTo(position::Position::getPosition()), 300);
         } else {
-            if (position::Position::getAngle() < lineAngle) {
-                turn(physical::TurnDirection::LEFT, position::Position::getAngle() - lineAngle, EV3_TURN_SPEED);
+            spdlog::debug("Turning to reverse angle: " + std::to_string(lineAngleReverse));
+            if (position::Position::getAngle() < lineAngleReverse) {
+                turn(physical::TurnDirection::LEFT, lineAngleReverse, EV3_TURN_SPEED);
             } else {
-                turn(physical::TurnDirection::RIGHT, position::Position::getAngle() - lineAngle, EV3_TURN_SPEED);
+                turn(physical::TurnDirection::RIGHT, lineAngleReverse, EV3_TURN_SPEED);
             }
 
             moveBackward(destination.distanceTo(position::Position::getPosition()), 300);
@@ -70,6 +76,13 @@ namespace finder::engines::movement
     {
         spdlog::trace("Moving forward " + std::to_string(distance) + " at speed " + std::to_string(speed));
 
+        if (speed < 0)
+        {
+            spdlog::info("Speed is negative, reversing direction");
+            _motorLeft->setPolarity(MotorPolarity::INVERSED);
+            _motorRight->setPolarity(MotorPolarity::INVERSED);
+        }
+
         setSpeed(speed);
 
         _motorLeft->setPositionSp(distance);
@@ -78,8 +91,14 @@ namespace finder::engines::movement
         _motorLeft->setCommand(physical::MotorCommand::RUN_TO_REL_POS);
         _motorRight->setCommand(physical::MotorCommand::RUN_TO_REL_POS);
 
-        _motorLeft->waitUntilStopped();
-        _motorRight->waitUntilStopped();
+        _motorLeft->waitUntilStopped(&position::Position::updatePosition);
+        _motorRight->waitUntilStopped(&position::Position::updatePosition);
+
+        if (speed < 0)
+        {
+            _motorLeft->setPolarity(MotorPolarity::NORMAL);
+            _motorRight->setPolarity(MotorPolarity::NORMAL);
+        }
 
         spdlog::trace("Motors stopped");
     }
@@ -141,20 +160,32 @@ namespace finder::engines::movement
         switch (direction)  
         {
         case TurnDirection::LEFT:
-            for (boost::leaf::result<int> result = _gyroSensor->getValue(0); result && result.value() < angle; result = _gyroSensor->getValue(0)) 
+            while (true) 
             {
-                spdlog::info("Target angle: " + std::to_string(angle));
-                spdlog::info("Current Sensor Angle: " + std::to_string(result.value()));
-                spdlog::info("Current Motor Angle: " + std::to_string(position::Position::getAngle()));
+                boost::leaf::result<int> result = _gyroSensor->getValue(0);
+                if (!result || result.value() >= angle - EV3_GYRO_TURN_TOLERANCE) 
+                {
+                    spdlog::info("Target angle reached: " + std::to_string(angle) + " Current angle: " + std::to_string(result.value()));
+                    break;
+                }
+                spdlog::debug("Target angle: " + std::to_string(angle));
+                spdlog::debug("Current Sensor Angle: " + std::to_string(result.value()));
+                spdlog::debug("Current Motor Angle: " + std::to_string(position::Position::getAngle()));
             }
             break;
         
         case TurnDirection::RIGHT:
-            for (boost::leaf::result<int> result = _gyroSensor->getValue(0); result && result.value() > angle; result = _gyroSensor->getValue(0)) 
+            while (true) 
             {
-                spdlog::info("Target angle: " + std::to_string(angle));
-                spdlog::info("Current Sensor Angle: " + std::to_string(result.value()));
-                spdlog::info("Current Motor Angle: " + std::to_string(position::Position::getAngle()));
+                boost::leaf::result<int> result = _gyroSensor->getValue(0);
+                if (!result || result.value() <= angle + EV3_GYRO_TURN_TOLERANCE) 
+                {
+                    spdlog::info("Target angle reached: " + std::to_string(angle) + " Current angle: " + std::to_string(result.value()));
+                    break;
+                }
+                spdlog::debug("Target angle: " + std::to_string(angle));
+                spdlog::debug("Current Sensor Angle: " + std::to_string(result.value()));
+                spdlog::debug("Current Motor Angle: " + std::to_string(position::Position::getAngle()));
             }
             break;
 
@@ -162,6 +193,7 @@ namespace finder::engines::movement
             spdlog::error("Invalid turn direction");
             break;
         }
+
 
         _motorLeft->stop();
         _motorRight->stop();

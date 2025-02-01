@@ -61,7 +61,7 @@ namespace finder::math {
 
     double Line::getAngle() const
     {
-        return atan2(_p2.y - _p1.y, _p2.x - _p1.x) * 180 / M_PI;
+        return (atan2(_p2.y - _p1.y, _p2.x - _p1.x) * 180 / M_PI) + 180;
     }
 
     Vector2 Line::getIntersection(const Line& other) const {
