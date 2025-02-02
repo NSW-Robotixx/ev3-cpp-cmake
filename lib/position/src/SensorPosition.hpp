@@ -12,19 +12,8 @@
 #include <atomic>
 #include <queue>
 #include <Eigen/Dense>
-
-
-#ifndef EV3_DEFINITION_TURN_DIRECTION     
-    /// @brief Enum for turn directions
-    enum struct TurnDirection
-    {
-        LEFT = 0,
-        RIGHT = 1,
-        FORWARD = 2,
-        BACKWARD = 3,
-    };
-#endif
-
+#include <spdlog/spdlog.h>
+#include <fstream>
 
 namespace finder::position {
     // not recommended to do this 
@@ -36,6 +25,9 @@ namespace finder::position {
         /// @brief Constructor
         /// @param portBasePath Path to the base directory of the ports 
         SensorPosition(std::string portBasePath);
+
+        /// @brief Destructor
+        ~SensorPosition();
 
         /// @brief Update the position estimate of the robot
         /// @param port The port of the sensor
@@ -81,6 +73,9 @@ namespace finder::position {
     private:
         static Eigen::Vector2d _sensorPosition;
         static float _angle;
+
+        // stores the previous color values of the sensors as svg
+        static std::ofstream _colorImageSvg;
         
         #if EV3_COLOR_SENSOR_USE_RGB_MODE
             static std::deque<Eigen::Vector3i> _prev_color_values_front;

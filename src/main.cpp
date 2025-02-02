@@ -12,8 +12,6 @@
 #include <EV3_MotorManager.hpp>
 
 // finder::log::Logger logger = finder::log::Logger();
-finder::system::System ev3_system = finder::system::System();
-finder::physical::GearboxManager gearbox_manager = finder::physical::GearboxManager();
 
 constexpr auto& ascii_art_literal = R"(
   _____ _           _ _____      
@@ -51,12 +49,15 @@ int main(int argc, char *argv[])
         spdlog::set_level(spdlog::level::info);
     }
 
+    finder::system::System ev3_system = finder::system::System();
+    finder::physical::GearboxManager gearbox_manager = finder::physical::GearboxManager();
+    finder::position::Position position = finder::position::Position();
     // logger.info("Starting application...");
 
-    spdlog::debug("Debug message");
-
-    // ev3_system.start();
-
+    if (FLAGS_gearbox)
+    {
+        gearbox_manager.calibrate();
+    }
     // finder::physical::DeviceManager device_manager = finder::physical::DeviceManager("/sys/class/");
 //    finder::engines::movement::MovementEngine movementEngine = finder::engines::movement::MovementEngine();
 //
@@ -65,8 +66,6 @@ int main(int argc, char *argv[])
 //    movementEngine.move(finder::math::Vector2{100, 100});
 //    movementEngine.move(finder::math::Vector2{100, 100});
     finder::physical::MotorManager motor_manager = finder::physical::MotorManager("/sys/class");
-
-    // gearbox_manager.calibrate();
 
     // finder::physical::SensorManager sensor_manager = finder::physical::SensorManager("/sys/class");
 

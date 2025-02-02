@@ -35,4 +35,5 @@ target_link_libraries(EV3_position
         boost::boost
         spdlog::spdlog
         Eigen3::Eigen
+        yaml-cpp::yaml-cpp
 )

@@ -6,6 +6,8 @@ namespace finder::position {
     float SensorPosition::_angle;
     TurnDirection SensorPosition::_lastDirection;
 
+    std::ofstream SensorPosition::_colorImageSvg;
+
     std::deque<Eigen::Vector3i> SensorPosition::_prev_color_values_front;
     std::deque<Eigen::Vector3i> SensorPosition::_prev_color_values_left;
     std::deque<Eigen::Vector3i> SensorPosition::_prev_color_values_right;
@@ -29,6 +31,24 @@ namespace finder::position {
     SensorPosition::SensorPosition(std::string portBasePath) : DeviceManager(portBasePath){
         spdlog::trace("Initializing SensorPosition");
 
+        // open the sensor image file
+
+        // check if the image file exists
+        spdlog::info("Loading color sensor image file");
+        // load the image file
+        // _colorImageSvg.open("./sensor_image.svg");
+
+        // if (_colorImageSvg.fail())
+        // {
+        //     spdlog::error("Failed to open the color sensor image file");
+        // }
+        // if (!_colorImageSvg.is_open())
+        // {
+        //     spdlog::error("Could not open the color sensor image file");
+        // }
+
+
+        // set the sensor modes
         #if EV3_COLOR_SENSOR_USE_RGB_MODE
             _colorSensorFront->setMode("RGB-RAW");
             _colorSensorLeft->setMode("RGB-RAW");
@@ -40,6 +60,13 @@ namespace finder::position {
             _colorSensorRight->setMode("COL-REFLECT");
             _gyroSensor->setMode("GYRO-ANG");
         #endif
+    }
+
+    SensorPosition::~SensorPosition()
+    {
+        spdlog::trace("Destroying SensorPosition");
+
+
     }
 
     void SensorPosition::update(DeviceID port, int value) {
@@ -150,29 +177,39 @@ namespace finder::position {
             {
                 if (color_values_front[i] >= EV3_COLOR_SENSOR_TRIGGER && _prev_color_values_front.size() - 1 < color_values_front[i])
                 {
-                    Eigen::Vector2d sensorPosition = _sensorPosition + EV3_SENSOR_COLOR_FRONT_OFFSET_VECTOR;
-                    _sensorLineOrder.push_back(Eigen::Vector3d{sensorPosition.x(), sensorPosition.y(), _angle});
+                    Eigen::Vector2d sensorPosition = finder::position::MotorPosition::getPosition() + EV3_SENSOR_COLOR_FRONT_OFFSET_VECTOR;
+                    _sensorLineOrder.push_back(Eigen::Vector3d{
+                        sensorPosition.x(), 
+                        sensorPosition.y(), 
+                        _angle
+                    });
+
+                    // write the color values to the image file
                 }
 
                 if (color_values_left[i] >= EV3_COLOR_SENSOR_TRIGGER && _prev_color_values_left.size() - 1 < color_values_left[i])
                 {
-                    Eigen::Vector2d sensorPosition = _sensorPosition + EV3_SENSOR_COLOR_LEFT_OFFSET_VECTOR;
-                    _sensorLineOrder.push_back(Eigen::Vector3d{
-                        sensorPosition.x(),
-                        sensorPosition.y(),
-                        _angle
-                    });;
-                }
-
-                if (color_values_right[i] >= EV3_COLOR_SENSOR_TRIGGER && _prev_color_values_right.size() - 1 < color_values_right[i])
-                {
-                    // recalculate the position of the sensor
-                    Eigen::Vector2d sensorPosition = _sensorPosition + EV3_SENSOR_COLOR_RIGHT_OFFSET_VECTOR;
+                    Eigen::Vector2d sensorPosition = finder::position::MotorPosition::getPosition() + EV3_SENSOR_COLOR_LEFT_OFFSET_VECTOR;
                     _sensorLineOrder.push_back(Eigen::Vector3d{
                         sensorPosition.x(),
                         sensorPosition.y(),
                         _angle
                     });
+
+                    // write the color values to the image file
+                }
+
+                if (color_values_right[i] >= EV3_COLOR_SENSOR_TRIGGER && _prev_color_values_right.size() - 1 < color_values_right[i])
+                {
+                    // recalculate the position of the sensor
+                    Eigen::Vector2d sensorPosition = finder::position::MotorPosition::getPosition() + EV3_SENSOR_COLOR_RIGHT_OFFSET_VECTOR;
+                    _sensorLineOrder.push_back(Eigen::Vector3d{
+                        sensorPosition.x(),
+                        sensorPosition.y(),
+                        _angle
+                    });
+
+                    // write the color values to the image file
                 }
             }
 

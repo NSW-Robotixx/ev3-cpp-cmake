@@ -6,9 +6,9 @@ gtest/1.15.0
 gflags/2.2.2
 spdlog/1.10.0
 doxygen/1.9.4
-boost/1.86.0
+boost/1.82.0
 boost-leaf/1.83.0
-cimg/3.3.2
+
 
 [tool_requires]
 kcov/42

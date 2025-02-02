@@ -1,6 +1,7 @@
 cmake_minimum_required(VERSION 3.24...3.24)
 
 set(CONAN_HOST_PROFILE "ev3" CACHE STRING "Conan profile to use for host")
+set(CONAN_BUILD_PROFILE "default" CACHE STRING "Conan profile to use for host")
 
 if(NOT EXISTS "${CMAKE_BINARY_DIR}/conan.cmake")
 message(STATUS "Downloading conan.cmake from https://github.com/conan-io/cmake-conan")
@@ -36,7 +37,7 @@ find_package(boost-leaf REQUIRED)
 find_package(Boost REQUIRED)
 find_package(asio REQUIRED)
 find_package(gflags REQUIRED)
-find_package(cimg REQUIRED)
+
 
 # new and untested stuff
 set(BUILD_SHARED_LIBS OFF)

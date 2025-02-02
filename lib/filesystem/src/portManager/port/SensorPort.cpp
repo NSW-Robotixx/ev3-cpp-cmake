@@ -443,7 +443,7 @@ namespace finder
                     }
                     else
                     {
-                        spdlog::info(("Opened value0 file at: {}"), value_path.value().c_str());
+                        spdlog::debug(("Opened value0 file at: {}"), value_path.value().c_str());
                     }
                 }
                 else

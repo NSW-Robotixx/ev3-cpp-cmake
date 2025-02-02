@@ -1,7 +1,8 @@
 #pragma once
 
 #include <Vector2.hpp>
-#include <EV3_MotorManager.hpp> 
+#include <EV3_MotorManager.hpp>
+#include <Eigen/Dense>
 
 namespace finder::position
 {
@@ -22,9 +23,9 @@ namespace finder::position
 
             /// @brief Get the current position of the robot
             /// @return The current position estimate of the robot
-            static inline math::Vector2 getPosition() {
-                spdlog::debug("Getting position: " + std::to_string(_position.x) + " " + std::to_string(_position.y));
-                return _position; 
+            static inline Eigen::Vector2d getPosition() {
+                spdlog::debug("Getting motor position: " + std::to_string(_position.x) + " " + std::to_string(_position.y));
+                return Eigen::Vector2d(_position.x, _position.y); 
             }
 
             /// @brief Get the current angle of the robot

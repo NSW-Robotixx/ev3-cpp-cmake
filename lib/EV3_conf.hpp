@@ -6,7 +6,7 @@
     // general settings
     constexpr bool EV3_THROW_ON_ERROR = true;
     constexpr bool EV3_DETAILED_LOGGING = true;
-    #define EV3_DEFAULT_PORT_BASE_PATH = "/sys/class/";
+    constexpr const char* EV3_DEFAULT_PORT_BASE_PATH = "/sys/class/";
 
     // map the physical ports to the internal ports
     typedef char DevicePort;
@@ -25,8 +25,8 @@
     // define the default speed of the motors
     constexpr unsigned int EV3_GEARBOX_SHIFT_SPEED = 500;
     constexpr unsigned int EV3_MOTOR_TOOL_SPEED = 500;
-    constexpr unsigned int EV3_DRIVE_SPEED = 200;
-    constexpr unsigned int EV3_TURN_SPEED = 20;
+    constexpr unsigned int EV3_DRIVE_SPEED = 300;
+    constexpr unsigned int EV3_TURN_SPEED = 50;
     
     // define the gear positions of the gearbox
     constexpr char EV3_PORT_GEARBOX_SHIFT = EV3_PORT_OUTPUT_D;
@@ -52,14 +52,14 @@
     constexpr unsigned int EV3_GYRO_CALIBRATION_TIMEOUT_MS = 1000;
 
     // define the offsets of the sensors on the robot
-    constexpr unsigned int EV3_SENSOR_COLOR_RIGHT_OFFSET_X = 0;                  // to be implemented
-    constexpr unsigned int EV3_SENSOR_COLOR_RIGHT_OFFSET_Y = 0;         // to be implemented
+    constexpr unsigned int EV3_SENSOR_COLOR_RIGHT_OFFSET_X = 0;
+    constexpr unsigned int EV3_SENSOR_COLOR_RIGHT_OFFSET_Y = 0; 
 
-    constexpr unsigned int EV3_SENSOR_COLOR_LEFT_OFFSET_X = 0;          // to be implemented
-    constexpr unsigned int EV3_SENSOR_COLOR_LEFT_OFFSET_Y = 0;          // to be implemented
+    constexpr unsigned int EV3_SENSOR_COLOR_LEFT_OFFSET_X = 0;  
+    constexpr unsigned int EV3_SENSOR_COLOR_LEFT_OFFSET_Y = 0;  
 
-    constexpr unsigned int EV3_SENSOR_COLOR_FRONT_OFFSET_X = 0;         // to be implemented
-    constexpr unsigned int EV3_SENSOR_COLOR_FRONT_OFFSET_Y = 0;         // to be implemented
+    constexpr unsigned int EV3_SENSOR_COLOR_FRONT_OFFSET_X = 0; 
+    constexpr unsigned int EV3_SENSOR_COLOR_FRONT_OFFSET_Y = 0; 
 
     // define the trigger values for the color sensors
     constexpr unsigned int EV3_COLOR_SENSOR_TRIGGER = 42;
@@ -76,6 +76,8 @@
     constexpr unsigned int EV3_COLOR_SENSOR_TRIGGER_GREEN = 42;         // to be implemented
     constexpr unsigned int EV3_COLOR_SENSOR_TRIGGER_BLUE = 42;          // to be implemented
 
+    constexpr const char* EV3_COLOR_SENSOR_IMAGE_PATH = "./color_sensor.svg";
+
     // define the offsets of the motors on the robot in mm
     constexpr unsigned int EV3_MOTOR_WHEELBASE = 140;                     // to be implemented
 
@@ -83,13 +85,14 @@
     constexpr unsigned int EV3_MOTOR_TURN_CIRCLE = M_PI * EV3_MOTOR_WHEELBASE;
 
     // define the wheel circumference of the robot
-    constexpr unsigned int EV3_MOTOR_WHEEL_CIRCUMFERENCE = 17.5;        // to be implemented
+    constexpr double EV3_MOTOR_WHEEL_DIAMETER = 43;
+    constexpr double EV3_MOTOR_WHEEL_CIRCUMFERENCE = M_PI * EV3_MOTOR_WHEEL_DIAMETER;
 
     // define the distance per degree of the motors
-    constexpr unsigned int EV3_MOTOR_DISTANCE_PER_DEGREE = EV3_MOTOR_WHEEL_CIRCUMFERENCE / 360;
+    constexpr double EV3_MOTOR_DISTANCE_PER_DEGREE = 360 / EV3_MOTOR_WHEEL_CIRCUMFERENCE;
 
     // define the position jump tolerance of the motors for the position estimation
-    constexpr unsigned int EV3_POSITION_JUMP_TOLERANCE = 100;
+    constexpr unsigned int EV3_POSITION_JUMP_TOLERANCE = 1000;
 
     // define the field parameters
     constexpr unsigned int EV3_FIELD_WIDTH = 2000;

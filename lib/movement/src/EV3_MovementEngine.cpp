@@ -34,18 +34,18 @@ namespace finder::engines::movement
         if (lineAngle < lineAngleReverse) {
             spdlog::debug("Turning to normal angle: " + std::to_string(lineAngle));
             if (position::Position::getAngle() > lineAngle) {
-                turn(physical::TurnDirection::RIGHT, lineAngle, EV3_TURN_SPEED);
+                turn(physical::TurnDirection::RIGHT, round(lineAngle), EV3_TURN_SPEED);
             } else {
-                turn(physical::TurnDirection::LEFT, lineAngle, EV3_TURN_SPEED);
+                turn(physical::TurnDirection::LEFT, round(lineAngle), EV3_TURN_SPEED);
             }
 
             moveForward(destination.distanceTo(position::Position::getPosition()), 300);
         } else {
             spdlog::debug("Turning to reverse angle: " + std::to_string(lineAngleReverse));
             if (position::Position::getAngle() < lineAngleReverse) {
-                turn(physical::TurnDirection::LEFT, lineAngleReverse, EV3_TURN_SPEED);
+                turn(physical::TurnDirection::LEFT, round(lineAngleReverse), EV3_TURN_SPEED);
             } else {
-                turn(physical::TurnDirection::RIGHT, lineAngleReverse, EV3_TURN_SPEED);
+                turn(physical::TurnDirection::RIGHT, round(lineAngleReverse), EV3_TURN_SPEED);
             }
 
             moveBackward(destination.distanceTo(position::Position::getPosition()), 300);
@@ -85,8 +85,8 @@ namespace finder::engines::movement
 
         setSpeed(speed);
 
-        _motorLeft->setPositionSp(distance);
-        _motorRight->setPositionSp(distance);
+        _motorLeft->setPositionSp(distance * EV3_MOTOR_DISTANCE_PER_DEGREE);
+        _motorRight->setPositionSp(distance * EV3_MOTOR_DISTANCE_PER_DEGREE);
 
         _motorLeft->setCommand(physical::MotorCommand::RUN_TO_REL_POS);
         _motorRight->setCommand(physical::MotorCommand::RUN_TO_REL_POS);
@@ -129,7 +129,7 @@ namespace finder::engines::movement
     void MovementEngine::turn(TurnDirection direction, int angle, int speed)
     {
         spdlog::trace("MovementEngine::turn()");
-        spdlog::trace("Turning " + (direction == TurnDirection::LEFT ? std::string("left") : std::string("right")) + " " + std::to_string(angle) + " at speed " + std::to_string(speed));
+        spdlog::info("Turning " + (direction == TurnDirection::LEFT ? std::string("left") : std::string("right")) + " " + std::to_string(angle) + " at speed " + std::to_string(speed));
 
         if (speed > 100) {
             spdlog::warn("Speed is higher than 100, setting to 100");
