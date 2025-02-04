@@ -17,7 +17,7 @@ namespace finder::physical
             /// @brief Set the tool position
             /// @param position The position to set the tool to
             /// @return boost::leaf::result<void>
-            boost::leaf::result<void> setAbsToolPosition(int position);
+            boost::leaf::result<void> setAbsToolPosition(int position, int speed);
 
             /// @brief Get the tool position
             /// @return boost::leaf::result<int> The position of the tool in Motor tachometer counts or an error

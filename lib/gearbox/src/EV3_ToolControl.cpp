@@ -14,13 +14,14 @@ namespace finder::physical
     {
     }
 
-    boost::leaf::result<void> ToolControl::setAbsToolPosition(int position)
+    boost::leaf::result<void> ToolControl::setAbsToolPosition(int position, int speed)
     {
         if (!isInitialized())
         {
             return boost::leaf::new_error(std::logic_error("ToolControl not initialized"));
         }
 
+        _motorTool->setSpeed(speed);
         boost::leaf::result<void> status = _motorTool->moveToAbsPosition(position);
         if (!status)
         {

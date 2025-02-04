@@ -78,11 +78,19 @@ namespace finder::system
 
             path.erase(path.begin());
 
-            path.end()->x = destination.x;
+
+            // add the z coordinates back to the path
+            std::vector<math::Vector3> pathWithZ;
+            for (auto &point : path)
+            {
+                pathWithZ.push_back(math::Vector3(point.x, point.y, -1));
+            }
+
+            pathWithZ.end()->z = destination.z;
 
             // add the z coordinates back to the path
 
-            m_path.insert(m_path.end(), path.begin(), path.end());
+            m_path.insert(m_path.end(), pathWithZ.begin(), pathWithZ.end());
             m_currentPosition = math::Vector2(destination.x, destination.y);
         }
     }
