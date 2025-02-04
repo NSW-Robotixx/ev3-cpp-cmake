@@ -4,7 +4,8 @@ namespace finder::system
 {
     math::Vector2 System::m_currentPosition = math::Vector2(0, 0);
     std::deque<math::Vector3> System::m_destinations;
-    std::deque<math::Vector2> System::m_path;
+    std::deque<math::Vector3> System::m_path;
+    int System::m_currentDestinationIndex = 0;
 
     System::System()
     {
@@ -16,36 +17,49 @@ namespace finder::system
         // });
     }
 
-boost::leaf::result<void> System::start()
+    boost::leaf::result<void> System::start()
     {
-        #if EV3_COMPUTE_MODULE_TCP_ENABLED
-        m_compute.start();
-        #else
-
         spdlog::info("Path: ");
-        for (auto &point : m_path)
+        int pathSize = sizeof(m_path)/sizeof(m_path[0]);
+
+        for (int i = m_currentDestinationIndex; i < pathSize; i++)
         {
-            spdlog::info("Moving to point x: " + std::to_string(point.x) + " y: " + std::to_string(point.y));
+            spdlog::info("Moving to point x: " + std::to_string(m_path[i].x) + " y: " + std::to_string(m_path[i].y));
+            m_currentDestinationIndex = i;
 
-            finder::engines::movement::MovementEngine::moveToPoint(point); // Move to the next point
+            if (m_path[i].x < 0 || m_path[i].y < 0)
+            {
+                spdlog::info("Pause Reached");
+                m_currentDestinationIndex++;
+                break;
+            }
 
-            finder::position::MotorPosition::setPosition(math::Vector2(point.x, point.y)); // Update the position
+            // check if the next point is the last point
+            // if (i == pathSize - 1)
+            // {
+            //     finder::engines::movement::MovementEngine::moveToPoint(m_path[i]); // Move to the next point
+            //     break;
+            // }
+
+            finder::engines::movement::MovementEngine::moveToPoint(m_path[i]); // Move to the next point
+
+            finder::position::MotorPosition::setPosition(math::Vector2(m_path[i].x, m_path[i].y)); // Update the position
+
 
             // finder::engines::movement::MovementEngine::turn(physical::TurnDirection::LEFT, point.y, EV3_TURN_SPEED); 
         }
-        #endif
 
         return boost::leaf::result<void>();
     }
 
     void System::read()
     {
-        std::vector<math::Vector3> path = ConfigReader::readDestinationsFromFile();
-        m_destinations.insert(m_destinations.end(), path.begin(), path.end());
+        std::vector<math::Vector3> pathYaml = ConfigReader::readDestinationsFromFile();
+        m_destinations.insert(m_destinations.end(), pathYaml.begin(), pathYaml.end());
         
         for (auto &destination : m_destinations)
         {
-            boost::leaf::result result = m_compute.getAStarPath(math::Vector2(destination.x, destination.y), m_currentPosition);
+            boost::leaf::result<finder::pathfind::AStar::CoordinateList> result = m_compute.getAStarPath(math::Vector2(destination.x, destination.y), m_currentPosition);
             std::vector<math::Vector2> path; 
             if (result) {
                 path = result.value();
@@ -63,6 +77,11 @@ boost::leaf::result<void> System::start()
             }
 
             path.erase(path.begin());
+
+            path.end()->x = destination.x;
+
+            // add the z coordinates back to the path
+
             m_path.insert(m_path.end(), path.begin(), path.end());
             m_currentPosition = math::Vector2(destination.x, destination.y);
         }

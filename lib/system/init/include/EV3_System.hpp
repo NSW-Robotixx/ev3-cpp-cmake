@@ -47,6 +47,8 @@ namespace finder::system
 
         static math::Vector2 m_currentPosition;
         static std::deque<math::Vector3> m_destinations;
-        static std::deque<math::Vector2> m_path;
+        static std::deque<math::Vector3> m_path;
+
+        static int m_currentDestinationIndex;
     };
 } // namespace finder::system

@@ -29,7 +29,7 @@ namespace finder
                 /// @brief Assign a new Vector3 object from Vector2 and z
                 /// @param xy The Vector2 object
                 /// @param z The z coordinate to add
-                Vector3(const math::Vector2 xy, float z): x(xy.x), y(xy.y), z(z) {};
+                Vector3(const math::Vector2& xy, float z): x(xy.x), y(xy.y), z(z) {};
 
                 /// @brief Assign a new Vector3 object from a string
                 /// @param str The string to parse

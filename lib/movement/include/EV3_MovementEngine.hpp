@@ -30,7 +30,7 @@ namespace finder::engines::movement
 
             /// @brief Move the robot to a point
             /// @param destination Point to move to
-            static void moveToPoint(math::Vector2 destination);
+            static void moveToPoint(math::Vector3 destination);
 
             /// @brief Set the speed of the drive motors
             /// @param speed Speed of the motors

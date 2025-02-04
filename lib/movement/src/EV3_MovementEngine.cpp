@@ -24,9 +24,9 @@ namespace finder::engines::movement
         stop();
     }
 
-    void MovementEngine::moveToPoint(math::Vector2 destination)
+    void MovementEngine::moveToPoint(math::Vector3 destination)
     {
-        double lineAngle = math::Line(position::Position::getPosition(), destination).getAngle();
+        double lineAngle = math::Line(position::Position::getPosition(), {destination.x, destination.y}).getAngle();
         double lineAngleReverse = std::fmod(lineAngle + 180, 360);
 
         spdlog::debug("Turning to angle: " + std::to_string(lineAngle));    
@@ -39,7 +39,7 @@ namespace finder::engines::movement
                 turn(physical::TurnDirection::LEFT, round(lineAngle), EV3_TURN_SPEED);
             }
 
-            moveForward(destination.distanceTo(position::Position::getPosition()), 300);
+            moveForward(math::Vector2{destination.x, destination.y}.distanceTo(position::Position::getPosition()), 300);
         } else {
             spdlog::debug("Turning to reverse angle: " + std::to_string(lineAngleReverse));
             if (position::Position::getAngle() < lineAngleReverse) {
@@ -48,7 +48,17 @@ namespace finder::engines::movement
                 turn(physical::TurnDirection::RIGHT, round(lineAngleReverse), EV3_TURN_SPEED);
             }
 
-            moveBackward(destination.distanceTo(position::Position::getPosition()), 300);
+            moveBackward(math::Vector2{destination.x, destination.y}.distanceTo(position::Position::getPosition()), 300);
+        }
+
+        if (destination.z > -1)
+        {
+            spdlog::debug("Turning to angle: " + std::to_string(destination.z));
+            if (position::Position::getAngle() > destination.z) {
+                turn(physical::TurnDirection::RIGHT, round(destination.z), EV3_TURN_SPEED);
+            } else {
+                turn(physical::TurnDirection::LEFT, round(destination.z), EV3_TURN_SPEED);
+            }
         }
     }
 
