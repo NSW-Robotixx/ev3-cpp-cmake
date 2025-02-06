@@ -1,10 +1,12 @@
 set(EV3_MOVEMENT_SRC
     ${EV3_MOVEMENT_SRC_DIR}/EV3_MovementEngine.cpp
     ${EV3_MOVEMENT_SRC_DIR}/MovementParser.cpp
+    ${EV3_MOVEMENT_SRC_DIR}/EV3_MovementCalibration.cpp
 )
 
 set(EV3_MOVEMENT_HDR
     ${EV3_MOVEMENT_INCLUDE_DIR}/EV3_MovementEngine.hpp
+    ${EV3_MOVEMENT_INCLUDE_DIR}/EV3_MovementCalibration.hpp
     ${EV3_MOVEMENT_SRC_DIR}/MovementParser.hpp
 )
 

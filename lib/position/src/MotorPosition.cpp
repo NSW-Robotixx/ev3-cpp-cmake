@@ -64,4 +64,14 @@ namespace finder::position
         
     }
 
+    void MotorPosition::setPosition(math::Vector2 position)
+    {
+        // warn if the delta is too big
+        if (abs(_position.x - position.x) > EV3_POSITION_JUMP_TOLERANCE || abs(_position.y - position.y) > EV3_POSITION_JUMP_TOLERANCE)
+        {
+            spdlog::warn("MotorPosition::setPosition() - Jump detected: x: {}, y: {}", _position.x - position.x, _position.y - position.y);
+        }
+        _position = position;
+    }
+
 } // namespace finder::position

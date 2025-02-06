@@ -6,7 +6,6 @@ namespace finder::position {
     float SensorPosition::_angle;
     TurnDirection SensorPosition::_lastDirection;
 
-    std::ofstream SensorPosition::_colorImageSvg;
 
     std::deque<Eigen::Vector3i> SensorPosition::_prev_color_values_front;
     std::deque<Eigen::Vector3i> SensorPosition::_prev_color_values_left;

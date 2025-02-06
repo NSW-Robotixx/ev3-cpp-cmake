@@ -53,7 +53,7 @@ namespace finder::engines::movement
 
         if (destination.z > -1)
         {
-            spdlog::debug("Turning to angle: " + std::to_string(destination.z));
+            spdlog::debug("Turning to second angle: " + std::to_string(destination.z));
             if (position::Position::getAngle() > destination.z) {
                 turn(physical::TurnDirection::RIGHT, round(destination.z), EV3_TURN_SPEED);
             } else {
@@ -181,6 +181,9 @@ namespace finder::engines::movement
                 spdlog::debug("Target angle: " + std::to_string(angle));
                 spdlog::debug("Current Sensor Angle: " + std::to_string(result.value()));
                 spdlog::debug("Current Motor Angle: " + std::to_string(position::Position::getAngle()));
+
+                // _motorLeft->setDutyCycle(-speed - abs(result.value() - angle));
+                // _motorRight->setDutyCycle(speed + abs(result.value() - angle));
             }
             break;
         
@@ -196,6 +199,9 @@ namespace finder::engines::movement
                 spdlog::debug("Target angle: " + std::to_string(angle));
                 spdlog::debug("Current Sensor Angle: " + std::to_string(result.value()));
                 spdlog::debug("Current Motor Angle: " + std::to_string(position::Position::getAngle()));
+
+                // _motorLeft->setDutyCycle(speed + abs(result.value() - angle));
+                // _motorRight->setDutyCycle(-speed - abs(result.value() - angle));
             }
             break;
 

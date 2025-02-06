@@ -13,7 +13,6 @@
 #include <queue>
 #include <Eigen/Dense>
 #include <spdlog/spdlog.h>
-#include <fstream>
 
 namespace finder::position {
     // not recommended to do this 
@@ -75,7 +74,6 @@ namespace finder::position {
         static float _angle;
 
         // stores the previous color values of the sensors as svg
-        static std::ofstream _colorImageSvg;
         
         #if EV3_COLOR_SENSOR_USE_RGB_MODE
             static std::deque<Eigen::Vector3i> _prev_color_values_front;

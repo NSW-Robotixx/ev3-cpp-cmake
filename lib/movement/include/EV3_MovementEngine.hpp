@@ -9,11 +9,6 @@
 #include "../../EV3_conf.hpp"
 #include "../../EV3_macros.hpp"
 #include <queue>
-#include <mutex>
-#include <functional>
-#include <condition_variable>
-
-#include <boost/exception/diagnostic_information.hpp>
 
 namespace finder::engines::movement
 {

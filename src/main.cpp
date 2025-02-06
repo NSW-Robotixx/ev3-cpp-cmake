@@ -25,9 +25,11 @@ constexpr auto& ascii_art_literal = R"(
 /                         _/                  
 )";
 
-DEFINE_bool(v, false, "Enable debug logging");
-DEFINE_bool(vv, false, "Enable trace logging");
+DEFINE_bool(v, false, "Enable info logging");
+DEFINE_bool(vv, false, "Enable debug logging");
+DEFINE_bool(vvv, false, "Enable trace logging");
 DEFINE_bool(gearbox, false, "Calibrate gearbox");
+DEFINE_bool(movement, false, "Calibrate movement");
 
 
 int main(int argc, char *argv[])
@@ -36,17 +38,21 @@ int main(int argc, char *argv[])
 
     std::cout << ascii_art_literal << std::endl;
 
-    if (FLAGS_vv)
+    if (FLAGS_vvv)
     {
         spdlog::set_level(spdlog::level::trace);
     }
-    else if (FLAGS_v)
+    else if (FLAGS_vv)
     {
         spdlog::set_level(spdlog::level::debug);
     }
-    else
+    else if (FLAGS_v)
     {
         spdlog::set_level(spdlog::level::info);
+    }
+    else
+    {
+        spdlog::set_level(spdlog::level::warn);
     }
 
     finder::system::System ev3_system = finder::system::System();
