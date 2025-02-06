@@ -5,6 +5,7 @@
 #include <yaml-cpp/yaml.h>
 
 #include <fstream>
+#include <filesystem>
 
 #include "../../EV3_conf.hpp"
 
@@ -24,6 +25,13 @@ namespace finder
             void loadObstacles();
 
             /// @brief Save the obstacles from the vector into the yaml file
+            /// @example obstacles:
+            ///  - x: 100
+            ///    y: 100
+            ///  - x: 200
+            ///    y: 200
+            ///  - x: 300
+            ///    y: 300
             void saveObstacles();
 
 
@@ -54,6 +62,7 @@ namespace finder
             /// @brief Get the nearest obstacle to a position
             /// @param position The position to check
             /// @return The nearest obstacle
+            /// @todo Consider lines
             Eigen::Vector2i getNearestObstacle(Eigen::Vector2i position);
 
         private:

@@ -1,0 +1,21 @@
+obstacles:
+  - x: 1
+    y: 2
+  - x: 3
+    y: 4
+  - x: 5
+    y: 6
+
+obstacles_lines:
+  - start:
+      x: 1
+      y: 2
+    end:
+      x: 3
+      y: 4
+  - start:
+      x: 5
+      y: 6
+    end:
+      x: 7
+      y: 8

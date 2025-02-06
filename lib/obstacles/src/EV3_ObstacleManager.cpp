@@ -16,23 +16,15 @@ namespace finder::physical
         spdlog::trace("ObstacleManager::~ObstacleManager()");
     }
 
-
-    /*
-        * Load the obstacles from the yaml file into the vector
-        * Example:
-        * 
-        * obstacles:
-        *  - x: 100
-        *    y: 100
-        *  - x: 200
-        *    y: 200
-        *  - x: 300
-        *    y: 300
-        * 
-    */
     void ObstacleManager::loadObstacles()
     {
         spdlog::trace("ObstacleManager::loadObstacles()");
+
+        if (!std::filesystem::exists(EV3_OBSTACLES_FILE_PATH))
+        {
+            spdlog::warn("Obstacles file does not exist");
+            return;
+        }
 
         // load the obstacles from the yaml file into the vector
         YAML::Node obstaclesFile = YAML::LoadFile(EV3_OBSTACLES_FILE_PATH);
