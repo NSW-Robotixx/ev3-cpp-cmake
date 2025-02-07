@@ -26,7 +26,7 @@
     constexpr unsigned int EV3_GEARBOX_SHIFT_SPEED = 500;
     constexpr unsigned int EV3_MOTOR_TOOL_SPEED = 500;
     constexpr unsigned int EV3_DRIVE_SPEED = 300;
-    constexpr unsigned int EV3_TURN_SPEED = 50;
+    constexpr unsigned int EV3_TURN_SPEED = 40;
     
     // define the gear positions of the gearbox
     constexpr char EV3_PORT_GEARBOX_SHIFT = EV3_PORT_OUTPUT_D;
@@ -99,8 +99,8 @@
     constexpr unsigned int EV3_FIELD_HEIGHT = 1000;
 
     // define the position of the robot on the field
-    constexpr unsigned int EV3_ROBOT_POSITION_X = 40;
-    constexpr unsigned int EV3_ROBOT_POSITION_Y = 40;
+    constexpr unsigned int EV3_ROBOT_POSITION_X = 70;
+    constexpr unsigned int EV3_ROBOT_POSITION_Y = 160;
 
     // set the file format of the destinations file
     #define EV3_DESTINATIONS_FILE_FORMAT_YAML 1

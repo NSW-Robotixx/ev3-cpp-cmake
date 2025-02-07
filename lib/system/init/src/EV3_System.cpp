@@ -20,7 +20,14 @@ namespace finder::system
     boost::leaf::result<void> System::start()
     {
         spdlog::info("Path: ");
-        int pathSize = sizeof(m_path)/sizeof(m_path[0]);
+        for (const auto& point : m_path)
+        {
+            spdlog::info("x: " + std::to_string(point.x) + " y: " + std::to_string(point.y) + " z: " + std::to_string(point.z));
+        }
+
+        int pathSize = m_path.size();
+
+        spdlog::debug("Path size: " + std::to_string(pathSize));
 
         for (int i = m_currentDestinationIndex; i < pathSize; i++)
         {
@@ -49,6 +56,8 @@ namespace finder::system
             // finder::engines::movement::MovementEngine::turn(physical::TurnDirection::LEFT, point.y, EV3_TURN_SPEED); 
         }
 
+        spdlog::info("Finished path");
+
         return boost::leaf::result<void>();
     }
 
@@ -57,7 +66,7 @@ namespace finder::system
         std::vector<math::Vector3> pathYaml = ConfigReader::readDestinationsFromFile();
         m_destinations.insert(m_destinations.end(), pathYaml.begin(), pathYaml.end());
         
-        for (auto &destination : m_destinations)
+        for (const auto& destination : m_destinations)
         {
             boost::leaf::result<finder::pathfind::AStar::CoordinateList> result = m_compute.getAStarPath(math::Vector2(destination.x, destination.y), m_currentPosition);
             std::vector<math::Vector2> path; 
@@ -86,12 +95,18 @@ namespace finder::system
                 pathWithZ.push_back(math::Vector3(point.x, point.y, -1));
             }
 
-            pathWithZ.end()->z = destination.z;
+            pathWithZ.back().z = destination.z;
 
             // add the z coordinates back to the path
 
             m_path.insert(m_path.end(), pathWithZ.begin(), pathWithZ.end());
             m_currentPosition = math::Vector2(destination.x, destination.y);
+        }
+
+        spdlog::info("Path read: ");
+        for (const auto& point : m_path)
+        {
+            spdlog::info("x: " + std::to_string(point.x) + " y: " + std::to_string(point.y) + " z: " + std::to_string(point.z));
         }
     }
 

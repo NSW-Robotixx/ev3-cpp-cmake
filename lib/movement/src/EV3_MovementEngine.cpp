@@ -26,6 +26,12 @@ namespace finder::engines::movement
 
     void MovementEngine::moveToPoint(math::Vector3 destination)
     {
+        if (destination.x <= 1 || destination.y <= 1)
+        {
+            spdlog::info("Pause Reached");
+            return;
+        }
+
         double lineAngle = math::Line(position::Position::getPosition(), {destination.x, destination.y}).getAngle();
         double lineAngleReverse = std::fmod(lineAngle + 180, 360);
 
@@ -101,8 +107,11 @@ namespace finder::engines::movement
         _motorLeft->setCommand(physical::MotorCommand::RUN_TO_REL_POS);
         _motorRight->setCommand(physical::MotorCommand::RUN_TO_REL_POS);
 
-        _motorLeft->waitUntilStopped(&position::Position::updatePosition);
-        _motorRight->waitUntilStopped(&position::Position::updatePosition);
+        // _motorLeft->waitUntilStopped(&position::Position::updatePosition);
+        // _motorRight->waitUntilStopped(&position::Position::updatePosition);
+
+        _motorLeft->waitUntilStopped();
+        _motorRight->waitUntilStopped();
 
         if (speed < 0)
         {
@@ -180,7 +189,7 @@ namespace finder::engines::movement
                 }
                 spdlog::debug("Target angle: " + std::to_string(angle));
                 spdlog::debug("Current Sensor Angle: " + std::to_string(result.value()));
-                spdlog::debug("Current Motor Angle: " + std::to_string(position::Position::getAngle()));
+                spdlog::debug("Current Motor Angle: " + std::to_string(position::MotorPosition::getAngle()));
 
                 // _motorLeft->setDutyCycle(-speed - abs(result.value() - angle));
                 // _motorRight->setDutyCycle(speed + abs(result.value() - angle));
@@ -198,7 +207,7 @@ namespace finder::engines::movement
                 }
                 spdlog::debug("Target angle: " + std::to_string(angle));
                 spdlog::debug("Current Sensor Angle: " + std::to_string(result.value()));
-                spdlog::debug("Current Motor Angle: " + std::to_string(position::Position::getAngle()));
+                spdlog::debug("Current Motor Angle: " + std::to_string(position::MotorPosition::getAngle()));
 
                 // _motorLeft->setDutyCycle(speed + abs(result.value() - angle));
                 // _motorRight->setDutyCycle(-speed - abs(result.value() - angle));
@@ -214,6 +223,7 @@ namespace finder::engines::movement
         _motorLeft->stop();
         _motorRight->stop();
 
+        // position::Position::updatePosition();
         spdlog::trace("Motors stopped");
     }
 
