@@ -169,6 +169,7 @@ namespace finder
                 boost::leaf::result<void> moveToAbsPosition(int abs_position_sp);
 
                 /// @brief Wait until the motor has stopped moving.
+                /// @param loopCallback Callback to call in the loop while waiting for the motor to stop.
                 /// @return boost::leaf::result<void>
                 boost::leaf::result<void> waitUntilStopped(std::function<void()> loopCallback = nullptr);
 

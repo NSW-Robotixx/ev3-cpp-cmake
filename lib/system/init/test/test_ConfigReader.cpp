@@ -27,10 +27,10 @@ TEST(ConfigReader, DefaultConstructor)
 #endif
 
     finder::system::ConfigReader configReader;
-    std::vector<finder::math::Vector3> destinations = configReader.readDestinationsFromFile();
+    std::vector<finder::system::Destination> destinations = configReader.readDestinationsFromFile();
 
     EXPECT_EQ(destinations.size(), 3);
-    EXPECT_EQ(destinations[0], (finder::math::Vector3{1, 2, 3}));
-    EXPECT_EQ(destinations[1], (finder::math::Vector3{4, 5, 6}));
-    EXPECT_EQ(destinations[2], (finder::math::Vector3{7, 8, 9}));
+    EXPECT_EQ(destinations[0], (finder::system::Destination{1, 2, 3, -1, "", -1}));
+    EXPECT_EQ(destinations[1], (finder::system::Destination{4, 5, 6, -1, "", -1}));
+    EXPECT_EQ(destinations[2], (finder::system::Destination{7, 8, 9, -1, "", -1}));
 }

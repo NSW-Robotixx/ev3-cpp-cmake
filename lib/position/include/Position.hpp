@@ -23,6 +23,7 @@ namespace finder::position
             /// @return Current angle in degrees
             static float getAngle();
 
+            /// @brief Update the position of the robot.
             static void updatePosition();
 
         private:

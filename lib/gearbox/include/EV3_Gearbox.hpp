@@ -1,3 +1,5 @@
+#pragma once
+
 #include <EV3_MotorManager.hpp>
 #include <EV3_ToolControl.hpp>
 #include "../../EV3_conf.hpp"

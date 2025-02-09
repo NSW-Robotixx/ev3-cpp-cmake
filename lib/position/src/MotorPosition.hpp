@@ -31,7 +31,8 @@ namespace finder::position
             /// @brief Get the current angle of the robot
             /// @return The current angle estimate of the robot
             static inline float getAngle() { return _angle; }
-
+            
+            /// @brief Set the position of the robot
             static void setPosition(math::Vector2 position);
 
         private:

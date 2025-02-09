@@ -1,3 +1,5 @@
+#pragma once
+
 #include <EV3_MotorManager.hpp>
 
 #include <chrono>
@@ -16,8 +18,9 @@ namespace finder::physical
             
             /// @brief Set the tool position
             /// @param position The position to set the tool to
+            /// @param speed The speed to move the tool at
             /// @return boost::leaf::result<void>
-            boost::leaf::result<void> setAbsToolPosition(int position, int speed);
+            boost::leaf::result<void> moveToAbsToolPosition(int position, int speed);
 
             /// @brief Get the tool position
             /// @return boost::leaf::result<int> The position of the tool in Motor tachometer counts or an error

@@ -2,9 +2,11 @@
 
 namespace finder::system
 {
+    finder::engines::movement::GearboxManager System::m_gearbox;
+    finder::engines::movement::ToolControl System::m_tool;
     math::Vector2 System::m_currentPosition = math::Vector2(0, 0);
-    std::deque<math::Vector3> System::m_destinations;
-    std::deque<math::Vector3> System::m_path;
+    std::deque<Destination> System::m_destinations;
+    std::deque<Destination> System::m_path;
     int System::m_currentDestinationIndex = 0;
 
     System::System()
@@ -22,7 +24,7 @@ namespace finder::system
         spdlog::info("Path: ");
         for (const auto& point : m_path)
         {
-            spdlog::info("x: " + std::to_string(point.x) + " y: " + std::to_string(point.y) + " z: " + std::to_string(point.z));
+            spdlog::info("x: " + std::to_string(point.x) + " y: " + std::to_string(point.y) + " angle: " + std::to_string(point.angle));
         }
 
         int pathSize = m_path.size();
@@ -48,9 +50,48 @@ namespace finder::system
             //     break;
             // }
 
-            finder::engines::movement::MovementEngine::moveToPoint(m_path[i]); // Move to the next point
+            finder::engines::movement::MovementEngine::moveToPoint(math::Vector3(m_path[i].x, m_path[i].y, m_path[i].angle)); // Move to the next point
 
             finder::position::MotorPosition::setPosition(math::Vector2(m_path[i].x, m_path[i].y)); // Update the position
+
+            if (m_path[i].gear > -1)
+            {
+                switch (m_path[i].gear)
+                {
+                case 0:
+                    m_gearbox.setGear(finder::physical::GearboxGears::EV3_GEARBOX_GEAR_1);
+                    break;
+                case 1:
+                    m_gearbox.setGear(finder::physical::GearboxGears::EV3_GEARBOX_GEAR_2);
+                    break;
+                case 2:
+                    m_gearbox.setGear(finder::physical::GearboxGears::EV3_GEARBOX_GEAR_3);
+                    break;
+                case 3:
+                    m_gearbox.setGear(finder::physical::GearboxGears::EV3_GEARBOX_GEAR_4);            
+                    break;
+                
+                default:
+                    spdlog::error("Invalid gear: " + std::to_string(m_path[i].gear));
+                    break;
+                }
+            }
+
+            if (m_path[i].tool != "")
+            {
+                if (m_path[i].tool == "inf")
+                {
+                    m_tool.moveToolForever(EV3_MOTOR_TOOL_SPEED);
+                }
+                else if (m_path[i].tool == "-inf")
+                {
+                    m_tool.moveToolForever(-EV3_MOTOR_TOOL_SPEED);
+                }
+                else
+                {
+                    m_tool.moveToAbsToolPosition(std::stoi(m_path[i].tool), EV3_MOTOR_TOOL_SPEED);
+                }
+            }
 
 
             // finder::engines::movement::MovementEngine::turn(physical::TurnDirection::LEFT, point.y, EV3_TURN_SPEED); 
@@ -63,7 +104,7 @@ namespace finder::system
 
     void System::read()
     {
-        std::vector<math::Vector3> pathYaml = ConfigReader::readDestinationsFromFile();
+        std::vector<Destination> pathYaml = ConfigReader::readDestinationsFromFile();
         m_destinations.insert(m_destinations.end(), pathYaml.begin(), pathYaml.end());
         
         for (const auto& destination : m_destinations)
@@ -88,25 +129,27 @@ namespace finder::system
             path.erase(path.begin());
 
 
-            // add the z coordinates back to the path
-            std::vector<math::Vector3> pathWithZ;
+            // add the angle coordinates back to the path
+            std::vector<Destination> pathWithAngle;
             for (auto &point : path)
             {
-                pathWithZ.push_back(math::Vector3(point.x, point.y, -1));
+                pathWithAngle.push_back(Destination(point.x, point.y, -1, -1, "", -1));
             }
 
-            pathWithZ.back().z = destination.z;
+            pathWithAngle.back().angle = destination.angle; 
+            pathWithAngle.back().gear = destination.gear;
+            pathWithAngle.back().tool = destination.tool;
+            pathWithAngle.back().wait = destination.wait;
 
-            // add the z coordinates back to the path
 
-            m_path.insert(m_path.end(), pathWithZ.begin(), pathWithZ.end());
+            m_path.insert(m_path.end(), pathWithAngle.begin(), pathWithAngle.end());
             m_currentPosition = math::Vector2(destination.x, destination.y);
         }
 
         spdlog::info("Path read: ");
         for (const auto& point : m_path)
         {
-            spdlog::info("x: " + std::to_string(point.x) + " y: " + std::to_string(point.y) + " z: " + std::to_string(point.z));
+            spdlog::info("x: " + std::to_string(point.x) + " y: " + std::to_string(point.y) + " angle: " + std::to_string(point.angle));
         }
     }
 
@@ -115,6 +158,7 @@ namespace finder::system
         #if EV3_COMPUTE_MODULE_TCP_ENABLED
         m_compute.stop();
         #else
+        spdlog::info("TCP compute module is not enabled.");
         #endif
 
         spdlog::info("System stopped");

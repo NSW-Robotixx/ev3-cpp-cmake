@@ -40,8 +40,8 @@ find_package(gflags REQUIRED)
 
 
 # new and untested stuff
-set(BUILD_SHARED_LIBS ON)
-# set(CMAKE_EXE_LINKER_FLAGS "-static-libgcc -static-libstdc++ -Wall -Werror -Wextra")
+set(BUILD_SHARED_LIBS OFF)
+set(CMAKE_EXE_LINKER_FLAGS "-static-libgcc -static-libstdc++ -Wall -Werror -Wextra")
 # end of new and untested stuff
 
 # add executables
@@ -49,7 +49,7 @@ add_executable(Main src/main.cpp)
 # add_executable(Test src/tests.cpp)
 
 # set executables to be static
-# SET_TARGET_PROPERTIES(Main PROPERTIES LINK_FLAGS "-static -lc -lm -L/usr/local/lib/")
+SET_TARGET_PROPERTIES(Main PROPERTIES LINK_FLAGS "-static -lc -lm -L/usr/local/lib/")
 # add include directories
 # include_directories(${CMAKE_SOURCE_DIR}/lib)
 # include_directories(${CMAKE_SOURCE_DIR}/tests)
@@ -107,7 +107,7 @@ target_link_libraries(Main
   
   
   add_executable(FullTest ${EV3_TESTS_SRC})
-  # SET_TARGET_PROPERTIES(FullTest PROPERTIES LINK_FLAGS "-static -lc -lm -L/usr/local/lib/")
+  SET_TARGET_PROPERTIES(FullTest PROPERTIES LINK_FLAGS "-static -lc -lm -L/usr/local/lib/")
   
   
   target_sources(FullTest

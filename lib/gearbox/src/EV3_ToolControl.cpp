@@ -14,7 +14,7 @@ namespace finder::physical
     {
     }
 
-    boost::leaf::result<void> ToolControl::setAbsToolPosition(int position, int speed)
+    boost::leaf::result<void> ToolControl::moveToAbsToolPosition(int position, int speed)
     {
         if (!isInitialized())
         {
@@ -27,6 +27,8 @@ namespace finder::physical
         {
             return status;
         }
+
+        _motorTool->waitUntilStopped();
 
         return boost::leaf::result<void>();
     }

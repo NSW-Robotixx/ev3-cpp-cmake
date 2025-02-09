@@ -6,6 +6,8 @@
 #include <EV3_compute_local.hpp>
 #include <ConfigReader.hpp>
 #include <EV3_MovementEngine.hpp>
+#include <EV3_Gearbox.hpp>
+#include <EV3_ToolControl.hpp>
 
 #include <deque>
 #include <unistd.h>
@@ -45,9 +47,12 @@ namespace finder::system
         finder::compute::EV3_compute m_compute;
         #endif
 
+        static finder::engines::movement::GearboxManager m_gearbox;
+        static finder::engines::movement::ToolControl m_tool;
+
         static math::Vector2 m_currentPosition;
-        static std::deque<math::Vector3> m_destinations;
-        static std::deque<math::Vector3> m_path;
+        static std::deque<Destination> m_destinations;
+        static std::deque<Destination> m_path;
 
         static int m_currentDestinationIndex;
     };

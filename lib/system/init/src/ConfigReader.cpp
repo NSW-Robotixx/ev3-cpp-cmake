@@ -2,9 +2,9 @@
 
 namespace finder::system
 {
-    std::vector<math::Vector3> ConfigReader::readDestinationsFromFile()
+    std::vector<Destination> ConfigReader::readDestinationsFromFile()
     {
-        std::vector<math::Vector3> destinations;
+        std::vector<Destination> destinations;
 
 #if EV3_DESTINATIONS_FILE_FORMAT_YAML
         YAML::Node config = YAML::LoadFile(EV3_DESTINATIONS_FILE_PATH);
@@ -20,7 +20,14 @@ namespace finder::system
 
         for (const auto &destination : config["destinations"])
         {
-            math::Vector3 vec(destination["x"].as<double>(), destination["y"].as<double>(), destination["z"].as<double>());
+            Destination vec;
+            vec.x = destination["x"].as<double>();
+            vec.y = destination["y"].as<double>();
+            vec.angle = destination["angle"].as<double>();
+            vec.gear = destination["gear"].as<int>();
+            vec.tool = destination["tool"].as<std::string>();
+            vec.wait = destination["wait"].as<int>();
+
             destinations.push_back(vec);
         }
 #else
@@ -67,7 +74,7 @@ namespace finder::system
         
         for (const auto &destination : destinations)
         {
-            spdlog::info(destination.toString());
+            spdlog::info("x: " + std::to_string(destination.x) + " y: " + std::to_string(destination.y) + " angle: " + std::to_string(destination.angle) + " gear: " + std::to_string(destination.gear) + " tool: " + destination.tool + " wait: " + std::to_string(destination.wait));
         }
 
         return destinations;
