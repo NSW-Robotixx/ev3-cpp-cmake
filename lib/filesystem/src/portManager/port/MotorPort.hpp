@@ -108,6 +108,14 @@ namespace finder
                 /// @brief Get the maximum speed of the motor. This is the maximum speed the motor can move at.
                 /// @return Path to read the maximum speed of the motor.
                 boost::leaf::result<path_max_speed_t> getMaxSpeedPath();
+
+                /// @brief Get the path to set the ramp up speed of the motor.
+                /// @return Path to set the ramp up speed of the motor.
+                boost::leaf::result<std::string> getRampUpSpPath();
+                
+                /// @brief Get the path to set the ramp down speed of the motor.
+                /// @return Path to set the ramp down speed of the motor.
+                boost::leaf::result<std::string> getRampDownSpPath();
                 
                 /// @brief Set the speed the motor should move at, max ca. 800.
                 /// @param speed Speed in pulses per second.
@@ -189,6 +197,8 @@ namespace finder
                 std::shared_ptr<std::ofstream> _file_stop_action_path;
                 std::shared_ptr<std::ifstream> _file_count_per_rotation_path;
                 std::shared_ptr<std::ifstream> _file_max_speed_path;
+                std::shared_ptr<std::ofstream> _file_ramp_up_sp_path;
+                std::shared_ptr<std::ofstream> _file_ramp_down_sp_path;
                 
                 bool _is_initialized;
 
@@ -196,7 +206,7 @@ namespace finder
 
                 int _position;
 
-                /// @brief Inititalize the motor class by checking if files exist and opening file streams.
+                /// @brief Initialize the motor class by checking if files exist and opening file streams.
                 boost::leaf::result<void> init();
 
                 std::string getStringFromState(MotorState state) noexcept;

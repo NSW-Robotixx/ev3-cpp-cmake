@@ -209,6 +209,40 @@ namespace finder
             }
         }
 
+        boost::leaf::result<std::string> MotorPort::getRampUpSpPath()
+        {
+            spdlog::trace("MotorPort::getRampUpSpPath()");
+
+            if (isEnabled() && *isEnabled()) {
+                boost::leaf::result<path_speed_sp_t> path = getBasePath();
+                if (path) {
+                    return path.value() + "/ramp_up_sp";
+                } else {
+                    return boost::leaf::new_error(std::invalid_argument("Failed to get base path"));
+                }
+            } else {
+                spdlog::warn("Port is not enabled");
+                return boost::leaf::new_error(std::invalid_argument("Port is not enabled: " + _path));
+            }
+        }
+
+        boost::leaf::result<std::string> MotorPort::getRampDownSpPath()
+        {
+            spdlog::trace("MotorPort::getRampDownSpPath()");
+
+            if (isEnabled() && *isEnabled()) {
+                boost::leaf::result<path_speed_sp_t> path = getBasePath();
+                if (path) {
+                    return path.value() + "/ramp_down_sp";
+                } else {
+                    return boost::leaf::new_error(std::invalid_argument("Failed to get base path"));
+                }
+            } else {
+                spdlog::warn("Port is not enabled");
+                return boost::leaf::new_error(std::invalid_argument("Port is not enabled: " + _path));
+            }
+        }
+
         void MotorPort::setSpeed(int speed)
         {
             spdlog::trace("MotorPort::setSpeed()");
@@ -638,6 +672,8 @@ namespace finder
                 boost::leaf::result<path_stop_action_t> stop_action_path = getStopActionPath();
                 boost::leaf::result<path_count_per_rotation_t> count_per_rotation_path = getCountPerRotationPath();
                 boost::leaf::result<path_max_speed_t> max_speed_path = getMaxSpeedPath();
+                boost::leaf::result<path_speed_sp_t> ramp_up_sp_path = getRampUpSpPath();
+                boost::leaf::result<path_speed_sp_t> ramp_down_sp_path = getRampDownSpPath();
 
                 spdlog::debug(("MotorPort::init() for"));
                 
@@ -697,6 +733,14 @@ namespace finder
                     spdlog::error("MotorPort failed to initialize, max_speed path is not valid");
                     return max_speed_path.error();
                 }
+                if (!ramp_up_sp_path) {
+                    spdlog::error("MotorPort failed to initialize, ramp_up_sp path is not valid");
+                    return ramp_up_sp_path.error();
+                }
+                if (!ramp_down_sp_path) {
+                    spdlog::error("MotorPort failed to initialize, ramp_down_sp path is not valid");
+                    return ramp_down_sp_path.error();
+                }
 
                 spdlog::debug("MotorPort::init() paths are valid");
 
@@ -752,6 +796,14 @@ namespace finder
                     spdlog::error("MotorPort failed to initialize, max_speed path does not exist");
                     return boost::leaf::new_error(std::invalid_argument("MotorPort failed to initialize, max_speed path does not exist"));
                 }
+                if (!std::filesystem::exists(ramp_up_sp_path.value())) {
+                    spdlog::error("MotorPort failed to initialize, ramp_up_sp path does not exist");
+                    return boost::leaf::new_error(std::invalid_argument("MotorPort failed to initialize, ramp_up_sp path does not exist"));
+                }
+                if (!std::filesystem::exists(ramp_down_sp_path.value())) {
+                    spdlog::error("MotorPort failed to initialize, ramp_down_sp path does not exist");
+                    return boost::leaf::new_error(std::invalid_argument("MotorPort failed to initialize, ramp_down_sp path does not exist"));
+                }
 
                 spdlog::debug("MotorPort::init() paths exist");
 
@@ -766,6 +818,8 @@ namespace finder
                 _file_stop_action_path = std::make_shared<std::ofstream>(stop_action_path.value());
                 _file_count_per_rotation_path = std::make_shared<std::ifstream>(count_per_rotation_path.value());
                 _file_max_speed_path = std::make_shared<std::ifstream>(max_speed_path.value());
+                _file_ramp_up_sp_path = std::make_shared<std::ofstream>(ramp_up_sp_path.value());
+                _file_ramp_down_sp_path = std::make_shared<std::ofstream>(ramp_down_sp_path.value());
 
                 spdlog::debug("MotorPort::init() file readers created");
 
@@ -824,6 +878,16 @@ namespace finder
                     return boost::leaf::new_error(std::invalid_argument("MotorPort failed to initialize, max_speed file is not open"));
                 }
                 spdlog::info("MotorPort::init() max_speed file opened at: " + max_speed_path.value());
+                if (!_file_ramp_up_sp_path->is_open() || _file_ramp_up_sp_path->bad()) {
+                    spdlog::error("MotorPort failed to initialize, ramp_up_sp file is not open");
+                    return boost::leaf::new_error(std::invalid_argument("MotorPort failed to initialize, ramp_up_sp file is not open"));
+                }
+                spdlog::info("MotorPort::init() ramp_up_sp file opened at: " + ramp_up_sp_path.value());
+                if (!_file_ramp_down_sp_path->is_open() || _file_ramp_down_sp_path->bad()) {
+                    spdlog::error("MotorPort failed to initialize, ramp_down_sp file is not open");
+                    return boost::leaf::new_error(std::invalid_argument("MotorPort failed to initialize, ramp_down_sp file is not open"));
+                }
+                spdlog::info("MotorPort::init() ramp_down_sp file opened at: " + ramp_down_sp_path.value());
 
                 spdlog::debug("MotorPort::init() file readers opened");
 
