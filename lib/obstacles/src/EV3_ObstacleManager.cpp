@@ -82,8 +82,9 @@ namespace finder::physical
 
         obstaclesFile["obstacles_lines"] = obstaclesLines;
 
-        std::ofstream fout(EV3_OBSTACLES_FILE_PATH);
+        std::ofstream fout(EV3_OBSTACLES_FILE_PATH + std::string(".out"));
         fout << obstaclesFile;
+        fout.close();
     }
 
     void ObstacleManager::addObstacle(Eigen::Vector2i position)

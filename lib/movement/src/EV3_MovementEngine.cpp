@@ -28,7 +28,7 @@ namespace finder::engines::movement
     {
         if (destination.x <= 1 || destination.y <= 1)
         {
-            spdlog::info("Pause Reached");
+            spdlog::info("Pause Reached, not moving");
             return;
         }
 
@@ -92,6 +92,8 @@ namespace finder::engines::movement
     {
         spdlog::trace("Moving forward " + std::to_string(distance) + " at speed " + std::to_string(speed));
 
+        finder::position::MotorPosition::notifyMovementStart(distance);
+
         if (speed < 0)
         {
             spdlog::info("Speed is negative, reversing direction");
@@ -107,11 +109,11 @@ namespace finder::engines::movement
         _motorLeft->setCommand(physical::MotorCommand::RUN_TO_REL_POS);
         _motorRight->setCommand(physical::MotorCommand::RUN_TO_REL_POS);
 
-        // _motorLeft->waitUntilStopped(&position::Position::updatePosition);
-        // _motorRight->waitUntilStopped(&position::Position::updatePosition);
+        _motorLeft->waitUntilStopped(&position::Position::updatePosition);
+        _motorRight->waitUntilStopped(&position::Position::updatePosition);
 
-        _motorLeft->waitUntilStopped();
-        _motorRight->waitUntilStopped();
+        // _motorLeft->waitUntilStopped();
+        // _motorRight->waitUntilStopped();
 
         if (speed < 0)
         {

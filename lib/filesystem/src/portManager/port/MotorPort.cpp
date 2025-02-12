@@ -469,22 +469,22 @@ namespace finder
                         }
                         for (auto token : state_tokens) {
                             if (token == "running") {
-                                spdlog::debug(("STATE.GET: WITH_RESULT: " + std::string("RUNNING")));
+                                spdlog::trace(("STATE.GET: WITH_RESULT: " + std::string("RUNNING")));
                                 states.push_back(MotorState::RUNNING);
                             } else if (token == "ramping") {
-                                spdlog::debug(("STATE.GET: WITH_RESULT: " + std::string("RAMPING")));
+                                spdlog::trace(("STATE.GET: WITH_RESULT: " + std::string("RAMPING")));
                                 states.push_back(MotorState::RAMPING);
                             } else if (token == "holding") {
-                                spdlog::debug(("STATE.GET: WITH_RESULT: " + std::string("HOLDING")));
+                                spdlog::trace(("STATE.GET: WITH_RESULT: " + std::string("HOLDING")));
                                 states.push_back(MotorState::HOLDING);
                             } else if (token == "overloaded") {
-                                spdlog::debug(("STATE.GET: WITH_RESULT: " + std::string("OVERLOADED")));
+                                spdlog::trace(("STATE.GET: WITH_RESULT: " + std::string("OVERLOADED")));
                                 states.push_back(MotorState::OVERLOADED);
                             } else if (token == "stalled") {
-                                spdlog::debug(("STATE.GET: WITH_RESULT: " + std::string("STALLED")));
+                                spdlog::trace(("STATE.GET: WITH_RESULT: " + std::string("STALLED")));
                                 states.push_back(MotorState::STALLED);
                             } else if (token == "stopped") {
-                                spdlog::debug(("STATE.GET: WITH_RESULT: " + std::string("STOPPED")));
+                                spdlog::trace(("STATE.GET: WITH_RESULT: " + std::string("STOPPED")));
                                 states.push_back(MotorState::STOPPED);
                             } else {
                                 spdlog::error("MotorPort failed to get state for"), token;
@@ -601,11 +601,7 @@ namespace finder
                 }
 
                 if (std::find(states.begin(), states.end(), MotorState::HOLDING) != states.end()) {
-                    if constexpr (EV3_DETAILED_LOGGING) {
-                        spdlog::info("MotorPort::waitUntilStopped() still running: "+ std::to_string(getPosition()));
-                    } else {
-                        spdlog::info("MotorPort::waitUntilStopped() still running");
-                    }
+                    spdlog::info("MotorPort::waitUntilStopped() still running: "+ std::to_string(getPosition()));
                     return boost::leaf::result<void>();
                 }
             }

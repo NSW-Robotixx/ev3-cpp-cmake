@@ -33,11 +33,19 @@ namespace finder::position
             static inline float getAngle() { return _angle; }
             
             /// @brief Set the position of the robot
+            /// @param position The new position of the robot
             static void setPosition(math::Vector2 position);
+
+            /// @brief Notify of movement start
+            /// @param destination The destination of the movement
+            static void notifyMovementStart(int destination);
 
         private:
             static math::Vector2 _prev_motor_position;
             static math::Vector2 _position;
             static float _angle;
+            static math::Vector2 _movement_start_position;
+            static math::Vector2 _movement_end_position;
+            static math::Vector2 _movement_start_robot_position;
     };
 }

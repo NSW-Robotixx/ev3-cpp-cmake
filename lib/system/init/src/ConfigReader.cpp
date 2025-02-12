@@ -23,10 +23,45 @@ namespace finder::system
             Destination vec;
             vec.x = destination["x"].as<double>();
             vec.y = destination["y"].as<double>();
-            vec.angle = destination["angle"].as<double>();
-            vec.gear = destination["gear"].as<int>();
-            vec.tool = destination["tool"].as<std::string>();
-            vec.wait = destination["wait"].as<int>();
+            try
+            {
+                vec.angle = destination["angle"].as<double>();
+            }
+            catch(const std::exception& e)
+            {
+                spdlog::debug("No angle found in destination, setting to -1");
+                vec.angle = -1;
+            }
+            
+            try
+            {
+                vec.gear = destination["gear"].as<int>();
+            }
+            catch(const std::exception& e)
+            {
+                spdlog::debug("No gear found in destination, setting to 0");
+                vec.gear = 0;
+            }
+
+            try
+            {
+                vec.tool = destination["tool"].as<std::string>();
+            }
+            catch(const std::exception& e)
+            {
+                spdlog::debug("No tool found in destination, setting to empty string");
+                vec.tool = "";
+            }            
+
+            try
+            {
+                vec.wait = destination["wait"].as<int>();
+            }
+            catch(const std::exception& e)
+            {
+                spdlog::debug("No wait found in destination, setting to 0");
+                vec.wait = 0;
+            }
 
             destinations.push_back(vec);
         }

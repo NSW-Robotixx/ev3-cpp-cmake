@@ -49,7 +49,7 @@ add_executable(Main src/main.cpp)
 # add_executable(Test src/tests.cpp)
 
 # set executables to be static
-SET_TARGET_PROPERTIES(Main PROPERTIES LINK_FLAGS "-static -lc -lm -L/usr/local/lib/")
+SET_TARGET_PROPERTIES(Main PROPERTIES LINK_FLAGS "-static -lc -lm -L/usr/local/lib/ -Wno-psabi")
 # add include directories
 # include_directories(${CMAKE_SOURCE_DIR}/lib)
 # include_directories(${CMAKE_SOURCE_DIR}/tests)
@@ -107,7 +107,7 @@ target_link_libraries(Main
   
   
   add_executable(FullTest ${EV3_TESTS_SRC})
-  SET_TARGET_PROPERTIES(FullTest PROPERTIES LINK_FLAGS "-static -lc -lm -L/usr/local/lib/")
+  SET_TARGET_PROPERTIES(FullTest PROPERTIES LINK_FLAGS "-static -lc -lm -L/usr/local/lib/ -Wno-psabi")
   
   
   target_sources(FullTest
