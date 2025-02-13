@@ -26,7 +26,7 @@
     constexpr unsigned int EV3_GEARBOX_SHIFT_SPEED = 500;
     constexpr unsigned int EV3_MOTOR_TOOL_SPEED = 500;
     constexpr unsigned int EV3_DRIVE_SPEED = 400;
-    constexpr unsigned int EV3_TURN_SPEED = 20;
+    constexpr unsigned int EV3_TURN_SPEED = 40;
     
     // define the gear positions of the gearbox
     constexpr char EV3_PORT_GEARBOX_SHIFT = EV3_PORT_OUTPUT_D;
@@ -34,6 +34,9 @@
     constexpr unsigned int EV3_GEARBOX_GEAR_POS_2  = 90;
     constexpr unsigned int EV3_GEARBOX_GEAR_POS_3  = 180;
     constexpr unsigned int EV3_GEARBOX_GEAR_POS_4  = 270;
+
+    // define the tolerance of current position to recalculate the path
+    constexpr unsigned int EV3_POSITION_RECALCULATION_TOLERANCE = 2;
 
 
     // define the tolerance for the gearbox
@@ -53,12 +56,12 @@
 
     // define the offsets of the sensors on the robot
     constexpr unsigned int EV3_SENSOR_COLOR_RIGHT_OFFSET_X = 0;
-    constexpr unsigned int EV3_SENSOR_COLOR_RIGHT_OFFSET_Y = 0; 
+    constexpr unsigned int EV3_SENSOR_COLOR_RIGHT_OFFSET_Y = 0;
 
-    constexpr unsigned int EV3_SENSOR_COLOR_LEFT_OFFSET_X = 0;  
-    constexpr unsigned int EV3_SENSOR_COLOR_LEFT_OFFSET_Y = 0;  
+    constexpr unsigned int EV3_SENSOR_COLOR_LEFT_OFFSET_X = 0;
+    constexpr unsigned int EV3_SENSOR_COLOR_LEFT_OFFSET_Y = 0; 
 
-    constexpr unsigned int EV3_SENSOR_COLOR_FRONT_OFFSET_X = 0; 
+    constexpr unsigned int EV3_SENSOR_COLOR_FRONT_OFFSET_X = 0;
     constexpr unsigned int EV3_SENSOR_COLOR_FRONT_OFFSET_Y = 0; 
 
     // define the trigger values for the color sensors

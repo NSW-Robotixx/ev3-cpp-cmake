@@ -93,6 +93,54 @@ namespace finder::system
                 }
             }
 
+            if (finder::position::Position::getPosition().distanceTo(math::Vector2(m_path[i].x, m_path[i].y)) < EV3_POSITION_RECALCULATION_TOLERANCE)
+            {
+                spdlog::info("Reached point x: " + std::to_string(m_path[i].x) + " y: " + std::to_string(m_path[i].y));
+            } else {
+                spdlog::warn("Failed to reach point x: " + std::to_string(m_path[i].x) + " y: " + std::to_string(m_path[i].y));
+
+                if (i < pathSize - 1)
+                {
+                    spdlog::info("Recalculating path to point x: " + std::to_string(m_path[i + 1].x) + " y: " + std::to_string(m_path[i + 1].y));
+
+                    math::Vector2 currentPosition = finder::position::Position::getPosition();
+                    boost::leaf::result<finder::pathfind::AStar::CoordinateList> result = m_compute.getAStarPath(math::Vector2(m_path[i + 1].x, m_path[i + 1].y), currentPosition);
+                    std::vector<math::Vector2> path;
+                    if (result) {
+                        path = result.value();
+                    } else {
+                        spdlog::error("Failed to get path, please check the input");
+                        return boost::leaf::new_error();
+                    }
+                    result = m_compute.getSmoothPath(path);
+
+                    if (result) {
+                        path = result.value();
+                    } else {
+                        spdlog::error("Failed to get smooth path, please check the log for errors");
+                        return boost::leaf::new_error();
+                    }
+
+                    path.erase(path.begin());
+
+                    // add the angle coordinates back to the path
+                    std::vector<Destination> pathWithAngle;
+                    for (auto &point : path)
+                    {
+                        pathWithAngle.push_back(Destination(point.x, point.y, -1, -1, "", -1));
+                    }
+
+                    pathWithAngle.back().angle = m_path[i + 1].angle; 
+                    pathWithAngle.back().gear = m_path[i + 1].gear;
+                    pathWithAngle.back().tool = m_path[i + 1].tool;
+                    pathWithAngle.back().wait = m_path[i + 1].wait;
+
+                    m_path.insert(m_path.begin() + i + 1, pathWithAngle.begin(), pathWithAngle.end());
+
+                    pathSize = m_path.size();
+                }
+            }
+
 
             // finder::engines::movement::MovementEngine::turn(physical::TurnDirection::LEFT, point.y, EV3_TURN_SPEED); 
         }

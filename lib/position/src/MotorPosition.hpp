@@ -48,4 +48,4 @@ namespace finder::position
             static math::Vector2 _movement_end_position;
             static math::Vector2 _movement_start_robot_position;
     };
-}
+} // namespace finder::position

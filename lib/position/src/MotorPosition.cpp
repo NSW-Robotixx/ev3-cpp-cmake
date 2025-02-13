@@ -22,6 +22,9 @@ namespace finder::position
     void MotorPosition::updatePosition()
     {
         spdlog::trace("MotorPosition::updatePosition()");
+        
+        // Update angle (gyro sensor)
+        _angle = fmod(_gyroSensor->getValue(0).value() + 360.0, 360.0);
 
         // Get motor positions
         int motor_position_left = _motorLeft->getPosition() / EV3_MOTOR_DISTANCE_PER_DEGREE;
@@ -49,17 +52,12 @@ namespace finder::position
             movement_range_right * average_percent_arrived,
             movement_range_left * average_percent_arrived
         );
-
+        
         // Update the robot's position
         _position.x = _movement_start_robot_position.x + cos(_angle) * travelled_position.x;
         _position.y = _movement_start_robot_position.y + sin(_angle) * travelled_position.y;
-
-
-        // Update angle (gyro sensor)
-        _angle = fmod(_gyroSensor->getValue(0).value() + 360.0, 360.0);
-
-
         
+
         // int motor_position_left = _motorLeft->getPosition();
         // int motor_position_right = _motorRight->getPosition();
 
@@ -119,7 +117,7 @@ namespace finder::position
         {
             spdlog::warn("MotorPosition::setPosition() - Jump detected: x: {}, y: {}", _position.x - position.x, _position.y - position.y);
         }
-        _position = position;
+        // _position = position;
     }
 
     void MotorPosition::notifyMovementStart(int destination)
@@ -138,5 +136,3 @@ namespace finder::position
                      _movement_start_position.x, _movement_start_position.y, 
                      _movement_end_position.x, _movement_end_position.y);
     }
-
-} // namespace finder::position
