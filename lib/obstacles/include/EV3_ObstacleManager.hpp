@@ -22,29 +22,29 @@ namespace finder
             ~ObstacleManager();
 
             /// @brief Load the obstacles from the yaml file into the vector
-            void loadObstacles();
+            static void loadObstacles();
 
             /// @brief Save the obstacles from the vector into the yaml file
-            void saveObstacles();
+            static void saveObstacles();
 
 
             /// @brief Add an obstacle to the vector
             /// @param position The position of the obstacle
-            void addObstacle(Eigen::Vector2i position);
+            static void addObstacle(Eigen::Vector2i position);
 
             /// @brief Add an obstacle line to the vector
             /// @param start The start of the line
             /// @param end The end of the line
-            void addObstacleLine(Eigen::Vector2f start, Eigen::Vector2f end);
+            static void addObstacleLine(Eigen::Vector2f start, Eigen::Vector2f end);
 
             /// @brief Remove an obstacle from the vector
             /// @param position The position of the obstacle
-            void removeObstacle(Eigen::Vector2i position);
+            static void removeObstacle(Eigen::Vector2i position);
 
             /// @brief Check if a position is an obstacle
             /// @param position The position to check
             /// @return true if the position is an obstacle
-            bool isObstacle(Eigen::Vector2i position);
+            static bool isObstacle(Eigen::Vector2i position);
 
             /// @brief Check if a line collides with an obstacle
             /// @param start The start of the line
@@ -56,7 +56,7 @@ namespace finder
             /// @param position The position to check
             /// @return The nearest obstacle
             /// @todo Consider lines
-            Eigen::Vector2i getNearestObstacle(Eigen::Vector2i position);
+            static Eigen::Vector2i getNearestObstacle(Eigen::Vector2i position);
 
         private:
             static std::vector<Eigen::Vector2i> _obstaclesVector;

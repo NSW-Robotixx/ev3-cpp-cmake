@@ -8,6 +8,7 @@
 #include <EV3_MovementEngine.hpp>
 #include <EV3_Gearbox.hpp>
 #include <EV3_ToolControl.hpp>
+#include <EV3_ObstacleManager.hpp>
 
 #include <deque>
 #include <unistd.h>

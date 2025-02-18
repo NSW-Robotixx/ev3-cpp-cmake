@@ -14,6 +14,12 @@ namespace finder::engines::movement
         _motorShift->setStopAction(MotorStopAction::HOLD);
         _motorTool->setStopAction(MotorStopAction::HOLD);
 
+        _motorLeft->setRampDownSpeed(3000);
+        _motorRight->setRampDownSpeed(3000);
+
+        _motorLeft->setRampUpSpeed(3000);
+        _motorRight->setRampUpSpeed(3000);
+
         _gyroSensor->calibrateGyro();
     }
 
@@ -45,7 +51,7 @@ namespace finder::engines::movement
                 turn(physical::TurnDirection::LEFT, round(lineAngle), EV3_TURN_SPEED);
             }
 
-            moveForward(math::Vector2{destination.x, destination.y}.distanceTo(position::Position::getPosition()), 300);
+            moveForward(math::Vector2{destination.x, destination.y}.distanceTo(position::Position::getPosition()), EV3_DRIVE_SPEED);
         } else {
             spdlog::debug("Turning to reverse angle: " + std::to_string(lineAngleReverse));
             if (position::Position::getAngle() < lineAngleReverse) {
@@ -54,7 +60,7 @@ namespace finder::engines::movement
                 turn(physical::TurnDirection::RIGHT, round(lineAngleReverse), EV3_TURN_SPEED);
             }
 
-            moveBackward(math::Vector2{destination.x, destination.y}.distanceTo(position::Position::getPosition()), 300);
+            moveBackward(math::Vector2{destination.x, destination.y}.distanceTo(position::Position::getPosition()), EV3_DRIVE_SPEED);
         }
 
         if (destination.z > -1)
@@ -109,11 +115,32 @@ namespace finder::engines::movement
         _motorLeft->setCommand(physical::MotorCommand::RUN_TO_REL_POS);
         _motorRight->setCommand(physical::MotorCommand::RUN_TO_REL_POS);
 
-        _motorLeft->waitUntilStopped(&position::Position::updatePosition);
-        _motorRight->waitUntilStopped(&position::Position::updatePosition);
+        // _motorLeft->waitUntilStopped(&position::Position::updatePosition);
+        // _motorRight->waitUntilStopped(&position::Position::updatePosition);
 
-        // _motorLeft->waitUntilStopped();
-        // _motorRight->waitUntilStopped();
+        while (true)
+        {
+            finder::position::MotorPosition::updatePosition();
+
+            auto leftState = _motorLeft->getState();
+            auto rightState = _motorRight->getState();
+            if (std::find(leftState.begin(), leftState.end(), MotorState::HOLDING) != leftState.end() &&
+                std::find(rightState.begin(), rightState.end(), MotorState::HOLDING) != rightState.end())
+            {
+                
+                spdlog::trace("Motors stopped");
+                break;
+            }
+
+            if (std::find(leftState.begin(), leftState.end(), MotorState::STALLED) != leftState.end() ||
+                std::find(rightState.begin(), rightState.end(), MotorState::STALLED) != rightState.end())
+            {
+                spdlog::error("Motor stalled");
+                stop();
+
+                break;
+            }
+        }
 
         if (speed < 0)
         {
@@ -157,6 +184,11 @@ namespace finder::engines::movement
             speed = 100;
         }
 
+        if (_gyroSensor->getValue(0).value() == round(angle)) {
+            spdlog::info("Already at target angle");
+            return;
+        }
+
         switch (direction)
         {
         case TurnDirection::LEFT:
@@ -193,8 +225,22 @@ namespace finder::engines::movement
                 spdlog::debug("Current Sensor Angle: " + std::to_string(result.value()));
                 spdlog::debug("Current Motor Angle: " + std::to_string(position::MotorPosition::getAngle()));
 
-                // _motorLeft->setDutyCycle(-speed - abs(result.value() - angle));
-                // _motorRight->setDutyCycle(speed + abs(result.value() - angle));
+                if (spdlog::get_level() == spdlog::level::info)
+                {
+                    spdlog::info("\rTarget angle: " + std::to_string(angle) + " Current angle: " + std::to_string(result.value()));
+                }
+
+                // if (direction == TurnDirection::LEFT)
+                // {
+                //     _motorLeft->setDutyCycle(-speed - abs(result.value() - angle));
+                //     _motorRight->setDutyCycle(speed + abs(result.value() - angle));
+                // }
+                // else
+                // {
+                //     _motorLeft->setDutyCycle(speed + abs(result.value() - angle));
+                //     _motorRight->setDutyCycle(-speed - abs(result.value() - angle));
+                // }
+
             }
             break;
         

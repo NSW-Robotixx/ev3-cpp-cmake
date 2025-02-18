@@ -25,7 +25,7 @@
     // define the default speed of the motors
     constexpr unsigned int EV3_GEARBOX_SHIFT_SPEED = 500;
     constexpr unsigned int EV3_MOTOR_TOOL_SPEED = 500;
-    constexpr unsigned int EV3_DRIVE_SPEED = 400;
+    constexpr unsigned int EV3_DRIVE_SPEED = 300;
     constexpr unsigned int EV3_TURN_SPEED = 40;
     
     // define the gear positions of the gearbox
@@ -36,8 +36,9 @@
     constexpr unsigned int EV3_GEARBOX_GEAR_POS_4  = 270;
 
     // define the tolerance of current position to recalculate the path
-    constexpr unsigned int EV3_POSITION_RECALCULATION_TOLERANCE = 2;
+    constexpr unsigned int EV3_POSITION_RECALCULATION_TOLERANCE = 10;
 
+    constexpr bool EV3_PATHFINDING_ENABLED = false;
 
     // define the tolerance for the gearbox
     constexpr unsigned int EV3_GEARBOX_GEAR_POS_TOLERANCE = 5;

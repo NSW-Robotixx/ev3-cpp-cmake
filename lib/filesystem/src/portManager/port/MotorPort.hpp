@@ -143,6 +143,10 @@ namespace finder
                 /// @return boost::leaf::result<void>
                 boost::leaf::result<void> setCommand(MotorCommand command);
 
+                void setRampUpSpeed(int duration);
+
+                void setRampDownSpeed(int duration);
+
                 /// @brief shorthand for setting the command to "stop".
                 /// @return boost::leaf::result<void>
                 boost::leaf::result<void> stop();
@@ -179,7 +183,7 @@ namespace finder
                 /// @brief Wait until the motor has stopped moving.
                 /// @param loopCallback Callback to call in the loop while waiting for the motor to stop.
                 /// @return boost::leaf::result<void>
-                boost::leaf::result<void> waitUntilStopped(std::function<void()> loopCallback = nullptr);
+                boost::leaf::result<MotorState> waitUntilStopped(std::function<void()> loopCallback = nullptr);
 
                 /// @brief Reset the motor to its default state. This will stop the motor. Reinit file streams.
                 /// @return boost::leaf::result<void>

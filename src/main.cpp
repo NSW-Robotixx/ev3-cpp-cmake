@@ -10,6 +10,7 @@
 #include <EV3_Gearbox.hpp>
 #include <DeviceManager.hpp>
 #include <EV3_MotorManager.hpp>
+#include <EV3_MovementCalibration.hpp>
 
 // finder::log::Logger logger = finder::log::Logger();
 
@@ -30,6 +31,8 @@ DEFINE_bool(vv, false, "Enable debug logging");
 DEFINE_bool(vvv, false, "Enable trace logging");
 DEFINE_bool(gearbox, false, "Calibrate gearbox");
 DEFINE_bool(movement, false, "Calibrate movement");
+DEFINE_bool(min_speed, false, "Set minimum speed");
+DEFINE_bool(dry_run, false, "Dry run");
 
 
 int main(int argc, char *argv[])
@@ -64,6 +67,14 @@ int main(int argc, char *argv[])
     {
         gearbox_manager.calibrate();
     }
+
+    if (FLAGS_min_speed)
+    {
+        finder::engines::movement::MovementCalibration movement_calibration = finder::engines::movement::MovementCalibration();
+        movement_calibration.start();
+
+        spdlog::info("Minimum speed: {}", movement_calibration.getMinSpeed());
+    }
     // finder::physical::DeviceManager device_manager = finder::physical::DeviceManager("/sys/class/");
 //    finder::engines::movement::MovementEngine movementEngine = finder::engines::movement::MovementEngine();
 //
@@ -75,10 +86,13 @@ int main(int argc, char *argv[])
 
     // finder::physical::SensorManager sensor_manager = finder::physical::SensorManager("/sys/class");
 
-    ev3_system.read();
-    ev3_system.start();
-
-    motor_manager.stop();
+    if (!FLAGS_dry_run) 
+    {        
+        ev3_system.read();
+        ev3_system.start();
+        
+        motor_manager.stop();
+    }
 
 
     // while (true)

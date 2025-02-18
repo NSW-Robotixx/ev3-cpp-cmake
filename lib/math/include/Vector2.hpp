@@ -54,6 +54,10 @@ namespace finder
                     return sqrt(x * x + y * y);
                 }
 
+                /// @brief Convert the vector to Eigen::Vector2i
+                /// @return Eigen::Vector2i The vector as Eigen::Vector2i
+
+
                 /// @brief Normalize the vector
                 /// @details Divide the vector by its magnitude
                 /// @return Vector2 The normalized vector

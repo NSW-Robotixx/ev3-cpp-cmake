@@ -24,7 +24,7 @@ namespace finder::engines::movement
             bool stalled = false;
             current_speed += 10;
             _motorLeft->setSpeed(current_speed);
-            _motorLeft->setPositionSp(360);
+            _motorLeft->setPositionSp(720);
             _motorLeft->setCommand(physical::MotorCommand::RUN_TO_ABS_POS);
 
             std::this_thread::sleep_for(std::chrono::milliseconds(50));
@@ -35,6 +35,12 @@ namespace finder::engines::movement
                 {
                     spdlog::info("Motor stopped");
                     stalled = true;
+                    break;
+                }
+                if (state == physical::MotorState::HOLDING)
+                {
+                    spdlog::info("Motor holding");
+                    stalled = false;
                     break;
                 }
             }

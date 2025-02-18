@@ -43,6 +43,24 @@ namespace finder::position
         spdlog::debug("MotorPosition::updatePosition() - Motor position: right: {}, left: {}", motor_position_right, motor_position_left);
         spdlog::debug("MotorPosition::updatePosition() - Distance to move: right: {}, left: {}", movement_range_right, movement_range_left);
 
+        if (spdlog::get_level() == spdlog::level::info)
+        {
+            float progress = (percent_arrived_right + percent_arrived_left) / 2;
+            int barWidth = 70;
+            
+            std::cout << "[";
+            int pos = barWidth * progress;
+            for (int i = 0; i < barWidth; ++i) {
+                if (i < pos) std::cout << "=";
+                else if (i == pos) std::cout << ">";
+                else std::cout << " ";
+            }
+            std::cout << "] " << int(progress * 100.0) << " %\r";
+            std::cout.flush();
+            std::cout << std::endl;
+
+        }
+
         // Calculate the average percentage arrived
         double average_percent_arrived = abs((percent_arrived_right + percent_arrived_left) / 2);
 
@@ -117,7 +135,7 @@ namespace finder::position
         {
             spdlog::warn("MotorPosition::setPosition() - Jump detected: x: {}, y: {}", _position.x - position.x, _position.y - position.y);
         }
-        // _position = position;
+        _position = position;
     }
 
     void MotorPosition::notifyMovementStart(int destination)
@@ -135,4 +153,6 @@ namespace finder::position
         spdlog::info("Movement started from position: {}, {} to position: {}, {}", 
                      _movement_start_position.x, _movement_start_position.y, 
                      _movement_end_position.x, _movement_end_position.y);
+
     }
+} // namespace finder::position

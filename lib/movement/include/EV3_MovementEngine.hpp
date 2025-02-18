@@ -6,6 +6,7 @@
 #include <Vector2.hpp>
 #include <Line.hpp>
 #include <Position.hpp>
+#include <EV3_ObstacleManager.hpp>
 #include "../../EV3_conf.hpp"
 #include "../../EV3_macros.hpp"
 #include <queue>

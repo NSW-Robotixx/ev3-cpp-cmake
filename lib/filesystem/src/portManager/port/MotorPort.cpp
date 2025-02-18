@@ -292,16 +292,27 @@ namespace finder
         {
             spdlog::trace("MotorPort::setDutyCycle()");
 
+            if (duty_cycle > 100)
+            {
+                spdlog::warn("Duty cycle exceeds 100, setting to 100");
+                duty_cycle = 100;
+            }
+
             if (isEnabled() && *isEnabled()) {
-                if (_file_duty_cycle_path->is_open()) {
+                if (_file_duty_cycle_path->is_open() && !_file_duty_cycle_path->bad()) {
+                    spdlog::trace("Writing to duty_cycle: " + std::to_string(duty_cycle));
+                    _file_duty_cycle_path->seekp(0);
+                    *_file_duty_cycle_path << duty_cycle;
+                    _file_duty_cycle_path->flush();
+
                     _file_duty_cycle_path->seekp(0);
                     *_file_duty_cycle_path << duty_cycle;
                     _file_duty_cycle_path->flush();
                 } else {
-                    spdlog::error("failed to write to duty_cycle file for");
+                    spdlog::error("failed to write to duty_cycle file for: " + _path);
                 }
             } else {
-                spdlog::error("Port is not enabled for");
+                spdlog::error("Port is not enabled for: " + _path);
                 // _init_future.wait();
                 // setDutyCycle(duty_cycle);
             }
@@ -396,11 +407,45 @@ namespace finder
             return boost::leaf::result<void>();
         }
 
+        void MotorPort::setRampUpSpeed(int duration)
+        {
+            spdlog::trace("MotorPort::setRampUpSpeed()");
+
+            if (isEnabled() && *isEnabled()) {
+                if (_file_speed_sp_path->is_open()) {
+                    _file_speed_sp_path->seekp(0);
+                    *_file_speed_sp_path << duration;
+                    _file_speed_sp_path->flush();
+                } else {
+                    spdlog::error("MotorPort failed to write to files for");
+                }
+            } else {
+                spdlog::error("Port is not enabled for");
+            }
+        }
+
+        void MotorPort::setRampDownSpeed(int duration)
+        {
+            spdlog::trace("MotorPort::setRampDownSpeed()");
+
+            if (isEnabled() && *isEnabled()) {
+                if (_file_speed_sp_path->is_open()) {
+                    _file_speed_sp_path->seekp(0);
+                    *_file_speed_sp_path << duration;
+                    _file_speed_sp_path->flush();
+                } else {
+                    spdlog::error("MotorPort failed to write to files for");
+                }
+            } else {
+                spdlog::error("Port is not enabled for");
+            }
+        }
+
         boost::leaf::result<void> MotorPort::stop()
         {
             spdlog::trace("MotorPort::stop()");
             if (isEnabled() && *isEnabled()) {
-                ABSL_RETURN_IF_ERROR(setCommand(MotorCommand::STOP));
+                return setCommand(MotorCommand::STOP);
             } else {
                 spdlog::error("Port is not enabled for");
             }
@@ -591,7 +636,7 @@ namespace finder
             return boost::leaf::result<void>();
         }
 
-        boost::leaf::result<void> MotorPort::waitUntilStopped(std::function<void()> loopCallback)
+        boost::leaf::result<MotorState> MotorPort::waitUntilStopped(std::function<void()> loopCallback)
         {
             while (true) {
                 std::vector<MotorState> states = getState();
@@ -602,9 +647,16 @@ namespace finder
 
                 if (std::find(states.begin(), states.end(), MotorState::HOLDING) != states.end()) {
                     spdlog::info("MotorPort::waitUntilStopped() still running: "+ std::to_string(getPosition()));
-                    return boost::leaf::result<void>();
+                    return MotorState::HOLDING;
+                }
+                
+                if (std::find(states.begin(), states.end(), MotorState::STALLED) != states.end()) {
+                    spdlog::info("MotorPort::waitUntilStopped() is stalled: "+ std::to_string(getPosition()));
+                    return MotorState::STALLED;
                 }
             }
+
+            return boost::leaf::new_error(std::runtime_error("MotorPort::waitUntilStopped() terminated unexpectedly."));
         }
 
         boost::leaf::result<void> MotorPort::reset()

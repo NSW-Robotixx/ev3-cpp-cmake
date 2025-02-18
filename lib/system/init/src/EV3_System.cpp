@@ -40,15 +40,7 @@ namespace finder::system
             {
                 spdlog::info("Pause Reached");
                 m_currentDestinationIndex++;
-                break;
             }
-
-            // check if the next point is the last point
-            // if (i == pathSize - 1)
-            // {
-            //     finder::engines::movement::MovementEngine::moveToPoint(m_path[i]); // Move to the next point
-            //     break;
-            // }
 
             finder::engines::movement::MovementEngine::moveToPoint(math::Vector3(m_path[i].x, m_path[i].y, m_path[i].angle)); // Move to the next point
 
@@ -93,53 +85,51 @@ namespace finder::system
                 }
             }
 
-            if (finder::position::Position::getPosition().distanceTo(math::Vector2(m_path[i].x, m_path[i].y)) < EV3_POSITION_RECALCULATION_TOLERANCE)
-            {
-                spdlog::info("Reached point x: " + std::to_string(m_path[i].x) + " y: " + std::to_string(m_path[i].y));
-            } else {
-                spdlog::warn("Failed to reach point x: " + std::to_string(m_path[i].x) + " y: " + std::to_string(m_path[i].y));
+            // if (finder::position::Position::getPosition().distanceTo(math::Vector2(m_path[i].x, m_path[i].y)) < EV3_POSITION_RECALCULATION_TOLERANCE) // todo: fix
+            // {
+            //     spdlog::warn("Failed to reach point x: " + std::to_string(m_path[i].x) + " y: " + std::to_string(m_path[i].y));
 
-                if (i < pathSize - 1)
-                {
-                    spdlog::info("Recalculating path to point x: " + std::to_string(m_path[i + 1].x) + " y: " + std::to_string(m_path[i + 1].y));
+            //     if (i < pathSize - 1)
+            //     {
+            //         spdlog::info("Recalculating path to point x: " + std::to_string(m_path[i + 1].x) + " y: " + std::to_string(m_path[i + 1].y));
 
-                    math::Vector2 currentPosition = finder::position::Position::getPosition();
-                    boost::leaf::result<finder::pathfind::AStar::CoordinateList> result = m_compute.getAStarPath(math::Vector2(m_path[i + 1].x, m_path[i + 1].y), currentPosition);
-                    std::vector<math::Vector2> path;
-                    if (result) {
-                        path = result.value();
-                    } else {
-                        spdlog::error("Failed to get path, please check the input");
-                        return boost::leaf::new_error();
-                    }
-                    result = m_compute.getSmoothPath(path);
+            //         math::Vector2 currentPosition = finder::position::Position::getPosition();
+            //         boost::leaf::result<finder::pathfind::AStar::CoordinateList> result = m_compute.getAStarPath(math::Vector2(m_path[i + 1].x, m_path[i + 1].y), currentPosition);
+            //         std::vector<math::Vector2> path;
+            //         if (result) {
+            //             path = result.value();
+            //         } else {
+            //             spdlog::error("Failed to get path, please check the input");
+            //             return boost::leaf::new_error();
+            //         }
+            //         result = m_compute.getSmoothPath(path);
 
-                    if (result) {
-                        path = result.value();
-                    } else {
-                        spdlog::error("Failed to get smooth path, please check the log for errors");
-                        return boost::leaf::new_error();
-                    }
+            //         if (result) {
+            //             path = result.value();
+            //         } else {
+            //             spdlog::error("Failed to get smooth path, please check the log for errors");
+            //             return boost::leaf::new_error();
+            //         }
 
-                    path.erase(path.begin());
+            //         path.erase(path.begin());
 
-                    // add the angle coordinates back to the path
-                    std::vector<Destination> pathWithAngle;
-                    for (auto &point : path)
-                    {
-                        pathWithAngle.push_back(Destination(point.x, point.y, -1, -1, "", -1));
-                    }
+            //         // add the angle coordinates back to the path
+            //         std::vector<Destination> pathWithAngle;
+            //         for (auto &point : path)
+            //         {
+            //             pathWithAngle.push_back(Destination(point.x, point.y, -1, -1, "", -1));
+            //         }
 
-                    pathWithAngle.back().angle = m_path[i + 1].angle; 
-                    pathWithAngle.back().gear = m_path[i + 1].gear;
-                    pathWithAngle.back().tool = m_path[i + 1].tool;
-                    pathWithAngle.back().wait = m_path[i + 1].wait;
+            //         pathWithAngle.back().angle = m_path[i + 1].angle; 
+            //         pathWithAngle.back().gear = m_path[i + 1].gear;
+            //         pathWithAngle.back().tool = m_path[i + 1].tool;
+            //         pathWithAngle.back().wait = m_path[i + 1].wait;
 
-                    m_path.insert(m_path.begin() + i + 1, pathWithAngle.begin(), pathWithAngle.end());
+            //         m_path.insert(m_path.begin() + i + 1, pathWithAngle.begin(), pathWithAngle.end());
 
-                    pathSize = m_path.size();
-                }
-            }
+            //         pathSize = m_path.size();
+            //     }
+            // }
 
 
             // finder::engines::movement::MovementEngine::turn(physical::TurnDirection::LEFT, point.y, EV3_TURN_SPEED); 
@@ -155,50 +145,57 @@ namespace finder::system
         std::vector<Destination> pathYaml = ConfigReader::readDestinationsFromFile();
         m_destinations.insert(m_destinations.end(), pathYaml.begin(), pathYaml.end());
         
-        for (const auto& destination : m_destinations)
+        if (EV3_PATHFINDING_ENABLED)
         {
-            boost::leaf::result<finder::pathfind::AStar::CoordinateList> result = m_compute.getAStarPath(math::Vector2(destination.x, destination.y), m_currentPosition);
-            std::vector<math::Vector2> path; 
-            if (result) {
-                path = result.value();
-            } else {
-                spdlog::error("Failed to get path, please check the input");
-                return; 
-            }
-            result = m_compute.getSmoothPath(path);
-
-            if (result) {
-                path = result.value();
-            } else {
-                spdlog::error("Failed to get smooth path, please check the log for errors");
-                return;
-            }
-
-            path.erase(path.begin());
-
-
-            // add the angle coordinates back to the path
-            std::vector<Destination> pathWithAngle;
-            for (auto &point : path)
+            for (const auto& destination : m_destinations)
             {
-                pathWithAngle.push_back(Destination(point.x, point.y, -1, -1, "", -1));
+                boost::leaf::result<finder::pathfind::AStar::CoordinateList> result = m_compute.getAStarPath(math::Vector2(destination.x, destination.y), m_currentPosition);
+                std::vector<math::Vector2> path; 
+                if (result) {
+                    path = result.value();
+                } else {
+                    spdlog::error("Failed to get path, please check the input");
+                    return; 
+                }
+                result = m_compute.getSmoothPath(path);
+                
+                if (result) {
+                    path = result.value();
+                } else {
+                    spdlog::error("Failed to get smooth path, please check the log for errors");
+                    return;
+                }
+                
+                path.erase(path.begin());
+                
+
+                // add the angle coordinates back to the path
+                std::vector<Destination> pathWithAngle;
+                for (auto &point : path)
+                {
+                    pathWithAngle.push_back(Destination(point.x, point.y, -1, -1, "", -1));
+                }
+                
+                pathWithAngle.back().angle = destination.angle; 
+                pathWithAngle.back().gear = destination.gear;
+                pathWithAngle.back().tool = destination.tool;
+                pathWithAngle.back().wait = destination.wait;
+                
+                
+                m_path.insert(m_path.end(), pathWithAngle.begin(), pathWithAngle.end());
+                m_currentPosition = math::Vector2(destination.x, destination.y);
             }
-
-            pathWithAngle.back().angle = destination.angle; 
-            pathWithAngle.back().gear = destination.gear;
-            pathWithAngle.back().tool = destination.tool;
-            pathWithAngle.back().wait = destination.wait;
-
-
-            m_path.insert(m_path.end(), pathWithAngle.begin(), pathWithAngle.end());
-            m_currentPosition = math::Vector2(destination.x, destination.y);
+        } else {
+            m_path = m_destinations;
+            spdlog::info("Pathfinding is disabled, using destinations as path");
         }
-
+        
         spdlog::info("Path read: ");
         for (const auto& point : m_path)
         {
             spdlog::info("x: " + std::to_string(point.x) + " y: " + std::to_string(point.y) + " angle: " + std::to_string(point.angle));
         }
+        spdlog::info("Total path length: " + std::to_string(m_path.size()));
     }
 
     void System::stop()

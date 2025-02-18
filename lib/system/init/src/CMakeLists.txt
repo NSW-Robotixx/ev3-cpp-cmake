@@ -34,6 +34,7 @@ target_link_libraries(EV3_system
         EV3_compute
         EV3_position
         EV3_gearbox
+        EV3_obstacle
         MovementEngine
         yaml-cpp::yaml-cpp
         boost::boost
