@@ -17,6 +17,8 @@ namespace finder::engines::movement
             /// @return The minimum speed as an integer
             int getMinSpeed() const { return min_speed; }
 
+            int calibrateTurnAngle(int angle, int speed);
+
         private:
             static int min_speed_direct;
             static int min_speed;
