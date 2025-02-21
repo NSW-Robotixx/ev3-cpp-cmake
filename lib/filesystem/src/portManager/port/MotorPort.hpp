@@ -163,6 +163,10 @@ namespace finder
                 /// @return Vector of current motor states.
                 std::vector<MotorState> getState();
 
+                bool isStalled();
+
+                bool isHolding();
+
                 /// @brief Get the motor pulses per revolution of the motor. Read from MotorCommand::getCountPerRotationPath()
                 /// @return Number of motor pulses per rotation of the motor.
                 int getCountPerRotation();

@@ -68,6 +68,12 @@ int main(int argc, char *argv[])
         gearbox_manager.calibrate();
     }
 
+    if (FLAGS_movement)
+    {
+        finder::engines::movement::MovementCalibration movement_calibration = finder::engines::movement::MovementCalibration();
+        movement_calibration.calibrateTurnAngle(90, EV3_TURN_SPEED);
+    }
+
     if (FLAGS_min_speed)
     {
         finder::engines::movement::MovementCalibration movement_calibration = finder::engines::movement::MovementCalibration();

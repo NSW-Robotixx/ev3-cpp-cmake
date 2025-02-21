@@ -54,7 +54,7 @@ namespace finder::engines::movement
                 _motorLeft->setSpeed(EV3_DRIVE_SPEED);
                 _motorLeft->setPositionSp(start_position);
                 _motorLeft->setCommand(physical::MotorCommand::RUN_TO_ABS_POS);
-
+                
                 break;
             }
         }
@@ -63,8 +63,27 @@ namespace finder::engines::movement
     {
         spdlog::trace("Calibrating turn angle");
 
+        // calibrate gyro
+        
+        _gyroSensor->calibrateGyro();
+        
+        _motorLeft->reset();
+        _motorRight->reset();
+        
+        std::this_thread::sleep_for(std::chrono::milliseconds(100));
+        
+        _motorLeft->setStopAction(physical::MotorStopAction::HOLD);
+        _motorRight->setStopAction(physical::MotorStopAction::HOLD);
+        _motorLeft->setRampDownSpeed(500);
+        _motorRight->setRampDownSpeed(500);
+        _motorLeft->setRampUpSpeed(500);
+        _motorRight->setRampUpSpeed(500);
+        
+        int start_angle = _gyroSensor->getValue(0).value();
         int current_angle = _gyroSensor->getValue(0).value();
         finder::math::Vector2 current_motor_position = {_motorLeft->getPosition(), _motorRight->getPosition()};
+
+        spdlog::debug("Starting position: " + std::to_string(current_motor_position.x) + " " + std::to_string(current_motor_position.y));
         
         int target_angle = (current_angle + angle) % 360;
 
@@ -98,12 +117,17 @@ namespace finder::engines::movement
         spdlog::debug("Motor position diff: " + std::to_string(motor_position_diff.x) + " " + std::to_string(motor_position_diff.y));
         
         // rotate back to original position
+
+        std::this_thread::sleep_for(std::chrono::milliseconds(1000));
+
         _motorLeft->setDutyCycle(-speed);
         _motorRight->setDutyCycle(speed);
         
 
         _motorLeft->setCommand(physical::MotorCommand::RUN_DIRECT);
         _motorRight->setCommand(physical::MotorCommand::RUN_DIRECT);
+
+        target_angle = start_angle;
         
         while (true)
         {
@@ -126,6 +150,138 @@ namespace finder::engines::movement
 
 
         spdlog::debug("Motor start position difference: " + std::to_string(motor_start_position_diff.x) + " " + std::to_string(motor_start_position_diff.y));
+
+        std::this_thread::sleep_for(std::chrono::milliseconds(1000));
+
+        
+        spdlog::info("Repeating with calibration results");
+
+        
+        _motorLeft->setPositionSp(motor_position_diff.x);
+        _motorRight->setPositionSp(motor_position_diff.y);
+
+        _motorLeft->setSpeed(EV3_DRIVE_SPEED);
+        _motorRight->setSpeed(EV3_DRIVE_SPEED);
+
+        _motorLeft->setCommand(physical::MotorCommand::RUN_TO_REL_POS);
+        _motorRight->setCommand(physical::MotorCommand::RUN_TO_REL_POS);
+
+        while (true)
+        {
+            if (_motorLeft->isStalled() || _motorRight->isStalled())
+            {
+                spdlog::info("Stalled");
+                break;
+            }
+
+            if (_motorLeft->isHolding() && _motorRight->isHolding())
+            {
+                spdlog::info("Holding");
+                break;
+            }
+        }
+        
+        spdlog::info("Gyro angle: " + std::to_string(_gyroSensor->getValue(0).value()));
+
+        // turn back to original position
+        _motorLeft->setPositionSp(current_motor_position.x);
+        _motorRight->setPositionSp(current_motor_position.y);
+
+        
+
+        std::this_thread::sleep_for(std::chrono::milliseconds(1000)); 
+
+        _motorLeft->setSpeed(EV3_DRIVE_SPEED);
+        _motorRight->setSpeed(EV3_DRIVE_SPEED);
+
+        _motorLeft->setCommand(physical::MotorCommand::RUN_TO_ABS_POS);
+        _motorRight->setCommand(physical::MotorCommand::RUN_TO_ABS_POS);
+
+        while (true)
+        {
+            if (_motorLeft->isStalled() || _motorRight->isStalled())
+            {
+                spdlog::info("Stalled");
+                break;
+            }
+
+            if (_motorLeft->isHolding() && _motorRight->isHolding())
+            {
+                spdlog::info("Holding");
+                break;
+            }
+        }
+
+        spdlog::info("Gyro angle: " + std::to_string(_gyroSensor->getValue(0).value()));
+
+
+        // calculate the motor movement per degree
+        finder::math::Vector2 motor_movement_per_degree_vector = motor_position_diff / angle;
+        float motor_movement_per_degree = (motor_movement_per_degree_vector.x + motor_movement_per_degree_vector.y) / 2;
+
+        spdlog::info("Motor movement per degree: " + std::to_string(motor_movement_per_degree));
+        spdlog::info("Calibration completed successfully.");
+
+        spdlog::debug("Using new values to turn again");
+
+        _motorLeft->setPositionSp(motor_movement_per_degree * angle*2);
+        _motorRight->setPositionSp(-motor_movement_per_degree * angle*2);
+        
+
+        current_motor_position = {_motorLeft->getPosition(), _motorRight->getPosition()};
+
+        _motorLeft->setSpeed(EV3_DRIVE_SPEED);
+        _motorRight->setSpeed(EV3_DRIVE_SPEED);
+        _motorLeft->setCommand(physical::MotorCommand::RUN_TO_REL_POS);
+        _motorRight->setCommand(physical::MotorCommand::RUN_TO_REL_POS);
+
+
+        while (true)
+        {
+            if (_motorLeft->isStalled() || _motorRight->isStalled())
+            {
+                spdlog::info("Stalled during turn execution");
+                break;
+            }
+
+            if (_motorLeft->isHolding() && _motorRight->isHolding())
+            {
+                spdlog::info("Holding after turn execution");
+                break;
+            }
+        }
+
+        std::this_thread::sleep_for(std::chrono::milliseconds(1000));
+
+        spdlog::info("Gyro angle: " + std::to_string(_gyroSensor->getValue(0).value()));
+
+        _motorLeft->setPositionSp(motor_movement_per_degree * angle * 2);
+        _motorRight->setPositionSp(-motor_movement_per_degree * angle * 2);
+
+
+        _motorLeft->setSpeed(EV3_DRIVE_SPEED);
+        _motorRight->setSpeed(EV3_DRIVE_SPEED);
+
+        _motorLeft->setCommand(physical::MotorCommand::RUN_TO_REL_POS);
+        _motorRight->setCommand(physical::MotorCommand::RUN_TO_REL_POS);
+
+        while (true)
+        {
+            if (_motorLeft->isStalled() || _motorRight->isStalled())
+            {
+                spdlog::info("Stalled during turn execution");
+                break;
+            }
+
+            if (_motorLeft->isHolding() && _motorRight->isHolding())
+            {
+                spdlog::info("Holding after turn execution");
+                break;
+            }
+        }
+
+        std::this_thread::sleep_for(std::chrono::milliseconds(1000));
+        spdlog::info("starting gyro angle: " + std::to_string(_gyroSensor->getValue(0).value()));
 
         return 0;
     }

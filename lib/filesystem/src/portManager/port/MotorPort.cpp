@@ -412,15 +412,15 @@ namespace finder
             spdlog::trace("MotorPort::setRampUpSpeed()");
 
             if (isEnabled() && *isEnabled()) {
-                if (_file_speed_sp_path->is_open()) {
-                    _file_speed_sp_path->seekp(0);
-                    *_file_speed_sp_path << duration;
-                    _file_speed_sp_path->flush();
+                if (_file_ramp_up_sp_path->is_open()) {
+                    _file_ramp_up_sp_path->seekp(0);
+                    *_file_ramp_up_sp_path << duration;
+                    _file_ramp_up_sp_path->flush();
                 } else {
-                    spdlog::error("MotorPort failed to write to files for");
+                    spdlog::error("MotorPort failed to write to files for ramp-up speed");
                 }
             } else {
-                spdlog::error("Port is not enabled for");
+                spdlog::error("Port is not enabled for ramp-up speed");
             }
         }
 
@@ -429,15 +429,15 @@ namespace finder
             spdlog::trace("MotorPort::setRampDownSpeed()");
 
             if (isEnabled() && *isEnabled()) {
-                if (_file_speed_sp_path->is_open()) {
-                    _file_speed_sp_path->seekp(0);
-                    *_file_speed_sp_path << duration;
-                    _file_speed_sp_path->flush();
+                if (_file_ramp_down_sp_path->is_open()) {
+                    _file_ramp_down_sp_path->seekp(0);
+                    *_file_ramp_down_sp_path << duration;
+                    _file_ramp_down_sp_path->flush();
                 } else {
-                    spdlog::error("MotorPort failed to write to files for");
+                    spdlog::error("MotorPort failed to write to files for ramp-down speed");
                 }
             } else {
-                spdlog::error("Port is not enabled for");
+                spdlog::error("Port is not enabled for ramp-down speed");
             }
         }
 
@@ -548,6 +548,19 @@ namespace finder
                 // }
                 return states;
             // });
+        }
+
+        bool MotorPort::isStalled()
+        {
+            spdlog::trace("MotorPort isStalled()");
+            std::vector<MotorState> states = getState();
+            return std::find(states.begin(), states.end(), MotorState::STALLED) != states.end();
+        }
+
+        bool MotorPort::isHolding()
+        {
+            std::vector<MotorState> states = getState();
+            return std::find(states.begin(), states.end(), MotorState::HOLDING) != states.end();
         }
 
         int MotorPort::getCountPerRotation()
