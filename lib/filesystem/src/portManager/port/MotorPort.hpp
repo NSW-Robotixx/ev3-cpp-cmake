@@ -184,6 +184,11 @@ namespace finder
                 /// @return boost::leaf::result<void>
                 boost::leaf::result<void> moveToAbsPosition(int abs_position_sp);
 
+                /// @brief Move the motor to a specific relative position. This will block the program until the motor has reached the position
+                /// @param rel_position_sp Position to move to in pulses.
+                /// @return boost::leaf::result<void>
+                boost::leaf::result<void> moveToRelPosition(int rel_position_sp);
+
                 /// @brief Wait until the motor has stopped moving.
                 /// @param loopCallback Callback to call in the loop while waiting for the motor to stop.
                 /// @return boost::leaf::result<void>

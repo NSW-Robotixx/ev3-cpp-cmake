@@ -649,6 +649,28 @@ namespace finder
             return boost::leaf::result<void>();
         }
 
+        boost::leaf::result<void> MotorPort::moveToRelPosition(int rel_position_sp)
+        {
+            spdlog::trace("MotorPort moveToRelPosition()");
+            if (isEnabled() && *isEnabled()) {
+                boost::leaf::result<void> status = setPositionSp(rel_position_sp);
+                if (!status) {
+                    spdlog::error("MotorPort failed to move to position for");
+                    return status;
+                }
+
+                status = setCommand(MotorCommand::RUN_TO_REL_POS);
+                if (!status) {
+                    spdlog::error("MotorPort failed to move to position for");
+                    return status;
+                }
+            } else {
+                spdlog::error("Port is not enabled for");
+                return boost::leaf::new_error(std::invalid_argument("Port is not enabled for: " + _path));
+            }
+            return boost::leaf::result<void>();
+        }
+
         boost::leaf::result<MotorState> MotorPort::waitUntilStopped(std::function<void()> loopCallback)
         {
             while (true) {

@@ -2,6 +2,8 @@
 
 namespace finder::engines::movement
 {
+    int MovementEngine::_target_angle = 0;
+
     MovementEngine::MovementEngine(std::string portBasePath) : DeviceManager(portBasePath)
     {
         spdlog::trace("Initializing MovementEngine");
@@ -13,6 +15,9 @@ namespace finder::engines::movement
         _motorRight->setStopAction(MotorStopAction::HOLD);
         _motorShift->setStopAction(MotorStopAction::HOLD);
         _motorTool->setStopAction(MotorStopAction::HOLD);
+
+        _motorLeft->setPolarity(MotorPolarity::NORMAL);
+        _motorRight->setPolarity(MotorPolarity::NORMAL);
 
         _motorLeft->setRampDownSpeed(3000);
         _motorRight->setRampDownSpeed(3000);
@@ -47,8 +52,10 @@ namespace finder::engines::movement
             spdlog::debug("Turning to normal angle: " + std::to_string(lineAngle));
             if (position::Position::getAngle() > lineAngle) {
                 turn(physical::TurnDirection::RIGHT, round(lineAngle), EV3_TURN_SPEED);
+                _target_angle = round(lineAngle);
             } else {
                 turn(physical::TurnDirection::LEFT, round(lineAngle), EV3_TURN_SPEED);
+                _target_angle = round(lineAngle);
             }
 
             moveForward(math::Vector2{destination.x, destination.y}.distanceTo(position::Position::getPosition()), EV3_DRIVE_SPEED);
@@ -56,8 +63,10 @@ namespace finder::engines::movement
             spdlog::debug("Turning to reverse angle: " + std::to_string(lineAngleReverse));
             if (position::Position::getAngle() < lineAngleReverse) {
                 turn(physical::TurnDirection::LEFT, round(lineAngleReverse), EV3_TURN_SPEED);
+                _target_angle = round(lineAngleReverse);
             } else {
                 turn(physical::TurnDirection::RIGHT, round(lineAngleReverse), EV3_TURN_SPEED);
+                _target_angle = round(lineAngleReverse);
             }
 
             moveBackward(math::Vector2{destination.x, destination.y}.distanceTo(position::Position::getPosition()), EV3_DRIVE_SPEED);
@@ -93,47 +102,145 @@ namespace finder::engines::movement
         _motorLeft->setDutyCycle(dutyCycleLeft);
         _motorRight->setDutyCycle(dutyCycleRight);
     }
-
+    
     void MovementEngine::moveForward(int distance, int speed)
     {
         spdlog::trace("Moving forward " + std::to_string(distance) + " at speed " + std::to_string(speed));
+        
+        #if EV3_DRIVE_MODE_USE_GYRO == 1
+        spdlog::trace("Using motor speed control");
 
         finder::position::MotorPosition::notifyMovementStart(distance);
 
-        if (speed < 0)
+        _motorLeft->setDutyCycle(EV3_TURN_SPEED);
+        _motorRight->setDutyCycle(EV3_TURN_SPEED);
+
+        _motorLeft->setCommand(physical::MotorCommand::RUN_DIRECT);
+        _motorRight->setCommand(physical::MotorCommand::RUN_DIRECT);
+
+        int _motor_left_start_position = _motorLeft->getPosition();
+        int _motor_right_start_position = _motorRight->getPosition();
+        
+        if (distance < 0)
         {
-            spdlog::info("Speed is negative, reversing direction");
-            _motorLeft->setPolarity(MotorPolarity::INVERSED);
-            _motorRight->setPolarity(MotorPolarity::INVERSED);
+            spdlog::info("Distance is negative, reversing direction");
+            _motor_left_start_position *= -1;
+            _motor_right_start_position *= -1;
+        }
+        
+        spdlog::trace("Motor Left Start Position: " + std::to_string(_motor_left_start_position));
+        spdlog::trace("Motor Right Start Position: " + std::to_string(_motor_right_start_position));
+        spdlog::trace("Motor Left Target Position: " + std::to_string(distance * EV3_MOTOR_DISTANCE_PER_DEGREE + _motor_left_start_position));
+        spdlog::trace("Motor Right Target Position: " + std::to_string(distance * EV3_MOTOR_DISTANCE_PER_DEGREE + _motor_right_start_position));
+        
+        while (true)
+        {
+            bool singleMotorStopped = false;
+
+            if (distance < 0)
+            {
+                if (_motorLeft->getPosition() <= distance * EV3_MOTOR_DISTANCE_PER_DEGREE + _motor_left_start_position)
+                {
+                    spdlog::debug("Left motor reached target position");
+                    _motorLeft->stop();
+                    
+                    if (singleMotorStopped)
+                    {
+                        break;
+                    }
+
+                    singleMotorStopped = true;
+                }   
+
+                if (_motorRight->getPosition() <= distance * EV3_MOTOR_DISTANCE_PER_DEGREE + _motor_right_start_position)
+                {
+                    spdlog::debug("Right motor reached target position");
+                    _motorRight->stop();
+
+                    if (singleMotorStopped)
+                    {
+                        break;
+                    }
+
+                    singleMotorStopped = true;
+                } 
+            } else {
+
+                if (_motorLeft->getPosition() >= distance * EV3_MOTOR_DISTANCE_PER_DEGREE + _motor_left_start_position)
+                {
+                    spdlog::debug("Left motor reached target position");
+                    _motorLeft->stop();
+                    
+                    if (singleMotorStopped)
+                    {
+                        break;
+                    }
+
+                    singleMotorStopped = true;
+                }
+
+                singleMotorStopped = true;
+                if (_motorRight->getPosition() >= distance * EV3_MOTOR_DISTANCE_PER_DEGREE + _motor_right_start_position)
+                {
+                    spdlog::debug("Right motor reached target position");
+                    _motorRight->stop();
+    
+                    if (singleMotorStopped)
+                    {
+                        break;
+                    }
+    
+                    singleMotorStopped = true;
+                }
+            }   
+
+            
+            int _current_angle = _gyroSensor->getValue(0).value();
+
+            if (speed > 0) 
+            {
+                _motorLeft->setDutyCycle(speed - abs(_current_angle - _target_angle));
+                _motorRight->setDutyCycle(speed + abs(_current_angle - _target_angle));
+            } else {
+                _motorLeft->setDutyCycle(speed + abs(_current_angle - _target_angle));
+                _motorRight->setDutyCycle(speed - abs(_current_angle - _target_angle));
+            }
+
+            spdlog::debug("Current angle: " + std::to_string(_current_angle));
+            spdlog::debug("Motor Left Position: " + std::to_string(_motorLeft->getPosition()));
+            spdlog::debug("Motor Right Position: " + std::to_string(_motorRight->getPosition()));
         }
 
-        setSpeed(speed);
+        #else
+        spdlog::trace("Using motor position control");
 
+        setSpeed(speed);
+        
         _motorLeft->setPositionSp(distance * EV3_MOTOR_DISTANCE_PER_DEGREE);
         _motorRight->setPositionSp(distance * EV3_MOTOR_DISTANCE_PER_DEGREE);
-
+        
         _motorLeft->setCommand(physical::MotorCommand::RUN_TO_REL_POS);
         _motorRight->setCommand(physical::MotorCommand::RUN_TO_REL_POS);
-
+        
         // _motorLeft->waitUntilStopped(&position::Position::updatePosition);
         // _motorRight->waitUntilStopped(&position::Position::updatePosition);
-
+        
         while (true)
         {
             finder::position::MotorPosition::updatePosition();
-
+            
             auto leftState = _motorLeft->getState();
             auto rightState = _motorRight->getState();
             if (std::find(leftState.begin(), leftState.end(), MotorState::HOLDING) != leftState.end() &&
-                std::find(rightState.begin(), rightState.end(), MotorState::HOLDING) != rightState.end())
+            std::find(rightState.begin(), rightState.end(), MotorState::HOLDING) != rightState.end())
             {
                 
                 spdlog::trace("Motors stopped");
                 break;
             }
-
+            
             if (std::find(leftState.begin(), leftState.end(), MotorState::STALLED) != leftState.end() ||
-                std::find(rightState.begin(), rightState.end(), MotorState::STALLED) != rightState.end())
+            std::find(rightState.begin(), rightState.end(), MotorState::STALLED) != rightState.end())
             {
                 spdlog::error("Motor stalled");
                 stop();
@@ -141,13 +248,8 @@ namespace finder::engines::movement
                 break;
             }
         }
-
-        if (speed < 0)
-        {
-            _motorLeft->setPolarity(MotorPolarity::NORMAL);
-            _motorRight->setPolarity(MotorPolarity::NORMAL);
-        }
-
+        #endif
+        
         spdlog::trace("Motors stopped");
     }
 
@@ -179,6 +281,14 @@ namespace finder::engines::movement
         spdlog::trace("MovementEngine::turn()");
         spdlog::info("Turning " + (direction == TurnDirection::LEFT ? std::string("left") : std::string("right")) + " " + std::to_string(angle) + " at speed " + std::to_string(speed));
 
+        double startAngleDiff = abs(_gyroSensor->getValue(0).value() - angle);
+        int checkCount = 0;
+
+        if (angle == _gyroSensor->getValue(0).value()) {
+            spdlog::info("Already at target angle");
+            return;
+        }
+
         if (speed > 100) {
             spdlog::warn("Speed is higher than 100, setting to 100");
             speed = 100;
@@ -206,15 +316,18 @@ namespace finder::engines::movement
             return;
         }
 
+        std::chrono::time_point<std::chrono::system_clock> start = std::chrono::system_clock::now();
+
         _motorLeft->setCommand(physical::MotorCommand::RUN_DIRECT);
         _motorRight->setCommand(physical::MotorCommand::RUN_DIRECT);
-    
 
         switch (direction)  
         {
         case TurnDirection::LEFT:
             while (true) 
             {
+                std::chrono::time_point<std::chrono::system_clock> loopStart = std::chrono::system_clock::now();
+
                 boost::leaf::result<int> result = _gyroSensor->getValue(0);
                 if (!result || result.value() >= angle - EV3_GYRO_TURN_TOLERANCE) 
                 {
@@ -225,10 +338,21 @@ namespace finder::engines::movement
                 spdlog::debug("Current Sensor Angle: " + std::to_string(result.value()));
                 spdlog::debug("Current Motor Angle: " + std::to_string(position::MotorPosition::getAngle()));
 
-                if (spdlog::get_level() == spdlog::level::info)
-                {
-                    spdlog::info("\rTarget angle: " + std::to_string(angle) + " Current angle: " + std::to_string(result.value()));
-                }
+                spdlog::debug("\rTarget angle: " + std::to_string(angle) + " Current angle: " + std::to_string(result.value()));
+
+                double angleDiff = abs(result.value() - angle);
+                double newSpeed = static_cast<double>(speed) - (static_cast<double>(speed) * (1 - (static_cast<double>(angleDiff) / static_cast<double>(startAngleDiff))));
+
+                double newSpeedSlowStart = static_cast<double>(speed) - (static_cast<double>(speed) * (static_cast<double>(angleDiff) / static_cast<double>(startAngleDiff)));
+
+                int leftDutyCycle = -round(std::min(newSpeed, newSpeedSlowStart)) - 15;
+                int rightDutyCycle = round(std::min(newSpeed, newSpeedSlowStart)) + 15;
+                setDutyCycle(leftDutyCycle, rightDutyCycle);
+
+                spdlog::debug("Start Angle Diff: " + std::to_string(startAngleDiff));
+                spdlog::debug("Angle Diff: " + std::to_string(angleDiff));
+                spdlog::debug("New Speed: " + std::to_string(static_cast<int>(newSpeed)));
+
 
                 // if (direction == TurnDirection::LEFT)
                 // {
@@ -240,6 +364,14 @@ namespace finder::engines::movement
                 //     _motorLeft->setDutyCycle(speed + abs(result.value() - angle));
                 //     _motorRight->setDutyCycle(-speed - abs(result.value() - angle));
                 // }
+
+                checkCount++;
+
+                std::chrono::time_point<std::chrono::system_clock> loopEnd = std::chrono::system_clock::now();
+
+                std::chrono::duration<double> elapsed_seconds = loopEnd - loopStart;
+
+                spdlog::info("Elapsed time for loop execution: " + std::to_string(elapsed_seconds.count()) + " seconds");
 
             }
             break;
@@ -257,6 +389,15 @@ namespace finder::engines::movement
                 spdlog::debug("Current Sensor Angle: " + std::to_string(result.value()));
                 spdlog::debug("Current Motor Angle: " + std::to_string(position::MotorPosition::getAngle()));
 
+                double angleDiff = abs(result.value() - angle);
+                double newSpeed = static_cast<double>(speed) - (static_cast<double>(speed) * (1 - (static_cast<double>(angleDiff) / static_cast<double>(startAngleDiff))));
+
+                double newSpeedSlowStart = static_cast<double>(speed) - (static_cast<double>(speed) * (static_cast<double>(angleDiff) / static_cast<double>(startAngleDiff)));
+
+                int leftDutyCycle =   round(std::min(newSpeed, newSpeedSlowStart)) - 15;
+                int rightDutyCycle = -round(std::min(newSpeed, newSpeedSlowStart)) + 15;
+                setDutyCycle(leftDutyCycle, rightDutyCycle);
+
                 // _motorLeft->setDutyCycle(speed + abs(result.value() - angle));
                 // _motorRight->setDutyCycle(-speed - abs(result.value() - angle));
             }
@@ -272,6 +413,12 @@ namespace finder::engines::movement
         _motorRight->stop();
 
         // position::Position::updatePosition();
+
+        std::chrono::time_point<std::chrono::system_clock> end = std::chrono::system_clock::now();
+        std::chrono::duration<double> elapsed_seconds = end - start;
+
+        spdlog::info("Checked " + std::to_string(checkCount) + " times in " + std::to_string(elapsed_seconds.count()) + " seconds: " + std::to_string(checkCount / elapsed_seconds.count()) + " checks per second");
+
         spdlog::trace("Motors stopped");
     }
 

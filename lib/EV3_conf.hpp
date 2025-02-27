@@ -25,7 +25,7 @@
     // define the default speed of the motors
     constexpr unsigned int EV3_GEARBOX_SHIFT_SPEED = 500;
     constexpr unsigned int EV3_MOTOR_TOOL_SPEED = 500;
-    constexpr unsigned int EV3_DRIVE_SPEED = 300;
+    constexpr unsigned int EV3_DRIVE_SPEED = 200;
     constexpr unsigned int EV3_TURN_SPEED = 40;
     
     // define the gear positions of the gearbox
@@ -106,7 +106,7 @@
     constexpr unsigned int EV3_ROBOT_POSITION_X = 70;
     constexpr unsigned int EV3_ROBOT_POSITION_Y = 160;
 
-    #define EV3_DRIVE_MODE_USE_GYRO 1
+    #define EV3_DRIVE_MODE_USE_GYRO 0
 
     // set the file format of the destinations file
     #define EV3_DESTINATIONS_FILE_FORMAT_YAML 1

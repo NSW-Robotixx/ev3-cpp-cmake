@@ -10,6 +10,7 @@
 #include "../../EV3_conf.hpp"
 #include "../../EV3_macros.hpp"
 #include <queue>
+#include <chrono>
 
 namespace finder::engines::movement
 {
@@ -84,7 +85,9 @@ namespace finder::engines::movement
             /// @return State of the motor
             boost::leaf::result<std::vector<MotorState>> getState(DeviceID port);
 
-            };
+        private:
+            static int _target_angle;
+    };
 }
 
 

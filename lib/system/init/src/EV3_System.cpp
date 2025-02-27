@@ -187,7 +187,7 @@ namespace finder::system
             }
         } else {
             m_path = m_destinations;
-            spdlog::info("Pathfinding is disabled, using destinations as path");
+            spdlog::warn("Pathfinding is disabled, using destinations as path");
         }
         
         spdlog::info("Path read: ");

@@ -145,7 +145,10 @@ namespace finder::engines::movement
         _motorRight->stop();
         
 
-        finder::math::Vector2 new_motor_start_position = {_motorLeft->getPosition(), _motorRight->getPosition()};
+        finder::math::Vector2 new_motor_start_position = {
+            static_cast<float>(_motorLeft->getPosition()), 
+            static_cast<float>(_motorRight->getPosition())
+        };
         finder::math::Vector2 motor_start_position_diff = new_motor_start_position - current_motor_position;
 
 
@@ -228,7 +231,7 @@ namespace finder::engines::movement
         _motorRight->setPositionSp(-motor_movement_per_degree * angle*2);
         
 
-        current_motor_position = {_motorLeft->getPosition(), _motorRight->getPosition()};
+        current_motor_position = {static_cast<float>(_motorLeft->getPosition()), static_cast<float>(_motorRight->getPosition())};
 
         _motorLeft->setSpeed(EV3_DRIVE_SPEED);
         _motorRight->setSpeed(EV3_DRIVE_SPEED);

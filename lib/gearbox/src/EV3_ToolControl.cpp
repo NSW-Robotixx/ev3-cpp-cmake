@@ -22,7 +22,7 @@ namespace finder::physical
         }
 
         _motorTool->setSpeed(speed);
-        boost::leaf::result<void> status = _motorTool->moveToAbsPosition(position);
+        boost::leaf::result<void> status = _motorTool->moveToRelPosition(position);
         if (!status)
         {
             return status;

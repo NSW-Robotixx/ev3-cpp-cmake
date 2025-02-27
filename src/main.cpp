@@ -33,6 +33,7 @@ DEFINE_bool(gearbox, false, "Calibrate gearbox");
 DEFINE_bool(movement, false, "Calibrate movement");
 DEFINE_bool(min_speed, false, "Set minimum speed");
 DEFINE_bool(dry_run, false, "Dry run");
+DEFINE_bool(stop, false, "Stop the robot");
 
 
 int main(int argc, char *argv[])
@@ -80,6 +81,12 @@ int main(int argc, char *argv[])
         movement_calibration.start();
 
         spdlog::info("Minimum speed: {}", movement_calibration.getMinSpeed());
+    }
+
+    if (FLAGS_stop)
+    {
+        finder::physical::MotorManager motor_manager = finder::physical::MotorManager("/sys/class");
+        motor_manager.stop();
     }
     // finder::physical::DeviceManager device_manager = finder::physical::DeviceManager("/sys/class/");
 //    finder::engines::movement::MovementEngine movementEngine = finder::engines::movement::MovementEngine();
