@@ -106,7 +106,7 @@
     constexpr unsigned int EV3_ROBOT_POSITION_X = 70;
     constexpr unsigned int EV3_ROBOT_POSITION_Y = 160;
 
-    #define EV3_DRIVE_MODE_USE_GYRO 0
+    #define EV3_DRIVE_MODE_USE_GYRO 0                               // experimental
 
     // set the file format of the destinations file
     #define EV3_DESTINATIONS_FILE_FORMAT_YAML 1

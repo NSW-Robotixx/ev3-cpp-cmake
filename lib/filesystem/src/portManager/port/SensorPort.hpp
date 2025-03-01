@@ -8,6 +8,7 @@
 #include <vector>
 #include <thread>
 #include <chrono>
+#include <boost/iostreams/device/mapped_file.hpp>
 
 namespace finder
 {

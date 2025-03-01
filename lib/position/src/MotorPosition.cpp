@@ -55,7 +55,7 @@ namespace finder::position
                 else if (i == pos) std::cout << ">";
                 else std::cout << " ";
             }
-            std::cout << "] " << int(progress * 100.0) << " %\r";
+            std::cout << "] " << int(progress * 100.0) << " % Angle: " << _gyroSensor->getValue(0).value() << " \r";
             std::cout.flush();
             std::cout << std::endl;
 

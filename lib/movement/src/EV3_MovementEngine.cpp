@@ -107,26 +107,27 @@ namespace finder::engines::movement
     {
         spdlog::trace("Moving forward " + std::to_string(distance) + " at speed " + std::to_string(speed));
         
+        finder::position::MotorPosition::notifyMovementStart(distance);
+        
         #if EV3_DRIVE_MODE_USE_GYRO == 1
         spdlog::trace("Using motor speed control");
 
-        finder::position::MotorPosition::notifyMovementStart(distance);
-
+        
         _motorLeft->setDutyCycle(EV3_TURN_SPEED);
         _motorRight->setDutyCycle(EV3_TURN_SPEED);
-
+        
         _motorLeft->setCommand(physical::MotorCommand::RUN_DIRECT);
         _motorRight->setCommand(physical::MotorCommand::RUN_DIRECT);
 
         int _motor_left_start_position = _motorLeft->getPosition();
         int _motor_right_start_position = _motorRight->getPosition();
         
-        if (distance < 0)
-        {
-            spdlog::info("Distance is negative, reversing direction");
-            _motor_left_start_position *= -1;
-            _motor_right_start_position *= -1;
-        }
+        // if (distance < 0)
+        // {
+        //     spdlog::info("Distance is negative, reversing direction");
+        //     _motor_left_start_position *= -1;
+        //     _motor_right_start_position *= -1;
+        // }
         
         spdlog::trace("Motor Left Start Position: " + std::to_string(_motor_left_start_position));
         spdlog::trace("Motor Right Start Position: " + std::to_string(_motor_right_start_position));
@@ -179,7 +180,6 @@ namespace finder::engines::movement
                     singleMotorStopped = true;
                 }
 
-                singleMotorStopped = true;
                 if (_motorRight->getPosition() >= distance * EV3_MOTOR_DISTANCE_PER_DEGREE + _motor_right_start_position)
                 {
                     spdlog::debug("Right motor reached target position");
@@ -200,10 +200,7 @@ namespace finder::engines::movement
             if (speed > 0) 
             {
                 _motorLeft->setDutyCycle(speed - abs(_current_angle - _target_angle));
-                _motorRight->setDutyCycle(speed + abs(_current_angle - _target_angle));
-            } else {
-                _motorLeft->setDutyCycle(speed + abs(_current_angle - _target_angle));
-                _motorRight->setDutyCycle(speed - abs(_current_angle - _target_angle));
+                _motorRight->setDutyCycle(speed + (_current_angle - _target_angle));
             }
 
             spdlog::debug("Current angle: " + std::to_string(_current_angle));
@@ -394,8 +391,8 @@ namespace finder::engines::movement
 
                 double newSpeedSlowStart = static_cast<double>(speed) - (static_cast<double>(speed) * (static_cast<double>(angleDiff) / static_cast<double>(startAngleDiff)));
 
-                int leftDutyCycle =   round(std::min(newSpeed, newSpeedSlowStart)) - 15;
-                int rightDutyCycle = -round(std::min(newSpeed, newSpeedSlowStart)) + 15;
+                int leftDutyCycle =   round(std::min(newSpeed, newSpeedSlowStart)) + 15;
+                int rightDutyCycle = -round(std::min(newSpeed, newSpeedSlowStart)) - 15;
                 setDutyCycle(leftDutyCycle, rightDutyCycle);
 
                 // _motorLeft->setDutyCycle(speed + abs(result.value() - angle));
